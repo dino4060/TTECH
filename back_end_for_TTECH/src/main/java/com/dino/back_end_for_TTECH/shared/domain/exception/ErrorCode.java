@@ -15,10 +15,12 @@ import java.util.Optional;
 public enum ErrorCode {
     // SUCCESS CODE: 1 //
 
-    // PRODUCT CATALOG 1200+ //
-    // CATEGORY //
+    // PRODUCT. CATEGORY //
     CATEGORY__NOT_FOUND(1210, "Không tìm thấy ngành hàng", HttpStatus.NOT_FOUND),
     CATEGORY__SAVE_FAILED(1211, "Có lỗi khi lưu ngành hàng", HttpStatus.INTERNAL_SERVER_ERROR),
+    // PROFILE. USER //
+    USER__EMAIL_ALREADY_EXISTS(1301, "Email đã tồn tại", HttpStatus.BAD_REQUEST),
+    USER__PHONE_ALREADY_EXISTS(1302, "Số điện thoại đã tồn tại", HttpStatus.BAD_REQUEST),
 
     // INFRASTRUCTURE 1000+ //
     // COMMON //

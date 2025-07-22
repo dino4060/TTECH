@@ -43,6 +43,8 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     UserStatus status;
 
+    String name;
+
     @Column(nullable = false, unique = true)
     String username;
 
@@ -54,21 +56,13 @@ public class User extends BaseEntity {
 
     String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    Set<Role> roles;
-
-    String name;
-
-    String photo;
-
-    Date dob;
-
-    String gender;
-
     Boolean isEmailVerified;
 
     Boolean isPhoneVerified;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    Set<Role> roles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -81,6 +75,22 @@ public class User extends BaseEntity {
     List<Order> orders;
 
     // FACTORY //
+
+    public static User createCustomer(String name, String email, String phone, String passHashed) {
+        User user = new User();
+
+        user.setStatus(UserStatus.LIVE);
+        user.setName(name);
+        user.setUsername("user" + System.currentTimeMillis());
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setPassword(passHashed);
+        user.addRole(Role.CUSTOMER);
+        user.setIsEmailVerified(false);
+        user.setIsPhoneVerified(false);
+
+        return user;
+    }
 
     public static User createEmailUser(String email, String hashPassword, Role role) {
         User user = new User();

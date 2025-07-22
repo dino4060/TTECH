@@ -1,9 +1,7 @@
 package com.dino.back_end_for_TTECH.identity.api;
 
-import com.dino.back_end_for_TTECH.identity.application.model.AuthEmailReq;
-import com.dino.back_end_for_TTECH.identity.application.model.AuthRes;
-import com.dino.back_end_for_TTECH.identity.application.model.CurrentShopRes;
-import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForSeller;
+import com.dino.back_end_for_TTECH.identity.application.model.*;
+import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForCustomer;
 import com.dino.back_end_for_TTECH.shared.api.annotation.AuthUser;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import jakarta.validation.Valid;
@@ -15,24 +13,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class SellerAuthController {
+public class AuthController {
 
-    // PublicSellerAuthController //
+    // PublicAuthController //
     @RestController
-    @RequestMapping("/api/v1/public/seller/auth")
+    @RequestMapping("/api/public/auth")
     @AllArgsConstructor
-    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-    public static class PublicSellerAuthController {
+    public static class PublicAuthController {
 
-        IAuthServiceForSeller authService;
+        private final IAuthServiceForCustomer authService;
+
+        // WRITE //
+
+        // register //
+        @PostMapping("/register")
+        public ResponseEntity<AuthRes> register(
+                @Valid @RequestBody RegisterBody body
+        ) {
+            HttpHeaders headers = new HttpHeaders();
+            AuthRes auth = this.authService.register(body, headers);
+            return ResponseEntity.ok().headers(headers).body(auth);
+        }
+
+        // LEGACY //
 
         // QUERY //
 
+        // lookupIdentifier //
+        @GetMapping("/lookup")
+        public ResponseEntity<LookupEmailRes> lookupIdentifier(
+                @RequestParam("email") String email
+        ) {
+            return ResponseEntity.ok(this.authService.lookupEmail(email));
+        }
+
         // COMMAND //
 
-        // login //
-        @PostMapping("/login/email")
-        public ResponseEntity<AuthRes> login(
+        // loginWithPassword //
+        @PostMapping("/login/password")
+        public ResponseEntity<AuthRes> loginWithPassword(
                 @Valid @RequestBody AuthEmailReq request
         ) {
             HttpHeaders headers = new HttpHeaders();
@@ -41,18 +60,18 @@ public class SellerAuthController {
             return ResponseEntity.ok().headers(headers).body(body);
         }
 
-        // signup //
-        @PostMapping("/signup/email")
-        public ResponseEntity<AuthRes> signup(
-                @Valid @RequestBody AuthEmailReq request
+        // loginOrSignupWithGoogle //
+        @PostMapping("/oauth2/google")
+        public ResponseEntity<AuthRes> loginOrSignupWithGoogle(
+                @RequestBody AuthGoogleReq request
         ) {
             HttpHeaders headers = new HttpHeaders();
-            AuthRes body = this.authService.signup(request, headers);
+            AuthRes body = this.authService.loginOrSignup(request, headers);
 
             return ResponseEntity.ok().headers(headers).body(body);
         }
 
-        // refresh //
+        // refreshToken //
         @PostMapping("/refresh")
         public ResponseEntity<AuthRes> refresh(
                 @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshToken
@@ -65,23 +84,21 @@ public class SellerAuthController {
 
     }
 
-    // PrivateSellerAuthController //
+    // PrivateBuyerAuthController //
     @RestController
-    @RequestMapping("/api/v1/seller/auth")
+    @RequestMapping("/api/v1/auth")
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-    public static class PrivateSellerAuthController {
+    public static class PrivateBuyerAuthController {
 
-        IAuthServiceForSeller authService;
+        IAuthServiceForCustomer authService;
 
         // QUERY //
 
-        // getCurrentShop //
+        // getCurrentUser //
         @GetMapping("/me")
-        public ResponseEntity<CurrentShopRes> getCurrentShop(
-                @AuthUser CurrentUser currentUser
-        ) {
-            return ResponseEntity.ok(this.authService.getCurrentShop(currentUser));
+        public ResponseEntity<CurrentUserRes> getCurrentUser(@AuthUser CurrentUser currentUser) {
+            return ResponseEntity.ok(this.authService.getCurrentUser(currentUser));
         }
 
         // COMMAND //

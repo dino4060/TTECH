@@ -1,12 +1,12 @@
-import { TApi, HttpMethod } from "@/types/base.types";
+import { HttpMethod, TApi } from "@/types/base.types";
+import { TCategoryInList } from "@/types/category.types";
 import { RESOURCES } from "../constants/resources";
-import { TCategory } from "@/types/category.types";
 
 export const categoryApi = {
   // PUBLIC //
 
   // READ //
-  getList: (): TApi<TCategory[]> => ({
+  getList: (): TApi<TCategoryInList[]> => ({
     route: `${RESOURCES.CATEGORIES.PUBLIC}/list`,
     method: HttpMethod.GET,
   }),

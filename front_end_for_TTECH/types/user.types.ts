@@ -23,19 +23,20 @@ export type TGender = typeof Gender[keyof typeof Gender];
 // MAIN TYPES //
 
 export type TUser = TBase & {
-  status: TUserStatus;
+  name: string;
   username: string;
   email: string;
   phone: string;
+  password: string;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
-  name: string;
-  photo: string;
-  dob: Date;
-  gender: TGender;
+  status: TUserStatus;
 };
 
 // SIDE TYPES //
 
 export type TCurrentUser = Pick<TUser,
-  'status' | 'username' | 'email' | 'phone' | 'name' | 'photo' | 'isEmailVerified' | 'isPhoneVerified'>
+  'id' | 'name' | 'username' | 'email' | 'phone' | 'isEmailVerified' | 'isPhoneVerified' | 'status'>
+
+export type TUserToCreate = Pick<TUser,
+  'name' | 'email' | 'phone' | 'password'>

@@ -3,10 +3,11 @@ package com.dino.back_end_for_TTECH.identity.application;
 import com.dino.back_end_for_TTECH.identity.application.model.AuthGoogleReq;
 import com.dino.back_end_for_TTECH.identity.application.model.AuthRes;
 import com.dino.back_end_for_TTECH.identity.application.model.LookupEmailRes;
+import com.dino.back_end_for_TTECH.identity.application.model.RegisterBody;
 import com.dino.back_end_for_TTECH.identity.application.pattern.AuthFacade;
 import com.dino.back_end_for_TTECH.identity.application.pattern.AuthTemplate;
 import com.dino.back_end_for_TTECH.identity.application.provider.IIdentityOauth2Provider;
-import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForBuyer;
+import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForCustomer;
 import com.dino.back_end_for_TTECH.identity.domain.model.Role;
 import com.dino.back_end_for_TTECH.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.profile.domain.User;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class AuthServiceImBuyer extends AuthTemplate implements IAuthServiceForBuyer {
+public class AuthServiceImCustomer extends AuthTemplate implements IAuthServiceForCustomer {
 
     AuthFacade authFacade;
 
@@ -28,7 +29,9 @@ public class AuthServiceImBuyer extends AuthTemplate implements IAuthServiceForB
 
     IIdentityOauth2Provider oauth2Provider;
 
-    public AuthServiceImBuyer(
+    // CONSTRUCTOR //
+
+    public AuthServiceImCustomer(
             AuthFacade authFacade, IUserService userService, IIdentityOauth2Provider oauth2Provider
     ) {
         super(authFacade);
@@ -37,10 +40,29 @@ public class AuthServiceImBuyer extends AuthTemplate implements IAuthServiceForB
         this.oauth2Provider = oauth2Provider;
     }
 
+    // INHERITANCE //
     @Override
     protected Role getRole() {
         return Role.BUYER;
     }
+
+    // WRITE //
+
+    @Override
+    public AuthRes register(RegisterBody body, HttpHeaders headers) {
+        this.userService.checkEmailNotExists(body.email());
+        this.userService.checkPhoneNotExists(body.phone());
+
+        User user = this.userService.createCustomer(
+                body.name(), body.email(), body.phone(), body.password()
+        );
+        this.authFacade.createToken(user);
+
+        return this.authFacade.inAuth(user, headers);
+    }
+
+    // LEGACY //
+
 
     // QUERY //
 

@@ -1,13 +1,13 @@
 package com.dino.back_end_for_TTECH.identity.application.model;
 
 public record CurrentUserRes(
-        String username,
+        Long id,
         String name,
-        String photo,
-        String status,
+        String username,
         String email,
         String phone,
         Boolean isEmailVerified,
-        Boolean isPhoneVerified
+        Boolean isPhoneVerified,
+        String status
 ) {
 }

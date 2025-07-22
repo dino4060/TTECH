@@ -14,13 +14,15 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import { categoryApi } from "@/lib/api/category.api"
 const Header = () => {
   const [category, setCategory] = useState([])
-  const { user, setUser } = UserAuth()
+  const { user } = UserAuth()
   const router = useRouter()
 
   const getAllCategory = async () => {
     const { success, data } = await clientFetch(categoryApi.getList())
-    if (success) setCategory(data);
-    if (!success) console.error("Header: Failed to fetch categories");
+    if (success)
+      setCategory(data)
+    else
+      console.error("Header: Failed to fetch categories");
     ;
   }
 

@@ -7,6 +7,17 @@ import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import java.util.Optional;
 
 public interface IUserService {
+    // READ //
+
+    void checkEmailNotExists(String email);
+
+    void checkPhoneNotExists(String phone);
+
+    // WRITE //
+
+    User createCustomer(String name, String email, String phone, String password);
+
+    // LEGACY //
 
     Optional<User> findUserByEmail(String email);
 

@@ -3,10 +3,11 @@ package com.dino.back_end_for_TTECH.identity.application.service;
 import com.dino.back_end_for_TTECH.identity.application.model.AuthGoogleReq;
 import com.dino.back_end_for_TTECH.identity.application.model.AuthRes;
 import com.dino.back_end_for_TTECH.identity.application.model.LookupEmailRes;
+import com.dino.back_end_for_TTECH.identity.application.model.RegisterBody;
 import com.dino.back_end_for_TTECH.identity.application.pattern.IAuthTemplate;
 import org.springframework.http.HttpHeaders;
 
-public interface IAuthServiceForBuyer extends IAuthTemplate {
+public interface IAuthServiceForCustomer extends IAuthTemplate {
 
     // QUERY //
 
@@ -16,4 +17,5 @@ public interface IAuthServiceForBuyer extends IAuthTemplate {
 
     AuthRes loginOrSignup(AuthGoogleReq request, HttpHeaders headers);
 
+    AuthRes register(RegisterBody body, HttpHeaders headers);
 }

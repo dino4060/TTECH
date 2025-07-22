@@ -22,8 +22,41 @@ import java.util.Optional;
 @Slf4j
 public class UserServiceIm implements IUserService {
 
-    IUserRepository userRepository;
-    IIdentitySecurityProvider securityProvider;
+    private final IUserRepository userRepository;
+    private final IIdentitySecurityProvider securityProvider;
+
+    // READ //
+
+    @Override
+    public void checkEmailNotExists(String email) {
+        userRepository.findByEmail(email)
+                .ifPresent(user -> {
+                    throw new AppException(ErrorCode.USER__EMAIL_ALREADY_EXISTS);
+                });
+    }
+
+    @Override
+    public void checkPhoneNotExists(String phone) {
+        userRepository.findByPhone(phone)
+                .ifPresent(user -> {
+                    throw new AppException(ErrorCode.USER__PHONE_ALREADY_EXISTS);
+                });
+    }
+
+    // WRITE //
+
+    @Override
+    public User createCustomer(String name, String email, String phone, String password) {
+        String passHashed = this.securityProvider.hashPassword(password);
+
+        User userToCreate = User.createCustomer(name, email, phone, passHashed);
+        User user = this.userRepository.save(userToCreate);
+
+        user.setPassword(null);
+        return user;
+    }
+
+    // LEGACY //
 
     @Override
     public Optional<User> findUserByEmail(String email) {
