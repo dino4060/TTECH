@@ -24,7 +24,7 @@ public class SellerCategoryController {
         // READ //
         @GetMapping("/tree")
         public ResponseEntity<Object> getTree() {
-            return ResponseEntity.ok().body(this.categoryService.getTree());
+            return ResponseEntity.ok().body(this.categoryService.listCategories());
         }
     }
 }

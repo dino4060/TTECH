@@ -1,54 +1,76 @@
 package com.dino.back_end_for_TTECH.product.application;
 
+import com.dino.back_end_for_TTECH.product.application.mapper.ICategoryMapper;
+import com.dino.back_end_for_TTECH.product.application.model.CategoryInList;
+import com.dino.back_end_for_TTECH.product.application.model.CategoryToWrite;
 import com.dino.back_end_for_TTECH.product.application.service.ICategoryService;
 import com.dino.back_end_for_TTECH.product.domain.Category;
-import com.dino.back_end_for_TTECH.product.domain.model.CategoryProjection;
 import com.dino.back_end_for_TTECH.product.domain.repository.ICategoryRepository;
-import lombok.AccessLevel;
+import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
+import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class CategoryServiceImpl implements ICategoryService {
 
-    ICategoryRepository categoryRepository;
+    private final ICategoryRepository categoryRepository;
+    private final ICategoryMapper categoryMapper;
+
+    // HELPERS //
+
+    private Category getCategory(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY__NOT_FOUND));
+    }
+
+    private Category saveCategory(Category category) {
+        try {
+            return categoryRepository.save(category);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.CATEGORY__SAVE_FAILED);
+        }
+    }
+
 
     // READ //
+
     @Override
-    public List<CategoryProjection> getList() {
-        List<CategoryProjection> categories = this.categoryRepository.findAllProjectedBy(
-                Sort.by(Sort.Direction.ASC, "position"),
-                CategoryProjection.class);
-        return categories;
+    public List<CategoryInList> listCategories() {
+        var categories = this.categoryRepository.findAll();
+
+        return categories.stream()
+                .map(categoryMapper::toCategoryInList)
+                .sorted(Comparator.comparingInt(CategoryInList::position))
+                .toList();
+    }
+
+    // WRITE //
+
+    @Override
+    public CategoryInList createCategory(CategoryToWrite body) {
+        Category category = categoryMapper.toCategory(body);
+        Category saved = saveCategory(category);
+        return categoryMapper.toCategoryInList(saved);
     }
 
     @Override
-    public List<Category> getTree() {
-        List<Category> categories = this.categoryRepository.findWithChildrenByLevel(1);
-
-        sortChildrenRecursively(categories);
-
-        return categories;
+    public CategoryInList updateCategory(long id, CategoryToWrite body) {
+        Category category = getCategory(id);
+        categoryMapper.toCategory(body, category);
+        Category saved = saveCategory(category);
+        return categoryMapper.toCategoryInList(saved);
     }
 
-    private void sortChildrenRecursively(List<Category> categories) {
-        if (CollectionUtils.isEmpty(categories))
-            return;
-
-        categories.sort(Comparator.comparingInt(c ->
-                c.getPosition() == null ? Integer.MAX_VALUE : c.getPosition()));
-
-        for (Category category : categories)
-            sortChildrenRecursively(category.getChildCategories());
+    @Override
+    public void deleteCategory(long id) {
+        Category category = getCategory(id);
+        categoryRepository.delete(category);
     }
 }

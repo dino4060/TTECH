@@ -12,7 +12,7 @@
     <artifactId>back_end_for_TTECH</artifactId>
     <version>0.0.1</version>
     <name>back end for TTECH</name>
-    <description>This is a backend, of the TECH e-shop project, using Spring Boot 3 and PostgreSQL</description>
+    <description>This is a backend of the TECH e-shop project</description>
     <url/>
     <licenses>
         <license/>
@@ -26,6 +26,7 @@
         <tag/>
         <url/>
     </scm>
+
     <properties>
         <java.version>21</java.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
@@ -38,6 +39,19 @@
         <slugify.version>3.0.7</slugify.version>
         <querydsl.version>5.0.0</querydsl.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <!-- to add libraries in the project to build and run, is added into jar -->
         <dependency>
@@ -115,47 +129,15 @@
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>${openapi.version}</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.slugify/slugify -->
         <dependency>
             <groupId>com.github.slugify</groupId>
             <artifactId>slugify</artifactId>
             <version>${slugify.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa -->
-        <dependency>
-            <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-apt</artifactId>
-            <classifier>jakarta</classifier>
-            <version>${querydsl.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-jpa</artifactId>
-            <classifier>jakarta</classifier>
-            <version>${querydsl.version}</version>
-        </dependency>
 
         <!-- the end of dependency -->
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>

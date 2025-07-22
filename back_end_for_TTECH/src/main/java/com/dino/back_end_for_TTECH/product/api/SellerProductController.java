@@ -3,7 +3,7 @@ package com.dino.back_end_for_TTECH.product.api;
 import com.dino.back_end_for_TTECH.product.application.model.ProductOfShopRes;
 import com.dino.back_end_for_TTECH.product.application.service.IProductService;
 import com.dino.back_end_for_TTECH.shared.api.annotation.AuthUser;
-import com.dino.back_end_for_TTECH.shared.api.constant.Auth;
+import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.application.utils.Id;
 import com.dino.back_end_for_TTECH.shared.application.utils.PageRes;
@@ -28,7 +28,7 @@ public class SellerProductController {
     // SellerPrivateProductController //
     @RestController
     @RequestMapping("/api/v1/seller/products")
-    @PreAuthorize(Auth.SELLER)
+    @PreAuthorize(AuthConst.SELLER)
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public static class SellerPrivateProductController {

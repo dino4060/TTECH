@@ -2,7 +2,7 @@ package com.dino.back_end_for_TTECH.infrastructure.persistence;
 
 import com.dino.back_end_for_TTECH.product.domain.model.ProductItemView;
 import com.dino.back_end_for_TTECH.product.domain.query.IProductQuery;
-import com.dino.back_end_for_TTECH.infrastructure.persistence.sqlquery.IProductSqlQuery;
+import com.dino.back_end_for_TTECH.infrastructure.persistence.sql.IProductSql;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 public class ProductQueryImpl implements IProductQuery {
 
-    IProductSqlQuery productSqlQuery;
+    IProductSql productSqlQuery;
 
     @Override
     public List<ProductItemView> searchByMultiParams(

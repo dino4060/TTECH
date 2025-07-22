@@ -1,14 +1,13 @@
 package com.dino.back_end_for_TTECH.ordering.application;
 
-import com.dino.back_end_for_TTECH.ordering.application.model.*;
-import com.dino.back_end_for_TTECH.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.ordering.application.mapper.ICartMapper;
-import com.dino.back_end_for_TTECH.features.ordering.application.model.*;
+import com.dino.back_end_for_TTECH.ordering.application.model.*;
 import com.dino.back_end_for_TTECH.ordering.application.service.ICartService;
 import com.dino.back_end_for_TTECH.ordering.domain.Cart;
 import com.dino.back_end_for_TTECH.ordering.domain.CartItem;
 import com.dino.back_end_for_TTECH.ordering.domain.repository.ICartRepository;
 import com.dino.back_end_for_TTECH.product.application.service.ISkuService;
+import com.dino.back_end_for_TTECH.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.profile.domain.Shop;
 import com.dino.back_end_for_TTECH.profile.domain.User;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;

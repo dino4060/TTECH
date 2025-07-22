@@ -1,6 +1,5 @@
 package com.dino.back_end_for_TTECH.identity.application.pattern;
 
-import com.dino.back_end_for_TTECH.features.identity.application.model.*;
 import com.dino.back_end_for_TTECH.identity.application.model.AuthEmailReq;
 import com.dino.back_end_for_TTECH.identity.application.model.AuthRes;
 import com.dino.back_end_for_TTECH.identity.application.model.CurrentUserRes;

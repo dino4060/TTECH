@@ -15,6 +15,11 @@ import java.util.Optional;
 public enum ErrorCode {
     // SUCCESS CODE: 1 //
 
+    // PRODUCT CATALOG 1200+ //
+    // CATEGORY //
+    CATEGORY__NOT_FOUND(1210, "Không tìm thấy ngành hàng", HttpStatus.NOT_FOUND),
+    CATEGORY__SAVE_FAILED(1211, "Có lỗi khi lưu ngành hàng", HttpStatus.INTERNAL_SERVER_ERROR),
+
     // INFRASTRUCTURE 1000+ //
     // COMMON //
     SYSTEM__UNHANDLED_EXCEPTION(1000, "Thật tiết, đã có lỗi xảy ra", HttpStatus.INTERNAL_SERVER_ERROR),
@@ -56,8 +61,6 @@ public enum ErrorCode {
     // PRODUCT CATALOG 1200+ //
     // PRODUCT //
     PRODUCT__NOT_FOUND(1200, "Không tìm thấy sản phẩm", HttpStatus.BAD_REQUEST),
-    // CATEGORY //
-    CATEGORY__NOT_FOUND(1210, "Không tìm thấy ngành hàng", HttpStatus.BAD_REQUEST),
     // SKU //
     SKU__FIND_FAILED(1220, "Lấy SKU thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     SKU__TIER_OPTION_INDEXES_INVALID(1221, "tierOptionIndexes không hợp lệ", HttpStatus.BAD_REQUEST),

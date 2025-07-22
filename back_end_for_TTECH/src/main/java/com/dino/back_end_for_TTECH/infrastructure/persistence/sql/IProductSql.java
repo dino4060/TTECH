@@ -1,4 +1,4 @@
-package com.dino.back_end_for_TTECH.infrastructure.persistence.sqlquery;
+package com.dino.back_end_for_TTECH.infrastructure.persistence.sql;
 
 import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductItemView;
@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
 
 import java.util.List;
 
-public interface IProductSqlQuery extends JpaRepository<Product, Long> {
+public interface IProductSql extends JpaRepository<Product, Long> {
 
     @NativeQuery("""
             WITH query AS (SELECT plainto_tsquery('english', :keyword) AS q)

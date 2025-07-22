@@ -1,6 +1,5 @@
 package com.dino.back_end_for_TTECH.ordering.api;
 
-import com.dino.back_end_for_TTECH.features.ordering.application.model.*;
 import com.dino.back_end_for_TTECH.ordering.application.model.*;
 import com.dino.back_end_for_TTECH.ordering.application.service.ICheckoutService;
 import com.dino.back_end_for_TTECH.shared.api.annotation.AuthUser;

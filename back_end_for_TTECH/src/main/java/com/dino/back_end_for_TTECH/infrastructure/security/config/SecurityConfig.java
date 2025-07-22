@@ -31,6 +31,7 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
             // BUYER PUBLIC //
             "/api/v1/public/**",
+            "/api/public/**",
             // FILE //
             "/files/**",
             // SWAGGER //

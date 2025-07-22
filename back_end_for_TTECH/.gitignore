@@ -1,7 +1,7 @@
 ### Customize ####
-*application.yml
-*application-dev.yml
-*application-prod.yml
+src/main/resources/application.yml
+src/main/resources/application-dev.yml
+src/main/resources/application-prod.yml
 
 HELP.md
 target/

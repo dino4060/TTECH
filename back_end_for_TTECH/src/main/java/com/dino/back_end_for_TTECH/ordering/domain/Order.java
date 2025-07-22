@@ -1,9 +1,8 @@
 package com.dino.back_end_for_TTECH.ordering.domain;
 
 import com.dino.back_end_for_TTECH.ordering.domain.model.*;
-import com.dino.back_end_for_TTECH.profile.domain.User;
-import com.dino.back_end_for_TTECH.features.ordering.domain.model.*;
 import com.dino.back_end_for_TTECH.profile.domain.Shop;
+import com.dino.back_end_for_TTECH.profile.domain.User;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;

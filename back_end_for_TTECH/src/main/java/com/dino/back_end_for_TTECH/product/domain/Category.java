@@ -37,29 +37,5 @@ public class Category extends BaseEntity {
     @Column(length = 40, nullable = false, unique = true)
     String name;
 
-    @JsonIgnore
-    @Column(length = 40)
-    String slug;
-
-    String photo;
-
-    @JsonIgnore
-    String description;
-
-    Integer position;
-
-    @JsonIgnore
-    int level;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_category_id")
-    @JsonIgnore
-    Category parentCategory;
-
-    @OneToMany(mappedBy = "parentCategory", fetch = FetchType.EAGER)
-    List<Category> childCategories;
-
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    @JsonIgnore
-    List<Specification> specifications;
+    int position;
 }
