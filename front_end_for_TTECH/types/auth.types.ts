@@ -12,3 +12,5 @@ export type TAuthResult = {
 export type TRegisterBody = TUserToCreate;
 
 export type TLoginPhoneBody = TUserToLoginPhone;
+
+export type TLoginGoogleBody = { code: string };

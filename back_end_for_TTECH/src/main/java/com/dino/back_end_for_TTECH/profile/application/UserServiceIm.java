@@ -2,7 +2,6 @@ package com.dino.back_end_for_TTECH.profile.application;
 
 import com.dino.back_end_for_TTECH.identity.application.model.CurrentUserRes;
 import com.dino.back_end_for_TTECH.identity.application.provider.IIdentitySecurityProvider;
-import com.dino.back_end_for_TTECH.identity.domain.model.Role;
 import com.dino.back_end_for_TTECH.profile.application.mapper.IUserMapper;
 import com.dino.back_end_for_TTECH.profile.application.model.UserToUpdateBody;
 import com.dino.back_end_for_TTECH.profile.application.service.IUserService;
@@ -64,6 +63,12 @@ public class UserServiceIm implements IUserService {
     }
 
     @Override
+    public User createCustomer(String name, String email) {
+        User user = User.createThirdCustomer(name, email);
+        return this.userRepository.save(user);
+    }
+
+    @Override
     public CurrentUserRes updateCustomer(UserToUpdateBody body, CurrentUser currentUser) {
         // 1. get and check
         User user = userRepository.findById(currentUser.id())
@@ -101,24 +106,5 @@ public class UserServiceIm implements IUserService {
     @Override
     public User getUser(CurrentUser currentUser) {
         return this.getUserById(currentUser.id());
-    }
-
-    @Override
-    public User createEmailName(String email, String name, Role role) {
-        User user = User.createThirdUser(email, name, role);
-        return this.userRepository.save(user);
-    }
-
-    @Override
-    public User createEmailPass(String email, String plainPass, Role role) {
-        String hashPass = this.securityProvider.hashPassword(plainPass);
-        User user = User.createEmailUser(email, hashPass, role);
-        return this.userRepository.save(user);
-    }
-
-    @Override
-    public User addRole(User user, Role role) {
-        user.addRole(role);
-        return this.userRepository.save(user);
     }
 }

@@ -11,6 +11,7 @@ import { UserAuth } from "../../context/AuthContext";
 import CircleLoader from "../uncategory/CircleLoader";
 import ForgetPassword from "./ForgetPassword";
 import PopupRegister from "./PopupRegister";
+import { getEnv } from "@/lib/utils/env";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -27,6 +28,20 @@ const LoginForm = () => {
   const [cooldown, setCooldown] = useState(false);
 
   const { googleSignIn, setUser, setToken } = UserAuth();
+
+  const onAuthGoogle = () => {
+    const CLIENT_ID = getEnv.GOOGLE_CLIENT_ID;
+    const CALLBACK_URL = getEnv.GOOGLE_REDIRECT_URI;
+    const AUTH_URL = getEnv.GOOGLE_AUTH_URI;
+
+    const TARGET_URL = `${AUTH_URL
+      }?redirect_uri=${encodeURIComponent(CALLBACK_URL)
+      }&response_type=code&client_id=${CLIENT_ID
+      }&scope=openid%20email%20profile`;
+
+    window.location.href = TARGET_URL;
+  };
+
 
   useEffect(() => {
     let timer;
@@ -152,7 +167,7 @@ const LoginForm = () => {
       <button
         className='w-full bg-slate-400 text-[1.8rem] relative p-2 rounded-3xl flex justify-center items-center text-white'
         onClick={() => {
-          googleSignIn();
+          onAuthGoogle(); // googleSignIn();
         }}
       >
         <div className='bg-white rounded-[16px] p-2 w-[28px] h-[28px] flex items-center justify-center absolute left-2'>

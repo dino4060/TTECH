@@ -15,7 +15,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -88,6 +87,19 @@ public class User extends BaseEntity {
         user.addRole(Role.CUSTOMER);
         user.setIsEmailVerified(false);
         user.setIsPhoneVerified(false);
+
+        return user;
+    }
+
+    public static User createThirdCustomer(String name, String email) {
+        User user = new User();
+
+        user.setStatus(UserStatus.LIVE);
+        user.setUsername("user" + System.currentTimeMillis());
+        user.setEmail(email);
+        user.setName(name);
+        user.addRole(Role.CUSTOMER);
+        user.setIsEmailVerified(true);
 
         return user;
     }

@@ -15,6 +15,10 @@ import java.util.Optional;
 public enum ErrorCode {
     // SUCCESS CODE: 1 //
 
+    // INFRASTRUCTURE. SYSTEM //
+    SYSTEM__UNHANDLED_EXCEPTION(1000, "Thật tiết, đã có lỗi xảy ra", HttpStatus.INTERNAL_SERVER_ERROR),
+    // INFRASTRUCTURE. SECURITY //
+    SECURITY__UNAUTHENTICATED(1010, "Authenticate failed", HttpStatus.UNAUTHORIZED),
     // IDENTITY. AUTH //
     AUTH__PHONE_VALIDATION(1120, "Số điện thoại nên đúng định dạng", HttpStatus.BAD_REQUEST),
     AUTH__EMAIL_VALIDATION(1121, "Email nên đúng định dạng", HttpStatus.BAD_REQUEST),
@@ -32,7 +36,6 @@ public enum ErrorCode {
 
     // INFRASTRUCTURE 1000+ //
     // COMMON //
-    SYSTEM__UNHANDLED_EXCEPTION(1000, "Thật tiết, đã có lỗi xảy ra", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__DEVELOPING_FEATURE(1001, "The feature is still developing", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__VALIDATION_UNSUPPORTED(1003, "Validation is unsupported", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__METHOD_NOT_SUPPORTED(1004, "Method '%s' is not supported", HttpStatus.BAD_REQUEST),
@@ -40,7 +43,6 @@ public enum ErrorCode {
     SYSTEM__BODY_REQUIRED(1006, "Body is required", HttpStatus.BAD_REQUEST),
     SYSTEM__ID_INVALID(1006, "Id is invalid", HttpStatus.BAD_REQUEST),
     // SECURITY //
-    SECURITY__UNAUTHENTICATED(1010, "Authenticate failed", HttpStatus.UNAUTHORIZED),
     SECURITY__UNAUTHORIZED(1011, "Quyền truy cập thất bại", HttpStatus.FORBIDDEN),
     SECURITY__GET_CURRENT_USER_FAILED(1012, "Lấy thông tin người dùng thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     SECURITY__GEN_TOKEN_FAILED(1013, "Tạo token thất bại", HttpStatus.INTERNAL_SERVER_ERROR),    // OAUTH2 //

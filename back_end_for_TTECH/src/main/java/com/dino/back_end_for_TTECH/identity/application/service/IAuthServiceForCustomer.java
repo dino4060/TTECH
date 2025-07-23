@@ -9,13 +9,5 @@ public interface IAuthServiceForCustomer extends IAuthTemplate {
 
     AuthRes register(RegisterBody body, HttpHeaders headers);
 
-    // LEGACY //
-
-    // QUERY //
-
-    LookupEmailRes lookupEmail(String email);
-
-    // COMMAND //
-
-    AuthRes loginOrSignup(AuthGoogleReq request, HttpHeaders headers);
+    AuthRes login(LoginGoogleBody body, HttpHeaders headers);
 }
