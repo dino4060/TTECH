@@ -1,7 +1,8 @@
 "use client"
 
-import { handleCategory } from "@/app/api/handleCategory"
 import { UserAuth } from "@/context/AuthContext"
+import { categoryApi } from "@/lib/api/category.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -10,8 +11,6 @@ import { CiUser } from "react-icons/ci"
 import Cart from "../cart/Cart"
 import CategoryPhone from "./CategoryPhone"
 import SearchBar from "./SearchBar"
-import { clientFetch } from "@/lib/http/fetch.client"
-import { categoryApi } from "@/lib/api/category.api"
 const Header = () => {
   const [category, setCategory] = useState([])
   const { user } = UserAuth()
@@ -27,7 +26,7 @@ const Header = () => {
   }
 
   const handleOnClick = () => {
-    if (user?.userId) {
+    if (user?.id) {
       router.push("/account")
       return
     }
@@ -92,6 +91,7 @@ const Header = () => {
           <motion.div className='grow-[1] '>
             <SearchBar />
           </motion.div>
+
           <motion.div className=' p-2 '>
             <Cart />
           </motion.div>

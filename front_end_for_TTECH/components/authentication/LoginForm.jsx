@@ -74,9 +74,8 @@ const LoginForm = () => {
     const { success, data: result, error } = await clientFetch(authApi.login(data));
 
     if (success && result.isAuthenticated) {
-      const { token, user } = result;
-      setUser(user);
-      setToken(token);
+      setUser(result.currentUser);
+      setToken(result.accessToken);
       router.push("/");
     } else {
       setVerifyInput((prev) => ({
