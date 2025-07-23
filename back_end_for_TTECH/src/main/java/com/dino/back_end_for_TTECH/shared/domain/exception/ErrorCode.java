@@ -15,6 +15,14 @@ import java.util.Optional;
 public enum ErrorCode {
     // SUCCESS CODE: 1 //
 
+    // IDENTITY. AUTH //
+    AUTH__PHONE_VALIDATION(1120, "Số điện thoại nên đúng định dạng", HttpStatus.BAD_REQUEST),
+    AUTH__EMAIL_VALIDATION(1121, "Email nên đúng định dạng", HttpStatus.BAD_REQUEST),
+    AUTH__PASSWORD_VALIDATION(1122, "Password nên có ít nhất 8 kí tự", HttpStatus.BAD_REQUEST),
+    AUTH__PHONE_NOT_FOUND(1123, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
+    AUTH__EMAIL_NOT_FOUND(1124, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
+    AUTH__PASSWORD_NOT_MATCH(1125, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
+    AUTH__ROLE_NOT_PERMIT(1126, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
     // PRODUCT. CATEGORY //
     CATEGORY__NOT_FOUND(1210, "Không tìm thấy ngành hàng", HttpStatus.NOT_FOUND),
     CATEGORY__SAVE_FAILED(1211, "Có lỗi khi lưu ngành hàng", HttpStatus.INTERNAL_SERVER_ERROR),
@@ -55,8 +63,6 @@ public enum ErrorCode {
     AUTH__IDENTIFIER_NOT_FOUND(1121, "Email không tìm thấy", HttpStatus.BAD_REQUEST),
     AUTH__IDENTIFIER_EXISTED(1122, "Email đã tồn tại", HttpStatus.BAD_REQUEST),
     AUTH__PASSWORD_INVALID(1123, "Password không hợp lệ", HttpStatus.BAD_REQUEST),
-    AUTH__PASSWORD_MIN(1124, "Password nên có ít nhất 6 kí tự", HttpStatus.BAD_REQUEST),
-    AUTH__EMAIL_NOT_MATCHED(1125, "Email nên đúng định dạng", HttpStatus.BAD_REQUEST),
     // AUTH__REFRESH_TOKEN_INVALID(1217, "Refresh token thì rỗng, trái phép, hoặc bị
     // đánh cấp", HttpStatus.BAD_REQUEST),
 

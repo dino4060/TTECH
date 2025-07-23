@@ -1,5 +1,5 @@
 // src/types/auth.types.ts
-import type { TCurrentUser, TUserToCreate } from "./user.types";
+import type { TCurrentUser, TUserToLoginPhone, TUserToCreate } from "./user.types";
 
 // API TYPES //
 
@@ -10,3 +10,5 @@ export type TAuthResult = {
 };
 
 export type TRegisterBody = TUserToCreate;
+
+export type TLoginPhoneBody = TUserToLoginPhone;

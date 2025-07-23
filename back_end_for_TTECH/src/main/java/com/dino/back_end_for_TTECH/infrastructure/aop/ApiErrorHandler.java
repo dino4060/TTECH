@@ -24,6 +24,7 @@ public class ApiErrorHandler {
      */
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse<Object>> handleException(AppException exception) {
+        log.warn(">>> AppException: {}, {}", exception.getCode(), exception.getMessage());
         return ResponseEntity
                 .status(exception.getStatus())
                 .body(ApiResponse.builder()

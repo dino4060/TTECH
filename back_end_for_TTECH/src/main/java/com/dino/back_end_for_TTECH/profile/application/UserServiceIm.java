@@ -43,25 +43,26 @@ public class UserServiceIm implements IUserService {
                 });
     }
 
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findUserByPhone(String phone) {
+        return this.userRepository.findByPhone(phone);
+    }
+
     // WRITE //
 
     @Override
     public User createCustomer(String name, String email, String phone, String password) {
         String passHashed = this.securityProvider.hashPassword(password);
-
         User userToCreate = User.createCustomer(name, email, phone, passHashed);
-        User user = this.userRepository.save(userToCreate);
-
-        user.setPassword(null);
-        return user;
+        return this.userRepository.save(userToCreate);
     }
 
     // LEGACY //
-
-    @Override
-    public Optional<User> findUserByEmail(String email) {
-        return this.userRepository.findByEmail(email);
-    }
 
     @Override
     public User getUserById(Long userId) {

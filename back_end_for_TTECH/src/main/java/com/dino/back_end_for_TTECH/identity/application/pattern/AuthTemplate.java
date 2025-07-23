@@ -3,6 +3,7 @@ package com.dino.back_end_for_TTECH.identity.application.pattern;
 import com.dino.back_end_for_TTECH.identity.application.model.AuthEmailReq;
 import com.dino.back_end_for_TTECH.identity.application.model.AuthRes;
 import com.dino.back_end_for_TTECH.identity.application.model.CurrentUserRes;
+import com.dino.back_end_for_TTECH.identity.application.model.LoginPhoneBody;
 import com.dino.back_end_for_TTECH.identity.domain.Token;
 import com.dino.back_end_for_TTECH.identity.domain.model.Role;
 import com.dino.back_end_for_TTECH.profile.domain.User;
@@ -25,6 +26,22 @@ public abstract class AuthTemplate implements IAuthTemplate {
     // TEMPLATE //
 
     protected abstract Role getRole();
+
+    // COMMAND //
+
+    // login + LoginPhoneBody //
+    @Override
+    public AuthRes login(LoginPhoneBody body, HttpHeaders headers) {
+        // check
+        var user = this.authFacade.checkPhone(body.phone());
+        this.authFacade.checkPassword(user, body.password());
+        this.authFacade.checkRole(user, this.getRole());
+
+        // license token
+        return this.authFacade.inAuth(user, headers);
+    }
+
+    // LEGACY //
 
     // QUERY //
 

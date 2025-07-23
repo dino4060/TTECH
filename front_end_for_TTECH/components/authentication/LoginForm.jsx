@@ -1,16 +1,16 @@
 "use client";
-
-import { handleAuth } from "@/app/api/handleAuth"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import { FcGoogle } from "react-icons/fc"
-import { UserAuth } from "../../context/AuthContext"
-import CircleLoader from "../uncategory/CircleLoader"
-import PopupRegister from "./PopupRegister"
-import ForgetPassword from "./ForgetPassword"
-import { isValidPhoneNumber } from "@/utils/until"
+import { authApi } from "@/lib/api/auth.api";
+import { clientFetch } from "@/lib/http/fetch.client";
+import { isValidPhoneNumber } from "@/utils/until";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { UserAuth } from "../../context/AuthContext";
+import CircleLoader from "../uncategory/CircleLoader";
+import ForgetPassword from "./ForgetPassword";
+import PopupRegister from "./PopupRegister";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -65,36 +65,29 @@ const LoginForm = () => {
   const handleLogin = async () => {
     if (cooldown) return;
 
-    try {
-      const isValid =
-        verify("phone", data.phone) && verify("password", data.password);
-      if (!isValid) return;
+    const isValid =
+      verify("phone", data.phone) &&
+      verify("password", data.password);
+    if (!isValid) return;
 
-      setLoading(true);
-      const res = await handleAuth.login(data);
+    setLoading(true);
+    const { success, data: result, error } = await clientFetch(authApi.login(data));
 
-      if (res?.token) {
-        const { token } = res;
-        const user = res?.loginedUser;
-        setUser(user);
-        setToken(token);
-        router.push("/");
-      } else {
-        setVerifyInput((prev) => ({
-          ...prev,
-          password: "Incorrect login information",
-        }));
-        setAttempts((prev) => prev + 1);
-        if (attempts + 1 >= 3) {
-          setCooldown(true);
-        }
-      }
-
-      setLoading(false);
-    } catch (error) {
-      console.error("Login error:", error);
-      setLoading(false);
+    if (success && result.isAuthenticated) {
+      const { token, user } = result;
+      setUser(user);
+      setToken(token);
+      router.push("/");
+    } else {
+      setVerifyInput((prev) => ({
+        ...prev,
+        password: error || "Incorrect login information",
+      }));
+      setAttempts((prev) => prev + 1);
+      (attempts + 1 >= 3) && setCooldown(true);
     }
+
+    setLoading(false);
   };
 
   return (

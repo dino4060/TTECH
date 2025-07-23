@@ -35,6 +35,17 @@ public class AuthController {
             return ResponseEntity.ok().headers(headers).body(auth);
         }
 
+        // loginWithPhone //
+        @PostMapping("/login/phone")
+        public ResponseEntity<AuthRes> loginWithPhone(
+                @Valid @RequestBody LoginPhoneBody body
+        ) {
+            HttpHeaders headers = new HttpHeaders();
+            AuthRes result = this.authService.login(body, headers);
+
+            return ResponseEntity.ok().headers(headers).body(result);
+        }
+
         // LEGACY //
 
         // QUERY //

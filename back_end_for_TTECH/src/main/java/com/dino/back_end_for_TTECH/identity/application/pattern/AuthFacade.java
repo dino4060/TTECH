@@ -42,24 +42,76 @@ public class AuthFacade {
 
     IIdentityCookieProvider cookieProvider;
 
-    // QUERY //
-
     // checkEmail //
     public User checkEmail(String email) {
         return this.userService.findUserByEmail(email)
-                .orElseThrow(() -> new AppException(ErrorCode.AUTH__IDENTIFIER_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.AUTH__PHONE_NOT_FOUND));
     }
 
-    // checkEmailNotExists //
-    public void checkEmailNotExists(String email) {
-        if (this.userService.findUserByEmail(email).isPresent())
-            throw new AppException(ErrorCode.AUTH__IDENTIFIER_EXISTED);
+    // checkEmail //
+    public User checkPhone(String phone) {
+        return this.userService.findUserByPhone(phone)
+                .orElseThrow(() -> new AppException(ErrorCode.AUTH__EMAIL_NOT_FOUND));
     }
 
     // checkPassword //
     public void checkPassword(User user, String password) {
         if (!this.securityProvider.matchPassword(password, user.getPassword()))
-            throw new AppException(ErrorCode.AUTH__PASSWORD_INVALID);
+            throw new AppException(ErrorCode.AUTH__PASSWORD_NOT_MATCH);
+    }
+
+    // checkRole //
+    public void checkRole(User user, Role role) {
+        if (!user.getRoles().contains(role))
+            throw new AppException(ErrorCode.AUTH__ROLE_NOT_PERMIT);
+    }
+
+    // inAuth //
+    public AuthRes inAuth(User user, HttpHeaders headers) {
+        // get tokens
+        TokenPair tokenPair = this.securityProvider.genTokenPair(user);
+
+        // update refresh token to database
+        this.tokenService.updateRefreshToken(
+                tokenPair.refreshToken(), tokenPair.refreshTokenExpiry(), user.getId());
+
+        // set refresh token to cookie
+        this.cookieProvider.attachRefreshToken(
+                headers, tokenPair.refreshToken(), tokenPair.refreshTokenTtl());
+
+        return AuthRes.builder()
+                .isAuthenticated(true)
+                .accessToken(tokenPair.accessToken())
+                .currentUser(this.authMapper.toCurrentUserRes(user))
+                .build();
+    }
+
+    // unAuth //
+    public AuthRes unAuth(HttpHeaders headers) {
+        this.cookieProvider.clearRefreshToken(headers);
+
+        return AuthRes.builder().isAuthenticated(false).build();
+    }
+
+    // outAuth //
+    public AuthRes outAuth(Token token, HttpHeaders headers) {
+        // 1. clean refresh token from DB
+        this.tokenService.cleanRefreshToken(token);
+
+        // 2. clean refresh token from cookies
+        this.cookieProvider.clearRefreshToken(headers);
+
+        return AuthRes.builder().isAuthenticated(true).build();
+    }
+
+    // LEGACY //
+
+    // QUERY //
+
+    // checkEmailNotExists //
+    public void checkEmailNotExists(String email) {
+        if (this.userService.findUserByEmail(email).isPresent())
+            throw new AppException(ErrorCode.AUTH__IDENTIFIER_EXISTED);
     }
 
     public User checkOrAddRole(User user, Role role) {
@@ -124,43 +176,5 @@ public class AuthFacade {
     // addRole //
     public User addRole(User user, Role role) {
         return this.userServiceShared.addRole(user, role);
-    }
-
-    // inAuth //
-    public AuthRes inAuth(User user, HttpHeaders headers) {
-        // get tokens
-        TokenPair tokenPair = this.securityProvider.genTokenPair(user);
-
-        // update refresh token to database
-        this.tokenService.updateRefreshToken(
-                tokenPair.refreshToken(), tokenPair.refreshTokenExpiry(), user.getId());
-
-        // set refresh token to cookie
-        this.cookieProvider.attachRefreshToken(
-                headers, tokenPair.refreshToken(), tokenPair.refreshTokenTtl());
-
-        return AuthRes.builder()
-                .isAuthenticated(true)
-                .accessToken(tokenPair.accessToken())
-                .currentUser(this.authMapper.toCurrentUserRes(user))
-                .build();
-    }
-
-    // unAuth //
-    public AuthRes unAuth(HttpHeaders headers) {
-        this.cookieProvider.clearRefreshToken(headers);
-
-        return AuthRes.builder().isAuthenticated(false).build();
-    }
-
-    // outAuth //
-    public AuthRes outAuth(Token token, HttpHeaders headers) {
-        // 1. clean refresh token from DB
-        this.tokenService.cleanRefreshToken(token);
-
-        // 2. clean refresh token from cookies
-        this.cookieProvider.clearRefreshToken(headers);
-
-        return AuthRes.builder().isAuthenticated(true).build();
     }
 }

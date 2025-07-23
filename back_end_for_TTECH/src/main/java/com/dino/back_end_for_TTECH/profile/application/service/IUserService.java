@@ -13,13 +13,15 @@ public interface IUserService {
 
     void checkPhoneNotExists(String phone);
 
+    Optional<User> findUserByEmail(String email);
+
+    Optional<User> findUserByPhone(String phone);
+
     // WRITE //
 
     User createCustomer(String name, String email, String phone, String password);
 
     // LEGACY //
-
-    Optional<User> findUserByEmail(String email);
 
     User getUserById(Long userId);
 

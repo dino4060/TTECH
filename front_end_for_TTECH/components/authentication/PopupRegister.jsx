@@ -1,16 +1,14 @@
 "use client"
-import { handleAuth } from "@/app/api/handleAuth"
+import { UserAuth } from "@/context/AuthContext"
+import { authApi } from "@/lib/api/auth.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 import { AnimatePresence, motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CiGlobe } from "react-icons/ci"
-import { v4 as uuidv4 } from "uuid"
 import useDebounce from "../../customHook/useDeboune"
 import { isValidEmail, isValidPhoneNumber } from "../../utils/until"
-import { UserAuth } from "@/context/AuthContext"
 import CircleLoader from "../uncategory/CircleLoader"
-import { clientFetch } from "@/lib/http/fetch.client"
-import { authApi } from "@/lib/api/auth.api"
 
 // Password validation function
 const validatePassword = (password) => {
@@ -49,6 +47,7 @@ const PopupRegister = () => {
   const [showPopup, setShowPopup] = useState(false)
   const { user, setUser, token, setToken } = UserAuth()
   const [loading, setLoading] = useState(false)
+  const [backendError, setBackendError] = useState("");
 
   const router = useRouter()
 
@@ -97,7 +96,9 @@ const PopupRegister = () => {
       router.push("/")
     } else {
       console.error("PopupRegister: ", error);
+      setBackendError(error || "Invalid register information");
     }
+    console.log("Before setLoading false");
     setLoading(false)
   }
 
@@ -210,6 +211,12 @@ const PopupRegister = () => {
                     </div>
                   ))}
 
+                  {backendError && (
+                    <h2 className="text-red-500 text-[1.2rem] whitespace-pre-wrap">
+                      {backendError}
+                    </h2>
+                  )}
+
                   <motion.button
                     onClick={handleRegister}
                     disabled={!isValidFormData}
@@ -220,7 +227,7 @@ const PopupRegister = () => {
                     }}
                     className='w-full py-2 font-[700] text-white rounded-2xl text-[1.6rem] flex justify-center items-center'
                   >
-                    {loading ? <CircleLoader /> : "Đăng nhập"}
+                    {loading ? <CircleLoader /> : "Đăng ký"}
                   </motion.button>
                 </form>
               </div>

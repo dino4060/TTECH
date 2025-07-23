@@ -1,9 +1,6 @@
 package com.dino.back_end_for_TTECH.identity.application;
 
-import com.dino.back_end_for_TTECH.identity.application.model.AuthGoogleReq;
-import com.dino.back_end_for_TTECH.identity.application.model.AuthRes;
-import com.dino.back_end_for_TTECH.identity.application.model.LookupEmailRes;
-import com.dino.back_end_for_TTECH.identity.application.model.RegisterBody;
+import com.dino.back_end_for_TTECH.identity.application.model.*;
 import com.dino.back_end_for_TTECH.identity.application.pattern.AuthFacade;
 import com.dino.back_end_for_TTECH.identity.application.pattern.AuthTemplate;
 import com.dino.back_end_for_TTECH.identity.application.provider.IIdentityOauth2Provider;
@@ -43,11 +40,12 @@ public class AuthServiceImCustomer extends AuthTemplate implements IAuthServiceF
     // INHERITANCE //
     @Override
     protected Role getRole() {
-        return Role.BUYER;
+        return Role.CUSTOMER;
     }
 
     // WRITE //
 
+    // register //
     @Override
     public AuthRes register(RegisterBody body, HttpHeaders headers) {
         this.userService.checkEmailNotExists(body.email());

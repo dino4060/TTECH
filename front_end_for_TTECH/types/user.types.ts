@@ -40,3 +40,6 @@ export type TCurrentUser = Pick<TUser,
 
 export type TUserToCreate = Pick<TUser,
   'name' | 'email' | 'phone' | 'password'>
+
+export type TUserToLoginPhone = Pick<TUser,
+  'phone' | 'password'>
