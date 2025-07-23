@@ -2,6 +2,8 @@
 import { TApi } from "@/types/base.types";
 import clientCookies from "../storage/cookie.client";
 import { fetchSafely } from "./config";
+import { TTECH_TOKEN } from "../constants/string";
+import clientLocal from "../storage/local.client";
 
 const buildHeader = async (
   options: RequestInit = {},
@@ -14,10 +16,10 @@ const buildHeader = async (
   };
 
   // include ACCESS_TOKEN
-  const ACCESS_TOKEN = clientCookies.get("ACCESS_TOKEN");
+  const accessToken = clientLocal.get(TTECH_TOKEN);
 
-  if (withAuth && ACCESS_TOKEN) {
-    headers['Authorization'] = `Bearer ${ACCESS_TOKEN}`
+  if (withAuth && accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`
   }
 
   return headers;

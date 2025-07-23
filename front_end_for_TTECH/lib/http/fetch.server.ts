@@ -1,5 +1,6 @@
-import { cookies } from "next/headers";
 import { TApi } from "@/types/base.types";
+import { cookies } from "next/headers";
+import { REFRESH_REFRESH, TTECH_TOKEN } from "../constants/string";
 import { fetchSafely } from "./config";
 
 export const buildHeader = async (
@@ -15,20 +16,20 @@ export const buildHeader = async (
 
   // get server cookies
   const cookieStore = await cookies();
-  const REFRESH_TOKEN = cookieStore.get("REFRESH_TOKEN")?.value;
-  const ACCESS_TOKEN = cookieStore.get("ACCESS_TOKEN")?.value;
+  const refreshToken = cookieStore.get(REFRESH_REFRESH)?.value;
+  const accessToken = cookieStore.get(TTECH_TOKEN)?.value; // Error: (TODO) Should get TTECH_TOKEN from local
 
   // include ACCESS_TOKEN
-  if (withAuth && ACCESS_TOKEN) {
-    headers['Authorization'] = `Bearer ${ACCESS_TOKEN}`;
+  if (withAuth && accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`;
   }
 
   // include REFRESH_TOKEN
   // NOTE: 'Cookie'
   // Next tự inject cookie từ next/headers() khi bạn fetch từ RRC
   // Đính cookie thủ công nếu dùng Api route h hay Server action
-  if (REFRESH_TOKEN) {
-    headers['Cookie'] = `REFRESH_TOKEN=${REFRESH_TOKEN}`;
+  if (refreshToken) {
+    headers['Cookie'] = `REFRESH_TOKEN=${refreshToken}`;
 
     // TEST
     // console.log('>>> serverFetch: cookies toString: ', cookieStore.toString());

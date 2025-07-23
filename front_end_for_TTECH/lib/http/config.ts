@@ -38,6 +38,10 @@ export const normalizeResponse = async <T>(response: Response) => {
     console.warn(`>>> normalizeResponse: ${json.error}`);
   }
 
+  if (!json.success && json.code === 1010) {
+    json.error = "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại";
+  }
+
   return json;
 }
 

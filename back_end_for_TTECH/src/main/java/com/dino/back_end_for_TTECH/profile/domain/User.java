@@ -92,6 +92,18 @@ public class User extends BaseEntity {
         return user;
     }
 
+    // INSTANCE //
+
+    public void updateCustomer(String name, String email, String phone) {
+        this.setName(name);
+        this.setEmail(email);
+        this.setPhone(phone);
+    }
+
+    // LEGACY //
+
+    // FACTORY //
+
     public static User createEmailUser(String email, String hashPassword, Role role) {
         User user = new User();
 

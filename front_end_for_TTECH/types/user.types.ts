@@ -43,3 +43,8 @@ export type TUserToCreate = Pick<TUser,
 
 export type TUserToLoginPhone = Pick<TUser,
   'phone' | 'password'>
+
+// API TYPES //
+
+export type TUserToUpdateBody = Pick<TUser,
+  'name' | 'email' | 'phone'>

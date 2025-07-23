@@ -12,6 +12,10 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByPhone(String phone);
 
+    Optional<User> findByEmailAndIdNot(String email, Long excludedId);
+
+    Optional<User> findByPhoneAndIdNot(String phone, Long excludedId);
+
     // LEGACY //
 
     // QUERY //

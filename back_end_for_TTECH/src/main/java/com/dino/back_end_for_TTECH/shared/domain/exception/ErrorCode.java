@@ -41,7 +41,7 @@ public enum ErrorCode {
     SYSTEM__ID_INVALID(1006, "Id is invalid", HttpStatus.BAD_REQUEST),
     // SECURITY //
     SECURITY__UNAUTHENTICATED(1010, "Authenticate failed", HttpStatus.UNAUTHORIZED),
-    SECURITY__UNAUTHORIZED(1011, "Bạn không quyền truy cập tài nguyên", HttpStatus.FORBIDDEN),
+    SECURITY__UNAUTHORIZED(1011, "Quyền truy cập thất bại", HttpStatus.FORBIDDEN),
     SECURITY__GET_CURRENT_USER_FAILED(1012, "Lấy thông tin người dùng thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     SECURITY__GEN_TOKEN_FAILED(1013, "Tạo token thất bại", HttpStatus.INTERNAL_SERVER_ERROR),    // OAUTH2 //
     OAUTH2__GET_GOOGLE_TOKEN_FAILED(1020, "Lấy access token của Google thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
