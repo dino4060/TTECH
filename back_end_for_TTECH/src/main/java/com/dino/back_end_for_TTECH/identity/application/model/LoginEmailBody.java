@@ -3,11 +3,12 @@ package com.dino.back_end_for_TTECH.identity.application.model;
 import com.dino.back_end_for_TTECH.identity.application.pattern.AuthFacade;
 import com.dino.back_end_for_TTECH.identity.application.pattern.ILoginBodyStrategy;
 import com.dino.back_end_for_TTECH.profile.domain.User;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
-public record LoginPhoneBody(
-        @Size(message = "AUTH__PHONE_VALIDATION", min = 10)
-        String phone,
+public record LoginEmailBody(
+        @Email(message = "AUTH__EMAIL_VALIDATION")
+        String email,
 
         @Size(message = "AUTH__PASSWORD_VALIDATION", min = 8)
         String password
@@ -15,7 +16,7 @@ public record LoginPhoneBody(
 
         @Override
         public User checkBody(AuthFacade authFacade) {
-                var user = authFacade.checkPhone(phone);
+                var user = authFacade.checkEmail(email);
                 authFacade.checkPassword(user, password);
                 return user;
         }

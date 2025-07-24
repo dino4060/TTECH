@@ -4,6 +4,7 @@ import com.dino.back_end_for_TTECH.identity.application.mapper.IAuthMapper;
 import com.dino.back_end_for_TTECH.identity.application.model.AuthRes;
 import com.dino.back_end_for_TTECH.identity.application.model.TokenPair;
 import com.dino.back_end_for_TTECH.identity.application.provider.IIdentityCookieProvider;
+import com.dino.back_end_for_TTECH.identity.application.provider.IIdentityOauth2Provider;
 import com.dino.back_end_for_TTECH.identity.application.provider.IIdentitySecurityProvider;
 import com.dino.back_end_for_TTECH.identity.application.service.ITokenService;
 import com.dino.back_end_for_TTECH.identity.domain.Token;
@@ -12,28 +13,42 @@ import com.dino.back_end_for_TTECH.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.profile.domain.User;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+/*
+NOTE: @RequiredArgsConstructor
+The annotation applies to fields which are:
+- instance
+- final or nonnull
+ */
+
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class AuthFacade {
 
-    ITokenService tokenService;
+    private final static boolean CAN_CREATE_GOOGLE_USER_WHEN_LOGIN = true;
 
-    IUserService userService;
+    private final ITokenService tokenService;
 
-    IAuthMapper authMapper;
+    private final IUserService userService;
 
-    IIdentitySecurityProvider securityProvider;
+    private final IAuthMapper authMapper;
 
-    IIdentityCookieProvider cookieProvider;
+    private final IIdentitySecurityProvider securityProvider;
+
+    private final IIdentityOauth2Provider oauth2Provider;
+
+    private final IIdentityCookieProvider cookieProvider;
+
+    // checkUsername //
+    public User checkUsername(String username) {
+        return this.userService.findUserByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.AUTH__USERNAME_NOT_FOUND));
+    }
 
     // checkEmail //
     public User checkEmail(String email) {
@@ -41,10 +56,32 @@ public class AuthFacade {
                 .orElseThrow(() -> new AppException(ErrorCode.AUTH__PHONE_NOT_FOUND));
     }
 
-    // checkEmail //
+    // checkPhone //
     public User checkPhone(String phone) {
         return this.userService.findUserByPhone(phone)
                 .orElseThrow(() -> new AppException(ErrorCode.AUTH__EMAIL_NOT_FOUND));
+    }
+
+    // checkGoogleAuthCode //
+    public User checkGoogleAuthCode(String code) {
+        var googleUser = this.oauth2Provider.authViaGoogle(code);
+
+        // find or create/error
+        if (CAN_CREATE_GOOGLE_USER_WHEN_LOGIN) {
+            return this.userService
+                    .findUserByEmail(googleUser.getEmail())
+                    .orElseGet(() -> {
+                        User userCreated = this.userService.createCustomer(
+                                googleUser.getName(), googleUser.getEmail()
+                        );
+                        this.tokenService.createToken(userCreated);
+                        return userCreated;
+                    });
+        } else {
+            return this.userService
+                    .findUserByEmail(googleUser.getEmail())
+                    .orElseThrow(() -> new AppException(ErrorCode.AUTH__GOOGLE_NOT_FOUND));
+        }
     }
 
     // checkPassword //

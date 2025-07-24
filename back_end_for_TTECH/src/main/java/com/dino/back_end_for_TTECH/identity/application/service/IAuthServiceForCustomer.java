@@ -7,7 +7,5 @@ import org.springframework.http.HttpHeaders;
 public interface IAuthServiceForCustomer extends IAuthTemplate {
     // WRITE //
 
-    AuthRes register(RegisterBody body, HttpHeaders headers);
-
-    AuthRes login(LoginGoogleBody body, HttpHeaders headers);
+    AuthRes registerCustomer(RegisterBody body, HttpHeaders headers);
 }

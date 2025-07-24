@@ -2,12 +2,8 @@ package com.dino.back_end_for_TTECH.identity.api;
 
 import com.dino.back_end_for_TTECH.identity.application.model.*;
 import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForCustomer;
-import com.dino.back_end_for_TTECH.shared.api.annotation.AuthUser;
-import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +27,13 @@ public class AuthController {
                 @Valid @RequestBody RegisterBody body
         ) {
             HttpHeaders headers = new HttpHeaders();
-            AuthRes auth = this.authService.register(body, headers);
+            AuthRes auth = this.authService.registerCustomer(body, headers);
             return ResponseEntity.ok().headers(headers).body(auth);
         }
 
-        // loginWithPhone //
+        // login with phone //
         @PostMapping("/login/phone")
-        public ResponseEntity<AuthRes> loginWithPhone(
+        public ResponseEntity<AuthRes> login(
                 @Valid @RequestBody LoginPhoneBody body
         ) {
             HttpHeaders headers = new HttpHeaders();
@@ -46,9 +42,9 @@ public class AuthController {
             return ResponseEntity.ok().headers(headers).body(result);
         }
 
-        // loginWithGoogle //
+        // login with Google //
         @PostMapping("/login/google")
-        public ResponseEntity<AuthRes> loginWithGoogle(
+        public ResponseEntity<AuthRes> login(
                 @RequestBody LoginGoogleBody body
         ) {
             HttpHeaders headers = new HttpHeaders();

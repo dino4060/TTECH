@@ -53,6 +53,11 @@ public class UserServiceIm implements IUserService {
         return this.userRepository.findByPhone(phone);
     }
 
+    @Override
+    public Optional<User> findUserByUsername(String username) {
+        return this.userRepository.findByUsername(username);
+    }
+
     // WRITE //
 
     @Override
@@ -65,6 +70,13 @@ public class UserServiceIm implements IUserService {
     @Override
     public User createCustomer(String name, String email) {
         User user = User.createThirdCustomer(name, email);
+        return this.userRepository.save(user);
+    }
+
+    @Override
+    public User createAdmin(String username, String password) {
+        String passHashed = this.securityProvider.hashPassword(password);
+        User user = User.createAdmin(username, passHashed);
         return this.userRepository.save(user);
     }
 

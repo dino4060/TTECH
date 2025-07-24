@@ -16,15 +16,6 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByPhoneAndIdNot(String phone, Long excludedId);
 
-    // LEGACY //
-
-    // QUERY //
-
-    boolean existsByUsernameOrEmail(String username, String email);
-    // value is NULL, database exists NULL, return true: X (dangerous)
-
-    // COMMAND //
-    Optional<User> findByUsername(String username); // value is NULL, database exists NULL, return EMPTY: O (safe)
-
-
+    Optional<User> findByUsername(String username);
+    // value is NULL, database exists NULL, return EMPTY: O (safe)
 }

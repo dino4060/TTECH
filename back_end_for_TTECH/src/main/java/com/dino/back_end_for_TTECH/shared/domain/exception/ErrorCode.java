@@ -22,9 +22,12 @@ public enum ErrorCode {
     // IDENTITY. AUTH //
     AUTH__PHONE_VALIDATION(1120, "Số điện thoại nên đúng định dạng", HttpStatus.BAD_REQUEST),
     AUTH__EMAIL_VALIDATION(1121, "Email nên đúng định dạng", HttpStatus.BAD_REQUEST),
+    AUTH__USERNAME_VALIDATION(1122, "Username không nên để trống", HttpStatus.BAD_REQUEST),
     AUTH__PASSWORD_VALIDATION(1122, "Password nên có ít nhất 8 kí tự", HttpStatus.BAD_REQUEST),
     AUTH__PHONE_NOT_FOUND(1123, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
     AUTH__EMAIL_NOT_FOUND(1124, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
+    AUTH__USERNAME_NOT_FOUND(1124, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
+    AUTH__GOOGLE_NOT_FOUND(1124, "Tài khoản không tồn tại. Vui lòng đăng kí", HttpStatus.BAD_REQUEST),
     AUTH__PASSWORD_NOT_MATCH(1125, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
     AUTH__ROLE_NOT_PERMIT(1126, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
     // PRODUCT. CATEGORY //

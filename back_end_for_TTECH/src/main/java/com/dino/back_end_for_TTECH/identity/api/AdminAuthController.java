@@ -1,9 +1,14 @@
 package com.dino.back_end_for_TTECH.identity.api;
 
-import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForSeller;
-import lombok.AccessLevel;
+import com.dino.back_end_for_TTECH.identity.application.model.AuthRes;
+import com.dino.back_end_for_TTECH.identity.application.model.LoginUsernameBody;
+import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForAdmin;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,21 +17,20 @@ public class AdminAuthController {
 
     // PublicSellerAuthController //
     @RestController
-    @RequestMapping("/api/v1/public/seller/auth")
+    @RequestMapping("/api/v1/public/admin/auth")
     @AllArgsConstructor
-    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-    public static class PublicSellerAuthController {
+    public static class PublicAdminAuthController {
 
-        IAuthServiceForSeller authService;
-    }
+        private final IAuthServiceForAdmin authService;
 
-    // PrivateSellerAuthController //
-    @RestController
-    @RequestMapping("/api/v1/seller/auth")
-    @AllArgsConstructor
-    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-    public static class PrivateSellerAuthController {
-
-        IAuthServiceForSeller authService;
+        // login with username //
+        @PostMapping("/login/phone")
+        public ResponseEntity<AuthRes> login(
+                @Valid @RequestBody LoginUsernameBody body
+        ) {
+            HttpHeaders headers = new HttpHeaders();
+            AuthRes result = this.authService.login(body, headers);
+            return ResponseEntity.ok().headers(headers).body(result);
+        }
     }
 }

@@ -18,11 +18,15 @@ public interface IUserService {
 
     Optional<User> findUserByPhone(String phone);
 
+    Optional<User> findUserByUsername(String username);
+
     // WRITE //
 
     User createCustomer(String name, String email, String phone, String password);
 
     User createCustomer(String name, String email);
+
+    User createAdmin(String username, String password);
 
     CurrentUserRes updateCustomer(UserToUpdateBody body, CurrentUser currentUser);
 

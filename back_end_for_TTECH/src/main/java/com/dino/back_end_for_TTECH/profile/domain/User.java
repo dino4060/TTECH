@@ -95,11 +95,23 @@ public class User extends BaseEntity {
         User user = new User();
 
         user.setStatus(UserStatus.LIVE);
+        user.setName(name);
         user.setUsername("user" + System.currentTimeMillis());
         user.setEmail(email);
-        user.setName(name);
         user.addRole(Role.CUSTOMER);
         user.setIsEmailVerified(true);
+
+        return user;
+    }
+
+    public static User createAdmin(String username, String passHashed) {
+        User user = new User();
+
+        user.setStatus(UserStatus.LIVE);
+        user.setName("Top 1 server at TTECH");
+        user.setUsername(username);
+        user.setPassword(passHashed);
+        user.addRole(Role.ADMIN);
 
         return user;
     }
@@ -112,43 +124,9 @@ public class User extends BaseEntity {
         this.setPhone(phone);
     }
 
-    // LEGACY //
-
-    // FACTORY //
-
-    public static User createEmailUser(String email, String hashPassword, Role role) {
-        User user = new User();
-
-        user.setStatus(UserStatus.LACK_INFO);
-        user.setUsername("user" + System.currentTimeMillis());
-        user.setEmail(email);
-        user.setPassword(hashPassword);
-        user.addRole(role);
-        user.setIsEmailVerified(false);
-
-        return user;
-    }
-
-    public static User createThirdUser(String email, String name, Role role) {
-        User user = new User();
-
-        user.setStatus(UserStatus.LACK_INFO);
-        user.setUsername("user" + System.currentTimeMillis());
-        user.setEmail(email);
-        user.setName(name);
-        user.addRole(role);
-        user.setIsEmailVerified(true);
-
-        return user;
-    }
-
-    // INSTANCE //
-
     public void addRole(Role role) {
-        boolean condition = AppUtils.nonNull(this.getRoles());
-
-        if (!condition) this.setRoles(new HashSet<>());
-
+        boolean isNull = AppUtils.isNull(this.getRoles());
+        if (isNull) this.setRoles(new HashSet<>());
         this.getRoles().add(role);
     }
 }
