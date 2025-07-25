@@ -6,6 +6,8 @@ type TResourceVariants = {
   BASE: string;
   PUBLIC: string;
   PRIVATE: string;
+  PUBLIC_ADMIN: string;
+  PRIVATE_ADMIN: string;
 };
 
 export type TResources = Record<TResourceUppers, TResourceVariants>;
@@ -16,6 +18,8 @@ export const RESOURCES = RESOURCE_NAMES.reduce((acc, key) => {
     BASE: `/${key}`,
     PUBLIC: `/public/${key}`,
     PRIVATE: `/${key}`,
+    PUBLIC_ADMIN: `/public/admin/${key}`,
+    PRIVATE_ADMIN: `/admin/${key}`,
   };
   return acc;
 }, {} as TResources);

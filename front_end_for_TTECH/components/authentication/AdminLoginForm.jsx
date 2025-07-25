@@ -1,7 +1,7 @@
 "use client";
-import { authApi } from "@/lib/api/auth.api";
+import { adminAuthApi, authApi } from "@/lib/api/auth.api";
 import { clientFetch } from "@/lib/http/fetch.client";
-import { isValidPhoneNumber } from "@/utils/until";
+import { isValidPhoneNumber, isValidUsername } from "@/utils/until";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ import ForgetPassword from "./ForgetPassword";
 import PopupRegister from "./PopupRegister";
 import { getEnv } from "@/lib/utils/env";
 
-const LoginForm = () => {
+const AdminLoginForm = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [verifyInput, setVerifyInput] = useState({
@@ -27,21 +27,7 @@ const LoginForm = () => {
   const [attempts, setAttempts] = useState(0);
   const [cooldown, setCooldown] = useState(false);
 
-  const { googleSignIn, setUser, setToken } = UserAuth();
-
-  const onAuthGoogle = () => {
-    const CLIENT_ID = getEnv.GOOGLE_CLIENT_ID;
-    const CALLBACK_URL = getEnv.GOOGLE_REDIRECT_URI;
-    const AUTH_URL = getEnv.GOOGLE_AUTH_URI;
-
-    const TARGET_URL = `${AUTH_URL
-      }?redirect_uri=${encodeURIComponent(CALLBACK_URL)
-      }&response_type=code&client_id=${CLIENT_ID
-      }&scope=openid%20email%20profile`;
-
-    window.location.href = TARGET_URL;
-  };
-
+  const { setUser, setToken } = UserAuth();
 
   useEffect(() => {
     let timer;
@@ -57,10 +43,9 @@ const LoginForm = () => {
   const verify = (id, value) => {
     let errorMessage = "";
     if (!value.trim()) {
-      errorMessage = `Vui lòng nhập ${id === "phone" ? "số điện thoại" : "password"
-        }`;
-    } else if (id === "phone" && !isValidPhoneNumber(value)) {
-      errorMessage = "Số điện thoại nên gồm 10 chữ số";
+      errorMessage = `Vui lòng nhập ${id}`;
+    } else if (id === "username" && !isValidUsername(value)) {
+      errorMessage = "Username nên ít nhất 4 ký tự và chỉ chứa chữ thường";
     }
 
     setVerifyInput((prev) => ({
@@ -81,17 +66,17 @@ const LoginForm = () => {
     if (cooldown) return;
 
     const isValid =
-      verify("phone", data.phone) &&
+      verify("username", data.username) &&
       verify("password", data.password);
     if (!isValid) return;
 
     setLoading(true);
-    const { success, data: result, error } = await clientFetch(authApi.loginPhone(data));
+    const { success, data: result, error } = await clientFetch(adminAuthApi.loginUsername(data));
 
     if (success && result.isAuthenticated) {
       setUser(result.currentUser);
       setToken(result.accessToken);
-      router.push("/");
+      router.push("/admin");
     } else {
       setVerifyInput((prev) => ({
         ...prev,
@@ -106,12 +91,9 @@ const LoginForm = () => {
 
   return (
     <div className='p-[30px] md:w-[500px] mx-auto'>
-      <div
-        className='flex gap-4 justify-center'
-        onClick={() => router.push("/")}
-      >
+      <div className='flex gap-4 justify-center'>
         <h1 className='text-[3rem] pt-[10px] font-[700] capitalize tracking-wide'>
-          Login Account
+          Admin Login
         </h1>
         <div className='relative w-[120px]'>
           <Image
@@ -124,7 +106,7 @@ const LoginForm = () => {
       </div>
 
       <div className='flex flex-col mt-2 gap-2'>
-        {["phone", "password"].map((x, i) => (
+        {["username", "password"].map((x, i) => (
           <div key={i}>
             <motion.input
               required
@@ -136,7 +118,7 @@ const LoginForm = () => {
               }}
               value={data[x]}
               onChange={handleInputChange}
-              placeholder={x === "phone" ? "Phone Number" : "Password"}
+              placeholder={x === "username" ? "Username" : "Password"}
               className='w-full border-b-2 outline-none text-[2.5rem] font-[600] px-2'
             />
             <h3 className='text-red-500 text-xl mt-2'>
@@ -145,7 +127,6 @@ const LoginForm = () => {
           </div>
         ))}
 
-        <ForgetPassword />
 
         <motion.button
           onClick={handleLogin}
@@ -162,24 +143,8 @@ const LoginForm = () => {
           {loading ? <CircleLoader /> : cooldown ? "Please wait 1 minute" : "Login"}
         </motion.button>
       </div>
-      <PopupRegister />
-      <div className='uppercase text-center text-[1.4em] font-[700] my-6'>
-        or
-      </div>
-
-      <button
-        className='w-full bg-slate-400 text-[1.8rem] relative p-2 rounded-3xl flex justify-center items-center text-white'
-        onClick={() => {
-          onAuthGoogle(); // googleSignIn();
-        }}
-      >
-        <div className='bg-white rounded-[16px] p-2 w-[28px] h-[28px] flex items-center justify-center absolute left-2'>
-          <FcGoogle size={22} />
-        </div>
-        <h1>Login with Google</h1>
-      </button>
     </div>
   );
 };
 
-export default LoginForm;
+export default AdminLoginForm;

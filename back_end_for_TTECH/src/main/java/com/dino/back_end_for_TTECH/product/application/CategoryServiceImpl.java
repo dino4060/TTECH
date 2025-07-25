@@ -10,6 +10,7 @@ import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -42,6 +43,7 @@ public class CategoryServiceImpl implements ICategoryService {
     // READ //
 
     @Override
+    @Cacheable(value = "categories", key = "'list'")
     public List<CategoryInList> listCategories() {
         var categories = this.categoryRepository.findAll();
 

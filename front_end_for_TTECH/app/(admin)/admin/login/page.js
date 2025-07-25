@@ -1,11 +1,11 @@
 "use client"
 
-import LoginForm from "@/components/authentication/LoginForm"
+import AdminLoginForm from "@/components/authentication/AdminLoginForm"
 
 const page = () => {
   return (
     <div className='w-full mt-[20px] bg-white'>
-      <LoginForm />
+      <AdminLoginForm />
     </div>
   )
 }

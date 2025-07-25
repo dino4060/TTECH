@@ -17,14 +17,14 @@ public class AdminAuthController {
 
     // PublicSellerAuthController //
     @RestController
-    @RequestMapping("/api/v1/public/admin/auth")
+    @RequestMapping("/api/public/admin/auth")
     @AllArgsConstructor
     public static class PublicAdminAuthController {
 
         private final IAuthServiceForAdmin authService;
 
         // login with username //
-        @PostMapping("/login/phone")
+        @PostMapping("/login/username")
         public ResponseEntity<AuthRes> login(
                 @Valid @RequestBody LoginUsernameBody body
         ) {

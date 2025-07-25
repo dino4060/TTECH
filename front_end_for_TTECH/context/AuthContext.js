@@ -21,7 +21,7 @@ const AuthContext = createContext()
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({})
-  const [token, setToken] = useState()
+  const [token, setToken] = useState("")
   const [triggerLogin, setTriggerLogin] = useState(false)
 
   const router = useRouter()
@@ -82,12 +82,25 @@ export const AuthContextProvider = ({ children }) => {
     setToken("")
 
     //remove token and user in localstorage
-    localStorage.removeItem("user")
-    localStorage.removeItem("token")
+    localStorage.removeItem("TTECH_user")
+    localStorage.removeItem("TTECH_token")
 
     // redirect to main page
 
     router.push("/")
+  }
+
+  const logoutAdmin = () => {
+    //clear user and token
+    setUser({})
+    setToken("")
+
+    //remove token and user in localstorage
+    localStorage.removeItem("TTECH_user")
+    localStorage.removeItem("TTECH_token")
+
+    // redirect to main page
+    router.push("/admin/login")
   }
 
   const googleSignIn = () => {
@@ -104,24 +117,26 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"))
-      const token = JSON.parse(localStorage.getItem("token"))
+      const user = JSON.parse(localStorage.getItem("TTECH_user"))
+      const token = JSON.parse(localStorage.getItem("TTECH_token"))
 
-      if (user) {
-        setUser(user)
-      }
-      if (token) {
-        setToken(token)
-      }
+      setUser(user)
+      setToken(token)
+      // if (user?.id) {
+      //   setUser(user)
+      // }
+      // if (token) {
+      //   setToken(token)
+      // }
     } catch (error) { }
   }, [])
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user))
+    if (user?.id) {
+      localStorage.setItem("TTECH_user", JSON.stringify(user))
     }
     if (token) {
-      localStorage.setItem("token", JSON.stringify(token))
+      localStorage.setItem("TTECH_token", JSON.stringify(token))
     }
   }, [user])
 
@@ -133,6 +148,7 @@ export const AuthContextProvider = ({ children }) => {
         setUser,
         googleSignIn,
         logOutGoogle,
+        logoutAdmin,
 
         setToken,
         token,

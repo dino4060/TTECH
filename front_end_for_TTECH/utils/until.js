@@ -110,6 +110,18 @@ export function isValidPhoneNumber(phoneNumber) {
   return phoneRegex.test(phoneNumber)
 }
 
+export function isValidUsername(username) {
+  const usernameRegex = /^[a-z]{4,}$/
+  return usernameRegex.test(username)
+}
+
+// export function isValidPassword(password) {
+//   // Ít nhất 8 ký tự, gồm chữ thường, in hoa, số và ký tự đặc biệt
+//   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/
+//   return passwordRegex.test(password)
+// }
+
+
 export const convertToVND = (money) => {
   return money?.toLocaleString("it-IT", {
     style: "currency",

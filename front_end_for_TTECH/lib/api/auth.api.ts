@@ -1,5 +1,5 @@
 // src/lib/api/auth.api.ts
-import { TAuthResult, TLoginGoogleBody, TLoginPhoneBody, TRegisterBody } from "@/types/auth.types";
+import { TAuthResult, TLoginGoogleBody, TLoginPhoneBody, TLoginUsernameBody, TRegisterBody } from "@/types/auth.types";
 import { HttpMethod, TApi } from "@/types/base.types";
 import { RESOURCES } from "../constants/resources";
 
@@ -12,7 +12,7 @@ export const authApi = {
     body
   }),
 
-  login: (body: TLoginPhoneBody): TApi<TAuthResult> => ({
+  loginPhone: (body: TLoginPhoneBody): TApi<TAuthResult> => ({
     route: `${RESOURCES.AUTH.PUBLIC}/login/phone`,
     method: HttpMethod.POST,
     body
@@ -24,3 +24,13 @@ export const authApi = {
     body
   }),
 };
+
+export const adminAuthApi = {
+  // PUBLIC ADMIN AUTH CONTROLLER //
+
+  loginUsername: (body: TLoginUsernameBody): TApi<TAuthResult> => ({
+    route: `${RESOURCES.AUTH.PUBLIC_ADMIN}/login/username`,
+    method: HttpMethod.POST,
+    body
+  }),
+}

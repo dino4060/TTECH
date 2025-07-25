@@ -33,6 +33,11 @@ const Header = () => {
     router.push("/login")
   }
 
+  const handleOnClickLogo = () => {
+    const nextRoute = "/"; // user.roles.includes("ADMIN") ? "/admin" : "/";
+    router.push(nextRoute);
+  }
+
   useEffect(() => {
     getAllCategory()
   }, [])
@@ -45,7 +50,7 @@ const Header = () => {
             <CategoryPhone />
           </div>
           <div
-            onClick={() => router.push("/")}
+            onClick={handleOnClickLogo}
             className='shinks-0'
           >
             <Image
