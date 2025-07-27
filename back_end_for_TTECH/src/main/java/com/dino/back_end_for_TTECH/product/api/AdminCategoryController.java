@@ -42,12 +42,15 @@ public class AdminCategoryController {
         @PutMapping("/{id}")
         public ResponseEntity<CategoryInList> updateCategory(
                 @PathVariable long id,
-                @RequestBody CategoryToWrite body) {
+                @RequestBody CategoryToWrite body
+        ) {
             return ResponseEntity.ok().body(this.categoryService.updateCategory(id, body));
         }
 
         @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteCategory(@PathVariable long id) {
+        public ResponseEntity<Void> deleteCategory(
+                @PathVariable long id
+        ) {
             this.categoryService.deleteCategory(id);
             return ResponseEntity.ok().build();
         }

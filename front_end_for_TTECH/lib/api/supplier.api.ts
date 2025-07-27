@@ -1,40 +1,40 @@
-// src/lib/api/category.api.ts
+// src/lib/api/supplier.api.ts
 import type { TApi } from "@/types/base.types";
 import { HttpMethod } from "@/types/base.types";
-import type { TCategoryInList, TCategoryToWrite } from "@/types/category.types";
+import type { TCategoryInList, TCategoryToWrite } from "@/types/supplier.types";
 import { RESOURCES } from "../constants/resources";
 
-export const categoryApi = {
-  // PUBLIC CATEGORY CONTROLLER //
+export const supplierApi = {
+  // PUBLIC SUPPLIER CONTROLLER //
 
   list: (): TApi<TCategoryInList[]> => ({
-    route: `${RESOURCES.CATEGORIES.PUBLIC}/list`,
+    route: `${RESOURCES.SUPPLIERS.PUBLIC}/list`,
     method: HttpMethod.GET,
   }),
 };
 
-export const adminCategoryApi = {
-  // PRIVATE ADMIN CATEGORY CONTROLLER //
+export const adminSupplierApi = {
+  // PRIVATE ADMIN SUPPLIER CONTROLLER //
 
   list: (): TApi<TCategoryInList[]> => ({
-    route: `${RESOURCES.CATEGORIES.PRIVATE_ADMIN}/list`,
+    route: `${RESOURCES.SUPPLIERS.PRIVATE_ADMIN}/list`,
     method: HttpMethod.GET,
   }),
 
   create: (body: TCategoryToWrite): TApi<TCategoryInList> => ({
-    route: `${RESOURCES.CATEGORIES.PRIVATE_ADMIN}`,
+    route: `${RESOURCES.SUPPLIERS.PRIVATE_ADMIN}`,
     method: HttpMethod.POST,
     body,
   }),
 
   update: (id: number, body: TCategoryToWrite): TApi<TCategoryInList> => ({
-    route: `${RESOURCES.CATEGORIES.PRIVATE_ADMIN}/${id}`,
+    route: `${RESOURCES.SUPPLIERS.PRIVATE_ADMIN}/${id}`,
     method: HttpMethod.PUT,
     body,
   }),
 
   delete: (id: number): TApi<void> => ({
-    route: `${RESOURCES.CATEGORIES.PRIVATE_ADMIN}/${id}`,
+    route: `${RESOURCES.SUPPLIERS.PRIVATE_ADMIN}/${id}`,
     method: HttpMethod.DELETE,
   }),
 };

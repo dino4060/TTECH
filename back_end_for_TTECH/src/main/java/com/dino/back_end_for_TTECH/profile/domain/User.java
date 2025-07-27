@@ -104,14 +104,16 @@ public class User extends BaseEntity {
         return user;
     }
 
-    public static User createAdmin(String username, String passHashed) {
+    public static User createAdmin(String username, String email, String passHashed) {
         User user = new User();
 
         user.setStatus(UserStatus.LIVE);
         user.setName("Top 1 server at TTECH");
         user.setUsername(username);
+        user.setEmail(email);
         user.setPassword(passHashed);
         user.addRole(Role.ADMIN);
+        user.setIsEmailVerified(false);
 
         return user;
     }

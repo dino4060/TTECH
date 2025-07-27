@@ -26,7 +26,7 @@ public interface IUserService {
 
     User createCustomer(String name, String email);
 
-    User createAdmin(String username, String password);
+    User createAdmin(String username, String email, String password);
 
     CurrentUserRes updateCustomer(UserToUpdateBody body, CurrentUser currentUser);
 

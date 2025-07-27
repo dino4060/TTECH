@@ -5,8 +5,8 @@ import com.dino.back_end_for_TTECH.product.domain.model.ProductMeta;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductSpecification;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductStatus;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
-import com.dino.back_end_for_TTECH.promotion.domain.ProductDiscount;
 import com.dino.back_end_for_TTECH.profile.domain.Shop;
+import com.dino.back_end_for_TTECH.promotion.domain.ProductDiscount;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -73,8 +73,8 @@ public class Product extends BaseEntity {
     ProductMeta meta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_branch_id")
-    CategoryBranch categoryBranch;
+    @JoinColumn(name = "category_id")
+    Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", updatable = false, nullable = false)

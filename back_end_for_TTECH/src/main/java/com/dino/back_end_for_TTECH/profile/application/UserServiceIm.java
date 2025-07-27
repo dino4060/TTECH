@@ -74,9 +74,9 @@ public class UserServiceIm implements IUserService {
     }
 
     @Override
-    public User createAdmin(String username, String password) {
+    public User createAdmin(String username, String email, String password) {
         String passHashed = this.securityProvider.hashPassword(password);
-        User user = User.createAdmin(username, passHashed);
+        User user = User.createAdmin(username, email, passHashed);
         return this.userRepository.save(user);
     }
 

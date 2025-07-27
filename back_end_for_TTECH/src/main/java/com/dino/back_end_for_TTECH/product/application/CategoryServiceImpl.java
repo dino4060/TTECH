@@ -6,10 +6,14 @@ import com.dino.back_end_for_TTECH.product.application.model.CategoryToWrite;
 import com.dino.back_end_for_TTECH.product.application.service.ICategoryService;
 import com.dino.back_end_for_TTECH.product.domain.Category;
 import com.dino.back_end_for_TTECH.product.domain.repository.ICategoryRepository;
+import com.dino.back_end_for_TTECH.shared.application.constant.CacheKey;
+import com.dino.back_end_for_TTECH.shared.application.constant.CacheValue;
+import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -39,11 +43,29 @@ public class CategoryServiceImpl implements ICategoryService {
         }
     }
 
+    private void removeCategory(long id) {
+        try {
+            categoryRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.CATEGORY__REMOVE_FAILED);
+        }
+    }
+
+    private void validateCategory(Category category) {
+        List<Category> categories = this.categoryRepository.findByName(category.getName());
+
+        boolean conditionOfName =
+                AppUtils.isEmpty(categories) ||
+                        AppUtils.isEqual(categories.getFirst().getId(), category.getId());
+
+        if (!conditionOfName) throw new AppException(ErrorCode.CATEGORY__NAME_EXITED);
+    }
+
 
     // READ //
 
     @Override
-    @Cacheable(value = "categories", key = "'list'")
+    @Cacheable(value = CacheValue.CATEGORIES, key = CacheKey.LIST)
     public List<CategoryInList> listCategories() {
         var categories = this.categoryRepository.findAll();
 
@@ -56,23 +78,28 @@ public class CategoryServiceImpl implements ICategoryService {
     // WRITE //
 
     @Override
+    @CacheEvict(value = CacheValue.CATEGORIES, key = CacheKey.LIST)
     public CategoryInList createCategory(CategoryToWrite body) {
         Category category = categoryMapper.toCategory(body);
+        this.validateCategory(category);
         Category saved = saveCategory(category);
         return categoryMapper.toCategoryInList(saved);
     }
 
     @Override
+    @CacheEvict(value = CacheValue.CATEGORIES, key = CacheKey.LIST)
     public CategoryInList updateCategory(long id, CategoryToWrite body) {
         Category category = getCategory(id);
         categoryMapper.toCategory(body, category);
+        this.validateCategory(category);
         Category saved = saveCategory(category);
         return categoryMapper.toCategoryInList(saved);
     }
 
     @Override
+    @CacheEvict(value = CacheValue.CATEGORIES, key = CacheKey.LIST)
     public void deleteCategory(long id) {
         Category category = getCategory(id);
-        categoryRepository.delete(category);
+        this.removeCategory(category.getId());
     }
 }

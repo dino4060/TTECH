@@ -26,8 +26,12 @@ public class AppUtils {
         return !StringUtils.hasText(string);
     }
 
-    public static boolean isEmpty(Collection<Object> collection) {
+    public static boolean isEmpty(Collection<?> collection) {
         return CollectionUtils.isEmpty(collection);
+    }
+
+    public static boolean isEqual(Object one, Object two) {
+        return Objects.equals(one, two);
     }
 
     public static Pageable defaultPageable() {

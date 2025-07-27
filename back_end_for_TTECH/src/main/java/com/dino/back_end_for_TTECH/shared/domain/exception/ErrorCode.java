@@ -33,6 +33,13 @@ public enum ErrorCode {
     // PRODUCT. CATEGORY //
     CATEGORY__NOT_FOUND(1210, "Không tìm thấy ngành hàng", HttpStatus.NOT_FOUND),
     CATEGORY__SAVE_FAILED(1211, "Có lỗi khi lưu ngành hàng", HttpStatus.INTERNAL_SERVER_ERROR),
+    CATEGORY__REMOVE_FAILED(1212, "Ngành hàng đã tham gia kinh doanh nên không thể xóa", HttpStatus.INTERNAL_SERVER_ERROR),
+    CATEGORY__NAME_EXITED(1213, "Tên ngành hàng không nên trùng lặp", HttpStatus.NOT_FOUND),
+    // PRODUCT. SUPPLIER //
+    SUPPLIER__NOT_FOUND(1210, "Không tìm thấy nhà cung cấp", HttpStatus.NOT_FOUND),
+    SUPPLIER__SAVE_FAILED(1211, "Có lỗi khi lưu nhà cung cấp", HttpStatus.INTERNAL_SERVER_ERROR),
+    SUPPLIER__REMOVE_FAILED(1212, "Nhà cung cấp đã tham gia kinh doanh nên không thể xóa", HttpStatus.INTERNAL_SERVER_ERROR),
+    SUPPLIER__NAME_EXITED(1213, "Tên cung cấp không nên trùng lặp", HttpStatus.NOT_FOUND),
     // PROFILE. USER //
     USER__EMAIL_ALREADY_EXISTS(1301, "Email đã tồn tại", HttpStatus.BAD_REQUEST),
     USER__PHONE_ALREADY_EXISTS(1302, "Số điện thoại đã tồn tại", HttpStatus.BAD_REQUEST),

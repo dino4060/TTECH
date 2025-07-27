@@ -26,7 +26,6 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonIgnoreProperties(value = {"createdAt", "updatedAt", "isDeleted"}, allowSetters = true)
 public class Category extends BaseEntity {
 
     @Id
@@ -34,7 +33,7 @@ public class Category extends BaseEntity {
     @Column(name = "category_id")
     Long id;
 
-    @Column(length = 40, nullable = false, unique = true)
+    @Column(length = 40, nullable = false)
     String name;
 
     int position;

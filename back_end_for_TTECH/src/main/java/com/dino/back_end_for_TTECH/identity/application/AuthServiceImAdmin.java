@@ -36,12 +36,13 @@ public class AuthServiceImAdmin extends AuthTemplate implements IAuthServiceForA
     @Override
     public void initAdmin() {
         var username = "admin";
+        var email = "admin@ttech.com";
         var password = "top1ttech";
 
         var optional = this.userService.findUserByUsername(username);
 
         if (optional.isEmpty()) {
-            User admin = this.userService.createAdmin(username, password);
+            User admin = this.userService.createAdmin(username, email, password);
             this.tokenService.createToken(admin);
         }
         log.info(">>> Admin is ready. Username: {}. Password: {}", username, password);
