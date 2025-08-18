@@ -1,7 +1,6 @@
 package com.dino.back_end_for_TTECH.product.application;
 
 import com.dino.back_end_for_TTECH.pricing.application.service.IPriceService;
-import com.dino.back_end_for_TTECH.pricing.domain.Price;
 import com.dino.back_end_for_TTECH.product.application.mapper.IProductMapper;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
@@ -98,7 +97,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public AppPage<ProductInList> listProducts(Pageable pageable) {
-        Page<Product> page = this.productRepository.findWithAll(pageable);
+        Page<Product> page = this.productRepository.findAll(pageable);
 
         List<ProductInList> products = page.getContent()
                 .stream()

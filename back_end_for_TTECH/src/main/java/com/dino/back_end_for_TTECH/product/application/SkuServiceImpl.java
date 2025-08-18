@@ -37,11 +37,9 @@ public class SkuServiceImpl implements ISkuService {
 
     private void validateSku(Sku sku) {
         // no
-        List<Sku> skus = this.skuRepository.findByNo(sku.getNo());
+        var skuOptional = this.skuRepository.findByNo(sku.getNo());
 
-        boolean conditionOfNo =
-                AppUtils.isEmpty(skus) ||
-                        AppUtils.isEqual(skus.getFirst().getId(), sku.getId());
+        boolean conditionOfNo = skuOptional.isPresent();
 
         if (!conditionOfNo) throw new AppException(ErrorCode.SKU__NO_DUPLICATED);
     }

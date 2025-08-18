@@ -20,7 +20,7 @@ public interface IProductRepository extends JpaRepository<Product, Long>, JpaSpe
             "category",
             "supplier",
     })
-    Page<Product> findWithAll(@NonNull Pageable pageable);
+    Page<Product> findAll(@NonNull Pageable pageable);
 
     List<Product> findBySerialNumber(int serialNumber);
 }

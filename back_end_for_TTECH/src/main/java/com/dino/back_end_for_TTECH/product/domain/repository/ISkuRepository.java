@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ISkuRepository extends JpaRepository<Sku, Long> {
     // FIND//
-    Optional<Sku> findByCode(@NonNull String skuCode);
+    //Optional<Sku> findByCode(@NonNull String skuCode);
 
-    List<Sku> findByNo(String no);
+    Optional<Sku> findByNo(String no);
 }
