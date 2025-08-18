@@ -21,7 +21,6 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SkuPrice extends BaseEntity {
 
@@ -32,16 +31,15 @@ public class SkuPrice extends BaseEntity {
 
     int mainPrice;
 
-    int discountPercent;
+    int sidePrice;
 
-    Integer sidePrice;
+    int discountPercent;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sku_id", updatable = false, nullable = false)
     Sku sku;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_price_id", updatable = false, nullable = false)
-    ProductPrice productPrice;
-
+    @JoinColumn(name = "price_id", updatable = false, nullable = false)
+    Price price;
 }

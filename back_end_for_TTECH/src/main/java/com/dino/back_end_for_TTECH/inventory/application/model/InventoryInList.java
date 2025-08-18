@@ -1,9 +1,9 @@
 package com.dino.back_end_for_TTECH.inventory.application.model;
 
-public record InventoryRes(
-        Long id,
-        int stocks,
+public record InventoryInList(
+        long id,
+        int total,
         int sales,
-        int total
+        int stocks
 ) {
 }

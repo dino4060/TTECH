@@ -10,6 +10,8 @@ public record CurrentUser(
         Set<String> roles
 ) {
     public User toUser() {
-        return User.builder().id(this.id).build();
+        var user = new User();
+        user.setId(this.id);
+        return user;
     }
 }

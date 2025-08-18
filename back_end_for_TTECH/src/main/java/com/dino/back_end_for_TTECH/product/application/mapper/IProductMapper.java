@@ -1,22 +1,17 @@
 package com.dino.back_end_for_TTECH.product.application.mapper;
 
-import com.dino.back_end_for_TTECH.product.application.model.ProductOfShopRes;
-import com.dino.back_end_for_TTECH.product.domain.model.ProductItemView;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
-
-import com.dino.back_end_for_TTECH.product.application.model.ProductWithPriceRes;
-import com.dino.back_end_for_TTECH.product.application.model.ProductRes;
+import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
+import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.domain.Product;
-import com.dino.back_end_for_TTECH.product.domain.model.ProductProjection;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IProductMapper {
-    ProductRes toProductRes(Product product);
+    ProductInList toProductInList(Product product);
 
-    ProductWithPriceRes toProductItemRes(ProductProjection product);
+    Product toProduct(ProductToWrite dto);
 
-    ProductWithPriceRes toProductItemRes(ProductItemView product);
-
-    ProductOfShopRes toProductOfShopRes(Product product);
+    void toProduct(ProductToWrite dto, @MappingTarget Product entity);
 }

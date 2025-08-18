@@ -7,6 +7,7 @@ import com.dino.back_end_for_TTECH.pricing.domain.SkuPrice;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
 import com.dino.back_end_for_TTECH.promotion.domain.SkuDiscount;
 import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
+import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
@@ -32,7 +33,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Sku extends BaseEntity {
 
@@ -41,33 +41,29 @@ public class Sku extends BaseEntity {
     @Column(name = "sku_id")
     Long id;
 
-    @Enumerated(EnumType.STRING)
-    SkuStatus status;
-
     @Column(nullable = false)
-    String code;
+    String no;
 
-    @Column(nullable = false)
     List<Integer> tierOptionIndexes;
 
     String tierOptionValue;
 
+    Integer productionCost;
+
     int retailPrice;
 
-    Integer productionCost;
+    @Enumerated(EnumType.STRING)
+    SkuStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", updatable = false, nullable = false)
     Product product;
 
     @OneToOne(mappedBy = "sku", cascade = CascadeType.ALL, orphanRemoval = true)
-    Inventory inventory;
-
-    @OneToOne(mappedBy = "sku", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    SkuPrice price;
+    Inventory inventory; // always eager loading
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
-    List<SkuDiscount> discounts;
+    List<SkuDiscount> skuDiscounts;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     List<CartItem> cartItems;
@@ -100,4 +96,9 @@ public class Sku extends BaseEntity {
         return tierOptionIndex;
     }
 
+    // INSTANCE //
+
+    public void createSku(int retailPrice) {
+        if (this.retailPrice == 0) this.retailPrice = retailPrice;
+    }
 }

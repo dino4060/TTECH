@@ -1,32 +1,17 @@
 package com.dino.back_end_for_TTECH.identity.domain;
 
-import java.time.Instant;
-
 import com.dino.back_end_for_TTECH.profile.domain.User;
+import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
+import java.time.Instant;
 
 @Entity
 @Table(name = "tokens")
@@ -34,7 +19,6 @@ import lombok.experimental.SuperBuilder;
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE tokens SET is_deleted = true WHERE token_id=?")
 @SQLRestriction("is_deleted = false")
-@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor

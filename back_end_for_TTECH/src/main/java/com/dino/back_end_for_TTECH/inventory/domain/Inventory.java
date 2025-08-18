@@ -7,7 +7,6 @@ import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -19,7 +18,6 @@ import org.hibernate.annotations.SQLRestriction;
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE inventories SET is_deleted = true WHERE inventory_id = ?")
 @SQLRestriction("is_deleted = false")
-@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor

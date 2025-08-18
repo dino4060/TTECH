@@ -30,7 +30,8 @@ public class CategoryServiceImpl implements ICategoryService {
 
     // HELPERS //
 
-    private Category getCategory(Long id) {
+    @Override
+    public Category getCategory(Long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY__NOT_FOUND));
     }
@@ -47,7 +48,7 @@ public class CategoryServiceImpl implements ICategoryService {
         try {
             categoryRepository.deleteById(id);
         } catch (Exception e) {
-            throw new AppException(ErrorCode.CATEGORY__REMOVE_FAILED);
+            throw new AppException(ErrorCode.CATEGORY__NOT_REMOVED);
         }
     }
 
@@ -58,7 +59,7 @@ public class CategoryServiceImpl implements ICategoryService {
                 AppUtils.isEmpty(categories) ||
                         AppUtils.isEqual(categories.getFirst().getId(), category.getId());
 
-        if (!conditionOfName) throw new AppException(ErrorCode.CATEGORY__NAME_EXITED);
+        if (!conditionOfName) throw new AppException(ErrorCode.CATEGORY__NAME_DUPLICATED);
     }
 
 

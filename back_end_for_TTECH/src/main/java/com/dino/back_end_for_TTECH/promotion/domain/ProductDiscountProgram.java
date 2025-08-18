@@ -1,42 +1,19 @@
 package com.dino.back_end_for_TTECH.promotion.domain;
 
-import java.util.List;
-
+import com.dino.back_end_for_TTECH.profile.domain.Shop;
+import com.dino.back_end_for_TTECH.promotion.domain.model.PricingType;
 import com.dino.back_end_for_TTECH.promotion.domain.model.ProgramStatusType;
 import com.dino.back_end_for_TTECH.promotion.domain.repository.Promotion;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import com.dino.back_end_for_TTECH.promotion.domain.model.PricingType;
-import com.dino.back_end_for_TTECH.profile.domain.Shop;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
+import java.util.List;
 
 @Entity
 @Table(name = "product_discount_programs")
@@ -50,7 +27,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class ProductDiscountProgram extends Promotion {
 

@@ -4,6 +4,7 @@ import com.dino.back_end_for_TTECH.inventory.application.provider.IInventoryLock
 import com.dino.back_end_for_TTECH.inventory.application.service.IInventoryService;
 import com.dino.back_end_for_TTECH.inventory.domain.Inventory;
 import com.dino.back_end_for_TTECH.inventory.domain.repository.IInventoryRepository;
+import com.dino.back_end_for_TTECH.product.domain.Sku;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import lombok.AccessLevel;
@@ -65,5 +66,10 @@ public class InventoryServiceImpl implements IInventoryService {
     @Transactional
     public void reserveStock(Long skuId, int quantity) {
         this.reserveStockWithLock(skuId, quantity);
+    }
+
+    @Override
+    public void createInventoryForSku(Sku sku) {
+
     }
 }

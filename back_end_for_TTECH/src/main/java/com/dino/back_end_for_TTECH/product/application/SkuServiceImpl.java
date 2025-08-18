@@ -1,9 +1,14 @@
 package com.dino.back_end_for_TTECH.product.application;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.dino.back_end_for_TTECH.inventory.application.service.IInventoryService;
+import com.dino.back_end_for_TTECH.product.application.model.SkuToWrite;
+import com.dino.back_end_for_TTECH.product.domain.Product;
+import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -24,7 +29,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SkuServiceImpl implements ISkuService {
 
+    IInventoryService inventoryService;
+
     ISkuRepository skuRepository;
+
+    // HELPERS //
+
+    private void validateSku(Sku sku) {
+        // no
+        List<Sku> skus = this.skuRepository.findByNo(sku.getNo());
+
+        boolean conditionOfNo =
+                AppUtils.isEmpty(skus) ||
+                        AppUtils.isEqual(skus.getFirst().getId(), sku.getId());
+
+        if (!conditionOfNo) throw new AppException(ErrorCode.SKU__NO_DUPLICATED);
+    }
+
+    private void cascadeSku(Sku sku) {
+        this.inventoryService.createInventoryForSku(sku);
+    }
 
     // DOMAIN //
 
@@ -68,6 +92,15 @@ public class SkuServiceImpl implements ISkuService {
         } catch (AppException e) {
             log.warn("Sku.tierOptionIndexes is invalid {}: {}", sku.getId(), e.getMessage());
             return sku.getProduct().getThumb();
+        }
+    }
+
+    @Override
+    public void createSkusForProduct(Product product) {
+        for (Sku sku : product.getSkus()) {
+            this.cascadeSku(sku);
+            this.validateSku(sku);
+            sku.createSku(product.getRetailPrice());
         }
     }
 }

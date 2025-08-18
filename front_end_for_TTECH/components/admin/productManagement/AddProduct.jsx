@@ -55,7 +55,7 @@ const AddProduct = ({
   };
 
   const addNewProduct = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     if (isErrorForm(error)) {
       alert("Error")
       return
@@ -305,7 +305,7 @@ const AddProduct = ({
                     onChange={handleProductValueChange}
                   >
                     <option>Chọn doanh mục</option>
-                    {category.map((x, i) => (
+                    {category?.map((x, i) => (
                       <option key={i} value={x.categoryId}>
                         {x.categoryName}
                       </option>

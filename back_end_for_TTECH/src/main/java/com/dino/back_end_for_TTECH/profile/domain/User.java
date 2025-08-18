@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -25,7 +24,6 @@ import java.util.Set;
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE user_id=?")
 @SQLRestriction("is_deleted = false")
-@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor

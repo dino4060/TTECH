@@ -8,7 +8,6 @@ import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -24,7 +23,6 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderItem extends BaseEntity {
 
@@ -80,8 +78,8 @@ public class OrderItem extends BaseEntity {
         var item = new OrderItem();
 
         item.setQuantity(quantity);
-        item.setMainPrice(sku.getPrice().getMainPrice());
-        item.setSidePrice(sku.getPrice().getSidePrice());
+//        item.setMainPrice(sku.getPrice().getMainPrice());
+//        item.setSidePrice(sku.getPrice().getSidePrice());
         item.setSku(sku);
 
         return item;
