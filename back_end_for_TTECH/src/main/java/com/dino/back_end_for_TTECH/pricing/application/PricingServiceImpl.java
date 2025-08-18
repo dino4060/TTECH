@@ -31,9 +31,10 @@ public class PricingServiceImpl implements IPricingService {
 
     @Override
     public CheckoutSnapshot checkoutCartGroup(List<CartItem> cartItems) {
-        int totalMainPrice = cartItems.stream()
-                .mapToInt(item -> item.getSku().getPrice().getMainPrice() * item.getQuantity())
-                .sum();
+//        int totalMainPrice = cartItems.stream()
+//                .mapToInt(item -> item.getSku().getPrice().getMainPrice() * item.getQuantity())
+//                .sum();
+        int totalMainPrice = 0;
 
         return CheckoutSnapshot.createSnapshot(totalMainPrice);
     }

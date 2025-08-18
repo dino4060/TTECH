@@ -1,7 +1,6 @@
 package com.dino.back_end_for_TTECH.profile.domain;
 
 import com.dino.back_end_for_TTECH.ordering.domain.Order;
-import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.profile.domain.model.BusinessType;
 import com.dino.back_end_for_TTECH.profile.domain.model.ShopStatus;
 import com.dino.back_end_for_TTECH.promotion.domain.ProductDiscountProgram;
@@ -12,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -26,7 +24,6 @@ import java.util.List;
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE shops SET is_deleted = true WHERE shop_id=?")
 @SQLRestriction("is_deleted = false")
-@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -62,11 +59,6 @@ public class Shop extends BaseEntity {
     @JsonIgnore
     @ToString.Exclude
     User seller;
-
-    @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    @ToString.Exclude
-    List<Product> products;
 
     @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

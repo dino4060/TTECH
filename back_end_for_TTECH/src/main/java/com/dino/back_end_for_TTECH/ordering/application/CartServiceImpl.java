@@ -74,18 +74,20 @@ public class CartServiceImpl implements ICartService {
      */
     @Override
     public Optional<Map<Shop, List<CartItem>>> groupCartItemByShop(Cart cart, Set<Long> cartItemIdsToFilter) {
-        Map<Shop, List<CartItem>> itemsGroupedByShop = cart.getCartItems().stream()
-                .filter(item -> cartItemIdsToFilter.contains(item.getId()))
-                .collect(Collectors.groupingBy(item -> item.getSku().getProduct().getShop()));
-
-        return itemsGroupedByShop.isEmpty() ? Optional.empty() : Optional.of(itemsGroupedByShop);
+//        Map<Shop, List<CartItem>> itemsGroupedByShop = cart.getCartItems().stream()
+//                .filter(item -> cartItemIdsToFilter.contains(item.getId()))
+//                .collect(Collectors.groupingBy(item -> item.getSku().getProduct().getShop()));
+//
+//        return itemsGroupedByShop.isEmpty() ? Optional.empty() : Optional.of(itemsGroupedByShop);
+        return Optional.empty();
     }
 
     private Optional<Map<Shop, List<CartItem>>> groupCartItemByShop(Cart cart) {
-        Map<Shop, List<CartItem>> itemsGroupedByShop = cart.getCartItems().stream()
-                .collect(Collectors.groupingBy(item -> item.getSku().getProduct().getShop()));
-
-        return itemsGroupedByShop.isEmpty() ? Optional.empty() : Optional.of(itemsGroupedByShop);
+//        Map<Shop, List<CartItem>> itemsGroupedByShop = cart.getCartItems().stream()
+//                .collect(Collectors.groupingBy(item -> item.getSku().getProduct().getShop()));
+//
+//        return itemsGroupedByShop.isEmpty() ? Optional.empty() : Optional.of(itemsGroupedByShop);
+        return Optional.empty();
     }
 
     /**

@@ -3,7 +3,6 @@ package com.dino.back_end_for_TTECH.product.domain;
 import com.dino.back_end_for_TTECH.inventory.domain.Inventory;
 import com.dino.back_end_for_TTECH.ordering.domain.CartItem;
 import com.dino.back_end_for_TTECH.ordering.domain.OrderItem;
-import com.dino.back_end_for_TTECH.pricing.domain.SkuPrice;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
 import com.dino.back_end_for_TTECH.promotion.domain.SkuDiscount;
 import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
@@ -13,7 +12,6 @@ import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "skus")
+@Table(name = "sku_products")
 @DynamicInsert
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE skus SET is_deleted = true WHERE sku_id=?")
@@ -32,7 +30,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Sku extends BaseEntity {
 
@@ -41,33 +38,28 @@ public class Sku extends BaseEntity {
     @Column(name = "sku_id")
     Long id;
 
-    @Enumerated(EnumType.STRING)
-    SkuStatus status;
+    String no;
 
-    @Column(nullable = false)
-    String code;
-
-    @Column(nullable = false)
     List<Integer> tierOptionIndexes;
 
     String tierOptionValue;
 
+    Integer productionCost;
+
     int retailPrice;
 
-    Integer productionCost;
+    @Enumerated(EnumType.STRING)
+    SkuStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", updatable = false, nullable = false)
     Product product;
 
-    @OneToOne(mappedBy = "sku", cascade = CascadeType.ALL, orphanRemoval = true)
-    Inventory inventory;
-
-    @OneToOne(mappedBy = "sku", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    SkuPrice price;
+    @OneToOne(mappedBy = "sku")
+    Inventory inventory; // YELLOW: always eager loading
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
-    List<SkuDiscount> discounts;
+    List<SkuDiscount> skuDiscounts;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     List<CartItem> cartItems;
@@ -98,6 +90,16 @@ public class Sku extends BaseEntity {
             throw new AppException(ErrorCode.SKU__TIER_OPTION_INDEXES_INVALID);
 
         return tierOptionIndex;
+    }
+
+    // INSTANCE //
+
+    public void createSku() {
+        this.status = SkuStatus.LIVE;
+    }
+
+    public void updateStocks(int quantity) {
+        this.inventory.updateStocks(quantity);
     }
 
 }

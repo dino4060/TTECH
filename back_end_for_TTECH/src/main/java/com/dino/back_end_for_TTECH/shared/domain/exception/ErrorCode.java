@@ -30,16 +30,23 @@ public enum ErrorCode {
     AUTH__GOOGLE_NOT_FOUND(1124, "Tài khoản không tồn tại. Vui lòng đăng kí", HttpStatus.BAD_REQUEST),
     AUTH__PASSWORD_NOT_MATCH(1125, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
     AUTH__ROLE_NOT_PERMIT(1126, "Thông tin đăng nhập không đúng", HttpStatus.BAD_REQUEST),
+    // PRODUCT. PRODUCT //
+    PRODUCT__NOT_FOUND(1200, "Không tìm thấy sản phẩm", HttpStatus.BAD_REQUEST),
+    PRODUCT__SAVE_FAILED(1201, "Có lỗi khi lưu sản phẩm", HttpStatus.INTERNAL_SERVER_ERROR),
+    PRODUCT__NOT_REMOVED(1202, "Sản phẩm đã kinh doanh nên không thể xóa", HttpStatus.BAD_REQUEST),
+    PRODUCT__SKUS_VALIDATION(1204, "Sku không nên rỗng", HttpStatus.BAD_REQUEST),
     // PRODUCT. CATEGORY //
     CATEGORY__NOT_FOUND(1210, "Không tìm thấy ngành hàng", HttpStatus.NOT_FOUND),
     CATEGORY__SAVE_FAILED(1211, "Có lỗi khi lưu ngành hàng", HttpStatus.INTERNAL_SERVER_ERROR),
-    CATEGORY__REMOVE_FAILED(1212, "Ngành hàng đã tham gia kinh doanh nên không thể xóa", HttpStatus.INTERNAL_SERVER_ERROR),
-    CATEGORY__NAME_EXITED(1213, "Tên ngành hàng không nên trùng lặp", HttpStatus.NOT_FOUND),
+    CATEGORY__NOT_REMOVED(1212, "Ngành hàng đã kinh doanh nên không thể xóa", HttpStatus.BAD_REQUEST),
+    CATEGORY__NAME_DUPLICATED(1213, "Tên ngành hàng không nên trùng lặp", HttpStatus.BAD_REQUEST),
     // PRODUCT. SUPPLIER //
     SUPPLIER__NOT_FOUND(1210, "Không tìm thấy nhà cung cấp", HttpStatus.NOT_FOUND),
     SUPPLIER__SAVE_FAILED(1211, "Có lỗi khi lưu nhà cung cấp", HttpStatus.INTERNAL_SERVER_ERROR),
-    SUPPLIER__REMOVE_FAILED(1212, "Nhà cung cấp đã tham gia kinh doanh nên không thể xóa", HttpStatus.INTERNAL_SERVER_ERROR),
-    SUPPLIER__NAME_EXITED(1213, "Tên cung cấp không nên trùng lặp", HttpStatus.NOT_FOUND),
+    SUPPLIER__NOT_REMOVED(1212, "Nhà cung cấp đã kinh doanh nên không thể xóa", HttpStatus.BAD_REQUEST),
+    SUPPLIER__NAME_DUPLICATED(1213, "Tên cung cấp không nên trùng lặp", HttpStatus.BAD_REQUEST),
+    // PRODUCT. SKU //
+    
     // PROFILE. USER //
     USER__EMAIL_ALREADY_EXISTS(1301, "Email đã tồn tại", HttpStatus.BAD_REQUEST),
     USER__PHONE_ALREADY_EXISTS(1302, "Số điện thoại đã tồn tại", HttpStatus.BAD_REQUEST),
@@ -79,8 +86,6 @@ public enum ErrorCode {
     // đánh cấp", HttpStatus.BAD_REQUEST),
 
     // PRODUCT CATALOG 1200+ //
-    // PRODUCT //
-    PRODUCT__NOT_FOUND(1200, "Không tìm thấy sản phẩm", HttpStatus.BAD_REQUEST),
     // SKU //
     SKU__FIND_FAILED(1220, "Lấy SKU thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     SKU__TIER_OPTION_INDEXES_INVALID(1221, "tierOptionIndexes không hợp lệ", HttpStatus.BAD_REQUEST),
@@ -127,8 +132,10 @@ public enum ErrorCode {
     // INVENTORY 1600+ //
     // INVENTORY //
     INVENTORY__NOT_FOUND(1600, "Không tìm thấy kho hàng", HttpStatus.BAD_REQUEST),
+    INVENTORY__ALREADY_EXISTS(16001, "Kho hàng đã tồn tại", HttpStatus.BAD_REQUEST),
     INVENTORY__STOCKS_LIMIT(1601, "Số tồn kho >= 0 và <= tổng cộng", HttpStatus.BAD_REQUEST),
     INVENTORY__SALES_LIMIT(1602, "Số đã bán >= 0 và <= tổng cộng", HttpStatus.BAD_REQUEST),
+    INVENTORY__TOTAL_LIMIT(16021, "Tổng kho >= 0 và >= số tồn kho + số đã bán", HttpStatus.BAD_REQUEST),
     INVENTORY__INSUFFICIENT_STOCK(1603, "Sản phẩm đã hết hàng, sẽ trở lại sớm", HttpStatus.BAD_REQUEST),
     // LOCK //
     LOCK__OUT_OF_TRY(1610, "Yêu cầu đã đợi lâu. Vui lòng thử lại", HttpStatus.BAD_REQUEST),

@@ -1,10 +1,5 @@
 package com.dino.back_end_for_TTECH.promotion.domain;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
@@ -12,7 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @DiscriminatorValue("BASIC_DISCOUNT")
@@ -20,7 +18,6 @@ import lombok.experimental.SuperBuilder;
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE discount_programs SET is_deleted = true WHERE discount_program_id=?")
 @SQLRestriction("is_deleted = false")
-@SuperBuilder
 @NoArgsConstructor
 @Getter
 @Setter

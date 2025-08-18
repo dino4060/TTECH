@@ -24,7 +24,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category extends BaseEntity {
 
@@ -37,4 +36,11 @@ public class Category extends BaseEntity {
     String name;
 
     int position;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    List<Product> products;
+
+    public Category(Long id) {
+        this.id = id;
+    }
 }

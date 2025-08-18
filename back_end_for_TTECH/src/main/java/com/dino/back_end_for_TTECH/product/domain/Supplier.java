@@ -11,6 +11,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.util.List;
+
 @Entity
 @Table(name = "suppliers")
 @DynamicInsert
@@ -21,7 +23,6 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Supplier extends BaseEntity {
 
@@ -32,4 +33,11 @@ public class Supplier extends BaseEntity {
 
     @Column(length = 40, nullable = false)
     String name;
+
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
+    List<Product> products;
+
+    public Supplier(Long id) {
+        this.id = id;
+    }
 }

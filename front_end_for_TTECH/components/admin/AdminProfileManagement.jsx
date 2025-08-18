@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { CiLogout } from "react-icons/ci"
 import UserDataForm from "../user/UserDataForm"
 
-const AdminMeManagement = () => {
+const AdminProfileManagement = () => {
   const { user, logoutAdmin } = UserAuth()
 
   return (
@@ -33,4 +33,4 @@ const AdminMeManagement = () => {
   )
 }
 
-export default AdminMeManagement
+export default AdminProfileManagement

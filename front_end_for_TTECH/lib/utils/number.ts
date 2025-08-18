@@ -27,3 +27,23 @@ export function formatCurrency(
 
   return result;
 }
+
+// parsePrice //
+export function parsePrice(
+  value: string | number,
+  padding: number = 1,
+): number {
+  let parsedValue: number;
+
+  if (typeof value === "string") {
+    Number.parseInt(value);
+  } else {
+    parsedValue = value;
+  }
+
+  if (isNaN(parsedValue)) {
+    return 0;
+  }
+
+  return parsedValue * padding;
+};

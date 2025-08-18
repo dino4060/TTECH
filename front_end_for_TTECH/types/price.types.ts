@@ -5,16 +5,20 @@ import type { TBase } from "./base.types";
 
 export type TSkuPrice = TBase & {
   mainPrice: number;
-  sidePrice: number | null;
+  sidePrice: number;
   discountPercent: number;
 }
 
-export type TProductPrice = TBase & {
-  mainPrice: number;
-  sidePrice: number | null;
-  discountPercent: number;
+export type TPrice = TSkuPrice & {
   maxMainPrice: number | null;
   maxSidePrice: number | null;
   maxDiscountPercent: number | null;
-  skuPrices: TSkuPrice[];
+}
+
+// SIDE TYPES //
+
+export type TSkuPriceInList = TSkuPrice
+
+export type TPriceInList = TPrice & {
+  skuPrices: TSkuPriceInList[];
 }

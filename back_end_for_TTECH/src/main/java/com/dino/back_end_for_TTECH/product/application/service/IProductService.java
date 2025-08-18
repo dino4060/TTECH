@@ -1,23 +1,16 @@
 package com.dino.back_end_for_TTECH.product.application.service;
 
-import com.dino.back_end_for_TTECH.product.application.model.ProductOfShopRes;
-import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
-import com.dino.back_end_for_TTECH.shared.application.utils.Id;
-import lombok.NonNull;
+import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
+import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
+import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import org.springframework.data.domain.Pageable;
 
-import com.dino.back_end_for_TTECH.product.application.model.ProductWithPriceRes;
-import com.dino.back_end_for_TTECH.product.application.model.ProductRes;
-import com.dino.back_end_for_TTECH.shared.application.utils.PageRes;
-
 public interface IProductService {
-    // QUERY //
+    AppPage<ProductInList> listProducts(Pageable pageable);
 
-    PageRes<ProductWithPriceRes> listProducts(Pageable pageable);
+    ProductInList createProduct(ProductToWrite body);
 
-    PageRes<ProductOfShopRes> listProductsOfShop(Pageable pageable, CurrentUser currentUser);
+    ProductInList updateProduct(long id, ProductToWrite body);
 
-    ProductRes getProduct(Id productId);
-
-    ProductOfShopRes getProductOfShop(@NonNull Long productId, @NonNull CurrentUser currentUser);
+    void deleteProduct(long id);
 }

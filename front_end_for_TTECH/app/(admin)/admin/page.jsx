@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation"
 import AdminDiscountManagement from "@/components/admin/AdminDiscountManagement"
 import AdminSupplierManagement from "@/components/admin/AdminSupplierManagement"
 import AdminCategoryManagement from "@/components/admin/AdminCategoryManagement"
-import AdminMeManagement from "@/components/admin/AdminMeManagement"
+import AdminProfileManagement from "@/components/admin/AdminProfileManagement"
 
 const Page = () => {
   const [route, setRoute] = useState("dashboard")
@@ -39,7 +39,7 @@ const Page = () => {
         {route === "discount" && <AdminDiscountManagement />}
         {route === "supplier" && <AdminSupplierManagement />}
         {route === "category" && <AdminCategoryManagement />}
-        {route === "me" && <AdminMeManagement />}
+        {route === "profile" && <AdminProfileManagement />}
       </AnimatePresence>
     </div>
   )

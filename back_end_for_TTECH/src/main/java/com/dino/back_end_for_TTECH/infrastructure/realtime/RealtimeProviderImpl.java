@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.infrastructure.realtime;
 
 import com.dino.back_end_for_TTECH.pricing.application.provider.IRealtimePriceProvider;
-import com.dino.back_end_for_TTECH.pricing.domain.ProductPrice;
+import com.dino.back_end_for_TTECH.pricing.domain.Price;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,7 +18,7 @@ public class RealtimeProviderImpl implements IRealtimePriceProvider {
     SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public void publishPriceUpdate(Long productId, ProductPrice updatedPrice) {
+    public void publishPriceUpdate(Long productId, Price updatedPrice) {
         // Publish to queue at topic /topic/price/{productId}
         messagingTemplate.convertAndSend("/topic/price/" + productId, updatedPrice);
     }

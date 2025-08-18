@@ -12,6 +12,9 @@ import {
 import { v4 as uuidv4 } from "uuid"
 import { CldUploadWidget } from "next-cloudinary";
 import { IoCloseCircle } from "react-icons/io5";
+import { clientFetch } from "@/lib/http/fetch.client"
+import { adminProductApi } from "@/lib/api/product.api"
+import { parsePrice } from "@/lib/utils/number"
 
 const AddProduct = ({
   show,
@@ -24,14 +27,16 @@ const AddProduct = ({
   setCategory,
 }) => {
   const [data, setData] = useState({
-    quantityPr: "",
-    nameSerial: "",
-    detail: "",
-    namePr: "",
-    supplierId: "",
-    price: "",
-    guaranteePeriod: "",
+    name: "",
+    serialNumber: "",
+    retailPrice: "",
+    guaranteeMonths: "",
+    description: "",
+    thumb: "todo",
+    photos: null,
+    stocks: "",
     categoryId: "",
+    supplierId: "",
   })
 
   const [loading, setLoading] = useState(false)
@@ -55,43 +60,62 @@ const AddProduct = ({
   };
 
   const addNewProduct = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     if (isErrorForm(error)) {
       alert("Error")
       return
     }
     try {
-      const productId = uuidv4()
-
       const productDetail = {
-        productId: productId,
-        namePr: data.namePr,
-        nameSerial: data.nameSerial,
-        detail: data.detail,
-        price: Number.parseInt(data.price),
-        quantityPr: Number.parseInt(data.quantityPr),
-        guaranteePeriod: Number.parseInt(data.guaranteePeriod),
-        SupplierId: data.supplierId,
-        CategoryId: data.categoryId,
+        name: data.name,
+        serialNumber: data.serialNumber,
+        description: data.description,
+        retailPrice: Number.parseInt(data.retailPrice),
+        guaranteeMonths: Number.parseInt(data.guaranteeMonths),
+        thumb: data.thumb,
+        photos: data.photos,
+        supplier: { id: Number.parseInt(data.supplierId) },
+        category: { id: Number.parseInt(data.categoryId) },
+        skus: [{
+          code: data.serialNumber,
+          retailPrice: parsePrice(data.retailPrice, 1000),
+          inventory: { stocks: Number.parseInt(data.stocks) },
+        }],
+        price: {
+          mainPrice: parsePrice(data.retailPrice, 1000),
+          sidePrice: 0,
+          discountPercent: 0,
+          maxMainPrice: parsePrice(data.retailPrice, 1000),
+          maxSidePrice: 0,
+          maxDiscountPercent: 0,
+          skuPrices: [{
+            mainPrice: parsePrice(data.retailPrice, 1000),
+            sidePrice: 0,
+            discountPercent: 0,
+          }]
+        }
       }
 
-      await handleProduct.addNewProduct(productDetail);
-      const imageUrls = imageListDisplay.map(img => img.url);
-      console.log(imageUrls)
-      await handleProduct.addImage(imageUrls, productId)
+      await clientFetch(adminProductApi.create(productDetail));
+      // const imageUrls = imageListDisplay.map(img => img.url);
+      // console.log(imageUrls)
+      // await handleProduct.addImage(imageUrls, productId)
       setTrigger((pre) => !pre)
 
       setData({
-        quantityPr: "",
-        nameSerial: "",
-        detail: "",
-        namePr: "",
+        name: "",
+        serialNumber: "",
+        retailPrice: "",
+        guaranteeMonths: "",
+        stocks: "",
+        description: "",
+        thumb: "null",
+        photos: null,
+        categoryId: "",
         supplierId: "",
-        price: "",
-        guaranteePeriod: "",
       })
-      setFileImage([])
-      setImageListDisplay([])
+      // setFileImage([])
+      // setImageListDisplay([])
       setShow(false)
     } catch (error) {
       console.error("Error adding new product:", error);
@@ -102,29 +126,33 @@ const AddProduct = ({
     const { value, id } = e.target
 
     if (
-      id === "namePr" ||
-      id === "price" ||
-      id === "nameSerial" ||
-      id === "detail" ||
-      id === "guaranteePeriod" ||
-      id === "quantityPr" ||
+      id === "serialNumber" ||
+      id === "retailPrice" ||
+      id === "guaranteeMonths" ||
+      id === "stocks"
+    ) {
+      if (isNaN(value)) {
+        setError((pre) => ({
+          ...pre,
+          [id]: "Vui lòng nhập một số",
+        }))
+      } else {
+        setError((pre) => ({ ...pre, [id]: "" }))
+      }
+    }
+
+    if (
+      id === "name" ||
+      id === "serialNumber" ||
+      id === "retailPrice" ||
+      id === "guaranteeMonths" ||
+      id === "stocks" ||
+      id === "description" ||
+      id === "thumb" ||
+      id === "photos" ||
       id === "supplierId" ||
       id === "categoryId"
     ) {
-      if (
-        id === "price" ||
-        id === "guaranteePeriod" ||
-        id === "quantityPr"
-      ) {
-        if (isNaN(value)) {
-          setError((pre) => ({
-            ...pre,
-            [id]: "Vui lòng nhập một số",
-          }))
-        } else {
-          setError((pre) => ({ ...pre, [id]: "" }))
-        }
-      }
       setData((pre) => {
         const preData = { ...pre }
         preData[id] = value
@@ -223,57 +251,24 @@ const AddProduct = ({
               >
                 {[
                   {
-                    key: "namePr",
+                    key: "name",
                     name: "Tên sản phẩm",
                   },
                   {
-                    key: "price",
-                    name: "Giá sản phẩm",
+                    key: "retailPrice",
+                    name: "Giá bán lẻ (1K)",
                   },
                   {
-                    key: "nameSerial",
-                    name: "Seri",
+                    key: "serialNumber",
+                    name: "Số seri",
                   },
-                ].map((x, i) => (
-                  <div key={i}>
-                    <motion.div className='flex gap-2 w-full'>
-                      <label className='min-w-[170px] text-black/50'>
-                        {x.name}
-                      </label>
-                      <motion.input
-                        placeholder={x.name}
-                        required
-                        id={x.key}
-                        value={data[x.key]}
-                        onChange={handleProductValueChange}
-                        className='outline-none border-b font-semibold border-black/20 w-full'
-                      />
-                    </motion.div>
-                    <h2 className='text-red-500 text-2xl'>
-                      {error[x.key]}
-                    </h2>
-                  </div>
-                ))}
-                <motion.div className='flex gap-2 w-full'>
-                  <label className='min-w-[170px] text-black/50'>
-                    Mô tả sản phẩm
-                  </label>
-                  <motion.textarea
-                    placeholder='Mô tả sản phẩm'
-                    id={"detail"}
-                    value={data.detail}
-                    onChange={handleProductValueChange}
-                    className='outline-none border-b font-semibold border-black/20 w-full'
-                  />
-                </motion.div>
-                {[
                   {
-                    key: "guaranteePeriod",
+                    key: "guaranteeMonths",
                     name: "Bảo hành (tháng)",
                   },
                   {
-                    key: "quantityPr",
-                    name: "Còn lại (sản phẩm)",
+                    key: "stocks",
+                    name: "Số lượng nhập kho",
                   },
                 ].map((x, i) => (
                   <div key={i}>
@@ -298,6 +293,19 @@ const AddProduct = ({
 
                 <motion.div className='flex gap-2 w-full'>
                   <label className='min-w-[170px] text-black/50'>
+                    Mô tả chi tiết
+                  </label>
+                  <motion.textarea
+                    placeholder='Mô tả sản phẩm'
+                    id={"description"}
+                    value={data.detail}
+                    onChange={handleProductValueChange}
+                    className='outline-none border-b font-semibold border-black/20 w-full'
+                  />
+                </motion.div>
+
+                <motion.div className='flex gap-2 w-full'>
+                  <label className='min-w-[170px] text-black/50'>
                     Doanh mục
                   </label>
                   <select
@@ -305,9 +313,9 @@ const AddProduct = ({
                     onChange={handleProductValueChange}
                   >
                     <option>Chọn doanh mục</option>
-                    {category.map((x, i) => (
-                      <option key={i} value={x.categoryId}>
-                        {x.categoryName}
+                    {category?.map((x) => (
+                      <option key={x.id} value={x.id}>
+                        {x.name}
                       </option>
                     ))}
                   </select>
@@ -322,9 +330,9 @@ const AddProduct = ({
                     onChange={handleProductValueChange}
                   >
                     <option>Chọn nhà cung cấp</option>
-                    {supplier?.map((x, i) => (
-                      <option key={i} value={x.supplierId}>
-                        {x.supplierName}
+                    {supplier?.map((x) => (
+                      <option key={x.id} value={x.id}>
+                        {x.name}
                       </option>
                     ))}
                   </select>

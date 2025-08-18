@@ -20,7 +20,7 @@ public interface ICartMapper {
 
     @Mapping(source = "cartItem.id", target = "id")
     @Mapping(source = "cartItem.sku.product", target = "product")
-    @Mapping(source = "cartItem.sku.price", target = "price")
+    //@Mapping(source = "cartItem.sku.retailPrice", target = "price")
     CartItemRes toCartItemRes(CartItem cartItem, String photo);
 
     @Mapping(source = "id", target = "id")

@@ -2,6 +2,9 @@
 import { handleProduct } from "@/app/api/handleProduct";
 import { handleProductCategory } from "@/app/api/handleProductCategory";
 import Notification from "@/components/uncategory/Notification";
+import { adminProductApi } from "@/lib/api/product.api";
+import { clientFetch } from "@/lib/http/fetch.client";
+import { da } from "@faker-js/faker";
 import { AnimatePresence, motion } from "framer-motion";
 import { CldUploadWidget } from "next-cloudinary";
 import { useEffect, useState } from "react";
@@ -21,31 +24,139 @@ const ProductManagementForm = ({
   triggerImage,
   setTriggerImage,
 }) => {
-  const [error, setError] = useState({});
-  const [imageListDisplay, setImageListDisplay] = useState([]);
+  // OKE
   const [data, setData] = useState({
-    productId: currentProductChoose?.productId,
-    namePr: currentProductChoose?.namePr,
-    nameSerial: currentProductChoose?.nameSerial,
-    detail: currentProductChoose?.detail,
-    price: currentProductChoose?.price,
-    quantityPr: currentProductChoose?.quantityPr,
-    guaranteePeriod: currentProductChoose?.guaranteePeriod,
-    supplierId: currentProductChoose?.supplierId,
-    categoryId: currentProductChoose?.categoryId,
+    id: currentProductChoose?.id,
+    name: currentProductChoose?.name,
+    serialNumber: currentProductChoose?.serialNumber,
+    retailPrice: currentProductChoose?.retailPrice,
+    guaranteeMonths: currentProductChoose?.guaranteeMonths,
+    description: currentProductChoose?.description,
+    categoryId: currentProductChoose?.category?.id,
+    supplierId: currentProductChoose?.supplier?.id,
   });
+
+  const [inventoryData, setInventoryData] = useState({
+    total: currentProductChoose?.skus?.[0]?.inventory?.total,
+    sales: currentProductChoose?.skus?.[0]?.inventory?.sales,
+    stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
+    restocks: currentProductChoose?.skus?.[0]?.inventory?.restocks,
+  });
+
+  const [error, setError] = useState({});
+
+
+
+  const [imageListDisplay, setImageListDisplay] = useState([]);
   const [notifications, setNotifications] = useState(false);
-  const handleProductValueChange = (e) => {
-    const { value, id } = e.target;
-    if (["namePr", "price", "nameSerial", "detail", "guaranteePeriod", "quantityPr", "categoryId"].includes(id)) {
-      if (["price", "guaranteePeriod", "quantityPr"].includes(id) && isNaN(value)) {
-        setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
-      } else {
-        setError((prev) => ({ ...prev, [id]: "" }));
-        setData((prev) => ({ ...prev, [id]: value }));
-      }
+  const [notes, setNotes] = useState("");
+
+  // OKE
+  useEffect(() => {
+    setError({});
+    setData({
+      id: currentProductChoose?.id,
+      name: currentProductChoose?.name,
+      serialNumber: currentProductChoose?.serialNumber,
+      retailPrice: currentProductChoose?.retailPrice,
+      guaranteeMonths: currentProductChoose?.guaranteeMonths,
+      description: currentProductChoose?.description,
+      categoryId: currentProductChoose?.category?.id,
+      supplierId: currentProductChoose?.supplier?.id,
+    });
+
+    setInventoryData({
+      total: currentProductChoose?.skus?.[0]?.inventory?.total,
+      sales: currentProductChoose?.skus?.[0]?.inventory?.sales,
+      stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
+      restocks: currentProductChoose?.skus?.[0]?.inventory?.restocks,
+    });
+
+  }, [currentProductChoose]);
+
+  const onChangeData = (e) => {
+    const { id, value } = e.target;
+    if (["retailPrice", "serialNumber", "guaranteeMonths"].includes(id) && (isNaN(value) || value === '')) {
+      setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
+    } else if (["categoryId", "supplierId"].includes(id) && !value) {
+      setData((prev) => ({ ...prev, [id]: value }));
+      setError((prev) => ({ ...prev, [id]: "Vùi lòng chọn giá trị" }));
+    } else {
+      setData((prev) => ({ ...prev, [id]: value }));
+      setError((prev) => ({ ...prev, [id]: "" }));
     }
   };
+
+  const onChangeInventoryData = (e) => {
+    const { id, value } = e.target;
+    if (["restocks"].includes(id) && isNaN(value)) {
+      setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
+    } else if (["restocks"].includes(id) && value === '') {
+      setInventoryData((prev) => ({
+        ...prev,
+        total: currentProductChoose?.skus?.[0]?.inventory?.total,
+        stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
+        restocks: currentProductChoose?.skus?.[0]?.inventory?.restocks,
+      }));
+      setError((prev) => ({ ...prev, [id]: '' }));
+    } else {
+      setInventoryData((prev) => ({ ...prev, [id]: value }));
+      setError((prev) => ({ ...prev, [id]: '' }));
+      const restocks = parseInt(value, 10);
+      setInventoryData((prev) => ({
+        ...prev,
+        total: currentProductChoose?.skus?.[0]?.inventory?.total + restocks,
+        stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks + restocks,
+        restocks,
+      }));
+      setError((prev) => ({ ...prev, [id]: '' }));
+    }
+  };
+
+  const nonError = (errorObj) => {
+    return Object.values(errorObj).every((x) => x === "");
+  };
+
+  const handleSubmit = async () => {
+    const productId = currentProductChoose.id;
+    const updatedProduct = {
+      name: data.name,
+      serialNumber: data.serialNumber,
+      retailPrice: Number.parseInt(data.retailPrice),
+      guaranteeMonths: Number.parseInt(data.guaranteeMonths),
+      thumb: currentProductChoose.thumb,
+      photos: currentProductChoose.photos,
+      description: data.description,
+      category: { id: data.categoryId },
+      supplier: { id: data.supplierId },
+      skus: [{
+        code: currentProductChoose.skus[0].code,
+        retailPrice: Number.parseInt(data.retailPrice),
+        inventory: {
+          stocks: Number.parseInt(inventoryData.stocks),
+          restocks: Number.parseInt(inventoryData.restocks)
+        }
+      }]
+    };
+
+    // console.log(imageListDisplay): TEMP
+
+    const { success, error: failure } = await clientFetch(adminProductApi.update(productId, updatedProduct));
+    // const imageUrls = imageListDisplay.map(img => img.url); // TEMP
+    // await handleProduct.addImage(imageUrls, updatedProduct.productId);
+
+    if (!success) {
+      setNotifications(false);
+      setNotes(failure);
+    } else {
+      setNotifications(true);
+      setNotes("Cập nhật thành công");
+      setTrigger((prev) => !prev);
+      setInventoryData((prev) => ({ ...prev, restocks: '' }));
+    }
+  };
+
+
 
   const handleUploadComplete = (imageData) => {
     const imageUrl = imageData.info
@@ -60,52 +171,10 @@ const ProductManagementForm = ({
     }
   };
 
-  useEffect(() => {
-    setError({});
-    setData({
-      productId: currentProductChoose?.productId,
-      namePr: currentProductChoose?.namePr,
-      nameSerial: currentProductChoose?.nameSerial,
-      detail: currentProductChoose?.detail,
-      price: currentProductChoose?.price,
-      quantityPr: currentProductChoose?.quantityPr,
-      guaranteePeriod: currentProductChoose?.guaranteePeriod,
-      supplierId: currentProductChoose?.supplierId,
-      categoryId: currentProductChoose?.categoryId,
-    });
-  }, [currentProductChoose]);
-
-  const handleSubmit = async () => {
-    const productId = currentProductChoose.productId;
-    const price = Number.parseInt(data.price);
-    const quantityPr = Number.parseInt(data.quantityPr);
-    const guaranteePeriod = Number.parseInt(data.guaranteePeriod);
-    const updatedProduct = {
-      productId,
-      namePr: data.namePr,
-      nameSerial: data.nameSerial,
-      detail: data.detail,
-      price,
-      quantityPr,
-      guaranteePeriod,
-      SupplierId: data.supplierId,
-      CategoryId: data.categoryId
-    };
-    console.log(imageListDisplay)
-    if (Object.values(error).every((x) => x === "")) {
-      await handleProduct.updateProduct(updatedProduct);
-      const imageUrls = imageListDisplay.map(img => img.url);
-      await handleProduct.addImage(imageUrls, updatedProduct.productId);
-      setNotifications(true);
-      setTrigger((prev) => !prev);
-    } else {
-      alert("Lỗi cập nhật sản phẩm");
-    }
-  };
-
+  // OKE
   return (
     <motion.div
-      key={currentProductChoose?.productId}
+      key={currentProductChoose?.id}
       initial={{ opacity: 0, x: 10 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 10 }}
@@ -114,8 +183,8 @@ const ProductManagementForm = ({
       {notifications && (
         <Notification
           notification={{
-            text: "Chỉnh sửa thành công",
-            style: "success",
+            text: notes,
+            style: notifications ? "success" : "error",
           }}
           setNotifications={setNotifications}
           notifications={notifications}
@@ -146,31 +215,33 @@ const ProductManagementForm = ({
 							</button>
 						);
 					}}
-				</CldUploadWidget> */}
+				</CldUploadWidget> */} {/* // TEMP */}
       </div>
 
       <form onSubmit={(e) => e.preventDefault()} className="text-[2rem] flex flex-col gap-2 w-full">
+        <h3 className="text-[2.2rem] font-semibold mb-4">Thông tin sản phẩm</h3>
         {[
-          { key: "productId", name: "Mã sản phẩm", disabled: true },
-          { key: "namePr", name: "Tên sản phẩm" },
-          { key: "price", name: "Giá sản phẩm" },
-          { key: "nameSerial", name: "Seri" },
+          { key: "id", name: "Mã sản phẩm", disabled: true },
+          { key: "name", name: "Tên sản phẩm" },
+          { key: "retailPrice", name: "Giá bán lẻ (1K)" },
+          { key: "serialNumber", name: "Số seri" },
+          { key: "guaranteeMonths", name: "Bảo hành (tháng)" },
         ].map((field, i) => (
           <div key={i}>
             <div className="flex gap-2 w-full">
               <label className="min-w-[170px] flex items-center gap-2 text-black/50">
                 {field.name}
-                {field.key === "productId" && (
+                {field.key === "id" && (
                   <IoCopyOutline
                     size={20}
-                    onClick={() => navigator.clipboard.writeText(currentProductChoose?.productId)}
+                    onClick={() => navigator.clipboard.writeText(currentProductChoose?.id)}
                   />
                 )}
               </label>
               <input
                 id={field.key}
                 value={data[field.key]}
-                onChange={handleProductValueChange}
+                onChange={onChangeData}
                 disabled={field.disabled}
                 className="outline-none border-b font-semibold border-black/20 w-full"
               />
@@ -180,56 +251,80 @@ const ProductManagementForm = ({
         ))}
 
         <div className="flex gap-2 w-full">
-          <label className="min-w-[170px] text-black/50">Mô tả sản phẩm</label>
+          <label className="min-w-[170px] text-black/50">Mô tả chi tiết</label>
           <textarea
-            id="detail"
-            value={data.detail}
-            onChange={handleProductValueChange}
+            id="description"
+            value={data.description ?? ""}
+            onChange={onChangeData}
             className="outline-none border-b font-semibold border-black/20 w-full"
           />
         </div>
-
-        {[
-          { key: "guaranteePeriod", name: "Bảo hành (tháng)" },
-          { key: "quantityPr", name: "Còn lại (sản phẩm)" },
-        ].map((field, i) => (
-          <div key={i}>
-            <div className="flex gap-2 w-full">
-              <label className="min-w-[170px] text-black/50">{field.name}</label>
-              <input
-                id={field.key}
-                value={data[field.key]}
-                onChange={handleProductValueChange}
-                className="outline-none border-b border-black/20 font-semibold w-full"
-              />
-            </div>
-            <h2 className="text-red-500 text-2xl">{error[field.key]}</h2>
-          </div>
-        ))}
+        <h2 className="text-red-500 text-2xl">{error.description}</h2>
 
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Doanh mục</label>
-          <select id="categoryId" onChange={handleProductValueChange} value={data.categoryId}>
-            {category?.map((cat) => (
-              <option key={cat.categoryId} value={cat.categoryId}>
-                {cat.categoryName}
+          <select id="categoryId" onChange={onChangeData} value={data.categoryId}>
+            <option></option>
+            {category?.map((x) => (
+              <option key={x.id} value={x.id}>
+                {x.name}
               </option>
             ))}
           </select>
         </div>
+        <h2 className="text-red-500 text-2xl">{error.categoryId}</h2>
 
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Nhà cung cấp</label>
-          <select id="supplierId" onChange={handleProductValueChange} value={data.supplierId}>
-            {supplier?.map((sup) => (
-              <option key={sup.supplierId} value={sup.supplierId}>
-                {sup.supplierName}
+          <select id="supplierId" onChange={onChangeData} value={data.supplierId}>
+            <option></option>
+            {supplier?.map((x) => (
+              <option key={x.id} value={x.id}>
+                {x.name}
               </option>
             ))}
           </select>
         </div>
+        <h2 className="text-red-500 text-2xl">{error.supplierId}</h2>
 
-        <button onClick={handleSubmit} className="text-white bg-blue-500 text-[1.4rem] font-semibold py-2 rounded-lg">
+        <div className="text-[2rem] flex flex-col gap-2 w-full mt-6 border-t pt-4 ">
+          <h3 className="text-[2.2rem] font-semibold mb-4">Thông tin kho hàng</h3>
+          {[
+            { key: "total", name: "Tổng số hàng", disabled: true },
+            { key: "sales", name: "Đã bán", disabled: true },
+            { key: "stocks", name: "Tồn kho", disabled: true },
+            { key: "restocks", name: "Bổ sung" },
+          ].map((field, i) => (
+            <div key={i}>
+              <div className="flex gap-2 w-full">
+                <label className="min-w-[170px] flex items-center gap-2 text-black/50">
+                  {field.name}
+                  {field.key === "id" && (
+                    <IoCopyOutline
+                      size={20}
+                      onClick={() => navigator.clipboard.writeText(currentProductChoose?.id)}
+                    />
+                  )}
+                </label>
+                <input
+                  id={field.key}
+                  value={inventoryData[field.key]}
+                  onChange={onChangeInventoryData}
+                  disabled={field.disabled}
+                  className="outline-none border-b font-semibold border-black/20 w-full"
+                />
+              </div>
+              <h2 className="text-red-500 text-2xl">{error[field.key]}</h2>
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={handleSubmit}
+          disabled={!nonError(error)}
+          className={`text-white text-[1.4rem] font-semibold py-2 rounded-lg
+            ${!nonError(error) ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500"}`}
+        >
           Cập nhật
         </button>
       </form>

@@ -26,6 +26,14 @@ public class AppUtils {
         return !StringUtils.hasText(string);
     }
 
+    public static boolean isZero(int number) {
+        return number == 0;
+    }
+
+    public static boolean isZero(Integer number) {
+        return AppUtils.isNull(number) || isZero((int) number);
+    }
+
     public static boolean isEmpty(Collection<?> collection) {
         return CollectionUtils.isEmpty(collection);
     }
@@ -34,65 +42,12 @@ public class AppUtils {
         return Objects.equals(one, two);
     }
 
+    public static boolean isPresent(Object object) {
+        return AppUtils.nonNull(object);
+    }
+
     public static Pageable defaultPageable() {
         return PageRequest.of(0, 10,
                 Sort.by(Sort.Direction.DESC, "id"));
-    }
-
-    public static String maskMiddle(String plainText, int keptLength) {
-        if (isBlank(plainText))
-            return plainText;
-        // the non-masked text
-        int maskEndIndex = plainText.length() - keptLength;
-        String startText = plainText.substring(0, keptLength);
-        String endText = plainText.substring(maskEndIndex);
-        // the masked text
-        String middleText = new String(new char[maskEndIndex - keptLength]).replace('\0', '*');
-        return startText + middleText + endText;
-    }
-
-    public static String maskStart(String plainText, int keptLength) {
-        if (isBlank(plainText))
-            return plainText;
-        // the non-masked text
-        int maskEndIndex = plainText.length() - keptLength;
-        String endText = plainText.substring(maskEndIndex);
-        // the masked text
-        String startText = new String(new char[endText.length()]).replace('\0', '*');
-        return startText + endText;
-    }
-
-    public static String toSlug(String name) {
-        Slugify slugify = Slugify.builder().build();
-        return slugify.slugify(name);
-    }
-
-    /**
-     * Map source to target, with ignoring null source props, to update partially.
-     */
-    public static <T> void updatePartially(T target, T source) {
-        // 1. Get props of source or target
-        Field[] fields = source.getClass().getDeclaredFields();
-
-        // 2. Iterate through props
-        Arrays.stream(fields).parallel()
-                // Can access the private props
-                .peek(field -> field.setAccessible(true))
-                // Get non null props
-                .filter(field -> {
-                    try {
-                        return field.get(source) != null;
-                    } catch (IllegalArgumentException | IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                // Map source to target
-                .forEach(field -> {
-                    try {
-                        field.set(target, field.get(source));
-                    }  catch (IllegalArgumentException | IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
     }
 }

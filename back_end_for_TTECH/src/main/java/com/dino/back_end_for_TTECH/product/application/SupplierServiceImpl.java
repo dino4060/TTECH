@@ -30,7 +30,8 @@ public class SupplierServiceImpl implements ISupplierService {
 
     // HELPERS //
 
-    private Supplier getSupplier(Long id) {
+    @Override
+    public Supplier getSupplier(Long id) {
         return supplierRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SUPPLIER__NOT_FOUND));
     }
@@ -47,18 +48,18 @@ public class SupplierServiceImpl implements ISupplierService {
         try {
             supplierRepository.deleteById(id);
         } catch (Exception e) {
-            throw new AppException(ErrorCode.SUPPLIER__REMOVE_FAILED);
+            throw new AppException(ErrorCode.SUPPLIER__NOT_REMOVED);
         }
     }
 
     private void validateSupplier(Supplier supplier) {
         List<Supplier> suppliers = this.supplierRepository.findByName(supplier.getName());
-        
+
         boolean conditionOfName =
-                AppUtils.isEmpty(suppliers)||
+                AppUtils.isEmpty(suppliers) ||
                         AppUtils.isEqual(suppliers.getFirst().getId(), supplier.getId());
 
-        if (!conditionOfName) throw new AppException(ErrorCode.SUPPLIER__NAME_EXITED);
+        if (!conditionOfName) throw new AppException(ErrorCode.SUPPLIER__NAME_DUPLICATED);
     }
 
     // READ //

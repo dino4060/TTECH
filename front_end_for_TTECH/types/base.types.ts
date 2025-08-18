@@ -11,6 +11,10 @@ export type TBase = {
   isDeleted: boolean;
 }
 
+export type TId = {
+  id: number;
+}
+
 export const HttpMethod = {
   GET: 'GET',
   POST: 'POST',

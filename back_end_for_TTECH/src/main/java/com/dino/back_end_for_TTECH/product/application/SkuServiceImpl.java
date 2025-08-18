@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.dino.back_end_for_TTECH.inventory.application.service.IInventoryService;
+import com.dino.back_end_for_TTECH.product.domain.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -24,7 +26,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SkuServiceImpl implements ISkuService {
 
+    IInventoryService inventoryService;
+
     ISkuRepository skuRepository;
+
+    // HELPERS //
+
+    private void cascadeSku(Sku sku) {
+         this.inventoryService.createInventoryForSku(sku);
+    }
 
     // DOMAIN //
 
@@ -68,6 +78,15 @@ public class SkuServiceImpl implements ISkuService {
         } catch (AppException e) {
             log.warn("Sku.tierOptionIndexes is invalid {}: {}", sku.getId(), e.getMessage());
             return sku.getProduct().getThumb();
+        }
+    }
+
+    @Override
+    public void createSkusForProduct(Product product) {
+        for (Sku sku : product.getSkus()) {
+            sku.setProduct(product);
+            sku.createSku();
+            this.cascadeSku(sku);
         }
     }
 }

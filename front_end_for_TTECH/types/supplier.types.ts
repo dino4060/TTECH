@@ -9,6 +9,6 @@ export type TSupplier = TBase & {
 
 // SIDE TYPES //
 
-export type TCategoryInList = Pick<TSupplier, 'id' | 'name'>
+export type TSupplierInList = Pick<TSupplier, 'id' | 'name'>
 
-export type TCategoryToWrite = Pick<TSupplier, 'name'>
+export type TSupplierToWrite = Pick<TSupplier, 'name'>
