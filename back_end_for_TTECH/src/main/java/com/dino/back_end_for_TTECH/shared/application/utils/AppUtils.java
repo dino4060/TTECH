@@ -26,6 +26,14 @@ public class AppUtils {
         return !StringUtils.hasText(string);
     }
 
+    public static boolean isZero(int number) {
+        return number == 0;
+    }
+
+    public static boolean isZero(Integer number) {
+        return AppUtils.isNull(number) || isZero((int) number);
+    }
+
     public static boolean isEmpty(Collection<?> collection) {
         return CollectionUtils.isEmpty(collection);
     }

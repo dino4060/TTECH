@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.lang.NonNull;
 
-import java.util.List;
-
 public interface IProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     @EntityGraph(attributePaths = {
             "price",
@@ -21,6 +19,4 @@ public interface IProductRepository extends JpaRepository<Product, Long>, JpaSpe
             "supplier",
     })
     Page<Product> findAll(@NonNull Pageable pageable);
-
-    List<Product> findBySerialNumber(int serialNumber);
 }

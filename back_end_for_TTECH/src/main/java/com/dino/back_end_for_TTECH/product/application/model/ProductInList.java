@@ -7,8 +7,8 @@ import java.util.List;
 public record ProductInList(
         long id,
         String name,
+        String serialNumber,
         int retailPrice,
-        int serialNumber,
         int guaranteeMonths,
         String thumb,
         List<String> photos,

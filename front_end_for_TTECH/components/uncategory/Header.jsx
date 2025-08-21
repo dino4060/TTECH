@@ -17,7 +17,7 @@ const Header = () => {
   const router = useRouter()
 
   const getAllCategory = async () => {
-    const { success, data } = await clientFetch(categoryApi.getList())
+    const { success, data } = await clientFetch(categoryApi.list())
     if (success)
       setCategory(data)
     else

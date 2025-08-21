@@ -1,4 +1,4 @@
-const RESOURCE_NAMES = ['categories', 'auth', 'users', 'suppliers'] as const;
+const RESOURCE_NAMES = ['categories', 'auth', 'users', 'suppliers', 'products'] as const;
 
 type TResourceUnion = typeof RESOURCE_NAMES[number];
 type TResourceUppers = Uppercase<TResourceUnion>;

@@ -1,6 +1,7 @@
 package com.dino.back_end_for_TTECH.product.api;
 
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
+import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.application.service.IProductService;
 import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
@@ -10,9 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AdminProductController {
@@ -36,6 +35,30 @@ public class AdminProductController {
                 ) Pageable pageable
         ) {
             return ResponseEntity.ok(this.productService.listProducts(pageable));
+        }
+
+        // createProduct //
+        @PostMapping
+        public ResponseEntity<ProductInList> createProduct(@RequestBody ProductToWrite body) {
+            ProductInList newProduct = this.productService.createProduct(body);
+            return ResponseEntity.ok(newProduct);
+        }
+
+        // updateProduct //
+        @PutMapping("/{id}")
+        public ResponseEntity<ProductInList> updateProduct(
+                @PathVariable long id,
+                @RequestBody ProductToWrite body
+        ) {
+            ProductInList updatedProduct = this.productService.updateProduct(id, body);
+            return ResponseEntity.ok(updatedProduct);
+        }
+
+        // deleteProduct //
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
+            this.productService.deleteProduct(id);
+            return ResponseEntity.ok().build();
         }
     }
 }

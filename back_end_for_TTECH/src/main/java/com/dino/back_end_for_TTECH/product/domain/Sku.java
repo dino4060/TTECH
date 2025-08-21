@@ -3,18 +3,15 @@ package com.dino.back_end_for_TTECH.product.domain;
 import com.dino.back_end_for_TTECH.inventory.domain.Inventory;
 import com.dino.back_end_for_TTECH.ordering.domain.CartItem;
 import com.dino.back_end_for_TTECH.ordering.domain.OrderItem;
-import com.dino.back_end_for_TTECH.pricing.domain.SkuPrice;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
 import com.dino.back_end_for_TTECH.promotion.domain.SkuDiscount;
 import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
-import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -24,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "skus")
+@Table(name = "sku_products")
 @DynamicInsert
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE skus SET is_deleted = true WHERE sku_id=?")
@@ -41,8 +38,7 @@ public class Sku extends BaseEntity {
     @Column(name = "sku_id")
     Long id;
 
-    @Column(nullable = false)
-    String no;
+    String code;
 
     List<Integer> tierOptionIndexes;
 
@@ -98,7 +94,7 @@ public class Sku extends BaseEntity {
 
     // INSTANCE //
 
-    public void createSku(int retailPrice) {
-        if (this.retailPrice == 0) this.retailPrice = retailPrice;
+    public void createSku() {
+        this.status = SkuStatus.LIVE;
     }
 }

@@ -1,6 +1,7 @@
 package com.dino.back_end_for_TTECH.pricing.domain;
 
 import com.dino.back_end_for_TTECH.product.domain.Product;
+import com.dino.back_end_for_TTECH.product.domain.Sku;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -48,4 +50,25 @@ public class Price extends BaseEntity {
 
     @OneToMany(mappedBy = "price", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<SkuPrice> skuPrices;
+
+    // INSTANCE METHODS //
+
+    public void create() {
+        this.mainPrice = this.product.getRetailPrice();
+        this.sidePrice = 0;
+        this.discountPercent = 0;
+        this.maxMainPrice = this.mainPrice;
+        this.maxSidePrice = this.sidePrice;
+        this.maxDiscountPercent = this.discountPercent;
+        this.skuPrices = new ArrayList<>();
+
+        for (Sku sku : this.product.getSkus()) {
+            SkuPrice skuPrice = new SkuPrice();
+            this.skuPrices.add(skuPrice);
+
+            skuPrice.setPrice(this);
+            skuPrice.setSku(sku);
+            skuPrice.create();
+        }
+    }
 }

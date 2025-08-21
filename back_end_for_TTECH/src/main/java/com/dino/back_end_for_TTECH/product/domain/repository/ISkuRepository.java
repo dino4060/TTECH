@@ -8,8 +8,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ISkuRepository extends JpaRepository<Sku, Long> {
-    // FIND//
-    //Optional<Sku> findByCode(@NonNull String skuCode);
-
-    Optional<Sku> findByNo(String no);
 }

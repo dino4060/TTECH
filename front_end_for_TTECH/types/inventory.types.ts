@@ -8,3 +8,9 @@ export type TInventory = TBase & {
   sales: number;
   total: number;
 }
+
+// SIDE TYPES //
+
+export type TInventoryToWrite = Pick<TInventory, 'stocks'>
+
+export type TInventoryInList = TInventory

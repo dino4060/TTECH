@@ -11,7 +11,6 @@ import com.dino.back_end_for_TTECH.product.application.service.ISupplierService;
 import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.product.domain.repository.IProductRepository;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
-import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import lombok.AllArgsConstructor;
@@ -53,7 +52,7 @@ public class ProductServiceImpl implements IProductService {
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
     }
 
-    private Product saveProduct(Product product) {
+    private Product save(Product product) {
         try {
             return productRepository.save(product);
         } catch (Exception e) {
@@ -69,16 +68,7 @@ public class ProductServiceImpl implements IProductService {
         }
     }
 
-    private void validateProduct(Product product) {
-        // serialNumber
-        List<Product> products = this.productRepository.findBySerialNumber(product.getSerialNumber());
-
-        boolean conditionOfSerialNumber =
-                AppUtils.isEmpty(products) ||
-                        AppUtils.isEqual(products.getFirst().getId(), product.getId());
-
-        if (!conditionOfSerialNumber) throw new AppException(ErrorCode.PRODUCT__SERIAL_DUPLICATED);
-
+    private void validate(Product product) {
         // supplier
         this.supplierService.getSupplier(product.getSupplier().getId());
 
@@ -86,7 +76,7 @@ public class ProductServiceImpl implements IProductService {
         this.categoryService.getCategory(product.getCategory().getId());
     }
 
-    private void cascadeProduct(Product product) {
+    private void cascade(Product product) {
         this.skuService.createSkusForProduct(product);
 
         this.priceService.createPriceForProduct(product);
@@ -113,10 +103,11 @@ public class ProductServiceImpl implements IProductService {
     public ProductInList createProduct(ProductToWrite body) {
         Product product = productMapper.toProduct(body);
 
-        this.cascadeProduct(product);
-        this.validateProduct(product);
+        this.validate(product);
+        product.create();
+        this.cascade(product);
+        Product saved = this.save(product);
 
-        Product saved = this.saveProduct(product);
         return productMapper.toProductInList(saved);
     }
 
@@ -125,9 +116,9 @@ public class ProductServiceImpl implements IProductService {
         Product product = this.getProduct(id);
         productMapper.toProduct(body, product);
 
-        this.validateProduct(product);
+        this.validate(product);
 
-        Product saved = this.saveProduct(product);
+        Product saved = this.save(product);
         return productMapper.toProductInList(saved);
     }
 

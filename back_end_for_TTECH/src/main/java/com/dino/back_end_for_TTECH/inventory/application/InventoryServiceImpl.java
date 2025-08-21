@@ -70,6 +70,9 @@ public class InventoryServiceImpl implements IInventoryService {
 
     @Override
     public void createInventoryForSku(Sku sku) {
+        Inventory inventory = sku.getInventory();
 
+        inventory.setSku(sku);
+        inventory.create();
     }
 }

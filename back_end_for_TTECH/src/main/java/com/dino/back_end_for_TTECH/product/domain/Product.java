@@ -37,9 +37,9 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     String name;
 
-    int retailPrice;
+    String serialNumber;
 
-    int serialNumber;
+    int retailPrice;
 
     int guaranteeMonths;
 
@@ -74,7 +74,7 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "supplier_id")
     Supplier supplier;
 
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     Price price;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -82,4 +82,9 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductDiscount> discounts;
+
+    // INSTANCE METHODS //
+    public void create() {
+        this.status = ProductStatus.LIVE;
+    }
 }

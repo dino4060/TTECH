@@ -1,5 +1,6 @@
 package com.dino.back_end_for_TTECH.pricing.domain;
 
+import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.product.domain.Sku;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
@@ -42,4 +43,12 @@ public class SkuPrice extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "price_id", updatable = false, nullable = false)
     Price price;
+
+    // INSTANCE METHODS //
+
+    public void create() {
+        this.mainPrice = sku.getRetailPrice();
+        this.sidePrice = 0;
+        this.discountPercent = 0;
+    }
 }

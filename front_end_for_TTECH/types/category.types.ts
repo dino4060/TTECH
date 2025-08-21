@@ -10,8 +10,6 @@ export type TCategory = TBase & {
 
 // SIDE TYPES //
 
-export type TCategoryLean = Pick<TCategory, 'id' | 'name'>;
-
 export type TCategoryInList = Pick<TCategory, 'id' | 'name' | 'position'>
 
 export type TCategoryToWrite = Pick<TCategory, 'name' | 'position'>
