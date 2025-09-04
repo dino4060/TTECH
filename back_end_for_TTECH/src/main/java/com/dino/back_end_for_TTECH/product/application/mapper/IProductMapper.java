@@ -4,6 +4,7 @@ import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.domain.Product;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
@@ -13,5 +14,6 @@ public interface IProductMapper {
 
     Product toProduct(ProductToWrite dto);
 
+    @Mapping(target = "skus.inventory.stocks", ignore = true)
     void toProduct(ProductToWrite dto, @MappingTarget Product entity);
 }

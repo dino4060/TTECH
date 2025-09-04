@@ -23,8 +23,8 @@ const ProductRenderList = ({
           variants={variants}
           initial='initial'
           animate={
-            currentProductChoose?.productId ===
-              x?.productId
+            currentProductChoose?.id ===
+              x?.id
               ? "animate"
               : "initial"
           }
@@ -32,14 +32,17 @@ const ProductRenderList = ({
           className='flex items-start gap-2 p-2 cursor-pointer rounded-2xl'
         >
           <div className='w-12 h-12 shrink-0 rounded-xl bg-sky-300'>
-            <img
-              src={x?.images[0]}
+            {/* <img
+              src={x?.photos[0]}
               className='w-full h-full object-cover rounded-xl'
-            />
+            /> */}
           </div>
           <div className='text-[1.4rem] whitespace-nowrap overflow-hidden text-ellipsis'>
-            {x?.namePr}
+            {x?.name}
           </div>
+          {/* <div className='text-[1.4rem] whitespace-nowrap overflow-hidden text-ellipsis'>
+            {x?.skus[0]?.inventory?.stocks} pcs
+          </div> */}
         </motion.li>
       ))}
     </ul>

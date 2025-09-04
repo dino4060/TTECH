@@ -40,7 +40,7 @@ public class Inventory extends BaseEntity {
     @JoinColumn(name = "sku_id", nullable = false, updatable = false)
     Sku sku;
 
-    // SETTERS //
+    // CHECKING METHODS //
 
     public void checkSales() {
         boolean condition = 0 <= sales && sales <= this.total;
@@ -56,16 +56,16 @@ public class Inventory extends BaseEntity {
 
     // INSTANCE METHODS //
 
-    public void reverseStock(int quantity) {
+    public void create() {
+        this.sales = 0;
+        this.total = this.stocks;
+    }
+
+    public void updateStocks(int quantity) {
         this.setStocks(this.getStocks() - quantity);
         this.setSales(this.getSales() + quantity);
 
         this.checkStocks();
         this.checkSales();
-    }
-
-    public void create() {
-        this.sales = 0;
-        this.total = this.stocks;
     }
 }

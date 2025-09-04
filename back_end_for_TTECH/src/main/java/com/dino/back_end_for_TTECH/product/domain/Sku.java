@@ -38,7 +38,7 @@ public class Sku extends BaseEntity {
     @Column(name = "sku_id")
     Long id;
 
-    String code;
+    String no;
 
     List<Integer> tierOptionIndexes;
 
@@ -97,4 +97,9 @@ public class Sku extends BaseEntity {
     public void createSku() {
         this.status = SkuStatus.LIVE;
     }
+
+    public void update(int quantity) {
+        this.inventory.updateStocks(quantity);
+    }
+
 }

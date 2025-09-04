@@ -1,5 +1,5 @@
 // src/lib/api/product.api.ts
-import type { TApi } from "@/types/base.types";
+import type { TApi, TPage } from "@/types/base.types";
 import { HttpMethod } from "@/types/base.types";
 import type { TCategoryInList, TCategoryToWrite } from "@/types/category.types";
 import { RESOURCES } from "../constants/resources";
@@ -17,7 +17,7 @@ export const productApi = {
 export const adminProductApi = {
   // PRIVATE ADMIN PRODUCT CONTROLLER //
 
-  list: (): TApi<TProductInList[]> => ({
+  list: (): TApi<TPage<TProductInList[]>> => ({
     route: `${RESOURCES.PRODUCTS.PRIVATE_ADMIN}/list`,
     method: HttpMethod.GET,
   }),

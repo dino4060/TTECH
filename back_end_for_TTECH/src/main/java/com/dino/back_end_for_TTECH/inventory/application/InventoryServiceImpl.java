@@ -46,7 +46,7 @@ public class InventoryServiceImpl implements IInventoryService {
     private void reserveStockNormally(Long skuId, int quantity) {
         Inventory inventory = this.checkStock(skuId, quantity);
 
-        inventory.reverseStock(quantity);
+        inventory.updateStocks(quantity);
         this.inventoryRepository.save(inventory);
     }
 

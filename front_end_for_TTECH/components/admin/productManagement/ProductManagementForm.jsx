@@ -31,19 +31,17 @@ const ProductManagementForm = ({
     price: currentProductChoose?.price,
     quantityPr: currentProductChoose?.quantityPr,
     guaranteePeriod: currentProductChoose?.guaranteePeriod,
-    supplierId: currentProductChoose?.supplierId,
-    categoryId: currentProductChoose?.categoryId,
+    category: currentProductChoose?.category?.id,
+    supplier: currentProductChoose?.supplier?.id,
   });
   const [notifications, setNotifications] = useState(false);
   const handleProductValueChange = (e) => {
     const { value, id } = e.target;
-    if (["namePr", "price", "nameSerial", "detail", "guaranteePeriod", "quantityPr", "categoryId"].includes(id)) {
-      if (["price", "guaranteePeriod", "quantityPr"].includes(id) && isNaN(value)) {
-        setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
-      } else {
-        setError((prev) => ({ ...prev, [id]: "" }));
-        setData((prev) => ({ ...prev, [id]: value }));
-      }
+    if (["retailPrice", "serialNumber", "guaranteeMonths", "stocks"].includes(id) && isNaN(value)) {
+      setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
+    } else {
+      setError((prev) => ({ ...prev, [id]: "" }));
+      setData((prev) => ({ ...prev, [id]: value }));
     }
   };
 
@@ -61,17 +59,19 @@ const ProductManagementForm = ({
   };
 
   useEffect(() => {
+    console.log("currentProductChoose ", currentProductChoose);
+
     setError({});
     setData({
-      productId: currentProductChoose?.productId,
-      namePr: currentProductChoose?.namePr,
-      nameSerial: currentProductChoose?.nameSerial,
-      detail: currentProductChoose?.detail,
-      price: currentProductChoose?.price,
-      quantityPr: currentProductChoose?.quantityPr,
-      guaranteePeriod: currentProductChoose?.guaranteePeriod,
-      supplierId: currentProductChoose?.supplierId,
-      categoryId: currentProductChoose?.categoryId,
+      id: currentProductChoose?.id,
+      name: currentProductChoose?.name,
+      serialNumber: currentProductChoose?.serialNumber,
+      retailPrice: currentProductChoose?.retailPrice,
+      guaranteeMonths: currentProductChoose?.guaranteeMonths,
+      stocks: currentProductChoose?.stocks,
+      description: currentProductChoose?.description,
+      category: currentProductChoose?.category?.id,
+      supplier: currentProductChoose?.supplier?.id,
     });
   }, [currentProductChoose]);
 
@@ -88,8 +88,8 @@ const ProductManagementForm = ({
       price,
       quantityPr,
       guaranteePeriod,
-      SupplierId: data.supplierId,
-      CategoryId: data.categoryId
+      supplier: data.supplier,
+      category: data.category
     };
     console.log(imageListDisplay)
     if (Object.values(error).every((x) => x === "")) {
@@ -105,7 +105,7 @@ const ProductManagementForm = ({
 
   return (
     <motion.div
-      key={currentProductChoose?.productId}
+      key={currentProductChoose?.id}
       initial={{ opacity: 0, x: 10 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 10 }}
@@ -151,19 +151,19 @@ const ProductManagementForm = ({
 
       <form onSubmit={(e) => e.preventDefault()} className="text-[2rem] flex flex-col gap-2 w-full">
         {[
-          { key: "productId", name: "Mã sản phẩm", disabled: true },
-          { key: "namePr", name: "Tên sản phẩm" },
-          { key: "price", name: "Giá sản phẩm" },
-          { key: "nameSerial", name: "Seri" },
+          { key: "id", name: "Mã sản phẩm", disabled: true },
+          { key: "name", name: "Tên sản phẩm" },
+          { key: "retailPrice", name: "Giá bán lẻ (1K)" },
+          { key: "serialNumber", name: "Số seri" },
         ].map((field, i) => (
           <div key={i}>
             <div className="flex gap-2 w-full">
               <label className="min-w-[170px] flex items-center gap-2 text-black/50">
                 {field.name}
-                {field.key === "productId" && (
+                {field.key === "id" && (
                   <IoCopyOutline
                     size={20}
-                    onClick={() => navigator.clipboard.writeText(currentProductChoose?.productId)}
+                    onClick={() => navigator.clipboard.writeText(currentProductChoose?.id)}
                   />
                 )}
               </label>
@@ -179,19 +179,9 @@ const ProductManagementForm = ({
           </div>
         ))}
 
-        <div className="flex gap-2 w-full">
-          <label className="min-w-[170px] text-black/50">Mô tả sản phẩm</label>
-          <textarea
-            id="detail"
-            value={data.detail}
-            onChange={handleProductValueChange}
-            className="outline-none border-b font-semibold border-black/20 w-full"
-          />
-        </div>
-
         {[
-          { key: "guaranteePeriod", name: "Bảo hành (tháng)" },
-          { key: "quantityPr", name: "Còn lại (sản phẩm)" },
+          { key: "guaranteeMonths", name: "Bảo hành (tháng)" },
+          { key: "stocks", name: "Số lượng nhập kho" },
         ].map((field, i) => (
           <div key={i}>
             <div className="flex gap-2 w-full">
@@ -208,11 +198,22 @@ const ProductManagementForm = ({
         ))}
 
         <div className="flex gap-2 w-full">
+          <label className="min-w-[170px] text-black/50">Mô tả chi tiết</label>
+          <textarea
+            id="description"
+            value={data.description}
+            onChange={handleProductValueChange}
+            className="outline-none border-b font-semibold border-black/20 w-full"
+          />
+        </div>
+
+        <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Doanh mục</label>
-          <select id="categoryId" onChange={handleProductValueChange} value={data.categoryId}>
-            {category?.map((cat) => (
-              <option key={cat.categoryId} value={cat.categoryId}>
-                {cat.categoryName}
+          <select id="category" onChange={handleProductValueChange} value={data.category}>
+            <option></option>
+            {category?.map((x) => (
+              <option key={x.id} value={x.id}>
+                {x.name}
               </option>
             ))}
           </select>
@@ -220,10 +221,11 @@ const ProductManagementForm = ({
 
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Nhà cung cấp</label>
-          <select id="supplierId" onChange={handleProductValueChange} value={data.supplierId}>
-            {supplier?.map((sup) => (
-              <option key={sup.supplierId} value={sup.supplierId}>
-                {sup.supplierName}
+          <select id="supplier" onChange={handleProductValueChange} value={data.supplier}>
+            <option></option>
+            {supplier?.map((x) => (
+              <option key={x.id} value={x.id}>
+                {x.name}
               </option>
             ))}
           </select>

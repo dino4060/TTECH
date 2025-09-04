@@ -256,11 +256,11 @@ const AddProduct = ({
                   },
                   {
                     key: "retailPrice",
-                    name: "Giá bán lẻ (1K VNĐ)",
+                    name: "Giá bán lẻ (1K)",
                   },
                   {
                     key: "serialNumber",
-                    name: "Seri",
+                    name: "Số seri",
                   },
                   {
                     key: "guaranteeMonths",

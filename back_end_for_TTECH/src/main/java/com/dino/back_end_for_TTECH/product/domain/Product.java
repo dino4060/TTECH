@@ -87,4 +87,8 @@ public class Product extends BaseEntity {
     public void create() {
         this.status = ProductStatus.LIVE;
     }
+
+    public void update(int stocks) {
+        this.skus.forEach(sku -> sku.update(stocks));
+    }
 }

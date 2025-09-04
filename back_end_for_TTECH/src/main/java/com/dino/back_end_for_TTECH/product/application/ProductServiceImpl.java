@@ -103,11 +103,11 @@ public class ProductServiceImpl implements IProductService {
     public ProductInList createProduct(ProductToWrite body) {
         Product product = productMapper.toProduct(body);
 
-        this.validate(product);
         product.create();
+        this.validate(product);
         this.cascade(product);
-        Product saved = this.save(product);
 
+        Product saved = this.save(product);
         return productMapper.toProductInList(saved);
     }
 
@@ -116,6 +116,7 @@ public class ProductServiceImpl implements IProductService {
         Product product = this.getProduct(id);
         productMapper.toProduct(body, product);
 
+        product.update(body.skus().getFirst().inventory().stocks());
         this.validate(product);
 
         Product saved = this.save(product);

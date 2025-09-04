@@ -13,6 +13,7 @@ import { UserAuth } from "@/context/AuthContext"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { adminCategoryApi } from "@/lib/api/category.api"
 import { adminSupplierApi } from "@/lib/api/supplier.api"
+import { adminProductApi } from "@/lib/api/product.api"
 
 const AdminProductManagement = () => {
   const { token, user, logout } = UserAuth()
@@ -47,11 +48,12 @@ const AdminProductManagement = () => {
 
   const getData = async () => {
     try {
-      const { data: category } = await clientFetch(adminCategoryApi.list())
-      setCategory(category)
+      const { data: categories } = await clientFetch(adminCategoryApi.list())
+      setCategory(categories)
 
-      const { data: supplier } = await clientFetch(adminSupplierApi.list())
-      setSupplier(supplier)
+      const { data: suppliers } = await clientFetch(adminSupplierApi.list())
+      setSupplier(suppliers)
+
     } catch (error) { }
   }
 
@@ -63,11 +65,9 @@ const AdminProductManagement = () => {
 
   const getProduct = async () => {
     try {
-      const { products } = await handleProduct.getProduct(
-        filterDebounce
-      )
-
+      const { data: { items: products } } = await clientFetch(adminProductApi.list())
       setList(products)
+
     } catch (error) { }
   }
 
