@@ -16,7 +16,7 @@ const ProductRenderList = ({
     setCurrentProductChoose(x)
   }
   return (
-    <ul className='w-[25%] customScrollBar divide-y py-2 flex flex-col gap-2 h-[350px] overflow-y-scroll p-2'>
+    <ul className='w-[25%] customScrollBar divide-y py-2 flex flex-col gap-2 h-[600px] overflow-y-scroll p-2'>
       {list.map((x, i) => (
         <motion.li
           key={i}

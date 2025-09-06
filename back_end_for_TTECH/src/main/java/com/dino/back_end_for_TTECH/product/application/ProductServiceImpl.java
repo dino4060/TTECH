@@ -11,7 +11,9 @@ import com.dino.back_end_for_TTECH.product.application.service.ICategoryService;
 import com.dino.back_end_for_TTECH.product.application.service.IProductService;
 import com.dino.back_end_for_TTECH.product.application.service.ISkuService;
 import com.dino.back_end_for_TTECH.product.application.service.ISupplierService;
+import com.dino.back_end_for_TTECH.product.domain.Category;
 import com.dino.back_end_for_TTECH.product.domain.Product;
+import com.dino.back_end_for_TTECH.product.domain.Supplier;
 import com.dino.back_end_for_TTECH.product.domain.repository.IProductRepository;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
@@ -52,8 +54,6 @@ public class ProductServiceImpl implements IProductService {
 
     private final ISkuMapper skuMapper;
 
-    private final IInventoryMapper inventoryMapper;
-
 
     // HELPERS //
 
@@ -78,15 +78,23 @@ public class ProductServiceImpl implements IProductService {
         }
     }
 
-    private void validate(Product product) {
-        // supplier
-        this.supplierService.getSupplier(product.getSupplier().getId());
+    private void referBy(Product product) {
+        product.setSupplier(
+                this.supplierService.getSupplier(
+                        product.getSupplier().getId()));
 
-        // category
-        this.categoryService.getCategory(product.getCategory().getId());
+        product.setCategory(
+                this.categoryService.getCategory(
+                        product.getCategory().getId()));
     }
 
-    private void cascade(Product product) {
+    private void referBy(ProductToWrite body, Product product) {
+        product.setCategory(new Category(body.category().id()));
+        product.setSupplier(new Supplier(body.supplier().id()));
+        this.referBy(product);
+    }
+
+    private void buildBy(Product product) {
         this.skuService.createSkusForProduct(product);
 
         this.priceService.createPriceForProduct(product);
@@ -114,8 +122,8 @@ public class ProductServiceImpl implements IProductService {
         Product product = productMapper.toProduct(body);
 
         product.create();
-        this.validate(product);
-        this.cascade(product);
+        this.referBy(product);
+        this.buildBy(product);
 
         Product saved = this.save(product);
         return productMapper.toProductInList(saved);
@@ -130,16 +138,12 @@ public class ProductServiceImpl implements IProductService {
         var skuBody = body.skus().getFirst();
         var inventoryBody = skuBody.inventory();
 
-        // Map product
+        // Map to product
         this.productMapper.toProduct(body, product);
         this.skuMapper.toSku(skuBody, sku);
-        this.inventoryMapper.toInventory(inventoryBody, inventory);
 
-        product.getSkus().set(0, sku);
-        sku.setInventory(inventory);
-
-        // Validate product
-        this.validate(product);
+        // Refer by product
+        this.referBy(body, product);
 
         // Restocks inventory
         this.inventoryService.restock(inventory, inventoryBody.restocks());

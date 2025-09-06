@@ -40,7 +40,7 @@ const ProductManagementForm = ({
     total: currentProductChoose?.skus?.[0]?.inventory?.total,
     sales: currentProductChoose?.skus?.[0]?.inventory?.sales,
     stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
-    restock: 0,
+    restocks: currentProductChoose?.skus?.[0]?.inventory?.restocks,
   });
 
   const [error, setError] = useState({});
@@ -49,6 +49,7 @@ const ProductManagementForm = ({
 
   const [imageListDisplay, setImageListDisplay] = useState([]);
   const [notifications, setNotifications] = useState(false);
+  const [notes, setNotes] = useState("");
 
   // OKE
   useEffect(() => {
@@ -68,15 +69,18 @@ const ProductManagementForm = ({
       total: currentProductChoose?.skus?.[0]?.inventory?.total,
       sales: currentProductChoose?.skus?.[0]?.inventory?.sales,
       stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
-      restock: 0,
+      restocks: currentProductChoose?.skus?.[0]?.inventory?.restocks,
     });
 
   }, [currentProductChoose]);
 
   const onChangeData = (e) => {
     const { id, value } = e.target;
-    if (["retailPrice", "serialNumber", "guaranteeMonths", "stocks"].includes(id) && isNaN(value)) {
+    if (["retailPrice", "serialNumber", "guaranteeMonths"].includes(id) && (isNaN(value) || value === '')) {
       setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
+    } else if (["categoryId", "supplierId"].includes(id) && !value) {
+      setData((prev) => ({ ...prev, [id]: value }));
+      setError((prev) => ({ ...prev, [id]: "Vùi lòng chọn giá trị" }));
     } else {
       setData((prev) => ({ ...prev, [id]: value }));
       setError((prev) => ({ ...prev, [id]: "" }));
@@ -87,10 +91,30 @@ const ProductManagementForm = ({
     const { id, value } = e.target;
     if (["restocks"].includes(id) && isNaN(value)) {
       setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
+    } else if (["restocks"].includes(id) && value === '') {
+      setInventoryData((prev) => ({
+        ...prev,
+        total: currentProductChoose?.skus?.[0]?.inventory?.total,
+        stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
+        restocks: currentProductChoose?.skus?.[0]?.inventory?.restocks,
+      }));
+      setError((prev) => ({ ...prev, [id]: '' }));
     } else {
       setInventoryData((prev) => ({ ...prev, [id]: value }));
-      setError((prev) => ({ ...prev, [id]: "" }));
+      setError((prev) => ({ ...prev, [id]: '' }));
+      const restocks = parseInt(value, 10);
+      setInventoryData((prev) => ({
+        ...prev,
+        total: currentProductChoose?.skus?.[0]?.inventory?.total + restocks,
+        stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks + restocks,
+        restocks,
+      }));
+      setError((prev) => ({ ...prev, [id]: '' }));
     }
+  };
+
+  const nonError = (errorObj) => {
+    return Object.values(errorObj).every((x) => x === "");
   };
 
   const handleSubmit = async () => {
@@ -110,23 +134,25 @@ const ProductManagementForm = ({
         retailPrice: Number.parseInt(data.retailPrice),
         inventory: {
           stocks: Number.parseInt(inventoryData.stocks),
-          restocks: Number.parseInt(inventoryData.restock)
+          restocks: Number.parseInt(inventoryData.restocks)
         }
       }]
     };
 
-    console.log("handleSubmit", "updatedProduct", updatedProduct); // DOING
-
     // console.log(imageListDisplay): TEMP
 
-    if (Object.values(error).every((x) => x === "")) {
-      await clientFetch(adminProductApi.update(productId, updatedProduct));
-      // const imageUrls = imageListDisplay.map(img => img.url); // TEMP
-      // await handleProduct.addImage(imageUrls, updatedProduct.productId);
-      setNotifications(true);
-      setTrigger((prev) => !prev);
+    const { success, error: failure } = await clientFetch(adminProductApi.update(productId, updatedProduct));
+    // const imageUrls = imageListDisplay.map(img => img.url); // TEMP
+    // await handleProduct.addImage(imageUrls, updatedProduct.productId);
+
+    if (!success) {
+      setNotifications(false);
+      setNotes(failure);
     } else {
-      alert("Lỗi cập nhật sản phẩm");
+      setNotifications(true);
+      setNotes("Cập nhật thành công");
+      setTrigger((prev) => !prev);
+      setInventoryData((prev) => ({ ...prev, restocks: '' }));
     }
   };
 
@@ -157,8 +183,8 @@ const ProductManagementForm = ({
       {notifications && (
         <Notification
           notification={{
-            text: "Chỉnh sửa thành công",
-            style: "success",
+            text: notes,
+            style: notifications ? "success" : "error",
           }}
           setNotifications={setNotifications}
           notifications={notifications}
@@ -193,13 +219,13 @@ const ProductManagementForm = ({
       </div>
 
       <form onSubmit={(e) => e.preventDefault()} className="text-[2rem] flex flex-col gap-2 w-full">
+        <h3 className="text-[2.2rem] font-semibold mb-4">Thông tin sản phẩm</h3>
         {[
           { key: "id", name: "Mã sản phẩm", disabled: true },
           { key: "name", name: "Tên sản phẩm" },
           { key: "retailPrice", name: "Giá bán lẻ (1K)" },
           { key: "serialNumber", name: "Số seri" },
           { key: "guaranteeMonths", name: "Bảo hành (tháng)" },
-          { key: "stocks", name: "Số lượng nhập kho", disabled: true },
         ].map((field, i) => (
           <div key={i}>
             <div className="flex gap-2 w-full">
@@ -224,23 +250,6 @@ const ProductManagementForm = ({
           </div>
         ))}
 
-        {/* {[
-
-        ].map((field, i) => (
-          <div key={i}>
-            <div className="flex gap-2 w-full">
-              <label className="min-w-[170px] text-black/50">{field.name}</label>
-              <input
-                id={field.key}
-                value={data[field.key]}
-                onChange={handleProductValueChange}
-                className="outline-none border-b border-black/20 font-semibold w-full"
-              />
-            </div>
-            <h2 className="text-red-500 text-2xl">{error[field.key]}</h2>
-          </div>
-        ))} */} {/* // DOING */}
-
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Mô tả chi tiết</label>
           <textarea
@@ -250,10 +259,11 @@ const ProductManagementForm = ({
             className="outline-none border-b font-semibold border-black/20 w-full"
           />
         </div>
+        <h2 className="text-red-500 text-2xl">{error.description}</h2>
 
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Doanh mục</label>
-          <select id="category" onChange={onChangeData} value={data.categoryId}>
+          <select id="categoryId" onChange={onChangeData} value={data.categoryId}>
             <option></option>
             {category?.map((x) => (
               <option key={x.id} value={x.id}>
@@ -262,10 +272,11 @@ const ProductManagementForm = ({
             ))}
           </select>
         </div>
+        <h2 className="text-red-500 text-2xl">{error.categoryId}</h2>
 
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Nhà cung cấp</label>
-          <select id="supplier" onChange={onChangeData} value={data.supplierId}>
+          <select id="supplierId" onChange={onChangeData} value={data.supplierId}>
             <option></option>
             {supplier?.map((x) => (
               <option key={x.id} value={x.id}>
@@ -274,20 +285,15 @@ const ProductManagementForm = ({
             ))}
           </select>
         </div>
+        <h2 className="text-red-500 text-2xl">{error.supplierId}</h2>
 
-        {/* tạo ra section inventory trong form này
-        - yêu cầu tương tự các field trên
-        - total, sales, stocks are disable
-        - phần code cũ không được thay đổi
-         */}
-
-        {/* <div className="mt-6 border-t pt-4">
+        <div className="text-[2rem] flex flex-col gap-2 w-full mt-6 border-t pt-4 ">
           <h3 className="text-[2.2rem] font-semibold mb-4">Thông tin kho hàng</h3>
           {[
-            { key: "total", name: "Tổng tồn kho", disabled: true },
+            { key: "total", name: "Tổng số hàng", disabled: true },
             { key: "sales", name: "Đã bán", disabled: true },
-            { key: "stocks", name: "Tồn kho hiện tại", disabled: true },
-            { key: "restock", name: "Số lượng nhập kho" },
+            { key: "stocks", name: "Tồn kho", disabled: true },
+            { key: "restocks", name: "Bổ sung" },
           ].map((field, i) => (
             <div key={i}>
               <div className="flex gap-2 w-full">
@@ -302,35 +308,23 @@ const ProductManagementForm = ({
                 </label>
                 <input
                   id={field.key}
-                  value={data[field.key]}
-                  onChange={onChangeData}
+                  value={inventoryData[field.key]}
+                  onChange={onChangeInventoryData}
                   disabled={field.disabled}
                   className="outline-none border-b font-semibold border-black/20 w-full"
                 />
               </div>
               <h2 className="text-red-500 text-2xl">{error[field.key]}</h2>
             </div>
-
-            //  <div>
-            //   <div className="flex gap-2 w-full">
-            //     <label className="min-w-[170px] flex items-center gap-2 text-black/50">{field.name}</label>
-            //     <input
-            //       id={field.key}
-            //       type="number"
-            //       value={inventoryData[field.key] ?? ""}
-            //       onChange={onChangeInventoryData}
-            //       disabled={field.disabled}
-            //       className="outline-none border-b font-semibold border-black/20 w-full"
-            //     />
-            //     <h2 className="text-red-500 text-xl">{error[field.key]}</h2>
-            //   </div>
-            //   <h2 className="text-red-500 text-2xl">{error[field.key]}</h2>
-            // </div> // DOING
-
           ))}
-        </div> */}
+        </div>
 
-        <button onClick={handleSubmit} className="text-white bg-blue-500 text-[1.4rem] font-semibold py-2 rounded-lg">
+        <button
+          onClick={handleSubmit}
+          disabled={!nonError(error)}
+          className={`text-white text-[1.4rem] font-semibold py-2 rounded-lg
+            ${!nonError(error) ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500"}`}
+        >
           Cập nhật
         </button>
       </form>
