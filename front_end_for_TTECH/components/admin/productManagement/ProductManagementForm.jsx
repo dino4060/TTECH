@@ -24,15 +24,15 @@ const ProductManagementForm = ({
   const [error, setError] = useState({});
   const [imageListDisplay, setImageListDisplay] = useState([]);
   const [data, setData] = useState({
-    productId: currentProductChoose?.productId,
-    namePr: currentProductChoose?.namePr,
-    nameSerial: currentProductChoose?.nameSerial,
-    detail: currentProductChoose?.detail,
-    price: currentProductChoose?.price,
-    quantityPr: currentProductChoose?.quantityPr,
-    guaranteePeriod: currentProductChoose?.guaranteePeriod,
-    category: currentProductChoose?.category?.id,
-    supplier: currentProductChoose?.supplier?.id,
+    id: currentProductChoose?.id,
+    name: currentProductChoose?.name,
+    serialNumber: currentProductChoose?.serialNumber,
+    retailPrice: currentProductChoose?.retailPrice,
+    guaranteeMonths: currentProductChoose?.guaranteeMonths,
+    stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
+    description: currentProductChoose?.description,
+    categoryId: currentProductChoose?.category?.id,
+    supplierId: currentProductChoose?.supplier?.id,
   });
   const [notifications, setNotifications] = useState(false);
   const handleProductValueChange = (e) => {
@@ -59,8 +59,6 @@ const ProductManagementForm = ({
   };
 
   useEffect(() => {
-    console.log("currentProductChoose ", currentProductChoose);
-
     setError({});
     setData({
       id: currentProductChoose?.id,
@@ -68,11 +66,13 @@ const ProductManagementForm = ({
       serialNumber: currentProductChoose?.serialNumber,
       retailPrice: currentProductChoose?.retailPrice,
       guaranteeMonths: currentProductChoose?.guaranteeMonths,
-      stocks: currentProductChoose?.stocks,
+      stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
       description: currentProductChoose?.description,
-      category: currentProductChoose?.category?.id,
-      supplier: currentProductChoose?.supplier?.id,
+      categoryId: currentProductChoose?.category?.id,
+      supplierId: currentProductChoose?.supplier?.id,
     });
+
+    console.log("currentProductChoose ", currentProductChoose);
   }, [currentProductChoose]);
 
   const handleSubmit = async () => {
@@ -88,8 +88,8 @@ const ProductManagementForm = ({
       price,
       quantityPr,
       guaranteePeriod,
-      supplier: data.supplier,
-      category: data.category
+      supplierId: data.supplier,
+      categoryId: data.category
     };
     console.log(imageListDisplay)
     if (Object.values(error).every((x) => x === "")) {
@@ -201,7 +201,7 @@ const ProductManagementForm = ({
           <label className="min-w-[170px] text-black/50">Mô tả chi tiết</label>
           <textarea
             id="description"
-            value={data.description}
+            value={data.description ?? ""}
             onChange={handleProductValueChange}
             className="outline-none border-b font-semibold border-black/20 w-full"
           />
@@ -209,7 +209,7 @@ const ProductManagementForm = ({
 
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Doanh mục</label>
-          <select id="category" onChange={handleProductValueChange} value={data.category}>
+          <select id="category" onChange={handleProductValueChange} value={data.categoryId}>
             <option></option>
             {category?.map((x) => (
               <option key={x.id} value={x.id}>
@@ -221,7 +221,7 @@ const ProductManagementForm = ({
 
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Nhà cung cấp</label>
-          <select id="supplier" onChange={handleProductValueChange} value={data.supplier}>
+          <select id="supplier" onChange={handleProductValueChange} value={data.supplierId}>
             <option></option>
             {supplier?.map((x) => (
               <option key={x.id} value={x.id}>

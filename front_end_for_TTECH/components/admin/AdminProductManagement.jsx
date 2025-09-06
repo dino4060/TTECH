@@ -18,8 +18,7 @@ import { adminProductApi } from "@/lib/api/product.api"
 const AdminProductManagement = () => {
   const { token, user, logout } = UserAuth()
 
-  const [currentProductChoose, setCurrentProductChoose] =
-    useState({})
+  const [currentProductChoose, setCurrentProductChoose] = useState({})
   const [filter, setFilter] = useState({
     pageNumber: 1,
     pageSize: 999_999,
@@ -29,9 +28,7 @@ const AdminProductManagement = () => {
   const [list, setList] = useState([])
   const [supplier, setSupplier] = useState([{}])
   const [category, setCategory] = useState([{}])
-  const [allImageOfProduct, setAllImageOfProduct] = useState(
-    []
-  )
+  const [allImageOfProduct, setAllImageOfProduct] = useState([])
 
   const getAllImage = async () => {
     try {
