@@ -42,16 +42,19 @@ public class Inventory extends BaseEntity {
 
     // CHECKING METHODS //
 
-    public void checkSales() {
-        boolean condition = 0 <= sales && sales <= this.total;
-
-        if (!condition) throw new AppException(ErrorCode.INVENTORY__SALES_LIMIT);
+    public void setTotal() {
+        boolean condition = 0 <= total && stocks + sales <= total;
+        if (!condition) throw new AppException(ErrorCode.INVENTORY__TOTAL_LIMIT);
     }
 
-    public void checkStocks() {
-        boolean condition = 0 <= stocks && stocks < this.total;
-
+    public void setStocks() {
+        boolean condition = 0 <= stocks && stocks <= this.total;
         if (!condition) throw new AppException(ErrorCode.INVENTORY__STOCKS_LIMIT);
+    }
+
+    public void setSales() {
+        boolean condition = 0 <= sales && sales <= this.total;
+        if (!condition) throw new AppException(ErrorCode.INVENTORY__SALES_LIMIT);
     }
 
     // INSTANCE METHODS //
@@ -61,11 +64,21 @@ public class Inventory extends BaseEntity {
         this.total = this.stocks;
     }
 
+    public static Inventory imports(int quantity) {
+        var inventory = new Inventory();
+        inventory.setTotal(quantity);
+        inventory.setStocks(quantity);
+        inventory.setSales(0);
+        return inventory;
+    }
+
+    public void restock(int quantity) {
+        this.setTotal(this.total + quantity);
+        this.setStocks(this.stocks + quantity);
+    }
+
     public void updateStocks(int quantity) {
         this.setStocks(this.getStocks() - quantity);
         this.setSales(this.getSales() + quantity);
-
-        this.checkStocks();
-        this.checkSales();
     }
 }

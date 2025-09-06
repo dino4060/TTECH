@@ -2,6 +2,9 @@
 import { handleProduct } from "@/app/api/handleProduct";
 import { handleProductCategory } from "@/app/api/handleProductCategory";
 import Notification from "@/components/uncategory/Notification";
+import { adminProductApi } from "@/lib/api/product.api";
+import { clientFetch } from "@/lib/http/fetch.client";
+import { da } from "@faker-js/faker";
 import { AnimatePresence, motion } from "framer-motion";
 import { CldUploadWidget } from "next-cloudinary";
 import { useEffect, useState } from "react";
@@ -21,8 +24,7 @@ const ProductManagementForm = ({
   triggerImage,
   setTriggerImage,
 }) => {
-  const [error, setError] = useState({});
-  const [imageListDisplay, setImageListDisplay] = useState([]);
+  // OKE
   const [data, setData] = useState({
     id: currentProductChoose?.id,
     name: currentProductChoose?.name,
@@ -34,30 +36,13 @@ const ProductManagementForm = ({
     categoryId: currentProductChoose?.category?.id,
     supplierId: currentProductChoose?.supplier?.id,
   });
+  const [error, setError] = useState({});
+
+
+  const [imageListDisplay, setImageListDisplay] = useState([]);
   const [notifications, setNotifications] = useState(false);
-  const handleProductValueChange = (e) => {
-    const { value, id } = e.target;
-    if (["retailPrice", "serialNumber", "guaranteeMonths", "stocks"].includes(id) && isNaN(value)) {
-      setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
-    } else {
-      setError((prev) => ({ ...prev, [id]: "" }));
-      setData((prev) => ({ ...prev, [id]: value }));
-    }
-  };
 
-  const handleUploadComplete = (imageData) => {
-    const imageUrl = imageData.info
-    setImageListDisplay((prev) => [...prev, { url: imageUrl.secure_url, name: imageUrl.original_filename }]);
-  };
-
-  const handleRemoveImage = (index, fromInitialImages = false) => {
-    if (fromInitialImages) {
-      setAllImageOfProduct((prev) => prev.filter((_, i) => i !== index));
-    } else {
-      setImageListDisplay((prev) => prev.filter((_, i) => i !== index));
-    }
-  };
-
+  // OKE
   useEffect(() => {
     setError({});
     setData({
@@ -72,34 +57,64 @@ const ProductManagementForm = ({
       supplierId: currentProductChoose?.supplier?.id,
     });
 
-    console.log("currentProductChoose ", currentProductChoose);
+
   }, [currentProductChoose]);
 
+  const handleProductValueChange = (e) => {
+    const { value, id } = e.target;
+    if (["retailPrice", "serialNumber", "guaranteeMonths", "stocks"].includes(id) && isNaN(value)) {
+      setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
+    } else {
+      setError((prev) => ({ ...prev, [id]: "" }));
+      setData((prev) => ({ ...prev, [id]: value }));
+    }
+  };
+
   const handleSubmit = async () => {
-    const productId = currentProductChoose.productId;
-    const price = Number.parseInt(data.price);
-    const quantityPr = Number.parseInt(data.quantityPr);
-    const guaranteePeriod = Number.parseInt(data.guaranteePeriod);
+    const productId = currentProductChoose.id;
     const updatedProduct = {
-      productId,
-      namePr: data.namePr,
-      nameSerial: data.nameSerial,
-      detail: data.detail,
-      price,
-      quantityPr,
-      guaranteePeriod,
-      supplierId: data.supplier,
-      categoryId: data.category
+      name: data.name,
+      serialNumber: data.serialNumber,
+      retailPrice: Number.parseInt(data.retailPrice),
+      guaranteeMonths: Number.parseInt(data.guaranteeMonths),
+      thumb: currentProductChoose.thumb,
+      photos: currentProductChoose.photos,
+      description: data.description,
+      category: { id: data.categoryId },
+      supplier: { id: data.supplierId },
+      skus: [{
+        code: currentProductChoose.skus[0].code,
+        retailPrice: Number.parseInt(data.retailPrice),
+        inventory: { stocks: Number.parseInt(data.stocks) }
+      }]
     };
-    console.log(imageListDisplay)
+
+    console.log("handleSubmit", "updatedProduct", updatedProduct); // DOING
+
+    // console.log(imageListDisplay): TEMP
+
     if (Object.values(error).every((x) => x === "")) {
-      await handleProduct.updateProduct(updatedProduct);
-      const imageUrls = imageListDisplay.map(img => img.url);
-      await handleProduct.addImage(imageUrls, updatedProduct.productId);
+      await clientFetch(adminProductApi.update(productId, updatedProduct));
+      // const imageUrls = imageListDisplay.map(img => img.url); // TEMP
+      // await handleProduct.addImage(imageUrls, updatedProduct.productId);
       setNotifications(true);
       setTrigger((prev) => !prev);
     } else {
       alert("Lỗi cập nhật sản phẩm");
+    }
+  };
+
+
+  const handleUploadComplete = (imageData) => {
+    const imageUrl = imageData.info
+    setImageListDisplay((prev) => [...prev, { url: imageUrl.secure_url, name: imageUrl.original_filename }]);
+  };
+
+  const handleRemoveImage = (index, fromInitialImages = false) => {
+    if (fromInitialImages) {
+      setAllImageOfProduct((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      setImageListDisplay((prev) => prev.filter((_, i) => i !== index));
     }
   };
 
@@ -146,7 +161,7 @@ const ProductManagementForm = ({
 							</button>
 						);
 					}}
-				</CldUploadWidget> */}
+				</CldUploadWidget> */} {/* // TEMP */}
       </div>
 
       <form onSubmit={(e) => e.preventDefault()} className="text-[2rem] flex flex-col gap-2 w-full">

@@ -7,6 +7,7 @@ import com.dino.back_end_for_TTECH.inventory.domain.repository.IInventoryReposit
 import com.dino.back_end_for_TTECH.product.domain.Sku;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -66,6 +67,33 @@ public class InventoryServiceImpl implements IInventoryService {
     @Transactional
     public void reserveStock(Long skuId, int quantity) {
         this.reserveStockWithLock(skuId, quantity);
+    }
+
+    /**
+     * restock inventory
+     */
+    @Override
+    @Transactional
+    public void restock(Inventory inventory, int quantity) {
+        if (quantity == 0) return;
+
+        inventory.restock(quantity);
+
+        this.inventoryRepository.save(inventory);
+    }
+
+    /**
+     * import inventory
+     */
+    @Transactional
+    @Override
+    public void imports(Long skuId, int quantity) {
+        inventoryRepository.findBySkuId(skuId)
+                .ifPresent(inventory -> { throw new AppException(ErrorCode.INVENTORY__ALREADY_EXISTS); });
+
+        var inventory = Inventory.imports(quantity);
+
+        this.inventoryRepository.save(inventory);
     }
 
     @Override

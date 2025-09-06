@@ -132,8 +132,10 @@ public enum ErrorCode {
     // INVENTORY 1600+ //
     // INVENTORY //
     INVENTORY__NOT_FOUND(1600, "Không tìm thấy kho hàng", HttpStatus.BAD_REQUEST),
+    INVENTORY__ALREADY_EXISTS(16001, "Kho hàng đã tồn tại", HttpStatus.BAD_REQUEST),
     INVENTORY__STOCKS_LIMIT(1601, "Số tồn kho >= 0 và <= tổng cộng", HttpStatus.BAD_REQUEST),
     INVENTORY__SALES_LIMIT(1602, "Số đã bán >= 0 và <= tổng cộng", HttpStatus.BAD_REQUEST),
+    INVENTORY__TOTAL_LIMIT(16021, "Tổng kho >= 0 và >= số tồn kho + số đã bán", HttpStatus.BAD_REQUEST),
     INVENTORY__INSUFFICIENT_STOCK(1603, "Sản phẩm đã hết hàng, sẽ trở lại sớm", HttpStatus.BAD_REQUEST),
     // LOCK //
     LOCK__OUT_OF_TRY(1610, "Yêu cầu đã đợi lâu. Vui lòng thử lại", HttpStatus.BAD_REQUEST),

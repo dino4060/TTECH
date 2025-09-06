@@ -98,7 +98,7 @@ public class Sku extends BaseEntity {
         this.status = SkuStatus.LIVE;
     }
 
-    public void update(int quantity) {
+    public void updateStocks(int quantity) {
         this.inventory.updateStocks(quantity);
     }
 

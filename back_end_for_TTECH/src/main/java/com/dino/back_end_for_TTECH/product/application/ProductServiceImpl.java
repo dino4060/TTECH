@@ -1,7 +1,10 @@
 package com.dino.back_end_for_TTECH.product.application;
 
+import com.dino.back_end_for_TTECH.inventory.application.mapper.IInventoryMapper;
+import com.dino.back_end_for_TTECH.inventory.application.service.IInventoryService;
 import com.dino.back_end_for_TTECH.pricing.application.service.IPriceService;
 import com.dino.back_end_for_TTECH.product.application.mapper.IProductMapper;
+import com.dino.back_end_for_TTECH.product.application.mapper.ISkuMapper;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.application.service.ICategoryService;
@@ -33,6 +36,8 @@ import java.util.List;
 @Slf4j
 public class ProductServiceImpl implements IProductService {
 
+    private final IInventoryService inventoryService;
+
     private final ISkuService skuService;
 
     private final IPriceService priceService;
@@ -44,6 +49,11 @@ public class ProductServiceImpl implements IProductService {
     private final IProductRepository productRepository;
 
     private final IProductMapper productMapper;
+
+    private final ISkuMapper skuMapper;
+
+    private final IInventoryMapper inventoryMapper;
+
 
     // HELPERS //
 
@@ -113,11 +123,28 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductInList updateProduct(long id, ProductToWrite body) {
-        Product product = this.getProduct(id);
-        productMapper.toProduct(body, product);
+        var product = this.getProduct(id);
+        var sku = product.getSkus().getFirst();
+        var inventory = sku.getInventory();
 
-        product.update(body.skus().getFirst().inventory().stocks());
+        var skuBody = body.skus().getFirst();
+        var inventoryBody = skuBody.inventory();
+
+        // Map product
+        this.productMapper.toProduct(body, product);
+        this.skuMapper.toSku(skuBody, sku);
+        this.inventoryMapper.toInventory(inventoryBody, inventory);
+
+        product.getSkus().set(0, sku);
+        sku.setInventory(inventory);
+
+        // Validate product
         this.validate(product);
+
+        // Restocks inventory
+        this.inventoryService.restock(inventory, inventoryBody.restocks());
+
+        // Update price // DOING
 
         Product saved = this.save(product);
         return productMapper.toProductInList(saved);

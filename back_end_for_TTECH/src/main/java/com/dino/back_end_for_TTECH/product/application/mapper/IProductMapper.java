@@ -14,6 +14,6 @@ public interface IProductMapper {
 
     Product toProduct(ProductToWrite dto);
 
-    @Mapping(target = "skus.inventory.stocks", ignore = true)
+    @Mapping(target = "skus", ignore = true)
     void toProduct(ProductToWrite dto, @MappingTarget Product entity);
 }
