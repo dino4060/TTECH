@@ -12,7 +12,6 @@ public interface IInventoryService {
 
     void restock(Inventory inventory, int quantity);
 
-    @Transactional
     void imports(Long skuId, int quantity);
 
     void createInventoryForSku(Sku sku);

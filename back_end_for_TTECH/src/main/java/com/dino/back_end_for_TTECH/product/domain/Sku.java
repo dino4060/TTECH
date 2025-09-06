@@ -55,8 +55,8 @@ public class Sku extends BaseEntity {
     @JoinColumn(name = "product_id", updatable = false, nullable = false)
     Product product;
 
-    @OneToOne(mappedBy = "sku", cascade = CascadeType.ALL, orphanRemoval = true)
-    Inventory inventory; // always eager loading
+    @OneToOne(mappedBy = "sku")
+    Inventory inventory; // YELLOW: always eager loading
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     List<SkuDiscount> skuDiscounts;

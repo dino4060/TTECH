@@ -31,12 +31,20 @@ const ProductManagementForm = ({
     serialNumber: currentProductChoose?.serialNumber,
     retailPrice: currentProductChoose?.retailPrice,
     guaranteeMonths: currentProductChoose?.guaranteeMonths,
-    stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
     description: currentProductChoose?.description,
     categoryId: currentProductChoose?.category?.id,
     supplierId: currentProductChoose?.supplier?.id,
   });
+
+  const [inventoryData, setInventoryData] = useState({
+    total: currentProductChoose?.skus?.[0]?.inventory?.total,
+    sales: currentProductChoose?.skus?.[0]?.inventory?.sales,
+    stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
+    restock: 0,
+  });
+
   const [error, setError] = useState({});
+
 
 
   const [imageListDisplay, setImageListDisplay] = useState([]);
@@ -51,22 +59,37 @@ const ProductManagementForm = ({
       serialNumber: currentProductChoose?.serialNumber,
       retailPrice: currentProductChoose?.retailPrice,
       guaranteeMonths: currentProductChoose?.guaranteeMonths,
-      stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
       description: currentProductChoose?.description,
       categoryId: currentProductChoose?.category?.id,
       supplierId: currentProductChoose?.supplier?.id,
     });
 
+    setInventoryData({
+      total: currentProductChoose?.skus?.[0]?.inventory?.total,
+      sales: currentProductChoose?.skus?.[0]?.inventory?.sales,
+      stocks: currentProductChoose?.skus?.[0]?.inventory?.stocks,
+      restock: 0,
+    });
 
   }, [currentProductChoose]);
 
-  const handleProductValueChange = (e) => {
-    const { value, id } = e.target;
+  const onChangeData = (e) => {
+    const { id, value } = e.target;
     if (["retailPrice", "serialNumber", "guaranteeMonths", "stocks"].includes(id) && isNaN(value)) {
       setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
     } else {
-      setError((prev) => ({ ...prev, [id]: "" }));
       setData((prev) => ({ ...prev, [id]: value }));
+      setError((prev) => ({ ...prev, [id]: "" }));
+    }
+  };
+
+  const onChangeInventoryData = (e) => {
+    const { id, value } = e.target;
+    if (["restocks"].includes(id) && isNaN(value)) {
+      setError((prev) => ({ ...prev, [id]: "Vui lòng nhập một số" }));
+    } else {
+      setInventoryData((prev) => ({ ...prev, [id]: value }));
+      setError((prev) => ({ ...prev, [id]: "" }));
     }
   };
 
@@ -85,7 +108,10 @@ const ProductManagementForm = ({
       skus: [{
         code: currentProductChoose.skus[0].code,
         retailPrice: Number.parseInt(data.retailPrice),
-        inventory: { stocks: Number.parseInt(data.stocks) }
+        inventory: {
+          stocks: Number.parseInt(inventoryData.stocks),
+          restocks: Number.parseInt(inventoryData.restock)
+        }
       }]
     };
 
@@ -105,6 +131,7 @@ const ProductManagementForm = ({
   };
 
 
+
   const handleUploadComplete = (imageData) => {
     const imageUrl = imageData.info
     setImageListDisplay((prev) => [...prev, { url: imageUrl.secure_url, name: imageUrl.original_filename }]);
@@ -118,6 +145,7 @@ const ProductManagementForm = ({
     }
   };
 
+  // OKE
   return (
     <motion.div
       key={currentProductChoose?.id}
@@ -170,6 +198,8 @@ const ProductManagementForm = ({
           { key: "name", name: "Tên sản phẩm" },
           { key: "retailPrice", name: "Giá bán lẻ (1K)" },
           { key: "serialNumber", name: "Số seri" },
+          { key: "guaranteeMonths", name: "Bảo hành (tháng)" },
+          { key: "stocks", name: "Số lượng nhập kho", disabled: true },
         ].map((field, i) => (
           <div key={i}>
             <div className="flex gap-2 w-full">
@@ -185,7 +215,7 @@ const ProductManagementForm = ({
               <input
                 id={field.key}
                 value={data[field.key]}
-                onChange={handleProductValueChange}
+                onChange={onChangeData}
                 disabled={field.disabled}
                 className="outline-none border-b font-semibold border-black/20 w-full"
               />
@@ -194,9 +224,8 @@ const ProductManagementForm = ({
           </div>
         ))}
 
-        {[
-          { key: "guaranteeMonths", name: "Bảo hành (tháng)" },
-          { key: "stocks", name: "Số lượng nhập kho" },
+        {/* {[
+
         ].map((field, i) => (
           <div key={i}>
             <div className="flex gap-2 w-full">
@@ -210,21 +239,21 @@ const ProductManagementForm = ({
             </div>
             <h2 className="text-red-500 text-2xl">{error[field.key]}</h2>
           </div>
-        ))}
+        ))} */} {/* // DOING */}
 
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Mô tả chi tiết</label>
           <textarea
             id="description"
             value={data.description ?? ""}
-            onChange={handleProductValueChange}
+            onChange={onChangeData}
             className="outline-none border-b font-semibold border-black/20 w-full"
           />
         </div>
 
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Doanh mục</label>
-          <select id="category" onChange={handleProductValueChange} value={data.categoryId}>
+          <select id="category" onChange={onChangeData} value={data.categoryId}>
             <option></option>
             {category?.map((x) => (
               <option key={x.id} value={x.id}>
@@ -236,7 +265,7 @@ const ProductManagementForm = ({
 
         <div className="flex gap-2 w-full">
           <label className="min-w-[170px] text-black/50">Nhà cung cấp</label>
-          <select id="supplier" onChange={handleProductValueChange} value={data.supplierId}>
+          <select id="supplier" onChange={onChangeData} value={data.supplierId}>
             <option></option>
             {supplier?.map((x) => (
               <option key={x.id} value={x.id}>
@@ -245,6 +274,61 @@ const ProductManagementForm = ({
             ))}
           </select>
         </div>
+
+        {/* tạo ra section inventory trong form này
+        - yêu cầu tương tự các field trên
+        - total, sales, stocks are disable
+        - phần code cũ không được thay đổi
+         */}
+
+        {/* <div className="mt-6 border-t pt-4">
+          <h3 className="text-[2.2rem] font-semibold mb-4">Thông tin kho hàng</h3>
+          {[
+            { key: "total", name: "Tổng tồn kho", disabled: true },
+            { key: "sales", name: "Đã bán", disabled: true },
+            { key: "stocks", name: "Tồn kho hiện tại", disabled: true },
+            { key: "restock", name: "Số lượng nhập kho" },
+          ].map((field, i) => (
+            <div key={i}>
+              <div className="flex gap-2 w-full">
+                <label className="min-w-[170px] flex items-center gap-2 text-black/50">
+                  {field.name}
+                  {field.key === "id" && (
+                    <IoCopyOutline
+                      size={20}
+                      onClick={() => navigator.clipboard.writeText(currentProductChoose?.id)}
+                    />
+                  )}
+                </label>
+                <input
+                  id={field.key}
+                  value={data[field.key]}
+                  onChange={onChangeData}
+                  disabled={field.disabled}
+                  className="outline-none border-b font-semibold border-black/20 w-full"
+                />
+              </div>
+              <h2 className="text-red-500 text-2xl">{error[field.key]}</h2>
+            </div>
+
+            //  <div>
+            //   <div className="flex gap-2 w-full">
+            //     <label className="min-w-[170px] flex items-center gap-2 text-black/50">{field.name}</label>
+            //     <input
+            //       id={field.key}
+            //       type="number"
+            //       value={inventoryData[field.key] ?? ""}
+            //       onChange={onChangeInventoryData}
+            //       disabled={field.disabled}
+            //       className="outline-none border-b font-semibold border-black/20 w-full"
+            //     />
+            //     <h2 className="text-red-500 text-xl">{error[field.key]}</h2>
+            //   </div>
+            //   <h2 className="text-red-500 text-2xl">{error[field.key]}</h2>
+            // </div> // DOING
+
+          ))}
+        </div> */}
 
         <button onClick={handleSubmit} className="text-white bg-blue-500 text-[1.4rem] font-semibold py-2 rounded-lg">
           Cập nhật
