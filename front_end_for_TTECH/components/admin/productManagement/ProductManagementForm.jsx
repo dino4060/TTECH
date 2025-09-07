@@ -158,15 +158,24 @@ const ProductManagementForm = ({
     // await handleProduct.addImage(imageUrls, updatedProduct.productId);
 
     if (!success) {
+      alert(failure);
       setNotifications(false);
       setNotes(failure);
-    } else {
-      setNotifications(true);
-      setNotes("Cập nhật thành công");
-      setTrigger((prev) => !prev);
-      setInventoryData((prev) => ({ ...prev, restocks: '' }));
+      return;
     }
+
+    setNotifications(true);
+    setNotes("Cập nhật thành công");
+    setTrigger((prev) => !prev);
+    setInventoryData((prev) => ({ ...prev, restocks: '' }));
+
   };
+
+  const onCopyId = () => {
+    navigator.clipboard.writeText(currentProductChoose?.id);
+    setNotifications(true);
+    setNotes("Đã copy mã sản phẩm");
+  }
 
 
 
@@ -232,8 +241,27 @@ const ProductManagementForm = ({
 
       <form onSubmit={(e) => e.preventDefault()} className="text-[2rem] flex flex-col gap-2 w-full">
         <h3 className="text-[2.2rem] font-semibold mb-4">Thông tin sản phẩm</h3>
+        <div key="id">
+          <div className="flex gap-2 w-full">
+            <label className="min-w-[170px] flex items-center gap-2 text-black/50">
+              Mã sản phẩm
+              <IoCopyOutline
+                size={20}
+                onClick={onCopyId}
+              />
+            </label>
+            <input
+              id="id"
+              value={data.id}
+              onChange={onChangeData}
+              disabled={true}
+              className="outline-none border-b font-semibold border-black/20 w-full"
+            />
+          </div>
+          <h2 className="text-red-500 text-2xl">{error.id}</h2>
+        </div>
+
         {[
-          { key: "id", name: "Mã sản phẩm", disabled: true },
           { key: "name", name: "Tên sản phẩm" },
           { key: "mainPrice", name: "Giá chính thức (1k)", disabled: true },
           { key: "retailPrice", name: "Giá bán lẻ (1K)" },
@@ -242,15 +270,7 @@ const ProductManagementForm = ({
         ].map((field, i) => (
           <div key={i}>
             <div className="flex gap-2 w-full">
-              <label className="min-w-[170px] flex items-center gap-2 text-black/50">
-                {field.name}
-                {field.key === "id" && (
-                  <IoCopyOutline
-                    size={20}
-                    onClick={() => navigator.clipboard.writeText(currentProductChoose?.id)}
-                  />
-                )}
-              </label>
+              <label className="min-w-[170px] flex items-center gap-2 text-black/50">{field.name}</label>
               <input
                 id={field.key}
                 value={data[field.key]}

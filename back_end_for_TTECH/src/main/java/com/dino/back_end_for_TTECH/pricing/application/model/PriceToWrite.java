@@ -5,9 +5,17 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 
 public record PriceToWrite(
-        int retailPrice,
+        int mainPrice,
+        int sidePrice,
+        int discountPercent,
+
+        Integer maxMainPrice,
+        Integer maxSidePrice,
+        Integer maxDiscountPercent,
 
         @NotEmpty(message = "PRICE__SKU_PRICES_VALIDATION")
-        List<SkuPriceToWrite> skuPrices
+        List<SkuPriceToWrite> skuPrices,
+
+        int retailPrice
 ) {
 }

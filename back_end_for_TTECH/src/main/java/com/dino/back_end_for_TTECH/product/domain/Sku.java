@@ -1,11 +1,13 @@
 package com.dino.back_end_for_TTECH.product.domain;
 
 import com.dino.back_end_for_TTECH.inventory.domain.Inventory;
+import com.dino.back_end_for_TTECH.inventory.domain.model.InventoryStatus;
 import com.dino.back_end_for_TTECH.ordering.domain.CartItem;
 import com.dino.back_end_for_TTECH.ordering.domain.OrderItem;
+import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
 import com.dino.back_end_for_TTECH.promotion.domain.SkuSales;
-import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
+import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
@@ -55,7 +57,7 @@ public class Sku extends BaseEntity {
     @JoinColumn(name = "product_id", updatable = false, nullable = false)
     Product product;
 
-    @OneToOne(mappedBy = "sku")
+    @OneToOne(mappedBy = "sku", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     Inventory inventory; // YELLOW: always eager loading
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
@@ -92,14 +94,29 @@ public class Sku extends BaseEntity {
         return tierOptionIndex;
     }
 
-    // INSTANCE //
+    // SETTERS //
 
-    public void createSku() {
+    public void setStatus() {
+        if (AppUtils.isNull(this.getInventory())) {
+            this.status = SkuStatus.OUT_OF_STOCK;
+            return;
+        }
+
+        if (this.getInventory().getStatus() == InventoryStatus.OUT_OF_STOCK) {
+            this.status = SkuStatus.OUT_OF_STOCK;
+            return;
+        }
+
         this.status = SkuStatus.LIVE;
     }
 
-    public void updateStocks(int quantity) {
-        this.inventory.updateStocks(quantity);
+    // INSTANCE METHODS //
+
+    public void create() {
+        this.setStatus();
     }
 
+    public void update() {
+        this.setStatus();
+    }
 }

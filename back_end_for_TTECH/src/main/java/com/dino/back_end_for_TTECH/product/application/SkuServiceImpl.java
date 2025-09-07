@@ -1,24 +1,24 @@
 package com.dino.back_end_for_TTECH.product.application;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
-
 import com.dino.back_end_for_TTECH.inventory.application.service.IInventoryService;
-import com.dino.back_end_for_TTECH.product.domain.Product;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
+import com.dino.back_end_for_TTECH.product.application.model.SkuToWrite;
 import com.dino.back_end_for_TTECH.product.application.service.ISkuService;
+import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.product.domain.Sku;
 import com.dino.back_end_for_TTECH.product.domain.repository.ISkuRepository;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -33,7 +33,7 @@ public class SkuServiceImpl implements ISkuService {
     // HELPERS //
 
     private void cascadeSku(Sku sku) {
-         this.inventoryService.createInventoryForSku(sku);
+        this.inventoryService.create(sku);
     }
 
     // DOMAIN //
@@ -82,11 +82,29 @@ public class SkuServiceImpl implements ISkuService {
     }
 
     @Override
-    public void createSkusForProduct(Product product) {
+    public void createList(Product product) {
         for (Sku sku : product.getSkus()) {
             sku.setProduct(product);
-            sku.createSku();
-            this.cascadeSku(sku);
+
+            this.inventoryService.create(sku);
+
+            sku.create();
         }
+    }
+
+    @Override
+    public void updateList(List<Sku> skus, List<SkuToWrite> bodies) {
+        int i = 0;
+        for (var sku : skus) {
+            var inventory = sku.getInventory();
+            var inventoryBody = bodies.get(i).inventory();
+
+            this.inventoryService.restock(inventory, inventoryBody);
+
+            sku.update();
+            i++;
+        }
+
+        this.skuRepository.saveAll(skus);
     }
 }

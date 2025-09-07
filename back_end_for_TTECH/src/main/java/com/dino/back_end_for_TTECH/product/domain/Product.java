@@ -4,7 +4,9 @@ import com.dino.back_end_for_TTECH.pricing.domain.Price;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductSpecification;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductStatus;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
+import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
 import com.dino.back_end_for_TTECH.promotion.domain.Sales;
+import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -84,9 +86,30 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<Sales> discounts;
 
-    // INSTANCE METHODS //
-    public void create() {
+    // SETTERS //
+
+    public void setStatus() {
+        if (AppUtils.isEmpty(this.getSkus())) {
+            this.status = ProductStatus.OUT_OF_STOCK;
+            return;
+        }
+
+        if (skus.stream().allMatch(sku -> sku.getStatus() == SkuStatus.OUT_OF_STOCK)) {
+            this.status = ProductStatus.OUT_OF_STOCK;
+            return;
+        }
+
         this.status = ProductStatus.LIVE;
+    }
+
+    // INSTANCE METHODS //
+
+    public void create() {
+        this.setStatus();
+    }
+
+    public void update() {
+        this.setStatus();
     }
 
     public Optional<Sales> getActiveSales() {
@@ -94,5 +117,13 @@ public class Product extends BaseEntity {
          * get sales, check in period, in limit, is the highest priority (// TEMP)
          */
         return Optional.empty();
+    }
+
+    public boolean isInBusiness() {
+        // logic: get skus > each sku > check non in cart item || in non order item > flag = false
+        if (AppUtils.isEmpty(this.getSkus())) return false;
+
+        return skus.stream().anyMatch(sku ->
+                !AppUtils.isEmpty(sku.getCartItems()) || !AppUtils.isEmpty(sku.getOrderItems()));
     }
 }

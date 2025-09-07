@@ -54,21 +54,14 @@ public class Price extends BaseEntity {
     // INSTANCE METHODS //
 
     public void create() {
-        this.mainPrice = this.product.getRetailPrice();
-        this.sidePrice = 0;
-        this.discountPercent = 0;
-        this.maxMainPrice = this.mainPrice;
-        this.maxSidePrice = this.sidePrice;
-        this.maxDiscountPercent = this.discountPercent;
-        this.skuPrices = new ArrayList<>();
+//        this.mainPrice = this.product.getRetailPrice();
+//        this.sidePrice = 0;
+//        this.discountPercent = 0;
+//        this.maxMainPrice = this.mainPrice;
+//        this.maxSidePrice = this.sidePrice;
+//        this.maxDiscountPercent = this.discountPercent;
+    }
 
-        for (Sku sku : this.product.getSkus()) {
-            SkuPrice skuPrice = new SkuPrice();
-            this.skuPrices.add(skuPrice);
-
-            skuPrice.setPrice(this);
-            skuPrice.setSku(sku);
-            skuPrice.create();
-        }
+    public void update() {
     }
 }

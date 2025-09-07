@@ -47,8 +47,8 @@ public class SkuPrice extends BaseEntity {
     // INSTANCE METHODS //
 
     public void create() {
-        this.mainPrice = sku.getRetailPrice();
-        this.sidePrice = 0;
-        this.discountPercent = 0;
+    }
+
+    public void update() {
     }
 }
