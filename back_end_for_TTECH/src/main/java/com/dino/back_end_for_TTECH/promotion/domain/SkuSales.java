@@ -42,7 +42,7 @@ public class SkuDiscount extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_discount_id", updatable = false, nullable = false)
-    ProductDiscount productDiscount;
+    Sales productDiscount;
 
     // FACTORY METHODS //
 
