@@ -16,19 +16,19 @@ import org.hibernate.annotations.SQLRestriction;
 import java.util.List;
 
 @Entity
-@Table(name = "product_discount_programs")
+@Table(name = "sales_programs")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "program_type", discriminatorType = DiscriminatorType.STRING)
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE product_discount_programs SET is_deleted = true WHERE product_discount_program_id=?")
+@SQLDelete(sql = "UPDATE sales_programs SET is_deleted = true WHERE product_discount_program_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class ProductDiscountProgram extends Promotion {
+public abstract class SalesProgram extends Promotion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -49,7 +49,7 @@ public abstract class ProductDiscountProgram extends Promotion {
     Shop shop;
 
     @OneToMany(mappedBy = "productDiscountProgram", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ProductDiscount> productDiscounts;
+    List<Sales> productDiscounts;
 
     // getPriority //
     // - Open-closed principle in SOLID //

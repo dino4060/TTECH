@@ -1,5 +1,6 @@
 package com.dino.back_end_for_TTECH.inventory.application;
 
+import com.dino.back_end_for_TTECH.inventory.application.model.InventoryToWrite;
 import com.dino.back_end_for_TTECH.inventory.application.provider.IInventoryLockProvider;
 import com.dino.back_end_for_TTECH.inventory.application.service.IInventoryService;
 import com.dino.back_end_for_TTECH.inventory.domain.Inventory;
@@ -74,10 +75,10 @@ public class InventoryServiceImpl implements IInventoryService {
      */
     @Override
     @Transactional
-    public void restock(Inventory inventory, int quantity) {
-        if (quantity == 0) return;
+    public void restock(Inventory inventory, InventoryToWrite body) {
+        if (body.restocks() == 0) return;
 
-        inventory.restock(quantity);
+        inventory.restock(body.restocks());
 
         this.inventoryRepository.save(inventory);
     }

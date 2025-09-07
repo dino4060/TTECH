@@ -22,7 +22,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BasicDiscountProgram extends SalesProgram {
+public class BasicSalesProgram extends SalesProgram {
     // max 1 year
 
     @Override

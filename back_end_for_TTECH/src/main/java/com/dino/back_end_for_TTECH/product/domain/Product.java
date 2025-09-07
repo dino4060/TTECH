@@ -4,7 +4,7 @@ import com.dino.back_end_for_TTECH.pricing.domain.Price;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductSpecification;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductStatus;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
-import com.dino.back_end_for_TTECH.promotion.domain.ProductDiscount;
+import com.dino.back_end_for_TTECH.promotion.domain.Sales;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "products")
@@ -81,10 +82,17 @@ public class Product extends BaseEntity {
     List<Sku> skus;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ProductDiscount> discounts;
+    List<Sales> discounts;
 
     // INSTANCE METHODS //
     public void create() {
         this.status = ProductStatus.LIVE;
+    }
+
+    public Optional<Sales> getActiveSales() {
+        /*
+         * get sales, check in period, in limit, is the highest priority (// TEMP)
+         */
+        return Optional.empty();
     }
 }

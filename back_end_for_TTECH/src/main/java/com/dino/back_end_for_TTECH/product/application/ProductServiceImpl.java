@@ -1,19 +1,15 @@
 package com.dino.back_end_for_TTECH.product.application;
 
-import com.dino.back_end_for_TTECH.inventory.application.mapper.IInventoryMapper;
 import com.dino.back_end_for_TTECH.inventory.application.service.IInventoryService;
 import com.dino.back_end_for_TTECH.pricing.application.service.IPriceService;
 import com.dino.back_end_for_TTECH.product.application.mapper.IProductMapper;
-import com.dino.back_end_for_TTECH.product.application.mapper.ISkuMapper;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.application.service.ICategoryService;
 import com.dino.back_end_for_TTECH.product.application.service.IProductService;
 import com.dino.back_end_for_TTECH.product.application.service.ISkuService;
 import com.dino.back_end_for_TTECH.product.application.service.ISupplierService;
-import com.dino.back_end_for_TTECH.product.domain.Category;
 import com.dino.back_end_for_TTECH.product.domain.Product;
-import com.dino.back_end_for_TTECH.product.domain.Supplier;
 import com.dino.back_end_for_TTECH.product.domain.repository.IProductRepository;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
@@ -52,8 +48,6 @@ public class ProductServiceImpl implements IProductService {
 
     private final IProductMapper productMapper;
 
-    private final ISkuMapper skuMapper;
-
 
     // HELPERS //
 
@@ -86,12 +80,6 @@ public class ProductServiceImpl implements IProductService {
         product.setCategory(
                 this.categoryService.getCategory(
                         product.getCategory().getId()));
-    }
-
-    private void referBy(ProductToWrite body, Product product) {
-        product.setCategory(new Category(body.category().id()));
-        product.setSupplier(new Supplier(body.supplier().id()));
-        this.referBy(product);
     }
 
     private void buildBy(Product product) {
@@ -132,23 +120,22 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ProductInList updateProduct(long id, ProductToWrite body) {
         var product = this.getProduct(id);
-        var sku = product.getSkus().getFirst();
-        var inventory = sku.getInventory();
-
-        var skuBody = body.skus().getFirst();
-        var inventoryBody = skuBody.inventory();
+        var inventory = product.getSkus().getFirst().getInventory();
+        var inventoryBody = body.skus().getFirst().inventory();
+        var price = product.getPrice();
+        var priceBody = this.productMapper.getPriceBody(body);
 
         // Map to product
         this.productMapper.toProduct(body, product);
-        this.skuMapper.toSku(skuBody, sku);
 
         // Refer by product
-        this.referBy(body, product);
+        this.referBy(product);
 
         // Restocks inventory
-        this.inventoryService.restock(inventory, inventoryBody.restocks());
+        this.inventoryService.restock(inventory, inventoryBody);
 
-        // Update price // DOING
+        // Re-calculate retail price
+        this.priceService.recalculate(price, priceBody);
 
         Product saved = this.save(product);
         return productMapper.toProductInList(saved);

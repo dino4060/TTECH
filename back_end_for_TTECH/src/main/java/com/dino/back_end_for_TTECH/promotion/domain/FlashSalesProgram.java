@@ -20,7 +20,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FlashSaleProgram extends SalesProgram {
+public class FlashSalesProgram extends SalesProgram {
     // max 3 days
 
     @Enumerated(EnumType.STRING)
