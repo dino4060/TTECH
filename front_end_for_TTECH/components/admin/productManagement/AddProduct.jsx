@@ -15,6 +15,7 @@ import { IoCloseCircle } from "react-icons/io5";
 import { clientFetch } from "@/lib/http/fetch.client"
 import { adminProductApi } from "@/lib/api/product.api"
 import { parsePrice } from "@/lib/utils/number"
+import Notification from "@/components/uncategory/Notification"
 
 const AddProduct = ({
   show,
@@ -39,6 +40,8 @@ const AddProduct = ({
     supplierId: "",
   })
 
+  const [notifications, setNotifications] = useState(false);
+  const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState({})
   const [fileImage, setFileImage] = useState([])
@@ -62,64 +65,74 @@ const AddProduct = ({
   const addNewProduct = async (e) => {
     e.preventDefault();
     if (isErrorForm(error)) {
-      alert("Error")
+      alert("Dữ liệu không hợp lệ, vui lòng kiểm tra lại");
       return
     }
-    try {
-      const productDetail = {
-        name: data.name,
-        serialNumber: data.serialNumber,
-        description: data.description,
-        retailPrice: Number.parseInt(data.retailPrice),
-        guaranteeMonths: Number.parseInt(data.guaranteeMonths),
-        thumb: data.thumb,
-        photos: data.photos,
-        supplier: { id: Number.parseInt(data.supplierId) },
-        category: { id: Number.parseInt(data.categoryId) },
-        skus: [{
-          code: data.serialNumber,
-          retailPrice: parsePrice(data.retailPrice, 1000),
-          inventory: { stocks: Number.parseInt(data.stocks) },
-        }],
-        price: {
-          mainPrice: parsePrice(data.retailPrice, 1000),
+
+    const productDetail = {
+      name: data.name,
+      serialNumber: data.serialNumber,
+      description: data.description,
+      retailPrice: Number.parseInt(data.retailPrice),
+      guaranteeMonths: Number.parseInt(data.guaranteeMonths),
+      thumb: data.thumb,
+      photos: data.photos,
+      supplier: { id: Number.parseInt(data.supplierId) },
+      category: { id: Number.parseInt(data.categoryId) },
+      skus: [{
+        code: data.serialNumber,
+        retailPrice: Number.parseInt(data.retailPrice), // .parsePrice(data.retailPrice),
+        inventory: { stocks: Number.parseInt(data.stocks) },
+      }],
+      price: {
+        mainPrice: Number.parseInt(data.retailPrice),
+        sidePrice: 0,
+        discountPercent: 0,
+        maxMainPrice: Number.parseInt(data.retailPrice),
+        maxSidePrice: 0,
+        maxDiscountPercent: 0,
+        skuPrices: [{
+          mainPrice: Number.parseInt(data.retailPrice),
           sidePrice: 0,
           discountPercent: 0,
-          maxMainPrice: parsePrice(data.retailPrice, 1000),
-          maxSidePrice: 0,
-          maxDiscountPercent: 0,
-          skuPrices: [{
-            mainPrice: parsePrice(data.retailPrice, 1000),
-            sidePrice: 0,
-            discountPercent: 0,
-          }]
-        }
+        }]
       }
-
-      await clientFetch(adminProductApi.create(productDetail));
-      // const imageUrls = imageListDisplay.map(img => img.url);
-      // console.log(imageUrls)
-      // await handleProduct.addImage(imageUrls, productId)
-      setTrigger((pre) => !pre)
-
-      setData({
-        name: "",
-        serialNumber: "",
-        retailPrice: "",
-        guaranteeMonths: "",
-        stocks: "",
-        description: "",
-        thumb: "null",
-        photos: null,
-        categoryId: "",
-        supplierId: "",
-      })
-      // setFileImage([])
-      // setImageListDisplay([])
-      setShow(false)
-    } catch (error) {
-      console.error("Error adding new product:", error);
     }
+
+    const { success, error: failure } = await clientFetch(adminProductApi.create(productDetail));
+
+    if (!success) {
+      alert(failure);
+      setNotifications(false);
+      setNotes(failure);
+      return;
+    }
+
+    // const imageUrls = imageListDisplay.map(img => img.url);
+    // console.log(imageUrls)
+    // await handleProduct.addImage(imageUrls, productId)
+
+    setData({
+      name: "",
+      serialNumber: "",
+      retailPrice: "",
+      guaranteeMonths: "",
+      stocks: "",
+      description: "",
+      thumb: "null",
+      photos: null,
+      categoryId: "",
+      supplierId: "",
+    })
+
+    // setFileImage([])
+    // setImageListDisplay([])
+
+    setTrigger((pre) => !pre)
+    setShow(false);
+    setNotifications(true);
+    setNotes("Thêm mới thành công");
+
   }
 
   const handleProductValueChange = (e) => {
@@ -181,6 +194,17 @@ const AddProduct = ({
 
   return (
     <AnimatePresence>
+      {notifications && (
+        <Notification
+          notification={{
+            text: notes,
+            style: notifications ? "success" : "error",
+          }}
+          setNotifications={setNotifications}
+          notifications={notifications}
+        />
+      )}
+
       {show && (
         <motion.div
           exit={{ scale: 0.2, opacity: 0 }}

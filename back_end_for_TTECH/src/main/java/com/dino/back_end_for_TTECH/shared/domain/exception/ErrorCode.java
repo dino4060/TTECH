@@ -35,6 +35,7 @@ public enum ErrorCode {
     PRODUCT__SAVE_FAILED(1201, "Có lỗi khi lưu sản phẩm", HttpStatus.INTERNAL_SERVER_ERROR),
     PRODUCT__NOT_REMOVED(1202, "Sản phẩm đã kinh doanh nên không thể xóa", HttpStatus.BAD_REQUEST),
     PRODUCT__SKUS_VALIDATION(1204, "Sku không nên rỗng", HttpStatus.BAD_REQUEST),
+    PRODUCT__IN_BUSINESS(1205, "Không thể xóa. Sản phẩm đang được kinh doanh", HttpStatus.BAD_REQUEST),
     // PRODUCT. CATEGORY //
     CATEGORY__NOT_FOUND(1210, "Không tìm thấy ngành hàng", HttpStatus.NOT_FOUND),
     CATEGORY__SAVE_FAILED(1211, "Có lỗi khi lưu ngành hàng", HttpStatus.INTERNAL_SERVER_ERROR),
@@ -46,6 +47,7 @@ public enum ErrorCode {
     SUPPLIER__NOT_REMOVED(1212, "Nhà cung cấp đã kinh doanh nên không thể xóa", HttpStatus.BAD_REQUEST),
     SUPPLIER__NAME_DUPLICATED(1213, "Tên cung cấp không nên trùng lặp", HttpStatus.BAD_REQUEST),
     // PRODUCT. SKU //
+
     // PRICE . PRICE //
     PRICE__SKU_PRICES_VALIDATION(1221, "Giá của Sku không nên rỗng", HttpStatus.BAD_REQUEST),
     

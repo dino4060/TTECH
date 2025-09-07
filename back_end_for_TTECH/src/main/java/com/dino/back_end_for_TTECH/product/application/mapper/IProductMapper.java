@@ -1,6 +1,8 @@
 package com.dino.back_end_for_TTECH.product.application.mapper;
 
 import com.dino.back_end_for_TTECH.pricing.application.model.PriceToWrite;
+import com.dino.back_end_for_TTECH.pricing.domain.Price;
+import com.dino.back_end_for_TTECH.pricing.domain.SkuPrice;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.application.model.SkuToWrite;
@@ -14,11 +16,13 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.stream.Collectors;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IProductMapper {
     ProductInList toProductInList(Product product);
 
-    Product toProduct(ProductToWrite dto);
+    Product toProduct(ProductToWrite body);
 
     default void toProduct(ProductToWrite body, @MappingTarget Product product) {
         var category = toCategoryPartially(body.category());
@@ -40,12 +44,12 @@ public interface IProductMapper {
     @Mapping(target = "price", ignore = true)
     void toProductPartially(ProductToWrite body, @MappingTarget Product product);
 
-    @Mapping(target = "inventory", ignore = true)
-    void toSkuPartially(SkuToWrite body, @MappingTarget Sku product);
-
     Category toCategoryPartially(AppId categoryBody);
 
     Supplier toSupplierPartially(AppId supplierBody);
+
+    @Mapping(target = "inventory", ignore = true)
+    void toSkuPartially(SkuToWrite body, @MappingTarget Sku sku);
 
     @Mapping(source = "skus", target = "skuPrices")
     PriceToWrite getPriceBody(ProductToWrite body);

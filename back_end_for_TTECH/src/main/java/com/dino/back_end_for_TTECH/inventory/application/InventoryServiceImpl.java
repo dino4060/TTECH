@@ -77,31 +77,19 @@ public class InventoryServiceImpl implements IInventoryService {
     @Transactional
     public void restock(Inventory inventory, InventoryToWrite body) {
         if (body.restocks() == 0) return;
-
         inventory.restock(body.restocks());
 
         this.inventoryRepository.save(inventory);
     }
 
     /**
-     * import inventory
+     * cascade inventory (import inventory)
      */
-    @Transactional
     @Override
-    public void imports(Long skuId, int quantity) {
-        inventoryRepository.findBySkuId(skuId)
-                .ifPresent(inventory -> { throw new AppException(ErrorCode.INVENTORY__ALREADY_EXISTS); });
-
-        var inventory = Inventory.imports(quantity);
-
-        this.inventoryRepository.save(inventory);
-    }
-
-    @Override
-    public void createInventoryForSku(Sku sku) {
+    public void create(Sku sku) {
         Inventory inventory = sku.getInventory();
-
         inventory.setSku(sku);
-        inventory.create();
+
+        inventory.imports(inventory.getStocks());
     }
 }

@@ -1,5 +1,6 @@
 package com.dino.back_end_for_TTECH.product.application.model;
 
+import com.dino.back_end_for_TTECH.pricing.application.model.PriceToWrite;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppId;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -16,6 +17,8 @@ public record ProductToWrite(
 
         AppId category,
         AppId supplier,
+
+        PriceToWrite price,
 
         @NotEmpty(message = "PRODUCT__SKUS_VALIDATION")
         List<SkuToWrite> skus

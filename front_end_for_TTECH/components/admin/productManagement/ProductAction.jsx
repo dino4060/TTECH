@@ -5,6 +5,8 @@ import { CiSearch } from "react-icons/ci"
 import AddProduct from "./AddProduct"
 import { handleProduct } from "@/app/api/handleProduct"
 import Notification from "@/components/uncategory/Notification"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { adminProductApi } from "@/lib/api/product.api"
 
 const ProductAction = ({
   filter,
@@ -21,19 +23,22 @@ const ProductAction = ({
   const [notifications, setNotifications] = useState()
   const [showAdd, setShowAdd] = useState(false)
   const [deleteMode, setDeleteMode] = useState(false)
-  const [product_id_delete, setProudct_id_delete] =
-    useState("")
+  const [productIdToDelete, setProductIdToDelete] = useState("")
 
   const handleDeleteProduct = async () => {
     setDeleteMode((pre) => !pre)
-    if (product_id_delete === "") return
+    if (productIdToDelete === "") return
     if (deleteMode) {
-      const product_id = product_id_delete
-      await handleProduct.deleteProduct(product_id)
-      setNotifications(true)
-      setProudct_id_delete("")
-      setTrigger((pre) => !pre)
-      setCurrentProductChoose({})
+      const productId = productIdToDelete
+      const { success, error } = await clientFetch(adminProductApi.delete(productId))
+      if (!success) {
+        setCurrentProductChoose({})
+        setProductIdToDelete("")
+        setNotifications(true)
+        setTrigger((pre) => !pre)
+      } else {
+        alert(error)
+      }
     }
   }
   return (
@@ -95,8 +100,8 @@ const ProductAction = ({
             variants={variant}
             initial='init'
             exit='init'
-            value={product_id_delete}
-            onChange={(e) => setProudct_id_delete(e.target.value)}
+            value={productIdToDelete}
+            onChange={(e) => setProductIdToDelete(e.target.value)}
             animate={deleteMode ? "animate" : "init"}
             placeholder='Nhập vào id để xóa'
             className='w-[200px] text-red-500 border placeholder-red-500 border-red-500 px-4 rounded-2xl outline-none text-[1.4rem]'
@@ -106,7 +111,7 @@ const ProductAction = ({
           onClick={handleDeleteProduct}
           className='border font-[400] py-3 text-[1.4rem] border-red-500 text-red-500 leading-6 px-5 rounded-xl'
         >
-          {deleteMode ? "Xác nhận" : "Xóa"}
+          {deleteMode ? "Xác nhận xóa" : "Xóa"}
         </button>
       </div>
     </div>

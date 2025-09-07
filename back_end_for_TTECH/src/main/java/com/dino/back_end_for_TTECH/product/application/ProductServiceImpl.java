@@ -72,7 +72,7 @@ public class ProductServiceImpl implements IProductService {
         }
     }
 
-    private void referBy(Product product) {
+    private void referUp(Product product) {
         product.setSupplier(
                 this.supplierService.getSupplier(
                         product.getSupplier().getId()));
@@ -83,9 +83,9 @@ public class ProductServiceImpl implements IProductService {
     }
 
     private void buildBy(Product product) {
-        this.skuService.createSkusForProduct(product);
+        this.skuService.createList(product);
 
-        this.priceService.createPriceForProduct(product);
+        this.priceService.create(product);
     }
 
 
@@ -107,12 +107,20 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductInList createProduct(ProductToWrite body) {
+        // Map to product
         Product product = productMapper.toProduct(body);
 
-        product.create();
-        this.referBy(product);
-        this.buildBy(product);
+        // Refer up by product
+        this.referUp(product);
 
+        // Cascade skus
+        this.skuService.createList(product);
+
+        // Cascade price
+        this.priceService.create(product);
+
+        // Create product
+        product.create();
         Product saved = this.save(product);
         return productMapper.toProductInList(saved);
     }
@@ -120,23 +128,25 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ProductInList updateProduct(long id, ProductToWrite body) {
         var product = this.getProduct(id);
-        var inventory = product.getSkus().getFirst().getInventory();
-        var inventoryBody = body.skus().getFirst().inventory();
+        var skus = product.getSkus();
+        var skuBodies = body.skus();
         var price = product.getPrice();
         var priceBody = this.productMapper.getPriceBody(body);
 
         // Map to product
         this.productMapper.toProduct(body, product);
 
-        // Refer by product
-        this.referBy(product);
-
-        // Restocks inventory
-        this.inventoryService.restock(inventory, inventoryBody);
+        // Refer up by product
+        this.referUp(product);
 
         // Re-calculate retail price
         this.priceService.recalculate(price, priceBody);
 
+        // Update skus
+        this.skuService.updateList(skus, skuBodies);
+
+        // Update product
+        product.update();
         Product saved = this.save(product);
         return productMapper.toProductInList(saved);
     }
@@ -144,6 +154,10 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public void deleteProduct(long id) {
         Product product = this.getProduct(id);
+
+        if (product.isInBusiness())
+            throw new AppException(ErrorCode.PRODUCT__IN_BUSINESS);
+
         this.removeProduct(product.getId());
     }
 }

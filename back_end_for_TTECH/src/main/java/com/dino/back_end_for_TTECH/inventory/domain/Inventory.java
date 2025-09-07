@@ -1,5 +1,6 @@
 package com.dino.back_end_for_TTECH.inventory.domain;
 
+import com.dino.back_end_for_TTECH.inventory.domain.model.InventoryStatus;
 import com.dino.back_end_for_TTECH.product.domain.Sku;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
@@ -40,41 +41,55 @@ public class Inventory extends BaseEntity {
     @JoinColumn(name = "sku_id", nullable = false, updatable = false)
     Sku sku;
 
+    InventoryStatus status;
+
     // CHECKING METHODS //
 
-    public void setTotal() {
-        boolean condition = 0 <= total && stocks + sales <= total;
+    public void setStatus() {
+        if (this.getStocks() > 10) {
+            this.setStatus(InventoryStatus.LIVE);
+            return;
+        }
+
+        if (this.getStocks() > 0) {
+            this.setStatus(InventoryStatus.WARNING);
+            return;
+        }
+
+        this.setStatus(InventoryStatus.OUT_OF_STOCK);
+    }
+
+    public void setTotal(int total) {
+        boolean condition = 0 <= total;
         if (!condition) throw new AppException(ErrorCode.INVENTORY__TOTAL_LIMIT);
+        this.total = total;
     }
 
-    public void setStocks() {
-        boolean condition = 0 <= stocks && stocks <= this.total;
+    public void setStocks(int stocks) {
+        boolean condition = 0 <= stocks;
         if (!condition) throw new AppException(ErrorCode.INVENTORY__STOCKS_LIMIT);
+        this.stocks = stocks;
     }
 
-    public void setSales() {
-        boolean condition = 0 <= sales && sales <= this.total;
+    public void setSales(int sales) {
+        boolean condition = 0 <= sales;
         if (!condition) throw new AppException(ErrorCode.INVENTORY__SALES_LIMIT);
+        this.sales = sales;
     }
 
     // INSTANCE METHODS //
 
-    public void create() {
-        this.sales = 0;
-        this.total = this.stocks;
-    }
-
-    public static Inventory imports(int quantity) {
-        var inventory = new Inventory();
-        inventory.setTotal(quantity);
-        inventory.setStocks(quantity);
-        inventory.setSales(0);
-        return inventory;
+    public void imports(int quantity) {
+        this.setTotal(quantity);
+        this.setStocks(quantity);
+        this.setSales(0);
+        this.setStatus();
     }
 
     public void restock(int quantity) {
         this.setTotal(this.total + quantity);
         this.setStocks(this.stocks + quantity);
+        this.setStatus();
     }
 
     public void updateStocks(int quantity) {
