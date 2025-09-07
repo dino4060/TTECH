@@ -29,6 +29,7 @@ const ProductManagementForm = ({
     id: currentProductChoose?.id,
     name: currentProductChoose?.name,
     serialNumber: currentProductChoose?.serialNumber,
+    mainPrice: currentProductChoose?.price?.mainPrice,
     retailPrice: currentProductChoose?.retailPrice,
     guaranteeMonths: currentProductChoose?.guaranteeMonths,
     description: currentProductChoose?.description,
@@ -58,6 +59,7 @@ const ProductManagementForm = ({
       id: currentProductChoose?.id,
       name: currentProductChoose?.name,
       serialNumber: currentProductChoose?.serialNumber,
+      mainPrice: currentProductChoose?.price?.mainPrice,
       retailPrice: currentProductChoose?.retailPrice,
       guaranteeMonths: currentProductChoose?.guaranteeMonths,
       description: currentProductChoose?.description,
@@ -81,6 +83,15 @@ const ProductManagementForm = ({
     } else if (["categoryId", "supplierId"].includes(id) && !value) {
       setData((prev) => ({ ...prev, [id]: value }));
       setError((prev) => ({ ...prev, [id]: "Vùi lòng chọn giá trị" }));
+    } else if (["retailPrice"].includes(id)) {
+      const retailPrice = parseInt(value, 10);
+      const discountPercent = currentProductChoose?.price?.discountPercent || 0;
+      setData((prev) => ({
+        ...prev,
+        mainPrice: discountPercent == 0 ? retailPrice : discountPercent * retailPrice,
+        retailPrice: value
+      }));
+      setError((prev) => ({ ...prev, [id]: "" }));
     } else {
       setData((prev) => ({ ...prev, [id]: value }));
       setError((prev) => ({ ...prev, [id]: "" }));
@@ -99,9 +110,7 @@ const ProductManagementForm = ({
         restocks: currentProductChoose?.skus?.[0]?.inventory?.restocks,
       }));
       setError((prev) => ({ ...prev, [id]: '' }));
-    } else {
-      setInventoryData((prev) => ({ ...prev, [id]: value }));
-      setError((prev) => ({ ...prev, [id]: '' }));
+    } else if (["restocks"].includes(id)) {
       const restocks = parseInt(value, 10);
       setInventoryData((prev) => ({
         ...prev,
@@ -110,6 +119,9 @@ const ProductManagementForm = ({
         restocks,
       }));
       setError((prev) => ({ ...prev, [id]: '' }));
+    } else {
+      setData((prev) => ({ ...prev, [id]: value }));
+      setError((prev) => ({ ...prev, [id]: "" }));
     }
   };
 
@@ -223,6 +235,7 @@ const ProductManagementForm = ({
         {[
           { key: "id", name: "Mã sản phẩm", disabled: true },
           { key: "name", name: "Tên sản phẩm" },
+          { key: "mainPrice", name: "Giá chính thức (1k)", disabled: true },
           { key: "retailPrice", name: "Giá bán lẻ (1K)" },
           { key: "serialNumber", name: "Số seri" },
           { key: "guaranteeMonths", name: "Bảo hành (tháng)" },

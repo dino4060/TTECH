@@ -36,8 +36,4 @@ public class Supplier extends BaseEntity {
 
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     List<Product> products;
-
-    public Supplier(Long id) {
-        this.id = id;
-    }
 }

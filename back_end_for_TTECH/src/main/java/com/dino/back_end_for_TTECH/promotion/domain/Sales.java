@@ -19,23 +19,23 @@ import java.util.List;
 /**
  * Represents a discount that:
  * - Be part of a discount program,
- * - Can be applied to a product or multiple skus.
+ * - Can be applied to a product or multiple skuPrices.
  * <p>
  * Note for properties:
  * - totalLimit, buyerLimit == NULL is unlimited.
  */
 @Entity
-@Table(name = "product_discounts")
+@Table(name = "product_sales")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE product_discounts SET is_deleted = true WHERE product_discount_id=?")
+@SQLDelete(sql = "UPDATE product_sales SET is_deleted = true WHERE product_discount_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductDiscount extends BaseEntity {
+public class Sales extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -66,10 +66,10 @@ public class ProductDiscount extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_discount_program_id", updatable = false, nullable = false)
-    ProductDiscountProgram productDiscountProgram;
+    SalesProgram productDiscountProgram;
 
     @OneToMany(mappedBy = "productDiscount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<SkuDiscount> skuDiscounts;
+    List<SkuSales> skuDiscounts;
 
     // INSTANCE METHODS //
 

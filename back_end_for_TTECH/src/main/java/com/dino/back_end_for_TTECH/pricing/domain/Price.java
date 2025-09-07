@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "prices")
+@Table(name = "product_prices")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE prices SET is_deleted = true WHERE price_id=?")
+@SQLDelete(sql = "UPDATE product_prices SET is_deleted = true WHERE price_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter

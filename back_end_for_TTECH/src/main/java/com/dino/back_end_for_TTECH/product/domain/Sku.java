@@ -4,7 +4,7 @@ import com.dino.back_end_for_TTECH.inventory.domain.Inventory;
 import com.dino.back_end_for_TTECH.ordering.domain.CartItem;
 import com.dino.back_end_for_TTECH.ordering.domain.OrderItem;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
-import com.dino.back_end_for_TTECH.promotion.domain.SkuDiscount;
+import com.dino.back_end_for_TTECH.promotion.domain.SkuSales;
 import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "sku_products")
+@Table(name = "skus")
 @DynamicInsert
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE skus SET is_deleted = true WHERE sku_id=?")
@@ -59,7 +59,7 @@ public class Sku extends BaseEntity {
     Inventory inventory; // YELLOW: always eager loading
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
-    List<SkuDiscount> skuDiscounts;
+    List<SkuSales> skuDiscounts;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     List<CartItem> cartItems;

@@ -3,7 +3,7 @@ package com.dino.back_end_for_TTECH.profile.domain;
 import com.dino.back_end_for_TTECH.ordering.domain.Order;
 import com.dino.back_end_for_TTECH.profile.domain.model.BusinessType;
 import com.dino.back_end_for_TTECH.profile.domain.model.ShopStatus;
-import com.dino.back_end_for_TTECH.promotion.domain.ProductDiscountProgram;
+import com.dino.back_end_for_TTECH.promotion.domain.SalesProgram;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
@@ -62,7 +62,7 @@ public class Shop extends BaseEntity {
 
     @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    List<ProductDiscountProgram> discountPrograms;
+    List<SalesProgram> discountPrograms;
 
     @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY)
     @JsonIgnore

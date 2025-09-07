@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.promotion.application;
 
-import com.dino.back_end_for_TTECH.promotion.domain.ProductDiscount;
+import com.dino.back_end_for_TTECH.promotion.domain.Sales;
 import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.product.domain.Sku;
 import com.dino.back_end_for_TTECH.promotion.application.service.IDiscountService;
@@ -28,7 +28,7 @@ public class DiscountServiceImpl implements IDiscountService {
     // QUERY //
 
     // canApply by discounts //
-    private Optional<ProductDiscount> canApply(List<ProductDiscount> discounts, @Nullable CurrentUser currentUser) {
+    private Optional<Sales> canApply(List<Sales> discounts, @Nullable CurrentUser currentUser) {
         var discountsCanApply = discounts.stream()
                 .filter(d -> d.canApply(currentUser))
                 .toList();
@@ -45,7 +45,7 @@ public class DiscountServiceImpl implements IDiscountService {
 
     // canApply to product //
     @Override
-    public Optional<ProductDiscount> canDiscount(Product product, CurrentUser currentUser) {
+    public Optional<Sales> canDiscount(Product product, CurrentUser currentUser) {
         var discounts = this.discountRepository.findByProductId(product.getId());
 
         return this.canApply(discounts, currentUser);
@@ -53,7 +53,7 @@ public class DiscountServiceImpl implements IDiscountService {
 
     // canApply to Sku //
     @Override
-    public Optional<ProductDiscount> canDiscount(Sku sku, CurrentUser currentUser) {
+    public Optional<Sales> canDiscount(Sku sku, CurrentUser currentUser) {
         return this.canDiscount(sku.getProduct(), currentUser);
     }
 }

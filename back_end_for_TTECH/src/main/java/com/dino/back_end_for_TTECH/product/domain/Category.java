@@ -39,8 +39,4 @@ public class Category extends BaseEntity {
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     List<Product> products;
-
-    public Category(Long id) {
-        this.id = id;
-    }
 }

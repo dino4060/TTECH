@@ -22,7 +22,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NewArrivalProgram extends ProductDiscountProgram {
+public class NewArrivalProgram extends SalesProgram {
     // max 3 months
     // buyerLimit 1
     // no discounted sku price

@@ -1,5 +1,6 @@
 package com.dino.back_end_for_TTECH.product.application.mapper;
 
+import com.dino.back_end_for_TTECH.pricing.application.model.PriceToWrite;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.application.model.SkuToWrite;
@@ -7,6 +8,7 @@ import com.dino.back_end_for_TTECH.product.domain.Category;
 import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.product.domain.Sku;
 import com.dino.back_end_for_TTECH.product.domain.Supplier;
+import com.dino.back_end_for_TTECH.shared.application.utils.AppId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -18,24 +20,33 @@ public interface IProductMapper {
 
     Product toProduct(ProductToWrite dto);
 
+    default void toProduct(ProductToWrite body, @MappingTarget Product product) {
+        var category = toCategoryPartially(body.category());
+        var supplier = toSupplierPartially(body.supplier());
+        product.setCategory(category);
+        product.setSupplier(supplier);
+
+        var sku = product.getSkus().getFirst();
+        var skuBody = body.skus().getFirst();
+        this.toProductPartially(body, product);
+        this.toSkuPartially(skuBody, sku);
+    }
+
+    // SIDE MAPPINGS //
+
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "supplier", ignore = true)
     @Mapping(target = "skus", ignore = true)
-    void toProduct(ProductToWrite dto, @MappingTarget Product entity);
+    @Mapping(target = "price", ignore = true)
+    void toProductPartially(ProductToWrite body, @MappingTarget Product product);
 
     @Mapping(target = "inventory", ignore = true)
-    void toSku(SkuToWrite dto, @MappingTarget Sku entity);
+    void toSkuPartially(SkuToWrite body, @MappingTarget Sku product);
 
-    default void toProduct2(ProductToWrite body, @MappingTarget Product product) {
-        var sku = product.getSkus().getFirst();
-        var skuBody = body.skus().getFirst();
-        var category = new Category(body.category().id());
-        var supplier = new Supplier(body.supplier().id());
+    Category toCategoryPartially(AppId categoryBody);
 
-        this.toProduct(body, product);
-        this.toSku(skuBody, sku);
+    Supplier toSupplierPartially(AppId supplierBody);
 
-        product.setCategory(category);
-        product.setSupplier(supplier);
-    }
+    @Mapping(source = "skus", target = "skuPrices")
+    PriceToWrite getPriceBody(ProductToWrite body);
 }

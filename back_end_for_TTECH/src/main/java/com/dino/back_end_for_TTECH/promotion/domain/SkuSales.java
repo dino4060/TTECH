@@ -11,17 +11,17 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "sku_discounts")
+@Table(name = "sku_sales")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE sku_discounts SET is_deleted = true WHERE sku_discount_id=?")
+@SQLDelete(sql = "UPDATE sku_sales SET is_deleted = true WHERE sku_discount_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SkuDiscount extends BaseEntity {
+public class SkuSales extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

@@ -46,6 +46,8 @@ public enum ErrorCode {
     SUPPLIER__NOT_REMOVED(1212, "Nhà cung cấp đã kinh doanh nên không thể xóa", HttpStatus.BAD_REQUEST),
     SUPPLIER__NAME_DUPLICATED(1213, "Tên cung cấp không nên trùng lặp", HttpStatus.BAD_REQUEST),
     // PRODUCT. SKU //
+    // PRICE . PRICE //
+    PRICE__SKU_PRICES_VALIDATION(1221, "Giá của Sku không nên rỗng", HttpStatus.BAD_REQUEST),
     
     // PROFILE. USER //
     USER__EMAIL_ALREADY_EXISTS(1301, "Email đã tồn tại", HttpStatus.BAD_REQUEST),
