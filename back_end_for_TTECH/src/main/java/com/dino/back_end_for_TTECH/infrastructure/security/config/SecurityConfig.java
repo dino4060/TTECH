@@ -32,6 +32,7 @@ public class SecurityConfig {
             // BUYER PUBLIC //
             "/api/v1/public/**",
             "/api/public/**",
+            "/api/test/**",
             // FILE //
             "/files/**",
             // SWAGGER //
