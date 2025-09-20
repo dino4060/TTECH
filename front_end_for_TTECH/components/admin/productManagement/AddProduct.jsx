@@ -44,14 +44,12 @@ const AddProduct = ({
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState({})
-  const [fileImage, setFileImage] = useState([])
   const [imageListDisplay, setImageListDisplay] = useState([])
 
 
   const handleUploadComplete = (imageData) => {
     const imageUrl = imageData.info
-    console.log(imageUrl)
-    setImageListDisplay((prev) => [...prev, { url: imageUrl.secure_url, name: imageUrl.original_filename }]);
+    setImageListDisplay((prev) => [...prev, imageUrl.secure_url]);
   };
 
   const handleRemoveImage = (index, fromInitialImages = false) => {
@@ -69,14 +67,22 @@ const AddProduct = ({
       return
     }
 
+    const thumb = imageListDisplay?.[0] || currentProductChoose?.thumb || "";
+    const photos = imageListDisplay?.slice(1) || currentProductChoose?.photos || [];
+
+    if (!thumb) {
+      alert("Vui lòng thêm ảnh đại diện");
+      return;
+    }
+
     const productDetail = {
       name: data.name,
       serialNumber: data.serialNumber,
       description: data.description,
       retailPrice: Number.parseInt(data.retailPrice),
       guaranteeMonths: Number.parseInt(data.guaranteeMonths),
-      thumb: data.thumb,
-      photos: data.photos,
+      thumb,
+      photos,
       supplier: { id: Number.parseInt(data.supplierId) },
       category: { id: Number.parseInt(data.categoryId) },
       skus: [{
@@ -108,10 +114,6 @@ const AddProduct = ({
       return;
     }
 
-    // const imageUrls = imageListDisplay.map(img => img.url);
-    // console.log(imageUrls)
-    // await handleProduct.addImage(imageUrls, productId)
-
     setData({
       name: "",
       serialNumber: "",
@@ -125,8 +127,7 @@ const AddProduct = ({
       supplierId: "",
     })
 
-    // setFileImage([])
-    // setImageListDisplay([])
+    setImageListDisplay([])
 
     setTrigger((pre) => !pre)
     setShow(false);
@@ -227,36 +228,37 @@ const AddProduct = ({
                 Hình ảnh sản phẩm
               </h1>
 
-              {/* <CldUploadWidget uploadPreset={"wdxleeuq"} onSuccess={(result) => handleUploadComplete(result)}>
-								{({ open }) => {
-									return (
-										<button onClick={() => open()} className="text-center bg-blue-500 text-white text-[1.4rem] font-[600] py-2 px-3 rounded-2xl">
-											Thêm ảnh
-										</button>
-									);
-								}}
-							</CldUploadWidget> */}
+              <CldUploadWidget uploadPreset={"TTECH_products"} onSuccess={(result) => handleUploadComplete(result)}>
+                {({ open }) => {
+                  return (
+                    <button onClick={() => open()} className="text-center bg-blue-500 text-white text-[1.4rem] font-[600] py-2 px-3 rounded-2xl">
+                      Thêm ảnh
+                    </button>
+                  );
+                }}
+              </CldUploadWidget>
 
               {Array.isArray(imageListDisplay) && (
                 <div className='flex flex-col items-center justify-center'>
                   {imageListDisplay?.map((x, i) => (
                     <div
-                      key={i}
+                      key={x}
                       className='w-[200px] flex items-center justify-center h-[200px]'
                     >
                       {loading ? (
                         <CircleLoader />
-                      ) : (<>
-                        <IoCloseCircle
-                          className="absolute top-1 right-1 text-white text-[1.6rem] cursor-pointer"
-                          onClick={() => handleRemoveImage(i)}
-                        />
-                        <img
-                          src={x.url}
-                          key={i}
-                          className='w-full h-full object-cover rounded-3xl'
-                        />
-                      </>
+                      ) : (
+                        <div key={x || 'i'} className="relative w-full h-full bg-blue-300 rounded-3xl">
+                          <img
+                            src={x}
+                            key={i}
+                            className='w-full h-full object-cover rounded-3xl'
+                          />
+                          <IoCloseCircle
+                            className="absolute top-1 right-1 text-red-500 text-[1.6rem] cursor-pointer"
+                            onClick={() => handleRemoveImage(i)}
+                          />
+                        </div>
                       )}
 
                     </div>

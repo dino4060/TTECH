@@ -32,10 +32,10 @@ const ProductRenderList = ({
           className='flex items-start gap-2 p-2 cursor-pointer rounded-2xl'
         >
           <div className='w-12 h-12 shrink-0 rounded-xl bg-sky-300'>
-            {/* <img
-              src={x?.photos[0]}
+            <img
+              src={x?.thumb}
               className='w-full h-full object-cover rounded-xl'
-            /> */}
+            />
           </div>
           <div className='text-[1.4rem] whitespace-nowrap overflow-hidden text-ellipsis'>
             {x?.name}
