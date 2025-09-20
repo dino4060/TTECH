@@ -51,11 +51,18 @@ const ProductManagementForm = ({
 
   // OKE
   useEffect(() => {
+    // Set data to display
     setError({});
 
-    setImageListDisplay([currentProductChoose?.thumb]
-      .concat(currentProductChoose?.photos)
-      .map((url) => url ? { url } : { url: "todo" }));
+    const initialImages = []
+    currentProductChoose.thumb && initialImages.push(currentProductChoose.thumb);
+    currentProductChoose.photos && initialImages.push(...currentProductChoose.photos);
+    setImageListDisplay(initialImages);
+    // [currentProductChoose?.thumb]
+    // .concat(currentProductChoose?.photos)
+    // .map((url) => { url }));
+    //.map((url) => url ? { url } : { url: "todo 2" }));
+
     setData({
       id: currentProductChoose?.id,
       name: currentProductChoose?.name,
@@ -131,10 +138,10 @@ const ProductManagementForm = ({
   };
 
   const handleSubmit = async () => {
-    const thumb = imageListDisplay?.[0].url || currentProductChoose?.thumb || "";
-    const photos = imageListDisplay?.slice(1).map(img => img.url) || currentProductChoose?.photos || [];
+    const thumb = imageListDisplay?.[0] || currentProductChoose?.thumb || "";
+    const photos = imageListDisplay?.slice(1) || currentProductChoose?.photos || [];
     if (!thumb) {
-      alert(failure);
+      alert("Vui lòng thêm ảnh đại diện");
       return;
     }
 
@@ -180,7 +187,8 @@ const ProductManagementForm = ({
 
   const handleUploadComplete = (imageData) => {
     const imageUrl = imageData.info
-    setImageListDisplay((prev) => [...prev, { url: imageUrl.secure_url, name: imageUrl.original_filename }]);
+    setImageListDisplay((prev) => [...prev, imageUrl.secure_url]);
+    // setImageListDisplay((prev) => [...prev, { url: imageUrl.secure_url, name: imageUrl.original_filename }]);
   };
 
   const handleRemoveImage = (index, fromInitialImages = false) => {
@@ -211,15 +219,15 @@ const ProductManagementForm = ({
         />
       )}
       <div className="flex flex-col gap-2 justify-start items-center mr-4 mb-4">
-        {allImageOfProduct?.map((x, i) => (
+        {/* {allImageOfProduct?.map((x, i) => (
           <div key={i} className="w-44 h-44 bg-blue-300 rounded-[10px] relative">
             <img src={x?.imageHref} className="w-full h-full object-cover rounded-[10px]" />
           </div>
-        ))}
+        ))} */}
 
-        {imageListDisplay?.map((image) => (
-          <div key={image.url} className="relative w-44 h-44 bg-blue-300 rounded-[10px]">
-            <img src={image.url} className="w-full h-full object-cover rounded-[10px]" />
+        {imageListDisplay?.map((image, i) => (
+          <div key={image || 'i'} className="relative w-44 h-44 bg-blue-300 rounded-[10px]">
+            <img src={image || 'i'} className="w-full h-full object-cover rounded-[10px]" />
             <IoCloseCircle
               className="absolute top-1 right-1 text-red-500 text-[1.6rem] cursor-pointer"
               onClick={() => handleRemoveImage(i)}
@@ -227,7 +235,7 @@ const ProductManagementForm = ({
           </div>
         ))}
 
-        <CldUploadWidget uploadPreset={"wdxleeuq"} onSuccess={(result) => handleUploadComplete(result)}>
+        <CldUploadWidget uploadPreset={"TTECH_products"} onSuccess={(result) => handleUploadComplete(result)}>
           {({ open }) => {
             return (
               <button onClick={() => open()} className="text-center bg-blue-500 text-white text-[1.4rem] font-[600] py-2 px-3 rounded-2xl">
