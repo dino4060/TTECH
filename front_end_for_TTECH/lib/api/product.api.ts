@@ -2,20 +2,21 @@
 import type { TApi, TPage } from "@/types/base.types";
 import { HttpMethod } from "@/types/base.types";
 import type { TCategoryInList } from "@/types/category.types";
-import { TProductInList, TProductToWrite } from "@/types/product.types";
+import { TProductInList, TProductQuery, TProductToSell, TProductToWrite } from "@/types/product.types";
 import { RESOURCES } from "../constants/resources";
 
 export const productApi = {
-  // PUBLIC PRODUCT CONTROLLER //
+  // PUBLIC HOME //
 
-  list: (): TApi<TCategoryInList[]> => ({
-    route: `${RESOURCES.CATEGORIES.PUBLIC}/list`,
+  list: (query: TProductQuery): TApi<TProductToSell[]> => ({
+    route: `${RESOURCES.PRODUCTS.PUBLIC}`,
     method: HttpMethod.GET,
+    query
   }),
 };
 
 export const adminProductApi = {
-  // PRIVATE ADMIN PRODUCT CONTROLLER //
+  // PRIVATE DASHBOARD //
 
   list: (): TApi<TPage<TProductInList[]>> => ({
     route: `${RESOURCES.PRODUCTS.PRIVATE_ADMIN}/list`,

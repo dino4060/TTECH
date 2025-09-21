@@ -8,6 +8,7 @@ public record AppPage<T>(
         Pagination pagination,
         List<T> items
 ) {
+    // use 0-based index
     public record Pagination(
             int totalPages,
             long totalElements,
@@ -41,7 +42,7 @@ public record AppPage<T>(
         Pagination pagination = new Pagination(
                 page.getTotalPages(),
                 page.getTotalElements(),
-                Pagination.createPage(page.getNumber()),
+                page.getNumber(),
                 page.getSize()
         );
         return new AppPage<>(pagination, items);

@@ -4,6 +4,8 @@ import com.dino.back_end_for_TTECH.inventory.application.service.IInventoryServi
 import com.dino.back_end_for_TTECH.pricing.application.service.IPriceService;
 import com.dino.back_end_for_TTECH.product.application.mapper.IProductMapper;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
+import com.dino.back_end_for_TTECH.product.application.model.ProductQuery;
+import com.dino.back_end_for_TTECH.product.application.model.ProductToSell;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.application.service.ICategoryService;
 import com.dino.back_end_for_TTECH.product.application.service.IProductService;
@@ -11,6 +13,7 @@ import com.dino.back_end_for_TTECH.product.application.service.ISkuService;
 import com.dino.back_end_for_TTECH.product.application.service.ISupplierService;
 import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.product.domain.repository.IProductRepository;
+import com.dino.back_end_for_TTECH.product.domain.specification.ProductSpecification;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
@@ -19,8 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 // NOTE: == vs equal()
 // 1. == compares on stack
@@ -95,10 +96,20 @@ public class ProductServiceImpl implements IProductService {
     public AppPage<ProductInList> listProducts(Pageable pageable) {
         Page<Product> page = this.productRepository.findAll(pageable);
 
-        List<ProductInList> products = page.getContent()
-                .stream()
-                .map(this.productMapper::toProductInList)
-                .toList();
+        var products = page.getContent().stream()
+                .map(this.productMapper::toProductInList).toList();
+
+        return AppPage.from(page, products);
+    }
+
+    // LIST: integrate searching, pagination
+    public AppPage<ProductToSell> list(ProductQuery query, Pageable pageable) {
+        var queryable = ProductSpecification.build(query);
+
+        var page = this.productRepository.findAll(queryable, pageable);
+
+        var products = page.getContent().stream()
+                .map(this.productMapper::toProductToSell).toList();
 
         return AppPage.from(page, products);
     }

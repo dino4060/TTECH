@@ -224,7 +224,7 @@ const AddProduct = ({
               />
             </div>
             <div className='grow-[1] m-4 '>
-              <h1 className='text-3xl bg-blue-500/30 rounded-2xl inline-block p-2 mb-10 font-[600]'>
+              <h1 className='text-3xl bg-blue-500/30 rounded-2xl inline-block p-2 mb-10 mr-5 font-[600]'>
                 Hình ảnh sản phẩm
               </h1>
 

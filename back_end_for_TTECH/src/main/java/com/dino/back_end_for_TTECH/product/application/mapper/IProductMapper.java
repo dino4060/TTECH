@@ -1,9 +1,8 @@
 package com.dino.back_end_for_TTECH.product.application.mapper;
 
 import com.dino.back_end_for_TTECH.pricing.application.model.PriceToWrite;
-import com.dino.back_end_for_TTECH.pricing.domain.Price;
-import com.dino.back_end_for_TTECH.pricing.domain.SkuPrice;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
+import com.dino.back_end_for_TTECH.product.application.model.ProductToSell;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.application.model.SkuToWrite;
 import com.dino.back_end_for_TTECH.product.domain.Category;
@@ -16,11 +15,11 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
-import java.util.stream.Collectors;
-
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IProductMapper {
     ProductInList toProductInList(Product product);
+
+    ProductToSell toProductToSell(Product product);
 
     Product toProduct(ProductToWrite body);
 

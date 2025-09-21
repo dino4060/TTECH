@@ -1,12 +1,20 @@
 package com.dino.back_end_for_TTECH.product.api;
 
-import org.springframework.web.bind.annotation.*;
-
-import com.dino.back_end_for_TTECH.product.application.service.IProductService;
-
+import com.dino.back_end_for_TTECH.product.application.ProductServiceImpl;
+import com.dino.back_end_for_TTECH.product.application.model.ProductQuery;
+import com.dino.back_end_for_TTECH.product.application.model.ProductToSell;
+import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ProductController {
@@ -18,18 +26,19 @@ public class ProductController {
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public static class PublicProductController {
 
-        IProductService productService;
-//        IProductReader productReader;
-//
-//        // QUERY //
-//
-//        // listProducts //
-//        @GetMapping("/list")
-//        public ResponseEntity<Object> listProducts(
-//                @PageableDefault(sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
-//            return ResponseEntity.ok(this.productService.listProducts(pageable));
-//        }
-//
+        ProductServiceImpl productService;
+
+        // QUERY //
+
+        // list //
+        @GetMapping
+        public ResponseEntity<AppPage<ProductToSell>> list(
+                @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                @ModelAttribute ProductQuery query
+        ) {
+            return ResponseEntity.ok(this.productService.list(query, pageable));
+        }
+
 //        // searchProducts //
 //        @GetMapping("/search")
 //        public ResponseEntity<Object> searchProducts(

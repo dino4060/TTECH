@@ -2,22 +2,27 @@
 
 import { handleProduct } from "@/app/api/handleProduct"
 import { AnimatePresence, motion } from "framer-motion"
-import { useRouter } from "next/navigation"
+import {
+	usePathname,
+	useRouter,
+	useSearchParams,
+} from "next/navigation"
 import { useEffect, useState } from "react"
 import { CiMinimize1, CiSearch } from "react-icons/ci"
 import useDebounce from "../../customHook/useDeboune"
 
 const SearchBar = () => {
 	const [showSearchPage, setShowSearchPage] = useState(false)
-	const [value, setValue] = useState("")
+	const [keywords, setKeywords] = useState("")
+
 	const router = useRouter()
+	const searchParams = useSearchParams()
 
 	const [filteredProducts, setFilteredProducts] = useState(
 		[]
 	)
 
-	const debouncedValue = useDebounce(value, 500)
-	//
+	const debouncedValue = useDebounce(keywords, 500)
 
 	const getProductBySearchParam = async () => {
 		const result = await handleProduct.getProduct({
@@ -29,16 +34,24 @@ const SearchBar = () => {
 		}
 	}
 
-	useEffect(() => {
-		getProductBySearchParam()
-	}, [debouncedValue])
+	const onSearchKeywords = (keywords) => {
+		const params = new URLSearchParams(
+			searchParams.toString()
+		)
+		params.set("keywords", keywords)
+		router.push(`products/?${params.toString()}`)
+	}
 
-	const handleKeyPressEnter = (e) => {
+	const onPressKeyEnter = (e) => {
 		if (e.key === "Enter") {
-			router.push(`/products?searchKey=${value}`)
+			onSearchKeywords(keywords)
 			setShowSearchPage(false)
 		}
 	}
+
+	useEffect(() => {
+		getProductBySearchParam()
+	}, [debouncedValue])
 
 	useEffect(() => {
 		const handleKeyPress = (event) => {
@@ -84,10 +97,10 @@ const SearchBar = () => {
 										<motion.input
 											autoFocus
 											placeholder='Tìm Kiếm'
-											value={value}
-											onKeyPress={handleKeyPressEnter}
+											value={keywords}
+											onKeyPress={onPressKeyEnter}
 											onChange={(e) => {
-												setValue(e.target.value)
+												setKeywords(e.target.value)
 											}}
 											type='text'
 											className='outline-none bg-[#efeff1] w-full text-[2rem] font-semibold '

@@ -3,14 +3,40 @@ import { TApi, TApiResult, THttpMethod } from "@/types/base.types";
 import { getEnv } from "../utils/env";
 import { createAppError } from "../constants";
 
-export function buildEndpoint(domain: string, route: string, query?: any): RequestInfo {
-  const endpoint = `${domain}${route}`;
-  console.log(`>>> buildEndpoint: ${endpoint}`);
+// export function buildEndpoint(domain: string, route: string, query?: any): RequestInfo {
+//   let endpoint = `${domain}${route}`;
 
-  if (!query) return endpoint;
-  const queryRecord: Record<string, string> = query;
-  const queryString = new URLSearchParams(queryRecord).toString();
-  return `${endpoint}?${queryString}`;
+//   console.log('>>> query:', query);
+//   const queryRecord = Object.entries(query || {})
+//     .filter(([_, v]) => v !== undefined && v !== null)
+//     .reduce((acc, [k, v]) => {
+//       acc[k] = String(v);
+//       return acc;
+//     }, {});
+//   if (queryRecord.length > 0) {
+//     const queryString = new URLSearchParams(queryRecord).toString();
+//     endpoint = `${endpoint}?${queryString}`;
+//   }
+
+//   console.log(`>>> buildEndpoint: ${endpoint}`);
+//   return endpoint;
+// }
+
+export function buildEndpoint(domain: string, route: string, query?: any): RequestInfo {
+  let endpoint = `${domain}${route}`;
+
+  // Lọc và chuyển các giá trị undefined/null + convert thành string
+  const entries = Object.entries(query || {})
+    .filter(([_, v]) => v !== undefined && v !== null)
+    .map(([k, v]) => [k, String(v)]);
+
+  if (entries.length > 0) {
+    const queryString = new URLSearchParams(entries).toString();
+    endpoint = `${endpoint}?${queryString}`;
+  }
+
+  console.log(`>>> buildEndpoint: ${endpoint}`);
+  return endpoint;
 }
 
 export function buildOptions(method: THttpMethod, body?: any): RequestInit {

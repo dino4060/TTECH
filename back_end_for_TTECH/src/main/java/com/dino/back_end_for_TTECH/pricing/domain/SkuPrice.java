@@ -26,7 +26,7 @@ import org.hibernate.annotations.SQLRestriction;
 public class SkuPrice extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "sku_prices_seq", allocationSize = 1)
     @Column(name = "sku_price_id")
     Long id;
 

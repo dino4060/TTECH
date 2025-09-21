@@ -45,3 +45,17 @@ export type TProductInList = TProduct & {
   price: TPriceInList;
   skus: TSkuInList[];
 };
+
+export type TProductToSell = TProduct & {
+  category: TCategoryInList;
+  supplier: TSupplierInList;
+  price: TPriceInList;
+  skus: TSkuInList[];
+};
+
+export type TProductQuery = {
+  keywords?: string;
+  category?: number;
+  supplier?: number;
+  prices?: number[];
+};

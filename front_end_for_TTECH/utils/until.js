@@ -129,6 +129,11 @@ export const convertToVND = (money) => {
   })
 }
 
+
+export const convertTokVND = (money) => {
+  return `${money.toLocaleString('it-IT')}k VND`;
+}
+
 export function getCurrentDate(separator = "") {
   let daysOfWeek = [
     "Chủ Nhật",

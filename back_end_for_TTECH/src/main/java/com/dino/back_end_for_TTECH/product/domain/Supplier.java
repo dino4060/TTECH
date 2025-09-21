@@ -27,7 +27,7 @@ import java.util.List;
 public class Supplier extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "suppliers_seq", allocationSize = 1)
     @Column(name = "category_id")
     Long id;
 

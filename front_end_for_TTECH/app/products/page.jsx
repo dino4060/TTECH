@@ -6,68 +6,47 @@ import ProductItem from "@/components/product/ProductItem"
 import { useEffect, useState } from "react"
 import { handleProduct } from "../api/handleProduct"
 import { useRouter } from "next/navigation"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { productApi } from "@/lib/api/product.api"
 
 export default function Page({ searchParams }) {
-	const [filter, setFilter] = useState({
-		...searchParams,
-		IsDescending: !!searchParams.IsDescending || false,
-		pageNumber: Number.parseInt(searchParams.pageNumber) || 1,
-		pageSize: 12,
-	})
-
+	const [filter, setFilter] = useState(searchParams) // { keywords, category, supplier, prices }
 	const [loading, setLoading] = useState(true)
-
-	const router = useRouter()
+	const [totalPages, setTotalPages] = useState(1)
 	const [currentPage, setCurrentPage] = useState(
 		searchParams.pageNumber
 	)
-	const [totalPages, setTotalPages] = useState(1)
 	const [list, setList] = useState([
 		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
 	])
 
 	useEffect(() => {
-		const categoryId = searchParams.categoryId
-		const pageNumber = parseInt(searchParams?.pageNumber)
+		let { category, keywords } = searchParams
 
-		if (categoryId && pageNumber) {
-			setFilter((pre) => ({ ...pre, categoryId, pageNumber }))
-		} else {
-			const { categoryId, ...rest } = filter
-			setFilter({ ...rest, pageNumber })
-		}
-	}, [searchParams.categoryId, searchParams.pageNumber])
+		category = category || undefined
+		keywords = keywords || undefined
 
-	const getProduct = async () => {
-		const newFilter = {
-			...searchParams,
-			IsDescending:
-				searchParams.IsDescending === "true" ? true : false,
-			pageNumber: filter.pageNumber || 1,
-			pageSize: 12
-		}
-		const result = await handleProduct.getProduct(newFilter)
-		const products = result?.products
-		const totalPages = result?.totalPages
-		const pageNumber = result?.pageNumber
-		setCurrentPage(pageNumber)
-		setTotalPages(totalPages)
-		setList(products)
-		setLoading(false)
-	}
+		setFilter({ ...filter, category, keywords })
+	}, [searchParams.category, searchParams.keywords])
+
+	// useEffect(() => {
+	//   const queryString = Object.entries(filter)
+	//     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+	//     .join("&")
+	//   router.push("/products?" + queryString, undefined, { shallow: true, })
+	// }, [filter])
 
 	useEffect(() => {
-		const queryString = Object.entries(filter)
-			.map(
-				([key, value]) => `${key}=${encodeURIComponent(value)}`
+		const getProduct = async () => {
+			const { data } = await clientFetch(
+				productApi.list(filter)
 			)
-			.join("&")
-		router.push("/products?" + queryString, undefined, {
-			shallow: true,
-		})
-	}, [filter])
+			setCurrentPage(data?.pagination?.page)
+			setTotalPages(data?.pagination?.totalPages)
+			setList(data?.items)
+			setLoading(false)
+		}
 
-	useEffect(() => {
 		getProduct()
 	}, [filter])
 
@@ -83,15 +62,15 @@ export default function Page({ searchParams }) {
 						<ProductItem
 							loading={loading}
 							key={i}
-							product_id={x?.productId || ""}
-							category_id={x?.categoryId || ""}
-							name_pr={x?.namePr || ""}
-							name_serial={x?.nameSerial || ""}
-							detail={x?.detail || ""}
-							price={x?.price || 0}
-							quantity_pr={x?.quantityPr || ""}
-							img_href={x?.images || []}
-							guarantee_period={x?.guaranteePeriod || ""}
+							product_id={x?.id || ""}
+							category_id={x?.category?.id || ""}
+							name_pr={x?.name || ""}
+							name_serial={x?.serialNumber || ""}
+							detail={x?.description || ""}
+							price={x?.price?.skuPrices[0]?.mainPrice || 0}
+							quantity_pr={x?.skus?.[0].inventory.stocks || ""}
+							img_href={x?.thumb || []}
+							guarantee_period={x?.guaranteeMonths || ""}
 						/>
 					))}
 				</div>

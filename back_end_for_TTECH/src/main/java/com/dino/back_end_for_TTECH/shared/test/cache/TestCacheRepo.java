@@ -29,7 +29,7 @@ public class TestCacheRepo {
 //    1. @Caching – Gộp nhiều cache action cùng lúc
 //    @Caching(
 //            cacheable = @Cacheable(value = "product", key = "#id"),
-//            put = @CachePut(value = "productByName", key = "#result.name"),
+//            put = @CachePut(value = "productByName", key = "#result.keywords"),
 //            evict = @CacheEvict(value = "productList", allEntries = true)
 //    )
 
@@ -39,7 +39,7 @@ public class TestCacheRepo {
 //        // clear all cache entries under "product"
 //    }
 
-//    3. @CacheConfig – Đặt cache name mặc định cho class
+//    3. @CacheConfig – Đặt cache keywords mặc định cho class
 //    @CacheConfig(cacheNames = "result")
 //    @Service
 //    public class ResultService {

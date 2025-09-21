@@ -11,7 +11,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,7 +27,7 @@ import java.util.List;
 public class Price extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "product_prices_seq", allocationSize = 1)
     @Column(name = "price_id")
     Long id;
 

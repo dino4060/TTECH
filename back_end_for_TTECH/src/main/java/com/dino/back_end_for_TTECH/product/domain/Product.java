@@ -33,7 +33,7 @@ import java.util.Optional;
 public class Product extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "products_seq", allocationSize = 1)
     @Column(name = "product_id")
     Long id;
 
@@ -77,14 +77,14 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "supplier_id")
     Supplier supplier;
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Sales> discounts;
+
     @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     Price price;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<Sku> skus;
-
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Sales> discounts;
 
     // SETTERS //
 

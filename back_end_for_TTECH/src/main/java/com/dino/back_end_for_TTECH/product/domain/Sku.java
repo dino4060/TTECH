@@ -36,7 +36,7 @@ import java.util.List;
 public class Sku extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "skus_seq", allocationSize = 1)
     @Column(name = "sku_id")
     Long id;
 
