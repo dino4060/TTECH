@@ -4,6 +4,8 @@ import com.dino.back_end_for_TTECH.inventory.application.service.IInventoryServi
 import com.dino.back_end_for_TTECH.pricing.application.service.IPriceService;
 import com.dino.back_end_for_TTECH.product.application.mapper.IProductMapper;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
+import com.dino.back_end_for_TTECH.product.application.model.ProductQuery;
+import com.dino.back_end_for_TTECH.product.application.model.ProductToSell;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.application.service.ICategoryService;
 import com.dino.back_end_for_TTECH.product.application.service.IProductService;
@@ -95,10 +97,17 @@ public class ProductServiceImpl implements IProductService {
     public AppPage<ProductInList> listProducts(Pageable pageable) {
         Page<Product> page = this.productRepository.findAll(pageable);
 
-        List<ProductInList> products = page.getContent()
-                .stream()
-                .map(this.productMapper::toProductInList)
-                .toList();
+        var products = page.getContent().stream()
+                .map(this.productMapper::toProductInList).toList();
+
+        return AppPage.from(page, products);
+    }
+
+    public AppPage<ProductToSell> list(Pageable pageable, ProductQuery query) {
+        Page<Product> page = this.productRepository.findAll(pageable);
+
+        var products = page.getContent().stream()
+                .map(this.productMapper::toProductToSell).toList();
 
         return AppPage.from(page, products);
     }

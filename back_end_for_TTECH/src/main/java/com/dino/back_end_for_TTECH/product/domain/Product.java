@@ -33,7 +33,7 @@ import java.util.Optional;
 public class Product extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "products_seq", allocationSize = 1)
     @Column(name = "product_id")
     Long id;
 

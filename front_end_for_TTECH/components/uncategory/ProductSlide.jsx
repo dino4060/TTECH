@@ -148,14 +148,14 @@ const ProductSlide = ({
 			{list.length !== 0 && (
 				<motion.div
 					ref={containerRef}
-					className='hidden flex-1 gap-6 md:flex 
+					className='hidden flex-1 gap-6 md:flex
           md:overflow-scroll scroll-smooth relative'
 				>
 					{list?.map((x, i) => (
 						<div
 							ref={itemRef}
 							key={i}
-							className={`w-[40%] lg:w-1/3 h-full 
+							className={`w-[40%] lg:w-1/3 h-full
               flex flex-col items-center justify-center bg-white shrink-0 rounded-[26px] `}
 						>
 							<div className='w-[200px] h-[200px] mt-8 mb-4 rounded-[32px] flex items-center justify-center'>
@@ -175,7 +175,7 @@ const ProductSlide = ({
 								)}
 							</div>
 							<div
-								className='flex flex-col gap-2 
+								className='flex flex-col gap-2
               items-center text-[1.3rem] mt-[auto] flex-1'
 							>
 								<div className='font-[600] text-[2.2rem] max-w-[85%] overflow-hidden whitespace-nowrap overflow-ellipsis'>

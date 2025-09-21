@@ -28,7 +28,7 @@ import java.util.List;
 public class Category extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "categories_seq", allocationSize = 1)
     @Column(name = "category_id")
     Long id;
 

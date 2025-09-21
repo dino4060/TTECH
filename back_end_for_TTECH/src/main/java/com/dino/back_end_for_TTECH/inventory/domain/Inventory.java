@@ -27,7 +27,7 @@ import org.hibernate.annotations.SQLRestriction;
 public class Inventory extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "inventories_seq", allocationSize = 1)
     @Column(name = "inventory_id")
     Long id;
 

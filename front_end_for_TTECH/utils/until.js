@@ -123,10 +123,11 @@ export function isValidUsername(username) {
 
 
 export const convertToVND = (money) => {
-  return money?.toLocaleString("it-IT", {
-    style: "currency",
-    currency: "VND",
-  })
+  return `${money.toLocaleString('it-IT')}K VND`;
+  // return money?.toLocaleString("it-IT", {
+  //   style: "currency",
+  //   currency: "VND",
+  // })
 }
 
 export function getCurrentDate(separator = "") {
