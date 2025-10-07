@@ -1,20 +1,13 @@
 "use client"
 
-import { convertToVND } from "@/utils/until"
+import { convertTokVND, convertToVND } from "@/utils/until"
 import { useEffect, useState } from "react"
 import OrderFormData from "./OrderFormData"
 import { handleDiscount } from "@/app/api/handleDiscount."
 
 const OrderBill = ({ cart, setCart }) => {
-	const [totalPrice, setTotalPrice] = useState(() => {
-		let total = 0
-		cart
-			.map((x) => x?.quantity * x?.product?.price || 0)
-			.forEach((x) => {
-				total += x
-			})
-		return total
-	})
+	const [totalPrice, setTotalPrice] = useState(0)
+
 	const [discount, setDiscount] = useState({
 		discountId: null,
 		discountCode: "",
@@ -25,28 +18,26 @@ const OrderBill = ({ cart, setCart }) => {
 
 	useEffect(() => {
 		let total = 0
-		cart
-			?.map((x) => x?.quantity * x?.product?.price || 0)
-			.forEach((x) => {
-				total += x
-			})
-
+		if (!cart?.cartItems) return
+		cart?.cartItems
+			.map((x) => x?.quantity * x?.price?.mainPrice || 0)
+			.forEach((x) => (total += x))
 		setTotalPrice(total)
 	}, [cart])
 
-	const getCurrentDiscount = async () => {
-		const date = new Date().toISOString().split('T')[0]
+	// const getCurrentDiscount = async () => {
+	// 	const date = new Date().toISOString().split("T")[0]
 
-		const response = await handleDiscount.getCurrentDiscount(
-			date
-		)
+	// 	const response = await handleDiscount.getCurrentDiscount(
+	// 		date
+	// 	)
 
-		if (response.discountId) setDiscount(response)
-	}
+	// 	if (response.discountId) setDiscount(response)
+	// }
 
-	useEffect(() => {
-		getCurrentDiscount()
-	}, [])
+	// useEffect(() => {
+	// 	getCurrentDiscount()
+	// }, [])
 
 	return (
 		<div className='flex flex-col items-center p-8 shrink-0  bg-white min-w-[300px] max-w-[500px] '>
@@ -62,22 +53,25 @@ const OrderBill = ({ cart, setCart }) => {
 				<thead>
 					<tr>
 						<th className='p-2'>Sản phẩm</th>
-						<th className='p-2'>Số lượng</th>
+						<th className='p-2 w-[16%]'>Số lượng</th>
 						<th className='p-2'>Tổng tiền</th>
 					</tr>
 				</thead>
 				<tbody className=''>
-					{cart.map((x, i) => (
+					{cart?.cartItems?.map((x, i) => (
 						<tr
 							key={i}
 							className='border-t border-slate-500/60 my-2'
 						>
 							<td className='p-2'>
-								{x?.product?.name_pr || "loading"}
+								{x?.product?.name || "loading"}
 							</td>
-							<td className='p-2'>{x.quantity}</td>
+							<td className='p-2'>{x?.quantity}</td>
 							<td className='p-2'>
-								{convertToVND(x?.quantity * x?.product?.price || 0)}
+								{convertTokVND(
+									x?.quantity * x?.price?.mainPrice || 0,
+									false
+								)}
 							</td>
 						</tr>
 					))}
@@ -97,7 +91,7 @@ const OrderBill = ({ cart, setCart }) => {
 
 			<div className='text-black text-3xl grid grid-cols-2 px-[100px]  py-8 w-full rounded-full font-[600] mt-2'>
 				<div className=' '>Tổng:</div>{" "}
-				<div>{convertToVND(totalPrice)}</div>
+				<div>{convertTokVND(totalPrice)}</div>
 				{discount.discountId && (
 					<>
 						<div className=''>Giảm:</div>

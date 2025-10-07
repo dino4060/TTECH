@@ -5,23 +5,20 @@ import OrderBill from "@/components/order/OrderBill"
 import { useEffect, useState } from "react"
 import { handleCart } from "../api/handleCart"
 import { handleDiscount } from "../api/handleDiscount."
+import { TTECH_TOKEN } from "@/lib/constants/string"
+import clientLocal from "@/lib/storage/local.client"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { cartApi } from "@/lib/api/cart.api"
 
 const Page = () => {
-	const [cart, setCart] = useState([1, 1, 1, 1, 1])
-
-	const getCurrentProductInCart = async (token) => {
-		const result = await handleCart.GetCartProduct(token)
-		setCart(result)
-	}
+	const [cart, setCart] = useState([1, 2, 3, 4])
 
 	useEffect(() => {
-		try {
-			const user = JSON.parse(localStorage.getItem("user"))
-			const token = JSON.parse(localStorage.getItem("token"))
-			if (user?.userId) {
-				getCurrentProductInCart(token)
-			}
-		} catch (error) {}
+		const getCart = async () => {
+			const { data } = await clientFetch(cartApi.get())
+			setCart(data)
+		}
+		getCart()
 	}, [])
 
 	return (

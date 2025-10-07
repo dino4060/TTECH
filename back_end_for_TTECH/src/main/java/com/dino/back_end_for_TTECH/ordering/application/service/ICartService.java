@@ -7,6 +7,7 @@ import com.dino.back_end_for_TTECH.profile.domain.Shop;
 import com.dino.back_end_for_TTECH.profile.domain.User;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.application.utils.Deleted;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Map;

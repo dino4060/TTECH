@@ -16,15 +16,20 @@ import java.util.List;
 public interface ICartMapper {
 
     @Mapping(source = "cartItem.sku.product", target = "product")
+    @Mapping(source = "cartItem.sku.price", target = "price")
     CartItemRes toCartItemRes(CartItem cartItem);
-
-    @Mapping(source = "cartItem.id", target = "id")
-    @Mapping(source = "cartItem.sku.product", target = "product")
-    //@Mapping(source = "cartItem.sku.retailPrice", target = "price")
-    CartItemRes toCartItemRes(CartItem cartItem, String photo);
 
     @Mapping(source = "id", target = "id")
     CartGroupRes toCartGroupRes(Long id, Shop shop, List<CartItemRes> cartItems);
 
-    CartRes toCartRes(Cart cart, List<CartGroupRes> cartGroups);
+    CartRes toCartRes(Cart cart, List<CartItemRes> cartItems);
+
+    default CartRes customCartRes(Cart cart) {
+        return toCartRes(
+                cart,
+                cart.getCartItems().stream()
+                        .map(line -> toCartItemRes(line))
+                        .toList()
+        );
+    }
 }

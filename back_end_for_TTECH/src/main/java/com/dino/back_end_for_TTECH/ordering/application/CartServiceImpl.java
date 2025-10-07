@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -37,16 +36,10 @@ public class CartServiceImpl implements ICartService {
 
     // HELPER //
 
-    /**
-     * findCartWithSku.
-     */
     private Optional<Cart> findCartWithSku(CurrentUser currentUser) {
         return this.cartRepository.findWithSkuByBuyerId(currentUser.id());
     }
 
-    /**
-     * getCartWithSku.
-     */
     private Cart getCartWithSku(CurrentUser currentUser) {
         return this.cartRepository.findWithSkuByBuyerId(currentUser.id())
                 .orElseThrow(() -> new AppException(ErrorCode.CART__NOT_FOUND));
@@ -100,7 +93,7 @@ public class CartServiceImpl implements ICartService {
         List<CartItemRes> cartItemsRes = cartItems.stream()
                 .map(item -> {
                     var photo = skuService.getPhoto(item.getSku());
-                    return cartMapper.toCartItemRes(item, photo);
+                    return cartMapper.toCartItemRes(item); // photo
                 })
                 .sorted(Comparator.comparing(CartItemRes::id).reversed())
                 .toList();
@@ -110,9 +103,6 @@ public class CartServiceImpl implements ICartService {
                 : Optional.of(cartMapper.toCartGroupRes(cartItemsRes.getFirst().id(), shop, cartItemsRes));
     }
 
-    /**
-     * createCart.
-     */
     private Cart createCart(CurrentUser currentUser) {
         // exclude deleted carts
         this.cartRepository.findIsDeletedByBuyerId(currentUser.id())
@@ -127,42 +117,24 @@ public class CartServiceImpl implements ICartService {
 
     // QUERY //
 
-    /**
-     * get. (get or create cart, map to response dto)
-     */
     @Override
     public CartRes get(CurrentUser currentUser) {
-        Cart cart = this.findCartWithShop(currentUser)
+        Cart cart = this.findCartWithSku(currentUser)
                 .orElseGet(() -> this.createCart(currentUser));
 
-        // 1. group CartItems by Shop
-        Map<Shop, List<CartItem>> itemsGroupedByShop = this.groupCartItemByShop(cart)
-                .orElse(Collections.emptyMap());
+        cart.getCartItems().sort(
+                Comparator.comparing(CartItem::getId).reversed());
 
-        // 2. build and sort CartGroups
-        List<CartGroupRes> cartGroups = itemsGroupedByShop.entrySet().stream()
-                .map(entry -> this.buildCartGroupRes(entry).orElse(null))
-                .filter(Objects::nonNull)
-                .sorted(Comparator.comparing(CartGroupRes::id).reversed())
-                .toList();
-
-        return this.cartMapper.toCartRes(cart, cartGroups);
+        return this.cartMapper.customCartRes(cart);
     }
     // COMMAND //
 
-    /**
-     * createCart
-     */
     @Override
     public void createCart(User buyer) {
         var cart = Cart.createCart(buyer);
         this.cartRepository.save(cart);
     }
 
-
-    /**
-     * addCartItem
-     */
     @Override
     @Transactional
     public CartItemRes addCartItem(AddCartItemReq request, CurrentUser currentUser) {
@@ -176,28 +148,21 @@ public class CartServiceImpl implements ICartService {
         return this.cartMapper.toCartItemRes(upsertedCartItem);
     }
 
-    /**
-     * updateQuantity
-     */
     @Override
     public CartItemRes updateQuantity(UpdateQuantityReq request, CurrentUser currentUser) {
         var cart = this.getCartWithSku(currentUser);
 
-        // 1. updateQuantity
-        var updatedCartItem = cart.updateQuantity(request.cartItemId(), request.quantity());
+        var updatedCartItem = cart.updateQuantity(request.skuId(), request.quantity());
         this.cartRepository.save(cart);
 
         return this.cartMapper.toCartItemRes(updatedCartItem);
     }
 
-    /**
-     * removeCartItems
-     */
     @Override
     public Deleted removeCartItems(RemoveCartItemReq request, CurrentUser currentUser) {
         var cart = this.getCartWithSku(currentUser);
 
-        var removedCartItems = cart.removeCartItems(request.cartItemIds());
+        var removedCartItems = cart.removeCartItems(request.skuIds());
         this.cartRepository.save(cart);
 
         return Deleted.success(removedCartItems.size());

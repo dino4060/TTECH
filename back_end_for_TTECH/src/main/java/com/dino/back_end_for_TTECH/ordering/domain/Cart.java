@@ -106,9 +106,9 @@ public class Cart extends BaseEntity {
      * updateQuantity.
      * (check CartItem is existing => updateQuantity or CART__ITEM_NOT_FOUND)
      */
-    public CartItem updateQuantity(Long cartItemId, int quantity) {
+    public CartItem updateQuantity(Long skuId, int quantity) {
         return this.getCartItems().stream()
-                .filter(cartItem -> cartItem.getId().equals(cartItemId))
+                .filter(cartItem -> cartItem.getSku().getId().equals(skuId))
                 .findFirst()
                 .map(cartItem -> {
                     cartItem.updateQuantity(quantity);
@@ -120,11 +120,11 @@ public class Cart extends BaseEntity {
     /**
      * removeCartItems.
      */
-    public List<CartItem> removeCartItems(List<Long> cartItemIds) {
+    public List<CartItem> removeCartItems(List<Long> skuIds) {
         // NOTE: orphanRemoval
         // 1. filter CartItems (objects on memory) to remove
         var cartItemsToRemove = this.getCartItems().stream()
-                .filter(cartItem -> cartItemIds.contains(cartItem.getId()))
+                .filter(cartItem -> skuIds.contains(cartItem.getSku().getId()))
                 .toList();
 
         // 2. removeAll items => JPA note they are orphan => orphanRemoval auto delete

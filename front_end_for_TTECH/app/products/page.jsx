@@ -69,8 +69,9 @@ export default function Page({ searchParams }) {
 							detail={x?.description || ""}
 							price={x?.price?.skuPrices[0]?.mainPrice || 0}
 							quantity_pr={x?.skus?.[0].inventory.stocks || ""}
-							img_href={x?.thumb || []}
+							img_href={x?.thumb || null}
 							guarantee_period={x?.guaranteeMonths || ""}
+							skus={x.skus}
 						/>
 					))}
 				</div>
