@@ -14,10 +14,10 @@ import org.hibernate.annotations.SQLRestriction;
 import java.util.List;
 
 @Entity
-@Table(name = "product_prices")
+@Table(name = "prices")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE product_prices SET is_deleted = true WHERE price_id=?")
+@SQLDelete(sql = "UPDATE prices SET is_deleted = true WHERE price_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
@@ -27,7 +27,7 @@ import java.util.List;
 public class Price extends BaseEntity {
 
     @Id
-    @SequenceGenerator(name = "product_prices_seq", allocationSize = 1)
+    @SequenceGenerator(name = "prices_seq", allocationSize = 1)
     @Column(name = "price_id")
     Long id;
 

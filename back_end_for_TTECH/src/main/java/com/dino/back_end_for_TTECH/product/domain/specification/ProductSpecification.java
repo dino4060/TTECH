@@ -37,14 +37,14 @@ public class ProductSpecification {
     public static Specification<Product> fromMinPrice(Integer minPrice) {
         return (root, query, builder) -> {
             if (minPrice == null) return null;
-            return builder.greaterThanOrEqualTo(root.join("price").get("mainPrice"), minPrice);
+            return builder.greaterThanOrEqualTo(root.join("allPrice").get("mainPrice"), minPrice);
         };
     }
 
     public static Specification<Product> toMaxPrice(Integer maxPrice) {
         return (root, query, builder) -> {
             if (maxPrice == null) return null;
-            return builder.lessThanOrEqualTo(root.join("price").get("mainPrice"), maxPrice);
+            return builder.lessThanOrEqualTo(root.join("allPrice").get("mainPrice"), maxPrice);
         };
     }
 

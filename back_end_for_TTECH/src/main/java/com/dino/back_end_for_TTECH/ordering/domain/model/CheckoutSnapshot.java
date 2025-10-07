@@ -21,9 +21,9 @@ public class CheckoutSnapshot {
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class Summary {
         int itemsPrice;
-        int savings; // discount voucher + shipping voucher
+        int savings; // allDiscount voucher + shipping voucher
         int shippingFee;
-        int total;   // main price - discount voucher + final shipping fee.
+        int total;   // main allPrice - allDiscount voucher + final shipping fee.
 
     }
 

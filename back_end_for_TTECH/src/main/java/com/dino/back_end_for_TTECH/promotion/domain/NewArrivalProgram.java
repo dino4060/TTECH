@@ -25,7 +25,7 @@ import org.hibernate.annotations.SQLRestriction;
 public class NewArrivalProgram extends SalesProgram {
     // max 3 months
     // buyerLimit 1
-    // no discounted sku price
+    // no discounted sku allPrice
 
     @Override
     public int getPriority() {

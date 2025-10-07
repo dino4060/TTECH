@@ -61,17 +61,17 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     Set<Role> roles;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    @ToString.Exclude
-    List<Address> addresses;
-
     @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
     @JsonIgnore
     @ToString.Exclude
     List<Order> orders;
 
     // FACTORY //
+
+    public User (Long id) {
+        var user = new User();
+        user.setId(id);
+    }
 
     public static User createCustomer(String name, String email, String phone, String passHashed) {
         User user = new User();

@@ -1,10 +1,8 @@
 package com.dino.back_end_for_TTECH.promotion.domain;
 
-import com.dino.back_end_for_TTECH.profile.domain.Shop;
 import com.dino.back_end_for_TTECH.promotion.domain.model.PricingType;
 import com.dino.back_end_for_TTECH.promotion.domain.model.ProgramStatusType;
 import com.dino.back_end_for_TTECH.promotion.domain.repository.Promotion;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -43,10 +41,10 @@ public abstract class SalesProgram extends Promotion {
     @Column(name = "pricing_type")
     PricingType pricingType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shop_id", updatable = false, nullable = false)
-    @JsonIgnore
-    Shop shop;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "shop_id", updatable = false, nullable = false)
+//    @JsonIgnore
+//    Shop shop;
 
     @OneToMany(mappedBy = "productDiscountProgram", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<Sales> productDiscounts;

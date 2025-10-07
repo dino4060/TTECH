@@ -66,9 +66,9 @@ public class PriceServiceImpl implements IPriceService {
     }
 
     /*
-     * re-calculate main price := retail price || retail price * discount percent
-     * re-calculate side price := 0 || retail price
-     * re-calculate max price
+     * re-calculate main allPrice := retail allPrice || retail allPrice * allDiscount percent
+     * re-calculate side allPrice := 0 || retail allPrice
+     * re-calculate max allPrice
      */
     @Override
     public void recalculate(Price price, PriceToWrite body) {

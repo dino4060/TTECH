@@ -1,6 +1,7 @@
 package com.dino.back_end_for_TTECH.ordering.api;
 
-import com.dino.back_end_for_TTECH.ordering.application.CartServiceImpl;
+import com.dino.back_end_for_TTECH.ordering.application.CartService;
+import com.dino.back_end_for_TTECH.ordering.application.mapper.ICartMapper;
 import com.dino.back_end_for_TTECH.ordering.application.model.*;
 import com.dino.back_end_for_TTECH.shared.api.annotation.AuthUser;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
@@ -15,28 +16,26 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class CartController {
 
-    // BuyerPublicCartController //
-
-    // BuyerPrivateCartController //
     @RestController
     @RequestMapping("/api/carts")
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-    public static class BuyerPrivateCartController {
+    public static class PrivateCartController {
 
-        CartServiceImpl cartService;
+        CartService cartService;
+        ICartMapper cartMapper;
 
         @GetMapping
-        public ResponseEntity<CartRes> get(
+        public ResponseEntity<CartData> get(
                 @AuthUser CurrentUser currentUser
         ) {
             var cart = this.cartService.get(currentUser);
-            return ResponseEntity.ok(cart);
+            return ResponseEntity.ok(this.cartMapper.customCartData(cart));
         }
 
         @PostMapping("/lines")
-        public ResponseEntity<CartItemRes> addLine(
-                @Valid @RequestBody AddCartItemReq dto,
+        public ResponseEntity<CartLineData> addLine(
+                @Valid @RequestBody CartLineBody dto,
                 @AuthUser CurrentUser currentUser
         ) {
             var line = this.cartService.addCartItem(dto, currentUser);
@@ -44,17 +43,17 @@ public class CartController {
         }
 
         @PatchMapping("/lines")
-        public ResponseEntity<CartItemRes> updateQuantity(
-                @Valid @RequestBody UpdateQuantityReq request,
+        public ResponseEntity<CartLineData> updateQuantity(
+                @Valid @RequestBody CartLineBody body,
                 @AuthUser CurrentUser currentUser
         ) {
-            var updatedItem = this.cartService.updateQuantity(request, currentUser);
+            var updatedItem = this.cartService.updateQuantity(body, currentUser);
             return ResponseEntity.ok(updatedItem);
         }
 
         @DeleteMapping("/lines")
         public ResponseEntity<Deleted> removeLines(
-                @Valid @RequestBody RemoveCartItemReq request,
+                @Valid @RequestBody CartBody request,
                 @AuthUser CurrentUser currentUser
         ) {
             var deleteRes = this.cartService.removeCartItems(request, currentUser);

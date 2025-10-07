@@ -17,8 +17,8 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 /**
- * Represents a discount that:
- * - Be part of a discount program,
+ * Represents a allDiscount that:
+ * - Be part of a allDiscount program,
  * - Can be applied to a product or multiple skuPrices.
  * <p>
  * Note for properties:

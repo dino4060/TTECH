@@ -127,7 +127,7 @@ public class ProductServiceImpl implements IProductService {
         // Cascade skus
         this.skuService.createList(product);
 
-        // Cascade price
+        // Cascade allPrice
         this.priceService.create(product);
 
         // Create product
@@ -150,7 +150,7 @@ public class ProductServiceImpl implements IProductService {
         // Refer up by product
         this.referUp(product);
 
-        // Re-calculate retail price
+        // Re-calculate retail allPrice
         this.priceService.recalculate(price, priceBody);
 
         // Update skus

@@ -1,6 +1,7 @@
 import { handleDetailOrder } from "@/app/api/handleDetailOrder"
 import { handleOrder } from "@/app/api/handleOrder"
 import Notification from "@/components/uncategory/Notification"
+import { convertTokVND } from "@/utils/until"
 import { useEffect, useState } from "react"
 import { CiMinimize1 } from "react-icons/ci"
 
@@ -10,7 +11,7 @@ const DetailOrder = ({
 	setTrigger,
 }) => {
 	const [data, setData] = useState({
-		state: currentOrderClick?.orderInfor?.state,
+		state: currentOrderClick?.status,
 	})
 	const [notifications, setNotifications] = useState(false)
 
@@ -24,10 +25,10 @@ const DetailOrder = ({
 	}
 
 	const getOrderDetailByOrderId = async () => {
-		const orderId = currentOrderClick.orderInfor.orderId
-		const result =
-			await handleDetailOrder.getOrderDetailByOrderId(orderId)
-		setOrderDetailList(result)
+		// const orderId = currentOrderClick.id
+		// const result =
+		// 	await handleDetailOrder.getOrderDetailByOrderId(orderId)
+		setOrderDetailList(currentOrderClick.orderLines)
 	}
 
 	useEffect(() => {
@@ -35,7 +36,7 @@ const DetailOrder = ({
 	}, [])
 
 	const handleSubmit = async () => {
-		const order_id = currentOrderClick.orderInfor.orderId
+		const order_id = currentOrderClick.id
 		const state = data.state
 		await handleOrder.updateStateOrder(order_id, state)
 		setCurrentOrderClick({})
@@ -80,10 +81,7 @@ const DetailOrder = ({
 							<option
 								value={x}
 								key={i}
-								selected={
-									x.toLowerCase() ===
-									currentOrderClick.orderInfor.state.toLowerCase()
-								}
+								selected={x === currentOrderClick.status}
 							>
 								{x}
 							</option>
@@ -97,19 +95,22 @@ const DetailOrder = ({
 					</button>
 				</form>
 				<div className='grow-[5] text-2xl shrink-0 flex flex-wrap'>
-					{orderDetailList.map((x, i) => (
+					{orderDetailList.map((x) => (
 						<div
 							className='flex flex-col items-center gap-4'
-							key={i}
+							key={x.product.id}
 						>
 							<div className='w-[200px] h-[200px]'>
 								<img
-									src={x.image.imageHref}
+									src={x.product.thumb}
 									className='w-full h-full object-cover'
 								/>
 							</div>
 							<h1 className='w-[150px] overflow-ellipsis whitespace-nowrap text-center'>
-								{x.product.namePr.slice(0, 20)}...
+								{x.product.name.slice(0, 20)}...
+							</h1>
+							<h1 className='w-[150px] overflow-ellipsis whitespace-nowrap text-center'>
+								{convertTokVND(x.mainPrice)}
 							</h1>
 							<h2 className='px-2 text-white bg-blue-500 font-bold'>
 								{x.quantity}
@@ -125,7 +126,7 @@ const DetailOrder = ({
 export default DetailOrder
 
 const state = [
-	"pending",
+	"PENDING",
 	"completed",
 	"cancelled",
 	"banked",

@@ -38,20 +38,5 @@ public class ProductController {
         ) {
             return ResponseEntity.ok(this.productService.list(query, pageable));
         }
-
-//        // searchProducts //
-//        @GetMapping("/search")
-//        public ResponseEntity<Object> searchProducts(
-//                @ModelAttribute ProductSearchParams params) {
-//            return ResponseEntity.ok(this.productReader.searchProducts(params));
-//        }
-//
-//        // getProduct //
-//        @GetMapping("/{id}")
-//        public ResponseEntity<Object> getProduct(@PathVariable String id) {
-//            Id idObject = Id.from(id).orElseThrow(() -> new AppException(ErrorCode.SYSTEM__ID_INVALID));
-//
-//            return ResponseEntity.ok(this.productService.getProduct(idObject));
-//        }
     }
 }

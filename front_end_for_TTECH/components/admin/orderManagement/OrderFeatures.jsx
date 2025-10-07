@@ -59,7 +59,7 @@ const OrderFeatures = ({
 				onClick={handleDownloadExcelFile}
 				className='bg-blue-500 px-4 py-2 rounded-lg'
 			>
-				Xuất Exel
+				Xuất Excel
 			</button>
 			<div className='border border-black/20  bg-white rounded-2xl px-2 flex items-center'>
 				<CiSearch size={18} color='black' />

@@ -19,8 +19,8 @@ public class RealtimeProviderImpl implements IRealtimePriceProvider {
 
     @Override
     public void publishPriceUpdate(Long productId, Price updatedPrice) {
-        // Publish to queue at topic /topic/price/{productId}
-        messagingTemplate.convertAndSend("/topic/price/" + productId, updatedPrice);
+        // Publish to queue at topic /topic/allPrice/{productId}
+        messagingTemplate.convertAndSend("/topic/allPrice/" + productId, updatedPrice);
     }
 }
 

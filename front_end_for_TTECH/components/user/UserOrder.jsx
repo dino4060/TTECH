@@ -2,6 +2,8 @@
 
 import { handleOrder } from "@/app/api/handleOrder"
 import { UserAuth } from "@/context/AuthContext"
+import { orderApi } from "@/lib/api/order.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 import { convertToVND } from "@/utils/until"
 import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState } from "react"
@@ -57,35 +59,22 @@ const UserOrder = () => {
 			],
 		},
 	])
-	const {
-		user,
-		setUser,
-		googleSignIn,
-		logOutGoogle,
-		setToken,
-		token,
-	} = UserAuth()
 
-	const handleClick = (orderId) => {
+	const onClick = (orderId) => {
 		const newShowDetail = { ...showDetail }
 
 		if (newShowDetail[orderId]) {
-			delete newShowDetail[orderId]
+			newShowDetail[orderId] = false
 		} else {
-			newShowDetail[orderId] = orderId
+			newShowDetail[orderId] = true
 		}
 
 		setShowDetail(newShowDetail)
 	}
 
 	const getALlOrder = async () => {
-		try {
-			const result = await handleOrder.getOrderByUserId(
-				user.userId,
-				token
-			)
-			setOrderList(result)
-		} catch (error) {}
+		const { data } = await clientFetch(orderApi.list())
+		setOrderList(data.items)
 	}
 
 	function copy(text) {
@@ -119,105 +108,108 @@ const UserOrder = () => {
 					</h1>
 				</div>
 				<div className=''>
-					{orderList?.map((x, i) => (
-						<div key={i}>
-							<motion.div
-								variants={variant}
-								initial='initial'
-								animate={
-									showDetail[x.orderInfo.orderId]
-										? "active"
-										: "initial"
-								}
-								transition={{ type: "spring", delay: 0.1 }}
-								className='flex gap-1 xl:gap-2 p-4 rounded-2xl mb-6'
-							>
-								<motion.h1
-									whileTap={{ color: "red" }}
-									onClick={() => copy(x.orderInfo.orderId)}
-									className='flex-1 shrink-0 flex items-center justify-center gap-2'
+					{orderList?.map(
+						({ id, orderTime, total, orderLines }) => (
+							<div key={id}>
+								<motion.div
+									variants={variant}
+									initial='initial'
+									animate={showDetail[id] ? "active" : "initial"}
+									transition={{ type: "spring", delay: 0.1 }}
+									className='flex gap-1 xl:gap-2 p-4 rounded-2xl mb-6'
 								>
-									{x.orderInfo.orderId.slice(0, 10)}...{" "}
-									<IoCopyOutline size={15} />
-								</motion.h1>
-								<h1 className='flex-1 shrink-0 flex items-center justify-center'>
-									{convertDate(x.orderInfo.createOrderAt)}
-								</h1>
-								<h1 className='flex-1 shrink-0 flex items-center justify-center'>
-									{convertToVND(x.orderInfo.total || 0)}
-								</h1>
-								<motion.h1
-									onClick={() => handleClick(x.orderInfo.orderId)}
-									className='flex-1 shrink-0 flex items-center justify-center'
-								>
-									<AnimatePresence>
-										{!showDetail[x.orderInfo.orderId] ? (
-											<motion.div
-												initial={{ opacity: 0 }}
-												whileInView={{ opacity: 1 }}
-												exit={{ opacity: 0 }}
-											>
-												<CiMaximize1 size={20} />
-											</motion.div>
-										) : (
-											<motion.div
-												initial={{ opacity: 0 }}
-												whileInView={{ opacity: 1 }}
-												exit={{ opacity: 0 }}
-											>
-												<CiMinimize1 size={20} />
-											</motion.div>
-										)}
-									</AnimatePresence>
-								</motion.h1>
-							</motion.div>
-							<AnimatePresence>
-								{showDetail[x.orderInfo.orderId] && (
-									<motion.div
-										initial={{ scaleY: 0.1, opacity: 0 }}
-										whileInView={{ scaleY: 1, opacity: 1 }}
-										exit={{ scaleY: 0.1, opacity: 0 }}
-										className='flex flex-col gap-3 mt-2 origin-top'
+									<motion.h1
+										whileTap={{ color: "red" }}
+										onClick={() => copy(id)}
+										className='flex-1 shrink-0 flex items-center justify-center gap-2'
 									>
-										<div className='flex gap-2'>
-											<div className='flex-1 text-center bg-blue-500 text-white/90 py-2 rounded-3xl'></div>
-											<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
-												Tên
-											</div>
-											<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
-												{" "}
-												Giá
-											</div>
-											<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
-												Số lượng
-											</div>
-										</div>
-
-										{x.orderDetails?.map((y, j) => (
-											<div key={j} className='flex pt-6 pb-4'>
-												<div className='flex-1 text-center rounded-3xl'>
-													<img
-														src={y.product.images[0]}
-														className='h-[70px] m-auto w-[70px] object-contain rounded-3xl'
-													/>
+										{id}
+										<IoCopyOutline size={15} />
+									</motion.h1>
+									<h1 className='flex-1 shrink-0 flex items-center justify-center'>
+										{convertDate(orderTime)}
+									</h1>
+									<h1 className='flex-1 shrink-0 flex items-center justify-center'>
+										{convertToVND(total || 0)}
+									</h1>
+									<motion.h1
+										onClick={() => onClick(id)}
+										className='flex-1 shrink-0 flex items-center justify-center'
+									>
+										<AnimatePresence>
+											{!showDetail[id] ? (
+												<motion.div
+													initial={{ opacity: 0 }}
+													whileInView={{ opacity: 1 }}
+													exit={{ opacity: 0 }}
+												>
+													<CiMaximize1 size={20} />
+												</motion.div>
+											) : (
+												<motion.div
+													initial={{ opacity: 0 }}
+													whileInView={{ opacity: 1 }}
+													exit={{ opacity: 0 }}
+												>
+													<CiMinimize1 size={20} />
+												</motion.div>
+											)}
+										</AnimatePresence>
+									</motion.h1>
+								</motion.div>
+								<AnimatePresence>
+									{showDetail[id] && (
+										<motion.div
+											initial={{ scaleY: 0.1, opacity: 0 }}
+											whileInView={{ scaleY: 1, opacity: 1 }}
+											exit={{ scaleY: 0.1, opacity: 0 }}
+											className='flex flex-col gap-3 mt-2 origin-top'
+										>
+											<div className='flex gap-2'>
+												<div className='flex-1 text-center bg-blue-500 text-white/90 py-2 rounded-3xl'></div>
+												<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
+													Tên
 												</div>
-												<div className='flex-[2] flex items-center text-center justify-center'>
-													{y.product.namePr}
-												</div>
-												<div className='flex-[2] flex items-center text-center justify-center'>
+												<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
 													{" "}
-													{convertToVND(y.pricePr || 0)}{" "}
+													Giá
 												</div>
-												<div className='flex-[2] flex items-center text-center justify-center'>
-													{y.quantityPr}{" "}
+												<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
+													Số lượng
 												</div>
 											</div>
-										))}
-									</motion.div>
-								)}
-							</AnimatePresence>
-						</div>
-					))}
+
+											{orderLines?.map(
+												(
+													{ product, quantity, mainPrice, sidePrice },
+													j
+												) => (
+													<div key={j} className='flex pt-6 pb-4'>
+														<div className='flex-1 text-center rounded-3xl'>
+															<img
+																src={product.thumb}
+																className='h-[70px] m-auto w-[70px] object-contain rounded-3xl'
+															/>
+														</div>
+														<div className='flex-[2] flex items-center text-center justify-center'>
+															{product.name}
+														</div>
+														<div className='flex-[2] flex items-center text-center justify-center'>
+															{" "}
+															{convertToVND(mainPrice || 0)}{" "}
+														</div>
+														<div className='flex-[2] flex items-center text-center justify-center'>
+															{quantity}{" "}
+														</div>
+													</div>
+												)
+											)}
+										</motion.div>
+									)}
+								</AnimatePresence>
+							</div>
+						)
+					)}
 				</div>
 			</ul>
 		</div>

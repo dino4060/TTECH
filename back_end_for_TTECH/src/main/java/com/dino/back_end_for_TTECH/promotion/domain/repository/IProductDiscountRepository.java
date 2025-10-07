@@ -13,6 +13,6 @@ public interface IProductDiscountRepository
 
     List<Sales> findByProductId(@NonNull Long productId);
 
-    @EntityGraph(attributePaths = { "discount" })
+    @EntityGraph(attributePaths = { "allDiscount" })
     List<Sales> findEagerByProductId(@NonNull Long productId);
 }

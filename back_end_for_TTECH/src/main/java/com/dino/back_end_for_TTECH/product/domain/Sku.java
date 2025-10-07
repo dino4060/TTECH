@@ -2,9 +2,8 @@ package com.dino.back_end_for_TTECH.product.domain;
 
 import com.dino.back_end_for_TTECH.inventory.domain.Inventory;
 import com.dino.back_end_for_TTECH.inventory.domain.model.InventoryStatus;
-import com.dino.back_end_for_TTECH.ordering.domain.CartItem;
-import com.dino.back_end_for_TTECH.ordering.domain.OrderItem;
-import com.dino.back_end_for_TTECH.pricing.domain.Price;
+import com.dino.back_end_for_TTECH.ordering.domain.CartLine;
+import com.dino.back_end_for_TTECH.ordering.domain.OrderLine;
 import com.dino.back_end_for_TTECH.pricing.domain.SkuPrice;
 import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
@@ -69,10 +68,10 @@ public class Sku extends BaseEntity {
     List<SkuSales> skuDiscounts;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
-    List<CartItem> cartItems;
+    List<CartLine> cartItems;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
-    List<OrderItem> orderItems;
+    List<OrderLine> orderItems;
 
     // FACTORY METHOD //
 

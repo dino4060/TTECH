@@ -12,17 +12,9 @@ import java.util.Optional;
 
 public interface ICartRepository extends JpaRepository<Cart, Long> {
 
-    @EntityGraph(attributePaths = {"cartItems", "cartItems.sku"})
+    @EntityGraph(attributePaths = {"cartLines", "cartLines.sku"})
     Optional<Cart> findWithSkuByBuyerId(@NonNull Long buyerId);
-
-    @EntityGraph(attributePaths = {
-            "cartItems", "cartItems.sku", "cartItems.sku.product",
-            "cartItems.sku.product.shop"})
-    Optional<Cart> findWithShopByBuyerId(@NonNull Long buyerId);
 
     @Query("SELECT c FROM Cart c WHERE c.buyer.id = :buyerId AND c.isDeleted = true")
     Optional<Cart> findIsDeletedByBuyerId(@Param("buyerId") Long buyerId);
-
-    @NativeQuery("SELECT * FROM carts WHERE buyer_id = :buyerId")
-    Optional<Cart> findIncludeIsDeletedByBuyerId(@Param("buyerId") Long buyerId);
 }

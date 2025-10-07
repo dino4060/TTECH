@@ -7,6 +7,11 @@ import { AnimatePresence, motion } from "framer-motion"
 import DetailOrder from "./orderManagement/DetailOrder"
 import OrderFeatures from "./orderManagement/OrderFeatures"
 import useDebounce from "@/customHook/useDeboune"
+import { clientFetch } from "@/lib/http/fetch.client"
+import {
+	adminOrderApi,
+	orderApi,
+} from "@/lib/api/order.api"
 
 const AdminOrderManagement = () => {
 	const [searchOrder, setSearchOrder] = useState("")
@@ -56,24 +61,21 @@ const AdminOrderManagement = () => {
 	const [trigger, setTrigger] = useState(false)
 
 	const getAllOrder = async () => {
-		const result = await handleOrder.getAllOrder()
-		if (Array.isArray(result)) setOrderList(result)
+		const { success, data, error } = await clientFetch(
+			adminOrderApi.list()
+		)
+		if (success) setOrderList(data.items)
+		if (!success) alert("Lỗi " + error)
 	}
 
 	const handleSearch = async () => {
-		if (
-			orderSearchId == "" ||
-			orderSearchId == null ||
-			orderSearchId == undefined
-		) {
-			getAllOrder()
-			return
-		}
-		const response = await handleOrder.getOrderById(
-			orderSearchId
+		let query = orderSearchId ? { id: orderSearchId } : {}
+
+		const { success, data, error } = await clientFetch(
+			adminOrderApi.list(query)
 		)
-		if (Array.isArray(response)) setOrderList(response)
-		else alert("order không tồn tại")
+		if (success) setOrderList(data.items)
+		if (!success) alert("Lỗi " + error)
 	}
 
 	useEffect(() => {
@@ -104,7 +106,7 @@ const AdminOrderManagement = () => {
 			</div>
 
 			<AnimatePresence>
-				{currentOrderClick?.orderInfor?.orderId && (
+				{currentOrderClick?.id && (
 					<motion.div
 						initial={{ opacity: 0, height: 0 }}
 						whileInView={{

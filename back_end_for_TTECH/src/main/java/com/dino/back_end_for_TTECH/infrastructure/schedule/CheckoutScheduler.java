@@ -1,6 +1,5 @@
 package com.dino.back_end_for_TTECH.infrastructure.schedule;
 
-import com.dino.back_end_for_TTECH.ordering.application.service.ICheckoutService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,7 +15,7 @@ import java.time.Duration;
 @Slf4j
 public class CheckoutScheduler {
 
-    ICheckoutService checkoutService;
+    // ICheckoutService checkoutService;
 
     final Duration DRAFT_ORDER_TTL = Duration.ofMinutes(10);
 
@@ -24,7 +23,7 @@ public class CheckoutScheduler {
     public void cancelCheckout() {
         log.info(">>> Start the cancelCheckout task.");
 
-        this.checkoutService.cancelCheckout(DRAFT_ORDER_TTL);
+        // this.checkoutService.cancelCheckout(DRAFT_ORDER_TTL);
 
         log.info(">>> End the cancelCheckout task.");
     }

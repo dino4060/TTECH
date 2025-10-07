@@ -2,7 +2,7 @@
 
 import { convertTokVND, convertToVND } from "@/utils/until"
 import { useEffect, useState } from "react"
-import OrderFormData from "./OrderFormData"
+import OrderFormData from "./OrderFormData2"
 import { handleDiscount } from "@/app/api/handleDiscount."
 
 const OrderBill = ({ cart, setCart }) => {
@@ -18,8 +18,8 @@ const OrderBill = ({ cart, setCart }) => {
 
 	useEffect(() => {
 		let total = 0
-		if (!cart?.cartItems) return
-		cart?.cartItems
+		if (!cart?.cartLines) return
+		cart?.cartLines
 			.map((x) => x?.quantity * x?.price?.mainPrice || 0)
 			.forEach((x) => (total += x))
 		setTotalPrice(total)
@@ -58,7 +58,7 @@ const OrderBill = ({ cart, setCart }) => {
 					</tr>
 				</thead>
 				<tbody className=''>
-					{cart?.cartItems?.map((x, i) => (
+					{cart?.cartLines?.map((x, i) => (
 						<tr
 							key={i}
 							className='border-t border-slate-500/60 my-2'

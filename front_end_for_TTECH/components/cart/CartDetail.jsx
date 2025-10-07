@@ -16,7 +16,7 @@ const CartDetail = ({ cart, setCart }) => {
 	const onDownQuantity = async (skuId, quantity) => {
 		if (quantity === 1) return
 
-		const cartItem = cart.cartItems.find(
+		const cartItem = cart.cartLines.find(
 			(item) => item.sku.id === skuId
 		)
 		cartItem.quantity = quantity - 1
@@ -33,7 +33,7 @@ const CartDetail = ({ cart, setCart }) => {
 	const onUpQuantity = async (skuId, quantity) => {
 		if (quantity === 20) return
 
-		const cartItem = cart.cartItems.find(
+		const cartItem = cart.cartLines.find(
 			(item) => item.sku.id === skuId
 		)
 		cartItem.quantity = quantity + 1
@@ -48,7 +48,7 @@ const CartDetail = ({ cart, setCart }) => {
 	}
 
 	const onRemoveLine = async (skuId) => {
-		cart.cartItems = cart.cartItems.filter(
+		cart.cartLines = cart.cartLines.filter(
 			(item) => item.sku.id !== skuId
 		)
 		setCart({ ...cart })
@@ -58,7 +58,7 @@ const CartDetail = ({ cart, setCart }) => {
 
 	return (
 		<div className='flex flex-row gap-10 flex-wrap justify-center max-h-[600px] overflow-y-scroll customScrollBar'>
-			{cart?.cartItems?.map((x) => {
+			{cart?.cartLines?.map((x) => {
 				return (
 					<div
 						key={x.id}

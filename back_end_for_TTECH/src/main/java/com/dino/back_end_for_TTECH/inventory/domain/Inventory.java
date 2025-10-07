@@ -92,6 +92,13 @@ public class Inventory extends BaseEntity {
         this.setStatus();
     }
 
+    public void reserve(int quantity) {
+        this.setTotal(this.total - quantity);
+        this.setStocks(this.stocks - quantity);
+        this.setSales(this.sales + quantity);
+        this.setStatus();
+    }
+
     public void updateStocks(int quantity) {
         this.setStocks(this.getStocks() - quantity);
         this.setSales(this.getSales() + quantity);

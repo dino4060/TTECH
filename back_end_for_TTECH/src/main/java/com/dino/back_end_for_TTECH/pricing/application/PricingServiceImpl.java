@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.pricing.application;
 
-import com.dino.back_end_for_TTECH.ordering.domain.CartItem;
-import com.dino.back_end_for_TTECH.ordering.domain.OrderItem;
+import com.dino.back_end_for_TTECH.ordering.domain.CartLine;
+import com.dino.back_end_for_TTECH.ordering.domain.OrderLine;
 import com.dino.back_end_for_TTECH.ordering.domain.model.CheckoutSnapshot;
 import com.dino.back_end_for_TTECH.pricing.application.service.IPricingService;
 import lombok.AccessLevel;
@@ -21,7 +21,7 @@ public class PricingServiceImpl implements IPricingService {
     // CHECKOUT //
 
     @Override
-    public CheckoutSnapshot checkoutOrder(List<OrderItem> orderItems) {
+    public CheckoutSnapshot checkoutOrder(List<OrderLine> orderItems) {
         int totalMainPrice = orderItems.stream()
                 .mapToInt(item -> item.getMainPrice() * item.getQuantity())
                 .sum();
@@ -30,8 +30,8 @@ public class PricingServiceImpl implements IPricingService {
     }
 
     @Override
-    public CheckoutSnapshot checkoutCartGroup(List<CartItem> cartItems) {
-//        int totalMainPrice = cartItems.stream()
+    public CheckoutSnapshot checkoutCartGroup(List<CartLine> cartItems) {
+//        int totalMainPrice = cartLines.stream()
 //                .mapToInt(item -> item.getSku().getPrice().getMainPrice() * item.getQuantity())
 //                .sum();
         int totalMainPrice = 0;

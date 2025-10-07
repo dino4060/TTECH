@@ -21,16 +21,15 @@ const OrderFormData = ({
 	totalPrice,
 	discount,
 }) => {
-	const {
-		user,
-		setUser,
-		googleSignIn,
-		logOutGoogle,
-		setToken,
-		token,
-	} = UserAuth()
+	const { user, token } = UserAuth()
 
 	const router = useRouter()
+
+	const [selectedPaymentType, setSelectedPaymentType] =
+		useState("")
+	const paymentTypeRef = useRef()
+
+	const [loading, setLoading] = useState(false)
 
 	const [data, setData] = useState({
 		name: user?.name,
@@ -47,7 +46,7 @@ const OrderFormData = ({
 		phone: "",
 	})
 
-	const handleValueChange = (e) => {
+	const onChangeValue = (e) => {
 		const { id, value } = e.target
 
 		let errorMessage = ""
@@ -61,7 +60,9 @@ const OrderFormData = ({
 					? "mật khẩu"
 					: id == "phone"
 					? "số điện thoại"
-					: "địa chỉ"
+					: id == "address"
+					? "địa chỉ"
+					: ""
 			}`
 		} else if (id === "phone" && !isValidPhoneNumber(value)) {
 			errorMessage = "Sai định dạng số điện thoại"
@@ -72,18 +73,14 @@ const OrderFormData = ({
 			...pre,
 			[id]: errorMessage,
 		}))
+
 		setData((pre) => ({
 			...pre,
 			[id]: value,
 		}))
 	}
-	const [selectedPaymentType, setSelectedPaymentType] =
-		useState("")
-	const paymentTypeRef = useRef()
 
-	const [loading, setLoading] = useState(false)
-
-	const handleSubmit = async () => {
+	const onSubmitOrder = async () => {
 		const orderId = uuidv4()
 		setLoading(true)
 
@@ -139,7 +136,7 @@ const OrderFormData = ({
 					{
 						name: "Tên khách hàng",
 						key: "name",
-						placeholder: "vui lòng nhập tên khách hàng",
+						placeholder: "Vui lòng nhập tên khách hàng",
 					},
 					{
 						name: "Email",
@@ -168,7 +165,7 @@ const OrderFormData = ({
 							className='border-none outline-none bg-transparent text-2xl origin-top-left'
 							id={x.key}
 							placeholder={x.placeholder}
-							onChange={handleValueChange}
+							onChange={onChangeValue}
 							type='text'
 						/>
 						<h2 className='text-red-500 mt-1 text-left text-md'>
@@ -233,7 +230,7 @@ const OrderFormData = ({
 				</div>
 
 				<button
-					onClick={handleSubmit}
+					onClick={onSubmitOrder}
 					className='w-full bg-blue-500 rounded-full text-white py-3 text-2xl flex items-center justify-center font-bold'
 				>
 					{loading ? <CircleLoader /> : "Hoàn tất"}

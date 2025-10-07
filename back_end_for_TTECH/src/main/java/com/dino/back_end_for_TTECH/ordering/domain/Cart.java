@@ -31,7 +31,8 @@ import java.util.List;
 public class Cart extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "carts_seq")
+    @SequenceGenerator(name = "carts_seq", allocationSize = 1)
     @Column(name = "cart_id")
     Long id;
 
@@ -43,7 +44,7 @@ public class Cart extends BaseEntity {
     User buyer;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<CartItem> cartItems;
+    List<CartLine> cartLines;
 
     // SETTERS //
 
@@ -64,7 +65,7 @@ public class Cart extends BaseEntity {
     public static Cart createCart(User buyer) {
         Cart cart = new Cart();
 
-        cart.setCartItems(new ArrayList<>());
+        cart.setCartLines(new ArrayList<>());
         cart.setTotal(0);
         cart.setBuyer(buyer);
 
@@ -76,10 +77,10 @@ public class Cart extends BaseEntity {
     /**
      * addCartItem.
      */
-    public CartItem addCartItem(Sku sku, int quantity) {
-        CartItem item = CartItem.createCartItem(this, sku, quantity);
+    public CartLine addCartItem(Sku sku, int quantity) {
+        CartLine item = CartLine.createCartItem(this, sku, quantity);
 
-        this.getCartItems().add(item);
+        this.getCartLines().add(item);
         this.setTotal(this.getTotal() + 1);
 
         return item;
@@ -89,8 +90,8 @@ public class Cart extends BaseEntity {
      * addOrUpdateCartItem.
      * (check CartItem is existing => increaseQuantity or addCartItem)
      */
-    public CartItem addOrUpdateCartItem(Sku sku, int quantity) {
-        return this.cartItems.stream()
+    public CartLine addOrUpdateCartItem(Sku sku, int quantity) {
+        return this.cartLines.stream()
                 .filter(item -> item.getSku().getId().equals(sku.getId()))
                 .findFirst()
                 .map(cartItem -> {
@@ -106,8 +107,8 @@ public class Cart extends BaseEntity {
      * updateQuantity.
      * (check CartItem is existing => updateQuantity or CART__ITEM_NOT_FOUND)
      */
-    public CartItem updateQuantity(Long skuId, int quantity) {
-        return this.getCartItems().stream()
+    public CartLine updateQuantity(Long skuId, int quantity) {
+        return this.getCartLines().stream()
                 .filter(cartItem -> cartItem.getSku().getId().equals(skuId))
                 .findFirst()
                 .map(cartItem -> {
@@ -120,29 +121,29 @@ public class Cart extends BaseEntity {
     /**
      * removeCartItems.
      */
-    public List<CartItem> removeCartItems(List<Long> skuIds) {
+    public List<CartLine> removeCartItems(List<Long> skuIds) {
         // NOTE: orphanRemoval
         // 1. filter CartItems (objects on memory) to remove
-        var cartItemsToRemove = this.getCartItems().stream()
+        var cartItemsToRemove = this.getCartLines().stream()
                 .filter(cartItem -> skuIds.contains(cartItem.getSku().getId()))
                 .toList();
 
         // 2. removeAll items => JPA note they are orphan => orphanRemoval auto delete
-        this.getCartItems().removeAll(cartItemsToRemove);
+        this.getCartLines().removeAll(cartItemsToRemove);
         this.setTotal(this.getTotal() - cartItemsToRemove.size());
 
         return cartItemsToRemove;
     }
 
-    public List<CartItem> removeCartItemsBySkuIds(List<Long> skuIds) {
+    public List<CartLine> removeCartItemsBySkuIds(List<Long> skuIds) {
         // NOTE: orphanRemoval
         // 1. filter CartItems (objects on memory) to remove
-        var cartItemsToRemove = this.getCartItems().stream()
+        var cartItemsToRemove = this.getCartLines().stream()
                 .filter(cartItem -> skuIds.contains(cartItem.getSku().getId()))
                 .toList();
 
         // 2. removeAll items => JPA note they are orphan => orphanRemoval auto delete
-        this.getCartItems().removeAll(cartItemsToRemove);
+        this.getCartLines().removeAll(cartItemsToRemove);
         this.setTotal(this.getTotal() - cartItemsToRemove.size());
 
         return cartItemsToRemove;
