@@ -26,10 +26,145 @@ const OrderFormData = ({
 	const router = useRouter()
 
 	const [selectedPaymentType, setSelectedPaymentType] =
-		useState("")
+		useState("cash")
 	const paymentTypeRef = useRef()
 
 	const [loading, setLoading] = useState(false)
+
+	const Fields = [
+		{
+			key: "name",
+			name: "Tên khách hàng",
+			tag: "input",
+			placeholder: "Vui lòng nhập tên khách hàng",
+			require: true,
+		},
+		{
+			key: "email",
+			name: "Email",
+			tag: "input",
+			placeholder: "Vui lòng nhập email",
+			require: true,
+			validate: isValidEmail,
+		},
+		{
+			key: "phone",
+			name: "Số điện thoại",
+			tag: "input",
+			placeholder: "Vui lòng nhập số điện thoại",
+			require: true,
+			validate: isValidPhoneNumber,
+		},
+		{
+			key: "address",
+			name: "Địa chỉ",
+			tag: "input",
+			placeholder: "Vui lòng nhập địa chỉ",
+			require: true,
+		},
+		{
+			key: "note",
+			name: "Ghi chú",
+			tag: "textarea",
+			placeholder: "Có thể nhập ghi chú",
+		},
+		{
+			key: "paymentType",
+			name: "Hình thức thanh toán",
+			tag: "ratio",
+			options: [
+				{
+					key: "cash",
+					name: "Thanh toán khi nhận hàng",
+					default: true,
+				},
+				{
+					key: "bank",
+					name: "Chuyển khoản ngân hàng",
+				},
+			],
+			require: true,
+		},
+	]
+
+	const Input = {
+		input: (x) => {
+			return (
+				<div key={x.key} className='flex flex-col mb-2 '>
+					<label className='text-xl mb-1'>{x.name}</label>
+					<motion.input
+						whileFocus={{
+							margin: 4,
+							scale: 1.2,
+						}}
+						value={data[x.key]}
+						className='border-none outline-none bg-transparent text-2xl origin-top-left'
+						id={x.key}
+						placeholder={x.placeholder}
+						onChange={onChangeValue}
+						type='text'
+					/>
+					{x.require && (
+						<h2 className='text-red-500 mt-1 text-left text-md'>
+							{error[x.key]}
+						</h2>
+					)}
+				</div>
+			)
+		},
+
+		textarea: (x) => {
+			return (
+				<div key={x.key} className='flex flex-col'>
+					<label className='text-xl mb-1'>
+						{x.name}
+						{!x.require && (
+							<span className='text-black/40'> (optional)</span>
+						)}
+					</label>
+					<motion.textarea
+						placeholder='Vui lòng nhập ghi chú'
+						value={data[x.key]}
+						onChange={(e) => {
+							setData((pre) => ({
+								...pre,
+								Note: e.target.value,
+							}))
+						}}
+						className='border-none outline-none text-2xl origin-top-left'
+					></motion.textarea>
+				</div>
+			)
+		},
+
+		ratio: (x) => {
+			return (
+				<div key={x.key} className='mt-10 text-black w-full'>
+					<h1 className='text-xl'>{x.name}</h1>
+					{x.options.map((option) => {
+						return (
+							<div className='flex items-center gap-4'>
+								<input
+									type='radio'
+									name={x.key}
+									value={option.key}
+									id={option.key}
+									checked={option.default}
+									onChange={() => {
+										setSelectedPaymentType(option.key)
+										paymentTypeRef.current.focus()
+									}}
+								/>
+								<label htmlFor={option.key} className='text-2xl'>
+									{option.name}
+								</label>
+							</div>
+						)
+					})}
+				</div>
+			)
+		},
+	}
 
 	const [data, setData] = useState({
 		name: user?.name,
@@ -132,102 +267,7 @@ const OrderFormData = ({
 				onSubmit={(e) => e.preventDefault()}
 				className='flex flex-col gap-4 mt-4'
 			>
-				{[
-					{
-						name: "Tên khách hàng",
-						key: "name",
-						placeholder: "Vui lòng nhập tên khách hàng",
-					},
-					{
-						name: "Email",
-						key: "email",
-						placeholder: "Vui lòng nhập email",
-					},
-					{
-						name: "Số điện thoại",
-						key: "phone",
-						placeholder: "Vui lòng nhập số điện thoại",
-					},
-					{
-						name: "Địa chỉ",
-						placeholder: "Vui lòng nhập địa chỉ",
-						key: "address",
-					},
-				].map((x, i) => (
-					<div key={i} className='flex flex-col mb-2 '>
-						<label className='text-xl mb-1'>{x.name}</label>
-						<motion.input
-							whileFocus={{
-								margin: 4,
-								scale: 1.2,
-							}}
-							value={data[x.key]}
-							className='border-none outline-none bg-transparent text-2xl origin-top-left'
-							id={x.key}
-							placeholder={x.placeholder}
-							onChange={onChangeValue}
-							type='text'
-						/>
-						<h2 className='text-red-500 mt-1 text-left text-md'>
-							{error[x.key]}
-						</h2>
-					</div>
-				))}
-
-				<div className='flex flex-col'>
-					<label className='text-xl mb-1'>
-						Ghi chú{" "}
-						<span className='text-black/40'>(optional)</span>
-					</label>
-					<motion.textarea
-						placeholder='Vui lòng nhập ghi chú'
-						value={data["Note"]}
-						onChange={(e) => {
-							setData((pre) => ({
-								...pre,
-								Note: e.target.value,
-							}))
-						}}
-						className='border-none outline-none text-2xl origin-top-left'
-					></motion.textarea>
-				</div>
-
-				<div className='mt-10 text-black w-full'>
-					<h1 className='text-xl'>Hình thức thanh toán</h1>
-					<div className='flex items-center gap-4'>
-						<input
-							type='radio'
-							name='payment-type'
-							value='cash'
-							id='cash'
-							checked={selectedPaymentType === "cash"}
-							onChange={() => {
-								setSelectedPaymentType("cash")
-								paymentTypeRef.current.focus()
-							}}
-						/>
-						<label htmlFor='cash' className='text-2xl'>
-							Thanh toán khi nhận hàng
-						</label>
-					</div>
-					<div className='flex items-center gap-4'>
-						<input
-							type='radio'
-							name='payment-type'
-							value='bank'
-							id='bank'
-							checked={selectedPaymentType === "bank"}
-							onChange={() => {
-								setSelectedPaymentType("bank")
-								paymentTypeRef.current.focus()
-							}}
-							ref={paymentTypeRef} // Set the ref here for the second radio input element. This will allow us to focus on it after selecting it.
-						/>
-						<label htmlFor='bank' className='text-2xl'>
-							Chuyển khoản ngân hàng
-						</label>
-					</div>
-				</div>
+				{Fields.map((field) => Input[field.tag](field))}
 
 				<button
 					onClick={onSubmitOrder}
