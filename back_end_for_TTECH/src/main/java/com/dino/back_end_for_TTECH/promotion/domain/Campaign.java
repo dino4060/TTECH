@@ -1,4 +1,4 @@
-package com.dino.back_end_for_TTECH.promotion.domain.repository;
+package com.dino.back_end_for_TTECH.promotion.domain;
 
 import java.time.Instant;
 
@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
 @Getter
@@ -19,21 +18,18 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class Promotion extends BaseEntity {
+public abstract class Campaign extends BaseEntity {
 
     @Column(nullable = false)
     String name;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(nullable = false)
     Instant startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(nullable = false)
     Instant endDate;
-
     public boolean isPeriodActive() {
-        // NOTE: isAfter, isBefore
-        // isAfter, isBefore don't include equals => ()
-        // !isBefore, !isAfter include equals => []
+        // Instant.isXXX use () => !isXXX use []
         Instant now = Instant.now();
         return !now.isBefore(this.startDate) && !now.isAfter(this.endDate);
     }

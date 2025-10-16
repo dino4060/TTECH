@@ -1,10 +1,9 @@
 package com.dino.back_end_for_TTECH.promotion.application;
 
-import com.dino.back_end_for_TTECH.promotion.domain.Sales;
 import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.product.domain.Sku;
-import com.dino.back_end_for_TTECH.promotion.application.service.IDiscountService;
-import com.dino.back_end_for_TTECH.promotion.domain.repository.IProductDiscountRepository;
+import com.dino.back_end_for_TTECH.promotion.domain.Sales;
+import com.dino.back_end_for_TTECH.promotion.domain.repository.ISaleRepository;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,9 +20,9 @@ import java.util.Optional;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class DiscountServiceImpl implements IDiscountService {
+public class SaleService {
 
-    IProductDiscountRepository discountRepository;
+    ISaleRepository discountRepository;
 
     // QUERY //
 
@@ -40,11 +39,10 @@ public class DiscountServiceImpl implements IDiscountService {
             return Optional.of(discountsCanApply.getFirst());
 
         return discountsCanApply.stream()
-                .min(Comparator.comparingInt(d -> d.getProductDiscountProgram().getPriority()));
+                .min(Comparator.comparingInt(d -> d.getCampaign().getPriority()));
     }
 
     // canApply to product //
-    @Override
     public Optional<Sales> canDiscount(Product product, CurrentUser currentUser) {
         var discounts = this.discountRepository.findByProductId(product.getId());
 
@@ -52,7 +50,6 @@ public class DiscountServiceImpl implements IDiscountService {
     }
 
     // canApply to Sku //
-    @Override
     public Optional<Sales> canDiscount(Sku sku, CurrentUser currentUser) {
         return this.canDiscount(sku.getProduct(), currentUser);
     }

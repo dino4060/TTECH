@@ -25,10 +25,10 @@ import java.util.List;
  * - totalLimit, buyerLimit == NULL is unlimited.
  */
 @Entity
-@Table(name = "product_sales")
+@Table(name = "sales")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE product_sales SET is_deleted = true WHERE product_discount_id=?")
+@SQLDelete(sql = "UPDATE sales SET is_deleted = true WHERE sale_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
@@ -39,7 +39,7 @@ public class Sales extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "product_discount_id")
+    @Column(name = "sale_id")
     Long id;
 
     Boolean isEffective;
@@ -50,30 +50,25 @@ public class Sales extends BaseEntity {
 
     Integer totalLimit;
 
-    Integer buyerLimit;
-
     Integer usedCount;
 
     List<Long> usedBuyerIds;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "level_type", nullable = false)
-    LevelType levelType;
+    String levelType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", updatable = false, nullable = false)
     Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_discount_program_id", updatable = false, nullable = false)
-    SalesProgram productDiscountProgram;
+    @JoinColumn(name = "campaign_id", updatable = false, nullable = false)
+    SaleCampaign campaign;
 
-    @OneToMany(mappedBy = "productDiscount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<SkuSales> skuDiscounts;
+    @OneToMany(mappedBy = "sale", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<SkuSales> skuSales;
 
     // INSTANCE METHODS //
 
-    // isWithinTotalLimit //
     private boolean isWithinTotalLimit() {
         if (this.totalLimit == null || this.usedCount == null)
             return true;
@@ -81,25 +76,24 @@ public class Sales extends BaseEntity {
         return this.usedCount < this.totalLimit;
     }
 
-    // isWithinTotalLimit //
-    private boolean isWithinBuyerLimit(CurrentUser currentUser) {
-        if (this.buyerLimit == null || CollectionUtils.isEmpty(this.usedBuyerIds))
-            return true;
-
-        long count = this.usedBuyerIds.stream()
-                .filter(id -> id.equals(currentUser.id()))
-                .count();
-        return count < this.buyerLimit;
-    }
+//    private boolean isWithinBuyerLimit(CurrentUser currentUser) {
+//        if (this.buyerLimit == null || CollectionUtils.isEmpty(this.usedBuyerIds))
+//            return true;
+//
+//        long count = this.usedBuyerIds.stream()
+//                .filter(id -> id.equals(currentUser.id()))
+//                .count();
+//        return count < this.buyerLimit;
+//    }
 
     // canApply //
     public boolean canApply(@Nullable CurrentUser currentUser) {
         if (!this.isWithinTotalLimit())
             return false;
 
-        if (currentUser != null && !this.isWithinBuyerLimit(currentUser))
+        if (currentUser != null) // && !this.isWithinBuyerLimit(currentUser))
             return false;
 
-        return this.productDiscountProgram.isActive();
+        return this.campaign.isActive();
     }
 }

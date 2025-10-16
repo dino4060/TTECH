@@ -8,11 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.lang.NonNull;
 
-public interface IProductDiscountRepository
-        extends JpaRepository<Sales, Long>, JpaSpecificationExecutor<Sales> {
+public interface ISaleRepository extends JpaRepository<Sales, Long>, JpaSpecificationExecutor<Sales> {
 
     List<Sales> findByProductId(@NonNull Long productId);
 
-    @EntityGraph(attributePaths = { "allDiscount" })
-    List<Sales> findEagerByProductId(@NonNull Long productId);
+//    @EntityGraph(attributePaths = { "allDiscount" })
+//    List<Sales> findEagerByProductId(@NonNull Long productId);
 }

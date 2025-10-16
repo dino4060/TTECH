@@ -16,13 +16,13 @@ import org.hibernate.annotations.SQLRestriction;
 @DiscriminatorValue("NEW_ARRIVAL")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE discount_programs SET is_deleted = true WHERE discount_program_id=?")
+@SQLDelete(sql = "UPDATE sale_campaigns SET is_deleted = true WHERE campaign_id=?")
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NewArrivalProgram extends SalesProgram {
+public class NewArrivalCampaign extends SaleCampaign {
     // max 3 months
     // buyerLimit 1
     // no discounted sku allPrice

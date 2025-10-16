@@ -25,24 +25,22 @@ public class SkuSales extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "sku_discount_id")
+    @Column(name = "sku_sale_id")
     Long id;
 
     Integer dealPrice;
 
-    Integer discountPercent;
+    Integer dealPercent;
 
     Integer totalLimit;
-
-    Integer buyerLimit;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sku_id", updatable = false, nullable = false)
     Sku sku;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_discount_id", updatable = false, nullable = false)
-    Sales productDiscount;
+    @JoinColumn(name = "sale_id", updatable = false, nullable = false)
+    Sales sale;
 
     // FACTORY METHODS //
 
