@@ -78,7 +78,7 @@ public class Product extends BaseEntity {
     Supplier supplier;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Sales> discounts;
+    List<Sales> sales;
 
     @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     Price price;
@@ -124,6 +124,6 @@ public class Product extends BaseEntity {
         if (AppUtils.isEmpty(this.getSkus())) return false;
 
         return skus.stream().anyMatch(sku ->
-                !AppUtils.isEmpty(sku.getCartItems()) || !AppUtils.isEmpty(sku.getOrderItems()));
+                !AppUtils.isEmpty(sku.getCartLines()) || !AppUtils.isEmpty(sku.getOrderLines()));
     }
 }

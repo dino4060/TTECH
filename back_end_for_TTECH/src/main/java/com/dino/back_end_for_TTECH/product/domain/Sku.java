@@ -65,13 +65,13 @@ public class Sku extends BaseEntity {
     SkuPrice price;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
-    List<SkuSales> skuDiscounts;
+    List<SkuSales> sales;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
-    List<CartLine> cartItems;
+    List<CartLine> cartLines;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
-    List<OrderLine> orderItems;
+    List<OrderLine> orderLines;
 
     // FACTORY METHOD //
 

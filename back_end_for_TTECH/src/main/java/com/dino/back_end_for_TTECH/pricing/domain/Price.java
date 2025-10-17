@@ -35,13 +35,13 @@ public class Price extends BaseEntity {
 
     int sidePrice;
 
-    int discountPercent;
+    int dealPercent;
 
     Integer maxMainPrice;
 
     Integer maxSidePrice;
 
-    Integer maxDiscountPercent;
+    Integer maxDealPercent;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false, updatable = false)

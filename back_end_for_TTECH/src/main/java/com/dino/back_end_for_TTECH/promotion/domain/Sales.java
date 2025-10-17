@@ -46,7 +46,7 @@ public class Sales extends BaseEntity {
 
     Integer dealPrice;
 
-    Integer discountPercent;
+    Integer dealPercent;
 
     Integer totalLimit;
 

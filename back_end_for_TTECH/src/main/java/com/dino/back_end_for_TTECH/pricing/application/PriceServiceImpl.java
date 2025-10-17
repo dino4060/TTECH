@@ -39,7 +39,7 @@ public class PriceServiceImpl implements IPriceService {
         int i = 0;
         for (var skuPrice : skuPrices) {
             var retailPrice = bodies.get(i).retailPrice();
-            var discountPercent = skuPrice.getDiscountPercent();
+            var discountPercent = skuPrice.getDealPercent();
             var nonSale = AppUtils.isZero(discountPercent);
 
             int skuMainPrice = nonSale ? retailPrice : retailPrice * discountPercent;
@@ -73,7 +73,7 @@ public class PriceServiceImpl implements IPriceService {
     @Override
     public void recalculate(Price price, PriceToWrite body) {
         var retailPrice = body.retailPrice();
-        var discountPercent = price.getDiscountPercent();
+        var discountPercent = price.getDealPercent();
         var nonSale = AppUtils.isZero(discountPercent);
 
         int mainPrice = nonSale ? retailPrice : retailPrice * discountPercent;

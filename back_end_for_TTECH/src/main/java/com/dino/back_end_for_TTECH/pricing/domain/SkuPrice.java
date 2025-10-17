@@ -34,7 +34,7 @@ public class SkuPrice extends BaseEntity {
 
     int sidePrice;
 
-    int discountPercent;
+    int dealPercent;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sku_id", updatable = false, nullable = false)
