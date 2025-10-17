@@ -1,17 +1,21 @@
 package com.dino.back_end_for_TTECH.promotion.domain;
 
+import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.*;
+import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "vouchers")
@@ -40,9 +44,42 @@ public abstract class Voucher extends Campaign {
 
     int clientLimit;
 
+    int usedCount;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    private Map<Long, Integer> clientCount;
+
     String applyType;
 
     @OneToMany(mappedBy = "voucher", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<VoucherLine> lines;
 
+    private boolean isWithinTotalLimit() {
+        if (this.totalLimit == -1 || this.usedCount == -1)
+            return true;
+
+        return this.usedCount < this.totalLimit;
+    }
+
+    private boolean isWithinBuyerLimit(CurrentUser currentUser) {
+        if (this.clientLimit == -1 || CollectionUtils.isEmpty(this.clientCount))
+            return true;
+
+        return this.clientCount.get(currentUser.id()) < this.clientLimit;
+//        long count = this.usedBuyerIds.stream()
+//                .filter(id -> id.equals(currentUser.id()))
+//                .count();
+//        return count < this.buyerLimit;
+    }
+
+    public boolean canApply(@Nullable CurrentUser currentUser) {
+        if (!this.isWithinTotalLimit())
+            return false;
+
+        if (currentUser != null && !this.isWithinBuyerLimit(currentUser))
+            return false;
+
+        return super.isActive();
+    }
 }

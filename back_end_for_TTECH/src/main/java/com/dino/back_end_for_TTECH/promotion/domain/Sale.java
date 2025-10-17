@@ -1,5 +1,6 @@
 package com.dino.back_end_for_TTECH.promotion.domain;
 
+import com.dino.back_end_for_TTECH.promotion.domain.model.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -31,12 +32,4 @@ public abstract class Sale extends Campaign {
     List<SaleLine> lines;
 
     public abstract int getPriority();
-
-//    public boolean isStatusActive() {
-//        return super.status.equals(Status.ONGOING.toString());
-//    }
-//
-//    public boolean isActive() {
-//        return this.isPeriodActive() && this.isStatusActive();
-//    }
 }

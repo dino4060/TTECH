@@ -1,6 +1,7 @@
 package com.dino.back_end_for_TTECH.promotion.domain;
 
 import com.dino.back_end_for_TTECH.product.domain.Product;
+import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -63,30 +65,20 @@ public class SaleLine extends BaseEntity {
 
     // INSTANCE METHODS //
 
-//    private boolean isWithinTotalLimit() {
-//        if (this.totalLimit == null || this.usedCount == null)
-//            return true;
-//
-//        return this.usedCount < this.totalLimit;
-//    }
+    private boolean isWithinTotalLimit() {
+        if (this.totalLimit == null || this.usedCount == null)
+            return true;
 
-//    private boolean isWithinBuyerLimit(CurrentUser currentUser) {
-//        if (this.buyerLimit == null || CollectionUtils.isEmpty(this.usedBuyerIds))
-//            return true;
-//
-//        long count = this.usedBuyerIds.stream()
-//                .filter(id -> id.equals(currentUser.id()))
-//                .count();
-//        return count < this.buyerLimit;
-//    }
+        return this.usedCount < this.totalLimit;
+    }
 
-//    public boolean canApply(@Nullable CurrentUser currentUser) {
-//        if (!this.isWithinTotalLimit())
-//            return false;
-//
-//        if (currentUser != null) // && !this.isWithinBuyerLimit(currentUser))
-//            return false;
-//
-//        return this.campaign.isActive();
-//    }
+    public boolean canApply(@Nullable CurrentUser currentUser) {
+        if (!this.isWithinTotalLimit())
+            return false;
+
+        if (currentUser != null)
+            return false;
+
+        return this.sale.isActive();
+    }
 }

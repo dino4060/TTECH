@@ -2,6 +2,7 @@ package com.dino.back_end_for_TTECH.promotion.domain;
 
 import java.time.Instant;
 
+import com.dino.back_end_for_TTECH.promotion.domain.model.Status;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,7 +35,7 @@ public class Campaign extends BaseEntity {
     @Column(name = "promotion_group", insertable = false, updatable = false)
     String promotionGroup;
 
-    @Column(name = "promotion_type", insertable = false, updatable = false)
+    @Column(updatable = false)
     String promotionType;
 
     @Column(nullable = false)
@@ -48,9 +49,17 @@ public class Campaign extends BaseEntity {
 
     String status;
 
-//    public boolean isPeriodActive() {
-//        // Instant.isXXX use () => !isXXX use []
-//        Instant now = Instant.now();
-//        return !now.isBefore(this.startDate) && !now.isAfter(this.endDate);
-//    }
+    private boolean isPeriodActive() {
+        // Instant.isXXX use () => !isXXX use []
+        Instant now = Instant.now();
+        return !now.isBefore(this.startDate) && !now.isAfter(this.endDate);
+    }
+
+    private boolean isStatusActive() {
+        return this.status.equals(Status.ONGOING.toString());
+    }
+
+    public boolean isActive() {
+        return this.isPeriodActive() && this.isStatusActive();
+    }
 }
