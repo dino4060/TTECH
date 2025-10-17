@@ -5,7 +5,7 @@ import com.dino.back_end_for_TTECH.product.domain.model.ProductSpecification;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductStatus;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
 import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
-import com.dino.back_end_for_TTECH.promotion.domain.Sales;
+import com.dino.back_end_for_TTECH.promotion.domain.SaleLine;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -77,9 +77,6 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "supplier_id")
     Supplier supplier;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Sales> sales;
-
     @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     Price price;
 
@@ -112,7 +109,7 @@ public class Product extends BaseEntity {
         this.setStatus();
     }
 
-    public Optional<Sales> getActiveSales() {
+    public Optional<SaleLine> getActiveSales() {
         /*
          * get sales, check in period, in limit, is the highest priority (// TEMP)
          */

@@ -14,7 +14,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "order_items")
+@Table(name = "order_lines")
 @DynamicInsert
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE order_lines SET is_deleted = true WHERE line_id=?")

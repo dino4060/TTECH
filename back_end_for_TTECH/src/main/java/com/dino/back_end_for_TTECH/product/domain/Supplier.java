@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "suppliers")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE suppliers SET is_deleted = true WHERE category_id = ?")
+@SQLDelete(sql = "UPDATE suppliers SET is_deleted = true WHERE supplier_id = ?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
@@ -28,7 +28,7 @@ public class Supplier extends BaseEntity {
 
     @Id
     @SequenceGenerator(name = "suppliers_seq", allocationSize = 1)
-    @Column(name = "category_id")
+    @Column(name = "supplier_id")
     Long id;
 
     @Column(length = 40, nullable = false)

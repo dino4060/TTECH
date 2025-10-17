@@ -11,21 +11,21 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "sku_sales")
+@Table(name = "sku_sale_lines")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE sku_sales SET is_deleted = true WHERE sku_discount_id=?")
+@SQLDelete(sql = "UPDATE sku_sale_lines SET is_deleted = true WHERE sku_line_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SkuSales extends BaseEntity {
+public class SkuSaleLine extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "sku_sale_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sku_sale_lines_seq")
+    @SequenceGenerator(name = "sku_sale_lines_seq", allocationSize = 1)
+    @Column(name = "sku_line_id")
     Long id;
 
     Integer dealPrice;
@@ -35,12 +35,12 @@ public class SkuSales extends BaseEntity {
     Integer totalLimit;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sku_id", updatable = false, nullable = false)
-    Sku sku;
+    @JoinColumn(name = "line_id", updatable = false, nullable = false)
+    SaleLine line;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sale_id", updatable = false, nullable = false)
-    Sales sale;
+    @JoinColumn(name = "sku_id", updatable = false, nullable = false)
+    Sku sku;
 
     // FACTORY METHODS //
 

@@ -7,7 +7,7 @@ import com.dino.back_end_for_TTECH.ordering.domain.OrderLine;
 import com.dino.back_end_for_TTECH.pricing.domain.SkuPrice;
 import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
-import com.dino.back_end_for_TTECH.promotion.domain.SkuSales;
+import com.dino.back_end_for_TTECH.promotion.domain.SkuSaleLine;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
@@ -65,7 +65,7 @@ public class Sku extends BaseEntity {
     SkuPrice price;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
-    List<SkuSales> sales;
+    List<SkuSaleLine> sales;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     List<CartLine> cartLines;
