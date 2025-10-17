@@ -52,8 +52,6 @@ public class Sales extends BaseEntity {
 
     Integer usedCount;
 
-    List<Long> usedBuyerIds;
-
     String levelType;
 
     @ManyToOne(fetch = FetchType.LAZY)
