@@ -67,10 +67,6 @@ public abstract class Voucher extends Campaign {
             return true;
 
         return this.clientCount.get(currentUser.id()) < this.clientLimit;
-//        long count = this.usedBuyerIds.stream()
-//                .filter(id -> id.equals(currentUser.id()))
-//                .count();
-//        return count < this.buyerLimit;
     }
 
     public boolean canApply(@Nullable CurrentUser currentUser) {
