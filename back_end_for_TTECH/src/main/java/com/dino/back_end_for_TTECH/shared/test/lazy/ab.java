@@ -3,7 +3,7 @@ package com.dino.back_end_for_TTECH.shared.test.lazy;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-@Entity
+//@Entity
 @Getter
 public class ab {
 
