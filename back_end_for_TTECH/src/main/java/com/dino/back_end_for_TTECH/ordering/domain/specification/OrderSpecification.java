@@ -4,7 +4,7 @@ import com.dino.back_end_for_TTECH.ordering.application.model.OrderQuery;
 import com.dino.back_end_for_TTECH.ordering.domain.Order;
 import org.springframework.data.jpa.domain.Specification;
 
-public class OrderSpecifiation {
+public class OrderSpecification {
     public static Specification<Order> equalId(Long id) {
         return (root, query, builder) -> {
             if (id == null || id <= 0) return null;

@@ -8,7 +8,7 @@ import com.dino.back_end_for_TTECH.ordering.domain.Order;
 import com.dino.back_end_for_TTECH.ordering.domain.OrderLine;
 import com.dino.back_end_for_TTECH.ordering.domain.model.Status;
 import com.dino.back_end_for_TTECH.ordering.domain.repository.IOrderRepository;
-import com.dino.back_end_for_TTECH.ordering.domain.specification.OrderSpecifiation;
+import com.dino.back_end_for_TTECH.ordering.domain.specification.OrderSpecification;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import lombok.AccessLevel;
@@ -31,7 +31,7 @@ public class OrderService {
     IOrderMapper orderMapper;
 
     public AppPage<OrderData> list(OrderQuery query, Pageable pageable) {
-        var queryable = OrderSpecifiation.build(query);
+        var queryable = OrderSpecification.build(query);
         var page = this.orderRepository.findAll(queryable, pageable);
 
         var items = page.getContent().stream()
