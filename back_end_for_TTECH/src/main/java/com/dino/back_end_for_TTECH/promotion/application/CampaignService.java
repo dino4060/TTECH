@@ -1,9 +1,11 @@
 package com.dino.back_end_for_TTECH.promotion.application;
 
+import com.dino.back_end_for_TTECH.promotion.application.mapper.CampaignMapper;
 import com.dino.back_end_for_TTECH.promotion.application.model.CampaignData;
 import com.dino.back_end_for_TTECH.promotion.application.model.CampaignQuery;
+import com.dino.back_end_for_TTECH.promotion.application.model.PageData;
+import com.dino.back_end_for_TTECH.promotion.domain.Campaign;
 import com.dino.back_end_for_TTECH.promotion.domain.repository.CampaignRepository;
-import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,9 +19,13 @@ import org.springframework.stereotype.Service;
 public class CampaignService {
 
     CampaignRepository campaignRepository;
+    CampaignMapper mapper;
 
-    public AppPage<CampaignData> list(PageQuery page, CampaignQuery query) {
-        var result = this.campaignRepository.findAll(query.toQueryable(), page.toPageable());
-        return AppPage.from(result, null);
+    public PageData<Campaign> list(CampaignQuery query) {
+        var result = this.campaignRepository.findAll(
+                this.mapper.toQueryable(query),
+                this.mapper.toPageable(query)
+        );
+        return this.mapper.toPageData(result, (Campaign campaign) -> campaign);
     }
 }

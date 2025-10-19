@@ -38,13 +38,10 @@ public class Campaign extends BaseEntity {
     @Column(updatable = false)
     String promotionType;
 
-    @Column(nullable = false)
     String name;
 
-    @Column(nullable = false)
     Instant startDate;
 
-    @Column(nullable = false)
     Instant endDate;
 
     String status;
