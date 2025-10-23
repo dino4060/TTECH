@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,10 +27,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public abstract class Sale extends Campaign {
 
-    String discountType;
-
     @OneToMany(mappedBy = "sale", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<SaleLine> lines;
+    List<SaleLine> lines = new ArrayList<>();
 
     public abstract int getPriority();
 }

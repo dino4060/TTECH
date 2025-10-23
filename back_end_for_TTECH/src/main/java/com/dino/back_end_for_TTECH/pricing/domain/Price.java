@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.pricing.domain;
 
 import com.dino.back_end_for_TTECH.product.domain.Product;
-import com.dino.back_end_for_TTECH.product.domain.Sku;
+import com.dino.back_end_for_TTECH.promotion.domain.SaleLine;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -62,5 +62,11 @@ public class Price extends BaseEntity {
     }
 
     public void update() {
+    }
+
+    public void sale(SaleLine productSale) {
+        this.setSidePrice(this.getMainPrice());
+        this.setMainPrice(productSale.getDealPrice());
+        this.setDealPercent(productSale.getDealPercent());
     }
 }

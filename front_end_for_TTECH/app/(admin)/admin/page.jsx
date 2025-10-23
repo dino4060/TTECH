@@ -14,35 +14,37 @@ import AdminDiscountManagement from "@/components/admin/AdminDiscountManagement"
 import AdminSupplierManagement from "@/components/admin/AdminSupplierManagement"
 import AdminCategoryManagement from "@/components/admin/AdminCategoryManagement"
 import AdminProfileManagement from "@/components/admin/AdminProfileManagement"
+import AdminCampaignManagement from "@/components/admin/AdminCampaignManagement"
 
 const Page = () => {
-  const [route, setRoute] = useState("dashboard")
-  const { user, setUser } = UserAuth()
-  const router = useRouter()
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"))
+	const [route, setRoute] = useState("dashboard")
+	const { user, setUser } = UserAuth()
+	const router = useRouter()
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem("user"))
 
-    // if (user.role !== "1") return router.push("/")
-    if (user?.userId) setUser(user)
-  }, [setUser])
+		// if (user.role !== "1") return router.push("/")
+		if (user?.userId) setUser(user)
+	}, [setUser])
 
-  return (
-    <div className='container mx-auto'>
-      <AdminNavigator route={route} onRouteChange={setRoute} />
+	return (
+		<div className='container mx-auto'>
+			<AdminNavigator route={route} onRouteChange={setRoute} />
 
-      <AnimatePresence>
-        {route === "dashboard" && <AdminDashboard />}
-        {route === "product" && <AdminProductManagement />}
-        {route === "order" && <AdminOrderManagement />}
-        {route === "customer" && <AdminCustomerManagement />}
-        {route === "message" && <CustomerMessage />}
-        {route === "discount" && <AdminDiscountManagement />}
-        {route === "supplier" && <AdminSupplierManagement />}
-        {route === "category" && <AdminCategoryManagement />}
-        {route === "profile" && <AdminProfileManagement />}
-      </AnimatePresence>
-    </div>
-  )
+			<AnimatePresence>
+				{route === "dashboard" && <AdminDashboard />}
+				{route === "product" && <AdminProductManagement />}
+				{route === "order" && <AdminOrderManagement />}
+				{route === "customer" && <AdminCustomerManagement />}
+				{route === "message" && <CustomerMessage />}
+				{route === "campaign" && <AdminCampaignManagement />}
+				{route === "discount" && <AdminDiscountManagement />}
+				{route === "supplier" && <AdminSupplierManagement />}
+				{route === "category" && <AdminCategoryManagement />}
+				{route === "profile" && <AdminProfileManagement />}
+			</AnimatePresence>
+		</div>
+	)
 }
 
 export default Page

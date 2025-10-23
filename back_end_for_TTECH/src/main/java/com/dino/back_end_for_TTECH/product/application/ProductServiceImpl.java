@@ -52,7 +52,7 @@ public class ProductServiceImpl implements IProductService {
 
     // HELPERS //
 
-    private Product getProduct(Long id) {
+    public Product getProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
     }

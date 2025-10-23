@@ -29,8 +29,8 @@ public class AdminCampaignController {
 
     @PostMapping("/sales")
     public ResponseEntity<Object> create(@Valid @RequestBody Sale body) {
-        var data = this.campaignService.create(body);
-        return ResponseEntity.ok(data);
+        this.campaignService.create(body);
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/vouchers")

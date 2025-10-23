@@ -14,7 +14,7 @@ public class XOrderService {
     public String place() {
         var event = new PlacedOrderEvent(1L, 2L, 12.2004);
 
-        this.orderEventPublisher.send(event);
+//        this.orderEventPublisher.send(event);
 
         return "📤 Place order successfully";
     }

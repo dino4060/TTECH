@@ -40,16 +40,16 @@ public class Campaign extends BaseEntity {
 
     String name;
 
-    Instant startDate;
+    Instant startTime;
 
-    Instant endDate;
+    Instant endTime;
 
     String status;
 
     private boolean isPeriodActive() {
         // Instant.isXXX use () => !isXXX use []
         Instant now = Instant.now();
-        return !now.isBefore(this.startDate) && !now.isAfter(this.endDate);
+        return !now.isBefore(this.startTime) && !now.isAfter(this.endTime);
     }
 
     private boolean isStatusActive() {

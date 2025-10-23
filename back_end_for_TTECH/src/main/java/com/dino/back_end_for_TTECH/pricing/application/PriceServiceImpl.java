@@ -7,6 +7,7 @@ import com.dino.back_end_for_TTECH.pricing.domain.Price;
 import com.dino.back_end_for_TTECH.pricing.domain.SkuPrice;
 import com.dino.back_end_for_TTECH.pricing.domain.repository.IPriceRepository;
 import com.dino.back_end_for_TTECH.product.domain.Product;
+import com.dino.back_end_for_TTECH.promotion.domain.Sale;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,5 +89,9 @@ public class PriceServiceImpl implements IPriceService {
 
         price.update();
         this.priceRepository.save(price);
+    }
+
+    public void sale(Sale sale) {
+
     }
 }
