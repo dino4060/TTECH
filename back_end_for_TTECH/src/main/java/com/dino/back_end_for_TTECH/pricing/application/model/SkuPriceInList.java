@@ -4,6 +4,6 @@ public record SkuPriceInList(
         long id,
         int mainPrice,
         int sidePrice,
-        int discountPercent
+        int dealPercent
 ) {
 }

@@ -96,14 +96,12 @@ const AdminOrderManagement = () => {
 				handleSearch={handleSearch}
 			/>
 
-			<div>
-				<OrderRenderList
-					orderList={orderList}
-					setOrderList={setOrderList}
-					currentOrderClick={currentOrderClick}
-					setCurrentOrderClick={setCurrentOrderClick}
-				/>
-			</div>
+			<OrderRenderList
+				orderList={orderList}
+				setOrderList={setOrderList}
+				currentOrderClick={currentOrderClick}
+				setCurrentOrderClick={setCurrentOrderClick}
+			/>
 
 			<AnimatePresence>
 				{currentOrderClick?.id && (

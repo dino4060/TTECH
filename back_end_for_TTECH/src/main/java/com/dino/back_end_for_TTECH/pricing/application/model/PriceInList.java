@@ -6,11 +6,11 @@ public record PriceInList(
         long id,
         int mainPrice,
         int sidePrice,
-        int discountPercent,
+        int dealPercent,
 
         Integer maxMainPrice,
         Integer maxSidePrice,
-        Integer maxDiscountPercent,
+        Integer maxDealPercent,
 
         List<SkuPriceInList> skuPrices
 ) {
