@@ -20,8 +20,11 @@ const CampaignForm = ({
 	triggerGetData,
 	setTriggerGetData,
 }) => {
-	const { token } = UserAuth()
 	const [show, setShow] = useState(false)
+	const [chosenProducts, setChosenProducts] = useState(
+		new Set()
+	)
+	const { token } = UserAuth()
 
 	const handleSubmit = async (e) => {
 		if (mode === "add") {
@@ -174,7 +177,12 @@ const CampaignForm = ({
 					{mode === "add" ? "THÊM" : "SỬA"}
 				</button>
 			</div>
-			<ProductOptions show={show} setShow={setShow} />
+			<ProductOptions
+				show={show}
+				setShow={setShow}
+				chosenProducts={chosenProducts}
+				setChosenProducts={setChosenProducts}
+			/>
 		</div>
 	)
 }

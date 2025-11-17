@@ -2,7 +2,7 @@
 
 import { convertTokVND, convertToVND } from "@/utils/until"
 import { useEffect, useState } from "react"
-import OrderFormData from "./OrderFormData2"
+import OrderFormData from "./OrderFormData"
 import { handleDiscount } from "@/app/api/handleDiscount."
 
 const OrderBill = ({ cart, setCart }) => {
