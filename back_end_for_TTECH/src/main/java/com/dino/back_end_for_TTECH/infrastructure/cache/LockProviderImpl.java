@@ -20,8 +20,8 @@ public class LockProviderImpl implements IInventoryLockProvider {
 
     @Override
     @Transactional
-    public void reserveStockWithLock(Long skuId, Runnable doReserveStock) {
-        var key = "inventory:sku:" + skuId;
+    public void reserveStockWithLock(Long productId, Runnable doReserveStock) {
+        var key = "inventory:product:" + productId;
 
         var locker = new LockTemplate(this.lockFacade) {
             @Override

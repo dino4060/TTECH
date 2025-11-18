@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.inventory.domain;
 
 import com.dino.back_end_for_TTECH.inventory.domain.model.InventoryStatus;
-import com.dino.back_end_for_TTECH.product.domain.Sku;
+import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
@@ -14,44 +14,44 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "inventories")
+@Table(name = "stocks")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE inventories SET is_deleted = true WHERE inventory_id = ?")
+@SQLDelete(sql = "UPDATE stocks SET is_deleted = true WHERE stock_id = ?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Inventory extends BaseEntity {
+public class Stock extends BaseEntity {
 
     @Id
     @SequenceGenerator(name = "inventories_seq", allocationSize = 1)
-    @Column(name = "inventory_id")
+    @Column(name = "stock_id")
     Long id;
 
-    int stocks;
+    int available;
 
-    int sales;
+    int sold;
 
     int total;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sku_id", nullable = false, updatable = false)
-    Sku sku;
+    @JoinColumn(name = "product_id", nullable = false, updatable = false)
+    Product product;
 
     InventoryStatus status;
 
     // CHECKING METHODS //
 
     public void setStatus() {
-        if (this.getStocks() > 10) {
+        if (this.getAvailable() > 10) {
             this.setStatus(InventoryStatus.LIVE);
             return;
         }
 
-        if (this.getStocks() > 0) {
+        if (this.getAvailable() > 0) {
             this.setStatus(InventoryStatus.WARNING);
             return;
         }
@@ -65,42 +65,42 @@ public class Inventory extends BaseEntity {
         this.total = total;
     }
 
-    public void setStocks(int stocks) {
-        boolean condition = 0 <= stocks;
+    public void setAvailable(int available) {
+        boolean condition = 0 <= available;
         if (!condition) throw new AppException(ErrorCode.INVENTORY__STOCKS_LIMIT);
-        this.stocks = stocks;
+        this.available = available;
     }
 
-    public void setSales(int sales) {
-        boolean condition = 0 <= sales;
+    public void setSold(int sold) {
+        boolean condition = 0 <= sold;
         if (!condition) throw new AppException(ErrorCode.INVENTORY__SALES_LIMIT);
-        this.sales = sales;
+        this.sold = sold;
     }
 
     // INSTANCE METHODS //
 
     public void imports(int quantity) {
         this.setTotal(quantity);
-        this.setStocks(quantity);
-        this.setSales(0);
+        this.setAvailable(quantity);
+        this.setSold(0);
         this.setStatus();
     }
 
     public void restock(int quantity) {
         this.setTotal(this.total + quantity);
-        this.setStocks(this.stocks + quantity);
+        this.setAvailable(this.available + quantity);
         this.setStatus();
     }
 
     public void reserve(int quantity) {
         this.setTotal(this.total - quantity);
-        this.setStocks(this.stocks - quantity);
-        this.setSales(this.sales + quantity);
+        this.setAvailable(this.available - quantity);
+        this.setSold(this.sold + quantity);
         this.setStatus();
     }
 
-    public void updateStocks(int quantity) {
-        this.setStocks(this.getStocks() - quantity);
-        this.setSales(this.getSales() + quantity);
+    public void update(int quantity) {
+        this.setAvailable(this.getAvailable() - quantity);
+        this.setSold(this.getSold() + quantity);
     }
 }

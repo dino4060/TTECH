@@ -16,27 +16,27 @@ import org.hibernate.annotations.SQLRestriction;
 /**
  * Represents a allDiscount that:
  * - Be part of a allDiscount program,
- * - Can be applied to a product or multiple skuPrices.
+ * - Can be applied to a product or spu.
  * <p>
  * Note for properties:
  * - totalLimit, buyerLimit == NULL is unlimited.
  */
 @Entity
-@Table(name = "voucher_lines")
+@Table(name = "voucher_units")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE voucher_lines SET is_deleted = true WHERE line_id=?")
+@SQLDelete(sql = "UPDATE voucher_units SET is_deleted = true WHERE unit_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VoucherLine extends BaseEntity {
+public class VoucherUnit extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "voucher_lines_seq")
     @SequenceGenerator(name = "voucher_lines_seq", allocationSize = 1)
-    @Column(name = "line_id")
+    @Column(name = "unit_id")
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

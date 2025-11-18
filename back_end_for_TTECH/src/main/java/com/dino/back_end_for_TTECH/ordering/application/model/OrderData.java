@@ -24,5 +24,5 @@ public class OrderData {
 
     String status;
 
-    List<OrderLineData> orderLines;
+    List<OrderLineData> lines;
 }

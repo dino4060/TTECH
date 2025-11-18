@@ -1,15 +1,13 @@
 package com.dino.back_end_for_TTECH.product.application;
 
-import com.dino.back_end_for_TTECH.inventory.application.service.IInventoryService;
-import com.dino.back_end_for_TTECH.pricing.application.service.IPriceService;
+import com.dino.back_end_for_TTECH.inventory.application.StockService;
+import com.dino.back_end_for_TTECH.pricing.application.PriceService;
 import com.dino.back_end_for_TTECH.product.application.mapper.IProductMapper;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
 import com.dino.back_end_for_TTECH.product.application.model.ProductQuery;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToSell;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
 import com.dino.back_end_for_TTECH.product.application.service.ICategoryService;
-import com.dino.back_end_for_TTECH.product.application.service.IProductService;
-import com.dino.back_end_for_TTECH.product.application.service.ISkuService;
 import com.dino.back_end_for_TTECH.product.application.service.ISupplierService;
 import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.product.domain.repository.IProductRepository;
@@ -33,13 +31,9 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ProductServiceImpl implements IProductService {
+public class ProductService {
 
-    private final IInventoryService inventoryService;
-
-    private final ISkuService skuService;
-
-    private final IPriceService priceService;
+    private final PriceService priceService;
 
     private final ICategoryService categoryService;
 
@@ -84,15 +78,12 @@ public class ProductServiceImpl implements IProductService {
     }
 
     private void buildBy(Product product) {
-        this.skuService.createList(product);
-
         this.priceService.create(product);
     }
 
 
     // READ //
 
-    @Override
     public AppPage<ProductInList> listProducts(Pageable pageable) {
         Page<Product> page = this.productRepository.findAll(pageable);
 
@@ -116,7 +107,6 @@ public class ProductServiceImpl implements IProductService {
 
     // WRITE //
 
-    @Override
     public ProductInList createProduct(ProductToWrite body) {
         // Map to product
         Product product = productMapper.toProduct(body);
@@ -124,8 +114,7 @@ public class ProductServiceImpl implements IProductService {
         // Refer up by product
         this.referUp(product);
 
-        // Cascade skus
-        this.skuService.createList(product);
+        // todo1: Cascade inventory
 
         // Cascade allPrice
         this.priceService.create(product);
@@ -136,11 +125,8 @@ public class ProductServiceImpl implements IProductService {
         return productMapper.toProductInList(saved);
     }
 
-    @Override
     public ProductInList updateProduct(long id, ProductToWrite body) {
         var product = this.getProduct(id);
-        var skus = product.getSkus();
-        var skuBodies = body.skus();
         var price = product.getPrice();
         var priceBody = this.productMapper.getPriceBody(body);
 
@@ -153,8 +139,7 @@ public class ProductServiceImpl implements IProductService {
         // Re-calculate retail allPrice
         this.priceService.recalculate(price, priceBody);
 
-        // Update skus
-        this.skuService.updateList(skus, skuBodies);
+        // todo1: Update inventory
 
         // Update product
         product.update();
@@ -162,7 +147,6 @@ public class ProductServiceImpl implements IProductService {
         return productMapper.toProductInList(saved);
     }
 
-    @Override
     public void deleteProduct(long id) {
         Product product = this.getProduct(id);
 

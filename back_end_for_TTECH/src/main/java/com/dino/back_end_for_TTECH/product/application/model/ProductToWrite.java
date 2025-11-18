@@ -18,9 +18,6 @@ public record ProductToWrite(
         AppId category,
         AppId supplier,
 
-        PriceToWrite price,
-
-        @NotEmpty(message = "PRODUCT__SKUS_VALIDATION")
-        List<SkuToWrite> skus
+        PriceToWrite price
 ) {
 }

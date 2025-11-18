@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.product.api;
 
-import com.dino.back_end_for_TTECH.product.application.ProductServiceImpl;
+import com.dino.back_end_for_TTECH.product.application.ProductService;
 import com.dino.back_end_for_TTECH.product.application.model.ProductQuery;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToSell;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
@@ -26,7 +26,7 @@ public class ProductController {
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public static class PublicProductController {
 
-        ProductServiceImpl productService;
+        ProductService productService;
 
         // QUERY //
 

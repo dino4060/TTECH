@@ -1,12 +1,11 @@
 package com.dino.back_end_for_TTECH.product.domain;
 
+import com.dino.back_end_for_TTECH.inventory.domain.Stock;
 import com.dino.back_end_for_TTECH.pricing.domain.Price;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductSpecification;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductStatus;
 import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
-import com.dino.back_end_for_TTECH.product.domain.model.SkuStatus;
-import com.dino.back_end_for_TTECH.promotion.domain.SaleLine;
-import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
+import com.dino.back_end_for_TTECH.promotion.domain.SaleUnit;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -77,26 +76,16 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "supplier_id")
     Supplier supplier;
 
-    @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     Price price;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Sku> skus;
+    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    Stock stock;
 
     // SETTERS //
 
     public void setStatus() {
-        if (AppUtils.isEmpty(this.getSkus())) {
-            this.status = ProductStatus.OUT_OF_STOCK;
-            return;
-        }
-
-        if (skus.stream().allMatch(sku -> sku.getStatus() == SkuStatus.OUT_OF_STOCK)) {
-            this.status = ProductStatus.OUT_OF_STOCK;
-            return;
-        }
-
-        this.status = ProductStatus.LIVE;
+        this.status = ProductStatus.LIVE; // todo1: or OUT_OF_STOCK
     }
 
     // INSTANCE METHODS //
@@ -109,7 +98,7 @@ public class Product extends BaseEntity {
         this.setStatus();
     }
 
-    public Optional<SaleLine> getActiveSales() {
+    public Optional<SaleUnit> getActiveSales() {
         /*
          * get sales, check in period, in limit, is the highest priority (// TEMP)
          */
@@ -117,10 +106,8 @@ public class Product extends BaseEntity {
     }
 
     public boolean isInBusiness() {
-        // logic: get skus > each sku > check non in cart item || in non order item > flag = false
-        if (AppUtils.isEmpty(this.getSkus())) return false;
-
-        return skus.stream().anyMatch(sku ->
-                !AppUtils.isEmpty(sku.getCartLines()) || !AppUtils.isEmpty(sku.getOrderLines()));
+        // logic: get products > each product > check non in cart item || in non order item > flag = false
+        // todo1: isInBusiness
+        return false;
     }
 }

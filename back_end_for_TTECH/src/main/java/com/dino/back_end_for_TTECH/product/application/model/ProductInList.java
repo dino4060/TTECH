@@ -16,7 +16,6 @@ public record ProductInList(
 
         CategoryInList category,
         SupplierInList supplier,
-        PriceInList price,
-        List<SkuInList> skus
+        PriceInList price
 ) {
 }

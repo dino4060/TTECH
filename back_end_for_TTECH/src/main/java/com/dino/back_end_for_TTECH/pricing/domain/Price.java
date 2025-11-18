@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.pricing.domain;
 
 import com.dino.back_end_for_TTECH.product.domain.Product;
-import com.dino.back_end_for_TTECH.promotion.domain.SaleLine;
+import com.dino.back_end_for_TTECH.promotion.domain.SaleUnit;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,8 +10,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-
-import java.util.List;
 
 @Entity
 @Table(name = "prices")
@@ -37,18 +35,9 @@ public class Price extends BaseEntity {
 
     int dealPercent;
 
-    Integer maxMainPrice;
-
-    Integer maxSidePrice;
-
-    Integer maxDealPercent;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false, updatable = false)
     Product product;
-
-    @OneToMany(mappedBy = "price", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<SkuPrice> skuPrices;
 
     // INSTANCE METHODS //
 
@@ -64,7 +53,7 @@ public class Price extends BaseEntity {
     public void update() {
     }
 
-    public void sale(SaleLine productSale) {
+    public void sale(SaleUnit productSale) {
         this.setSidePrice(this.getMainPrice());
         this.setMainPrice(productSale.getDealPrice());
         this.setDealPercent(productSale.getDealPercent());

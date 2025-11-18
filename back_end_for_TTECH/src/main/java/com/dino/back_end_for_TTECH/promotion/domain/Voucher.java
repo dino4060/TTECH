@@ -14,6 +14,7 @@ import org.hibernate.annotations.*;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public abstract class Voucher extends Campaign {
     String applyType;
 
     @OneToMany(mappedBy = "voucher", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<VoucherLine> lines;
+    List<VoucherUnit> units = new ArrayList<>();
 
     private boolean isWithinTotalLimit() {
         if (this.totalLimit == -1 || this.usedCount == -1)

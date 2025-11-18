@@ -4,10 +4,8 @@ import com.dino.back_end_for_TTECH.pricing.application.model.PriceToWrite;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToSell;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
-import com.dino.back_end_for_TTECH.product.application.model.SkuToWrite;
 import com.dino.back_end_for_TTECH.product.domain.Category;
 import com.dino.back_end_for_TTECH.product.domain.Product;
-import com.dino.back_end_for_TTECH.product.domain.Sku;
 import com.dino.back_end_for_TTECH.product.domain.Supplier;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppId;
 import org.mapstruct.Mapper;
@@ -29,17 +27,13 @@ public interface IProductMapper {
         product.setCategory(category);
         product.setSupplier(supplier);
 
-        var sku = product.getSkus().getFirst();
-        var skuBody = body.skus().getFirst();
         this.toProductPartially(body, product);
-        this.toSkuPartially(skuBody, sku);
     }
 
     // SIDE MAPPINGS //
 
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "supplier", ignore = true)
-    @Mapping(target = "skus", ignore = true)
     @Mapping(target = "price", ignore = true)
     void toProductPartially(ProductToWrite body, @MappingTarget Product product);
 
@@ -47,9 +41,5 @@ public interface IProductMapper {
 
     Supplier toSupplierPartially(AppId supplierBody);
 
-    @Mapping(target = "inventory", ignore = true)
-    void toSkuPartially(SkuToWrite body, @MappingTarget Sku sku);
-
-    @Mapping(source = "skus", target = "skuPrices")
     PriceToWrite getPriceBody(ProductToWrite body);
 }

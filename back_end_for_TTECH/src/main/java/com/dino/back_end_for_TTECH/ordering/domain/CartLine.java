@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.ordering.domain;
 
-import com.dino.back_end_for_TTECH.product.domain.Sku;
+import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
@@ -40,8 +40,8 @@ public class CartLine extends BaseEntity {
     Cart cart;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sku_id", nullable = false)
-    Sku sku;
+    @JoinColumn(name = "product_id", nullable = false, updatable = false)
+    Product product;
 
     // SETTER METHODS //
 
@@ -56,11 +56,11 @@ public class CartLine extends BaseEntity {
 
     // FACTORY METHODS //
 
-    public static CartLine createCartItem(Cart cart, Sku sku, int quantity) {
+    public static CartLine createCartItem(Cart cart, Product product, int quantity) {
         CartLine item = new CartLine();
         item.setQuantity(quantity);
         item.setCart(cart);
-        item.setSku(sku);
+        item.setProduct(product);
 
         return item;
     }

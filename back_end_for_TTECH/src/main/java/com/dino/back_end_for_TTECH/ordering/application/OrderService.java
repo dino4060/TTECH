@@ -57,25 +57,25 @@ public class OrderService {
 
         var cart = this.cartService.get(user);
 
-        cart.getCartLines().forEach(cartLine -> {
+        cart.getLines().forEach(cartLine -> {
             OrderLine orderLine = new OrderLine();
 
             var quantity = cartLine.getQuantity();
-            var sku = cartLine.getSku();
-            var price = sku.getPrice();
-            var inventory = sku.getInventory();
+            var product = cartLine.getProduct();
+            var price = product.getPrice();
+            var inventory = product.getStock();
 
             orderLine.setOrder(model);
             orderLine.newQuantity(cartLine.getQuantity());
-            orderLine.setSku(sku);
+            orderLine.setProduct(product);
             orderLine.newMainPrice(price.getMainPrice());
             orderLine.newSidePrice(price.getSidePrice());
 
-            model.getOrderLines().add(orderLine);
+            model.getLines().add(orderLine);
             inventory.reserve(quantity);
         });
 
-        cart.getCartLines().clear();
+        cart.getLines().clear();
 
         var result = this.orderRepository.save(model);
         return result;

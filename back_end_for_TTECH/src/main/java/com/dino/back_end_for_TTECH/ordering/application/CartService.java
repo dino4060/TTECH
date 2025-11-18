@@ -7,7 +7,8 @@ import com.dino.back_end_for_TTECH.ordering.application.model.CartBody;
 import com.dino.back_end_for_TTECH.ordering.domain.Cart;
 import com.dino.back_end_for_TTECH.ordering.domain.CartLine;
 import com.dino.back_end_for_TTECH.ordering.domain.repository.ICartRepository;
-import com.dino.back_end_for_TTECH.product.application.service.ISkuService;
+import com.dino.back_end_for_TTECH.product.application.ProductService;
+import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.application.utils.Deleted;
@@ -31,18 +32,17 @@ import java.util.Optional;
 public class CartService {
 
     IUserService userService;
-    ISkuService skuService;
     ICartRepository cartRepository;
     ICartMapper cartMapper;
 
     // HELPER //
 
-    private Optional<Cart> findCartWithSku(CurrentUser currentUser) {
-        return this.cartRepository.findWithSkuByBuyerId(currentUser.id());
+    private Optional<Cart> findCartWithProduct(CurrentUser currentUser) {
+        return this.cartRepository.findWithProductByBuyerId(currentUser.id());
     }
 
-    private Cart getCartWithSku(CurrentUser currentUser) {
-        return this.cartRepository.findWithSkuByBuyerId(currentUser.id())
+    private Cart getCartWithProduct(CurrentUser currentUser) {
+        return this.cartRepository.findWithProductByBuyerId(currentUser.id())
                 .orElseThrow(() -> new AppException(ErrorCode.CART__NOT_FOUND));
     }
 
@@ -61,10 +61,10 @@ public class CartService {
     // QUERY //
 
     public Cart get(CurrentUser currentUser) {
-        Cart cart = this.findCartWithSku(currentUser)
+        Cart cart = this.findCartWithProduct(currentUser)
                 .orElseGet(() -> this.createCart(currentUser));
 
-        cart.getCartLines().sort(
+        cart.getLines().sort(
                 Comparator.comparing(CartLine::getId).reversed());
 
         return cart;
@@ -74,41 +74,41 @@ public class CartService {
 
     @Transactional
     public CartLineData addCartItem(CartLineBody request, CurrentUser currentUser) {
-        var cart = this.findCartWithSku(currentUser).orElseGet(() -> createCart(currentUser));
-        var sku = this.skuService.getSku(request.skuId());
+        var cart = this.findCartWithProduct(currentUser).orElseGet(() -> createCart(currentUser));
+        var product = new Product(); // todo1: this.productService.getProduct(request.productId());
 
         // 1. addOrUpdateCartItem
-        var upsertedCartItem = cart.addOrUpdateCartItem(sku, request.quantity());
+        var newProduct = cart.addOrUpdateLine(product, request.quantity());
         this.cartRepository.save(cart);
 
-        return this.cartMapper.toCartLineData(upsertedCartItem);
+        return this.cartMapper.toLineData(newProduct);
     }
 
     @Transactional
     public CartLineData updateQuantity(CartLineBody request, CurrentUser currentUser) {
-        var cart = this.getCartWithSku(currentUser);
+        var cart = this.getCartWithProduct(currentUser);
 
-        var updatedCartItem = cart.updateQuantity(request.skuId(), request.quantity());
+        var updatedCartItem = cart.updateQuantity(request.productId(), request.quantity());
         this.cartRepository.save(cart);
 
-        return this.cartMapper.toCartLineData(updatedCartItem);
+        return this.cartMapper.toLineData(updatedCartItem);
     }
 
     @Transactional
     public Deleted removeCartItems(CartBody request, CurrentUser currentUser) {
-        var cart = this.getCartWithSku(currentUser);
+        var cart = this.getCartWithProduct(currentUser);
 
-        var removedCartItems = cart.removeCartItems(request.skuIds());
+        var removedCartItems = cart.removeLines(request.productIds());
         this.cartRepository.save(cart);
 
         return Deleted.success(removedCartItems.size());
     }
 
     @Transactional
-    public Deleted removeCartItems(List<Long> skuIds, CurrentUser currentUser) {
-        var cart = this.getCartWithSku(currentUser);
+    public Deleted removeCartItems(List<Long> productIds, CurrentUser currentUser) {
+        var cart = this.getCartWithProduct(currentUser);
 
-        var removedCartItems = cart.removeCartItemsBySkuIds(skuIds);
+        var removedCartItems = cart.removeLinesByProductIds(productIds);
         this.cartRepository.save(cart);
 
         return Deleted.success(removedCartItems.size());

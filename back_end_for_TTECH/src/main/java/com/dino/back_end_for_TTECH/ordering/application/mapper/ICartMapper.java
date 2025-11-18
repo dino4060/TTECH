@@ -13,17 +13,17 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ICartMapper {
 
-    @Mapping(source = "cartLine.sku.product", target = "product")
-    @Mapping(source = "cartLine.sku.price", target = "price")
-    CartLineData toCartLineData(CartLine cartLine);
+    @Mapping(source = "line.product", target = "product")
+    @Mapping(source = "line.product.price", target = "price")
+    CartLineData toLineData(CartLine line);
 
     CartData toCartData(Cart cart, List<CartLineData> cartLines);
 
     default CartData customCartData(Cart cart) {
         return toCartData(
                 cart,
-                cart.getCartLines().stream()
-                        .map(line -> toCartLineData(line))
+                cart.getLines().stream()
+                        .map(line -> toLineData(line))
                         .toList()
         );
     }

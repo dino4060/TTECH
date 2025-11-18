@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.ordering.domain;
 
-import com.dino.back_end_for_TTECH.product.domain.Sku;
+import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.profile.domain.User;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
@@ -44,7 +44,7 @@ public class Cart extends BaseEntity {
     User buyer;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<CartLine> cartLines;
+    List<CartLine> lines;
 
     // SETTERS //
 
@@ -65,7 +65,7 @@ public class Cart extends BaseEntity {
     public static Cart createCart(User buyer) {
         Cart cart = new Cart();
 
-        cart.setCartLines(new ArrayList<>());
+        cart.setLines(new ArrayList<>());
         cart.setTotal(0);
         cart.setBuyer(buyer);
 
@@ -77,10 +77,10 @@ public class Cart extends BaseEntity {
     /**
      * addCartItem.
      */
-    public CartLine addCartItem(Sku sku, int quantity) {
-        CartLine item = CartLine.createCartItem(this, sku, quantity);
+    public CartLine addLine(Product product, int quantity) {
+        CartLine item = CartLine.createCartItem(this, product, quantity);
 
-        this.getCartLines().add(item);
+        this.getLines().add(item);
         this.setTotal(this.getTotal() + 1);
 
         return item;
@@ -90,16 +90,16 @@ public class Cart extends BaseEntity {
      * addOrUpdateCartItem.
      * (check CartItem is existing => increaseQuantity or addCartItem)
      */
-    public CartLine addOrUpdateCartItem(Sku sku, int quantity) {
-        return this.cartLines.stream()
-                .filter(item -> item.getSku().getId().equals(sku.getId()))
+    public CartLine addOrUpdateLine(Product product, int quantity) {
+        return this.lines.stream()
+                .filter(line -> line.getProduct().getId().equals(product.getId()))
                 .findFirst()
-                .map(cartItem -> {
-                    cartItem.increaseQuantity(quantity);
-                    return cartItem;
+                .map(line -> {
+                    line.increaseQuantity(quantity);
+                    return line;
                 })
                 .orElseGet(() -> {
-                    return this.addCartItem(sku, quantity);
+                    return this.addLine(product, quantity);
                 });
     }
 
@@ -107,13 +107,13 @@ public class Cart extends BaseEntity {
      * updateQuantity.
      * (check CartItem is existing => updateQuantity or CART__ITEM_NOT_FOUND)
      */
-    public CartLine updateQuantity(Long skuId, int quantity) {
-        return this.getCartLines().stream()
-                .filter(cartItem -> cartItem.getSku().getId().equals(skuId))
+    public CartLine updateQuantity(Long productId, int quantity) {
+        return this.getLines().stream()
+                .filter(line -> line.getProduct().getId().equals(productId))
                 .findFirst()
-                .map(cartItem -> {
-                    cartItem.updateQuantity(quantity);
-                    return cartItem;
+                .map(line -> {
+                    line.updateQuantity(quantity);
+                    return line;
                 })
                 .orElseThrow(() -> new AppException(ErrorCode.CART__ITEM_NOT_FOUND));
     }
@@ -121,29 +121,29 @@ public class Cart extends BaseEntity {
     /**
      * removeCartItems.
      */
-    public List<CartLine> removeCartItems(List<Long> skuIds) {
+    public List<CartLine> removeLines(List<Long> productIds) {
         // NOTE: orphanRemoval
         // 1. filter CartItems (objects on memory) to remove
-        var cartItemsToRemove = this.getCartLines().stream()
-                .filter(cartItem -> skuIds.contains(cartItem.getSku().getId()))
+        var cartItemsToRemove = this.getLines().stream()
+                .filter(line -> productIds.contains(line.getProduct().getId()))
                 .toList();
 
         // 2. removeAll items => JPA note they are orphan => orphanRemoval auto delete
-        this.getCartLines().removeAll(cartItemsToRemove);
+        this.getLines().removeAll(cartItemsToRemove);
         this.setTotal(this.getTotal() - cartItemsToRemove.size());
 
         return cartItemsToRemove;
     }
 
-    public List<CartLine> removeCartItemsBySkuIds(List<Long> skuIds) {
+    public List<CartLine> removeLinesByProductIds(List<Long> productIds) {
         // NOTE: orphanRemoval
         // 1. filter CartItems (objects on memory) to remove
-        var cartItemsToRemove = this.getCartLines().stream()
-                .filter(cartItem -> skuIds.contains(cartItem.getSku().getId()))
+        var cartItemsToRemove = this.getLines().stream()
+                .filter(line -> productIds.contains(line.getProduct().getId()))
                 .toList();
 
         // 2. removeAll items => JPA note they are orphan => orphanRemoval auto delete
-        this.getCartLines().removeAll(cartItemsToRemove);
+        this.getLines().removeAll(cartItemsToRemove);
         this.setTotal(this.getTotal() - cartItemsToRemove.size());
 
         return cartItemsToRemove;

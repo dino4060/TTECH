@@ -1,8 +1,8 @@
 package com.dino.back_end_for_TTECH.product.api;
 
+import com.dino.back_end_for_TTECH.product.application.ProductService;
 import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
-import com.dino.back_end_for_TTECH.product.application.service.IProductService;
 import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ public class AdminProductController {
     @AllArgsConstructor
     public static class AdminPrivateProductController {
 
-        private final IProductService productService;
+        private final ProductService productService;
 
         // QUERY //
 

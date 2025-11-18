@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public interface ICartRepository extends JpaRepository<Cart, Long> {
 
-    @EntityGraph(attributePaths = {"cartLines", "cartLines.sku"})
-    Optional<Cart> findWithSkuByBuyerId(@NonNull Long buyerId);
+    @EntityGraph(attributePaths = {"lines", "lines.product"})
+    Optional<Cart> findWithProductByBuyerId(@NonNull Long buyerId);
 
     @Query("SELECT c FROM Cart c WHERE c.buyer.id = :buyerId AND c.isDeleted = true")
     Optional<Cart> findIsDeletedByBuyerId(@Param("buyerId") Long buyerId);

@@ -5,6 +5,6 @@ import java.util.List;
 public record CartData(
         Long id,
         int total,
-        List<CartLineData> cartLines
+        List<CartLineData> lines
 ) {
 }

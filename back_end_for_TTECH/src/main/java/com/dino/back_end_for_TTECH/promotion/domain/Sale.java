@@ -1,6 +1,5 @@
 package com.dino.back_end_for_TTECH.promotion.domain;
 
-import com.dino.back_end_for_TTECH.promotion.domain.model.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -28,7 +27,7 @@ import java.util.List;
 public abstract class Sale extends Campaign {
 
     @OneToMany(mappedBy = "sale", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<SaleLine> lines = new ArrayList<>();
+    List<SaleUnit> units = new ArrayList<>();
 
     public abstract int getPriority();
 }

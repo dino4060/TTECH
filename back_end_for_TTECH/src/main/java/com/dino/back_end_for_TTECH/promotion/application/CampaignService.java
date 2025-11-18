@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.promotion.application;
 
 import com.dino.back_end_for_TTECH.pricing.domain.Price;
-import com.dino.back_end_for_TTECH.product.application.ProductServiceImpl;
+import com.dino.back_end_for_TTECH.product.application.ProductService;
 import com.dino.back_end_for_TTECH.promotion.application.mapper.CampaignMapper;
 import com.dino.back_end_for_TTECH.promotion.application.model.*;
 import com.dino.back_end_for_TTECH.promotion.domain.Campaign;
@@ -30,7 +30,7 @@ import java.time.ZoneId;
 @Slf4j
 public class CampaignService {
 
-    ProductServiceImpl productService;
+    ProductService productService;
     CampaignRepository campaignRepository;
     CampaignMapper mapper;
 
@@ -46,11 +46,10 @@ public class CampaignService {
     }
 
     public void create(Sale body) {
-        body.getLines().forEach(line -> {
+        body.getUnits().forEach(line -> {
             line.setSale(body);
             line.setLive(false);
             line.setProduct(this.productService.getProduct(line.getProduct().getId()));
-            line.getSkuLines().clear();
         });
 
         this.manageStatus(body);
@@ -62,11 +61,10 @@ public class CampaignService {
     public Sale update(Sale body) {
         body.setPromotionType(PromoType.NORMAL_SALE.name());
 
-        body.getLines().forEach(line -> {
+        body.getUnits().forEach(line -> {
             line.setSale(body);
-            // line.setEffective(false);
+            line.setLive(true);
             line.setProduct(this.productService.getProduct(line.getProduct().getId()));
-            line.getSkuLines().clear();
         });
 
         var model = this.saleRepository.save(body);
@@ -136,7 +134,7 @@ public class CampaignService {
         // write
         // async price with FE
         model.setStatus(Status.ONGOING.name());
-        model.getLines().forEach(line -> {
+        model.getUnits().forEach(line -> {
             var price = line.getProduct().getPrice();
             price.sale(line);
             this.asyncProductPrice(price);

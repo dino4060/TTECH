@@ -1,6 +1,5 @@
 package com.dino.back_end_for_TTECH.ordering.domain;
 
-import com.dino.back_end_for_TTECH.ordering.domain.model.Status;
 import com.dino.back_end_for_TTECH.profile.domain.User;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -57,6 +56,6 @@ public class Order extends BaseEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<OrderLine> orderLines = new ArrayList<>();
+    List<OrderLine> lines = new ArrayList<>();
 
 }

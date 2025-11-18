@@ -1,7 +1,6 @@
 package com.dino.back_end_for_TTECH.ordering.domain;
 
-import com.dino.back_end_for_TTECH.product.domain.Sku;
-import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
+import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
@@ -43,8 +42,8 @@ public class OrderLine extends BaseEntity {
     Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sku_id", nullable = false, updatable = false)
-    Sku sku;
+    @JoinColumn(name = "product_id", nullable = false, updatable = false)
+    Product product;
 
     // SETTER //
 

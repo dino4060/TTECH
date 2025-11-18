@@ -18,14 +18,13 @@ public interface IOrderMapper {
 
     OrderData toData(Order model);
 
-    @Mapping(source = "orderLine.sku.product", target = "product")
     OrderLineData toOrderLineData(OrderLine orderLine);
 
     default OrderData customData(Order model) {
         OrderData data = this.toData(model);
-        model.getOrderLines().forEach(orderLine -> {
-            OrderLineData orderLineData = this.toOrderLineData(orderLine);
-            data.getOrderLines().add(orderLineData);
+        model.getLines().forEach(line -> {
+            OrderLineData orderLineData = this.toOrderLineData(line);
+            data.getLines().add(orderLineData);
         });
         return data;
     }
