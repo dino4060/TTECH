@@ -1,9 +1,8 @@
 package com.dino.back_end_for_TTECH.product.application;
 
-import com.dino.back_end_for_TTECH.inventory.application.StockService;
 import com.dino.back_end_for_TTECH.pricing.application.PriceService;
 import com.dino.back_end_for_TTECH.product.application.mapper.IProductMapper;
-import com.dino.back_end_for_TTECH.product.application.model.ProductInList;
+import com.dino.back_end_for_TTECH.product.application.model.ProductData;
 import com.dino.back_end_for_TTECH.product.application.model.ProductQuery;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToSell;
 import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
@@ -12,6 +11,8 @@ import com.dino.back_end_for_TTECH.product.application.service.ISupplierService;
 import com.dino.back_end_for_TTECH.product.domain.Product;
 import com.dino.back_end_for_TTECH.product.domain.repository.IProductRepository;
 import com.dino.back_end_for_TTECH.product.domain.specification.ProductSpecification;
+import com.dino.back_end_for_TTECH.promotion.application.model.PageData;
+import com.dino.back_end_for_TTECH.promotion.application.model.PageQuery;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
@@ -41,7 +42,7 @@ public class ProductService {
 
     private final IProductRepository productRepository;
 
-    private final IProductMapper productMapper;
+    private final IProductMapper mapper;
 
 
     // HELPERS //
@@ -84,32 +85,35 @@ public class ProductService {
 
     // READ //
 
-    public AppPage<ProductInList> listProducts(Pageable pageable) {
-        Page<Product> page = this.productRepository.findAll(pageable);
+    // LIST
+    // description: to integrate pagination
+    public PageData<ProductData> list(PageQuery query) {
+        Page<Product> page = this.productRepository.findAll(
+                this.mapper.toPageable(query));
 
-        var products = page.getContent().stream()
-                .map(this.productMapper::toProductInList).toList();
-
-        return AppPage.from(page, products);
+        return this.mapper.toPageData(
+                page,
+                (Product product) -> this.mapper.toProductData(product));
     }
 
-    // LIST: integrate searching, pagination
+    // LIST
+    // description: to integrate pagination, searching
     public AppPage<ProductToSell> list(ProductQuery query, Pageable pageable) {
         var queryable = ProductSpecification.build(query);
 
         var page = this.productRepository.findAll(queryable, pageable);
 
         var products = page.getContent().stream()
-                .map(this.productMapper::toProductToSell).toList();
+                .map(this.mapper::toProductToSell).toList();
 
         return AppPage.from(page, products);
     }
 
     // WRITE //
 
-    public ProductInList createProduct(ProductToWrite body) {
+    public ProductData createProduct(ProductToWrite body) {
         // Map to product
-        Product product = productMapper.toProduct(body);
+        Product product = mapper.toProduct(body);
 
         // Refer up by product
         this.referUp(product);
@@ -122,16 +126,16 @@ public class ProductService {
         // Create product
         product.create();
         Product saved = this.save(product);
-        return productMapper.toProductInList(saved);
+        return mapper.toProductInList(saved);
     }
 
-    public ProductInList updateProduct(long id, ProductToWrite body) {
+    public ProductData updateProduct(long id, ProductToWrite body) {
         var product = this.getProduct(id);
         var price = product.getPrice();
-        var priceBody = this.productMapper.getPriceBody(body);
+        var priceBody = this.mapper.getPriceBody(body);
 
         // Map to product
-        this.productMapper.toProduct(body, product);
+        this.mapper.toProduct(body, product);
 
         // Refer up by product
         this.referUp(product);
@@ -144,7 +148,7 @@ public class ProductService {
         // Update product
         product.update();
         Product saved = this.save(product);
-        return productMapper.toProductInList(saved);
+        return this.mapper.toProductInList(saved);
     }
 
     public void deleteProduct(long id) {

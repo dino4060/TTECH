@@ -1,5 +1,6 @@
 package com.dino.back_end_for_TTECH.promotion.application;
 
+import com.dino.back_end_for_TTECH.infrastructure.aop.exception.BadRequestException;
 import com.dino.back_end_for_TTECH.pricing.domain.Price;
 import com.dino.back_end_for_TTECH.product.application.ProductService;
 import com.dino.back_end_for_TTECH.promotion.application.mapper.CampaignMapper;
@@ -16,9 +17,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -102,7 +101,7 @@ public class CampaignService {
             return;
         }
         // if duration is ended
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The ongoing duration is in the past");
+        throw new BadRequestException("The ongoing duration is in the past");
     }
 
     private void wait(Sale model) {

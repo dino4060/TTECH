@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.product.application.model;
 
-import com.dino.back_end_for_TTECH.pricing.application.model.PriceInList;
+import com.dino.back_end_for_TTECH.pricing.application.model.PriceData;
 
 import java.util.List;
 
@@ -16,6 +16,6 @@ public record ProductToSell(
 
         CategoryInList category,
         SupplierInList supplier,
-        PriceInList price
+        PriceData price
 ) {
 }
