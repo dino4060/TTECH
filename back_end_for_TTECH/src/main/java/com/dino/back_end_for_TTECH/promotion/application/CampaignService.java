@@ -48,7 +48,7 @@ public class CampaignService {
     public void create(Sale body) {
         body.getLines().forEach(line -> {
             line.setSale(body);
-            line.setEffective(false);
+            line.setLive(false);
             line.setProduct(this.productService.getProduct(line.getProduct().getId()));
             line.getSkuLines().clear();
         });

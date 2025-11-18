@@ -4,7 +4,10 @@ import { UserAuth } from "@/context/AuthContext"
 import { motion } from "framer-motion"
 import { v4 as uuidv4 } from "uuid"
 import ProductOptions from "./ProductOptions"
-import { useState } from "react"
+import { use, useEffect, useState } from "react"
+import { convertTokVND } from "@/utils/until"
+import PriceCell from "./PriceCell"
+import LimitCell from "./LimitCell"
 
 const CampaignForm = ({
 	currentDiscountClicked = {
@@ -21,10 +24,31 @@ const CampaignForm = ({
 	setTriggerGetData,
 }) => {
 	const [show, setShow] = useState(false)
-	const [chosenProducts, setChosenProducts] = useState(
+	const [manage, setManage] = useState(false)
+	const [chosenProductIds, setChosenProductIds] = useState(
 		new Set()
 	)
+	const [chosenProducts, setChosenProducts] = useState([])
+	const [saleUnits, setSaleUnits] = useState([])
 	const { token } = UserAuth()
+
+	useEffect(() => {
+		setChosenProductIds(
+			new Set(chosenProducts.map((product) => product.id))
+		)
+
+		setSaleUnits(
+			chosenProducts.map((product) => ({
+				product: product,
+				isLive: true,
+				dealPrice: 0,
+				dealPercent: 0,
+				totalLimit: -1,
+				usedCount: 0,
+				levelType: "PRODUCT",
+			}))
+		)
+	}, [chosenProducts])
 
 	const handleSubmit = async (e) => {
 		if (mode === "add") {
@@ -83,6 +107,17 @@ const CampaignForm = ({
 			...pre,
 			[id]: value,
 		}))
+	}
+
+	const handleRemove = (e) => {
+		const productIdToRemove = e.target.getAttribute(
+			"data-product-id"
+		)
+		setChosenProducts((prevProducts) =>
+			prevProducts.filter(
+				(product) => product.id !== productIdToRemove
+			)
+		)
 	}
 
 	return (
@@ -160,15 +195,119 @@ const CampaignForm = ({
 					<h3 className='text-[2.2rem] font-semibold '>
 						Danh sách sản phẩm
 					</h3>
-					<button
-						onClick={() => {
-							setShow(true)
-						}}
-						className='px-4 text-white text-2xl mt-4 bg-blue-500 rounded-full  py-1 '
-					>
-						Chọn sản phẩm
-					</button>
+					<div className='flex gap-4'>
+						<button
+							onClick={() => {
+								setShow(!show)
+							}}
+							className='px-4 py-1 text-white text-2xl bg-blue-500 rounded-full'
+						>
+							Chọn sản phẩm
+						</button>
+						{chosenProducts.length > 0 && (
+							<button
+								onClick={() => {
+									setManage(!manage)
+								}}
+								className='px-4 py-1 text-white text-2xl bg-gray-500 rounded-full'
+							>
+								Quản lý
+							</button>
+						)}
+					</div>
 				</div>
+
+				{chosenProducts.length !== 0 && (
+					<div className='overflow-x-auto'>
+						<table className='w-full border-spacing-1 border-separate table-auto text-xl bg-white relative'>
+							<thead class=' text-black uppercase sticky top-2'>
+								<tr className=''>
+									<th className='w-[40%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+										Tên sản phẩm
+									</th>
+									<th className='w-[25%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+										Giảm giá
+									</th>
+									<th className='w-[25%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+										Hạn mức
+									</th>
+
+									{!manage ? (
+										<th className='w-[10%] py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+											Trạng thái
+										</th>
+									) : (
+										<th className='w-[10%] py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+											Quản lý
+										</th>
+									)}
+								</tr>
+							</thead>
+							<tbody>
+								{chosenProducts.map((x) => (
+									<motion.tr
+										initial={{
+											backgroundColor: "#f8fafc",
+											padding: 0,
+										}}
+										whileHover={{
+											backgroundColor: "#cbd5e1",
+											padding: "10px 0px",
+										}}
+										transition={{ type: "spring" }}
+										key={x.id}
+										className='cursor-pointer'
+									>
+										<th className='px-4 py-2 font-normal shrink-0 text-center'>
+											<div className='flex gap-2 '>
+												<div className='w-14 h-14 shrink-0 rounded-xl bg-sky-300'>
+													<img
+														src={x.thumb}
+														className='w-full h-full object-cover rounded-xl'
+													/>
+												</div>
+												<div>
+													<div className='text-[1.4rem] whitespace-nowrap overflow-hidden text-ellipsis'>
+														{x.name}
+													</div>
+													<div className='text-left'>{`ID: ${x.id}`}</div>
+												</div>
+											</div>
+										</th>
+
+										<PriceCell x={x} />
+
+										<LimitCell x={x} />
+
+										{!manage ? (
+											<th className='px-4 py-2 font-normal shrink-0 text-center'>
+												<span
+													style={{
+														backgroundColor: x.isLive
+															? "#06b6d4"
+															: "#ef4444",
+													}}
+													className='p-2 rounded-xl text-white'
+												>
+													{x.isLive ? "LIVE" : "OFF"}
+												</span>
+											</th>
+										) : (
+											<th className='px-4 py-2 font-normal shrink-0 text-center'>
+												<span
+													className='text-[1.4rem] font-semibold text-red-500'
+													onClick={handleRemove}
+												>
+													Xóa
+												</span>
+											</th>
+										)}
+									</motion.tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				)}
 
 				<button
 					onClick={handleSubmit}
@@ -182,6 +321,7 @@ const CampaignForm = ({
 				setShow={setShow}
 				chosenProducts={chosenProducts}
 				setChosenProducts={setChosenProducts}
+				chosenProductIds={chosenProductIds}
 			/>
 		</div>
 	)

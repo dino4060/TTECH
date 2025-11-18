@@ -130,7 +130,7 @@ export const convertToVND = (money) => {
 
 export const convertTokVND = (money, hasUnit = true) => {
 	const unit = hasUnit ? " VND" : ""
-	return `${money.toLocaleString("it-IT")}k${unit}`
+	return `${money.toLocaleString("vi-VN")} k${unit}`
 }
 
 export function getCurrentDate(separator = "") {

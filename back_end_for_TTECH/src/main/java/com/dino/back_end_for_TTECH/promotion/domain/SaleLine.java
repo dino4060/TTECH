@@ -42,7 +42,7 @@ public class SaleLine extends BaseEntity {
     @Column(name = "line_id")
     Long id;
 
-    boolean isEffective;
+    boolean isLive;
 
     int dealPrice;
 

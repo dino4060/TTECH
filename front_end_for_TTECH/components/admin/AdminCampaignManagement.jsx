@@ -28,7 +28,7 @@ const AdminCampaignManagement = () => {
 
 	return (
 		<div className='container mx-auto flex mt-10 gap-5'>
-			<div className='flex-1'>
+			<div className='flex-[4]'>
 				<CampaignList
 					discountList={discountList}
 					setDiscountList={setDiscountList}
@@ -37,7 +37,7 @@ const AdminCampaignManagement = () => {
 					setMode={setMode}
 				/>
 			</div>
-			<div className='flex-1 bg-white'>
+			<div className='flex-[6] bg-white'>
 				<CampaignForm
 					currentDiscountClicked={currentDiscountClicked}
 					setCurrentDiscountClicked={setCurrentDiscountClicked}
