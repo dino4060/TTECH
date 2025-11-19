@@ -8,11 +8,11 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface ICategoryMapper {
+public interface CategoryMapper {
 
-    CategoryData toCategoryInList(Category entity);
+    CategoryData toCategoryData(Category model);
 
-    Category toCategory(CategoryBody dto);
+    Category toCategory(CategoryBody body);
 
-    void toCategory(CategoryBody dto, @MappingTarget Category entity);
+    void toCategory(CategoryBody dto, @MappingTarget Category model);
 }

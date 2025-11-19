@@ -1,10 +1,10 @@
 package com.dino.back_end_for_TTECH.features.product.application;
 
-import com.dino.back_end_for_TTECH.features.product.application.mapper.ISupplierMapper;
+import com.dino.back_end_for_TTECH.features.product.application.mapper.SupplierMapper;
 import com.dino.back_end_for_TTECH.features.product.application.model.SupplierBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.SupplierData;
 import com.dino.back_end_for_TTECH.features.product.domain.Supplier;
-import com.dino.back_end_for_TTECH.features.product.domain.repository.ISupplierRepository;
+import com.dino.back_end_for_TTECH.features.product.domain.repository.SupplierRepository;
 import com.dino.back_end_for_TTECH.shared.application.constant.CacheKey;
 import com.dino.back_end_for_TTECH.shared.application.constant.CacheValue;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
@@ -24,8 +24,8 @@ import java.util.List;
 @Slf4j
 public class SupplierService {
 
-    private final ISupplierRepository supplierRepository;
-    private final ISupplierMapper supplierMapper;
+    private final SupplierRepository supplierRepository;
+    private final SupplierMapper supplierMapper;
 
     // HELPERS //
 
@@ -67,7 +67,7 @@ public class SupplierService {
         var suppliers = this.supplierRepository.findAll();
 
         return suppliers.stream()
-                .map(supplierMapper::toSupplierInList)
+                .map(supplierMapper::toSupplierData)
                 .sorted(Comparator.comparing(SupplierData::name))
                 .toList();
     }
@@ -79,7 +79,7 @@ public class SupplierService {
         Supplier supplier = supplierMapper.toSupplier(body);
         this.validateSupplier(supplier);
         Supplier saved = saveSupplier(supplier);
-        return supplierMapper.toSupplierInList(saved);
+        return supplierMapper.toSupplierData(saved);
     }
 
     @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
@@ -88,7 +88,7 @@ public class SupplierService {
         supplierMapper.toSupplier(body, supplier);
         this.validateSupplier(supplier);
         Supplier saved = saveSupplier(supplier);
-        return supplierMapper.toSupplierInList(saved);
+        return supplierMapper.toSupplierData(saved);
     }
 
     @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)

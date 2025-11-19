@@ -1,10 +1,10 @@
 package com.dino.back_end_for_TTECH.features.product.application;
 
-import com.dino.back_end_for_TTECH.features.product.application.mapper.ICategoryMapper;
+import com.dino.back_end_for_TTECH.features.product.application.mapper.CategoryMapper;
 import com.dino.back_end_for_TTECH.features.product.application.model.CategoryData;
 import com.dino.back_end_for_TTECH.features.product.application.model.CategoryBody;
 import com.dino.back_end_for_TTECH.features.product.domain.Category;
-import com.dino.back_end_for_TTECH.features.product.domain.repository.ICategoryRepository;
+import com.dino.back_end_for_TTECH.features.product.domain.repository.CategoryRepository;
 import com.dino.back_end_for_TTECH.shared.application.constant.CacheKey;
 import com.dino.back_end_for_TTECH.shared.application.constant.CacheValue;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
@@ -24,8 +24,8 @@ import java.util.List;
 @Slf4j
 public class CategoryService {
 
-    private final ICategoryRepository categoryRepository;
-    private final ICategoryMapper categoryMapper;
+    private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     // HELPERS //
 
@@ -68,7 +68,7 @@ public class CategoryService {
         var categories = this.categoryRepository.findAll();
 
         return categories.stream()
-                .map(categoryMapper::toCategoryInList)
+                .map(categoryMapper::toCategoryData)
                 .sorted(Comparator.comparingInt(CategoryData::position))
                 .toList();
     }
@@ -80,7 +80,7 @@ public class CategoryService {
         Category category = categoryMapper.toCategory(body);
         this.validateCategory(category);
         Category saved = saveCategory(category);
-        return categoryMapper.toCategoryInList(saved);
+        return categoryMapper.toCategoryData(saved);
     }
 
     @CacheEvict(value = CacheValue.CATEGORIES, key = CacheKey.LIST)
@@ -89,7 +89,7 @@ public class CategoryService {
         categoryMapper.toCategory(body, category);
         this.validateCategory(category);
         Category saved = saveCategory(category);
-        return categoryMapper.toCategoryInList(saved);
+        return categoryMapper.toCategoryData(saved);
     }
 
     @CacheEvict(value = CacheValue.CATEGORIES, key = CacheKey.LIST)

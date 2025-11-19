@@ -7,6 +7,6 @@ import org.springframework.lang.NonNull;
 
 import java.util.List;
 
-public interface ISupplierRepository extends JpaRepository<Supplier, Long>, JpaSpecificationExecutor<Supplier> {
+public interface SupplierRepository extends JpaRepository<Supplier, Long>, JpaSpecificationExecutor<Supplier> {
     List<Supplier> findByName(@NonNull String name);
 }

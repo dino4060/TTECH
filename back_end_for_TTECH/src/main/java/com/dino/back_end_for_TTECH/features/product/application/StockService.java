@@ -1,11 +1,11 @@
 package com.dino.back_end_for_TTECH.features.product.application;
 
-import com.dino.back_end_for_TTECH.features.product.application.mapper.IStockMapper;
+import com.dino.back_end_for_TTECH.features.product.application.mapper.StockMapper;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.StockBody;
 import com.dino.back_end_for_TTECH.features.product.application.provider.IInventoryLockProvider;
 import com.dino.back_end_for_TTECH.features.product.domain.Stock;
-import com.dino.back_end_for_TTECH.features.product.domain.repository.IStockRepository;
+import com.dino.back_end_for_TTECH.features.product.domain.repository.StockRepository;
 import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
@@ -22,11 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class StockService {
 
-    IStockRepository inventoryRepository;
+    StockRepository inventoryRepository;
 
     IInventoryLockProvider lockProvider;
 
-    IStockMapper mapper;
+    StockMapper mapper;
 
     @Transactional(readOnly = true)
     public Stock checkStock(Long productId, int quantity) {

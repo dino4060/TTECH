@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface IStockMapper extends PageMapper {
+public interface StockMapper extends PageMapper {
 
-    StockBody toStockBody(ProductBody parent);
+    StockBody toStockBody(ProductBody product);
 }

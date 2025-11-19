@@ -8,11 +8,11 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface ISupplierMapper {
+public interface SupplierMapper {
 
-    SupplierData toSupplierInList(Supplier entity);
+    SupplierData toSupplierData(Supplier model);
 
-    Supplier toSupplier(SupplierBody dto);
+    Supplier toSupplier(SupplierBody body);
 
-    void toSupplier(SupplierBody dto, @MappingTarget Supplier entity);
+    void toSupplier(SupplierBody body, @MappingTarget Supplier model);
 }

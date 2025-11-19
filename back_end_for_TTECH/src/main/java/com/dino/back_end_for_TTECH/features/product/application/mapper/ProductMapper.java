@@ -13,7 +13,7 @@ import org.mapstruct.ReportingPolicy;
 import org.springframework.data.jpa.domain.Specification;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface IProductMapper extends PageMapper {
+public interface ProductMapper extends PageMapper {
 
     default Specification<Product> toQueryable(ProductQuery query) {
         return ProductSpecification.build(query);

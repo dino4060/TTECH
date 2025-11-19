@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.features.product.application;
 
-import com.dino.back_end_for_TTECH.features.product.application.mapper.IProductMapper;
+import com.dino.back_end_for_TTECH.features.product.application.mapper.ProductMapper;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductData;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductFull;
@@ -8,7 +8,7 @@ import com.dino.back_end_for_TTECH.features.product.application.model.ProductQue
 import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.features.product.domain.Stock;
 import com.dino.back_end_for_TTECH.features.product.domain.model.Status;
-import com.dino.back_end_for_TTECH.features.product.domain.repository.IProductRepository;
+import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
 import com.dino.back_end_for_TTECH.shared.application.exception.DatabaseException;
 import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundException;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
@@ -39,9 +39,9 @@ public class ProductService {
 
     private final SupplierService supplierService;
 
-    private final IProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    private final IProductMapper mapper;
+    private final ProductMapper mapper;
 
 
     // DOMAIN //
