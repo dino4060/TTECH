@@ -30,8 +30,8 @@ public class AdminProductController {
     public ResponseEntity<ProductData> create(
             @RequestBody ProductBody body
     ) {
-        ProductData newProduct = this.productService.create(body);
-        return ResponseEntity.ok(newProduct);
+        ProductData result = this.productService.create(body);
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping("/{id}")
@@ -39,12 +39,14 @@ public class AdminProductController {
             @PathVariable long id,
             @RequestBody ProductBody body
     ) {
-        ProductData updatedProduct = this.productService.update(id, body);
-        return ResponseEntity.ok(updatedProduct);
+        ProductData result = this.productService.update(id, body);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
+    public ResponseEntity<Void> delete(
+            @PathVariable long id
+    ) {
         this.productService.delete(id);
         return ResponseEntity.ok().build();
     }
