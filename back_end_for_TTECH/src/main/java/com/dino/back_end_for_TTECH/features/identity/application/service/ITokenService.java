@@ -1,10 +1,10 @@
-package com.dino.back_end_for_TTECH.identity.application.service;
+package com.dino.back_end_for_TTECH.features.identity.application.service;
 
 import java.time.Instant;
 import java.util.Optional;
 
-import com.dino.back_end_for_TTECH.identity.domain.Token;
-import com.dino.back_end_for_TTECH.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.identity.domain.Token;
+import com.dino.back_end_for_TTECH.features.profile.domain.User;
 
 public interface ITokenService {
 

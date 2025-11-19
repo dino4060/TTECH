@@ -1,8 +1,8 @@
 package com.dino.back_end_for_TTECH.infrastructure.security;
 
-import com.dino.back_end_for_TTECH.identity.application.model.TokenPair;
-import com.dino.back_end_for_TTECH.identity.application.provider.IIdentitySecurityProvider;
-import com.dino.back_end_for_TTECH.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.identity.application.model.TokenPair;
+import com.dino.back_end_for_TTECH.features.identity.application.provider.IIdentitySecurityProvider;
+import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.infrastructure.common.Env;
 import com.dino.back_end_for_TTECH.infrastructure.security.model.JwtType;
 import com.dino.back_end_for_TTECH.shared.application.utils.Id;

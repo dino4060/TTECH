@@ -1,6 +1,6 @@
-package com.dino.back_end_for_TTECH.profile.domain.repository;
+package com.dino.back_end_for_TTECH.features.profile.domain.repository;
 
-import com.dino.back_end_for_TTECH.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

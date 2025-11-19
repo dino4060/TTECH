@@ -1,12 +1,12 @@
-package com.dino.back_end_for_TTECH.profile.application;
+package com.dino.back_end_for_TTECH.features.profile.application;
 
-import com.dino.back_end_for_TTECH.identity.application.model.CurrentUserRes;
-import com.dino.back_end_for_TTECH.identity.application.provider.IIdentitySecurityProvider;
-import com.dino.back_end_for_TTECH.profile.application.mapper.IUserMapper;
-import com.dino.back_end_for_TTECH.profile.application.model.UserToUpdateBody;
-import com.dino.back_end_for_TTECH.profile.application.service.IUserService;
-import com.dino.back_end_for_TTECH.profile.domain.User;
-import com.dino.back_end_for_TTECH.profile.domain.repository.IUserRepository;
+import com.dino.back_end_for_TTECH.features.identity.application.model.CurrentUserRes;
+import com.dino.back_end_for_TTECH.features.identity.application.provider.IIdentitySecurityProvider;
+import com.dino.back_end_for_TTECH.features.profile.application.mapper.IUserMapper;
+import com.dino.back_end_for_TTECH.features.profile.application.model.UserToUpdateBody;
+import com.dino.back_end_for_TTECH.features.profile.application.service.IUserService;
+import com.dino.back_end_for_TTECH.features.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.profile.domain.repository.IUserRepository;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;

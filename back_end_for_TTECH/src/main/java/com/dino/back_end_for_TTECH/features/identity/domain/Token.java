@@ -1,6 +1,6 @@
-package com.dino.back_end_for_TTECH.identity.domain;
+package com.dino.back_end_for_TTECH.features.identity.domain;
 
-import com.dino.back_end_for_TTECH.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

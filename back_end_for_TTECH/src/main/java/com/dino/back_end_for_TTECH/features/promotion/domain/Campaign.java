@@ -1,8 +1,8 @@
-package com.dino.back_end_for_TTECH.promotion.domain;
+package com.dino.back_end_for_TTECH.features.promotion.domain;
 
 import java.time.Instant;
 
-import com.dino.back_end_for_TTECH.promotion.domain.model.Status;
+import com.dino.back_end_for_TTECH.features.promotion.domain.model.Status;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

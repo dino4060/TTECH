@@ -1,6 +1,6 @@
-package com.dino.back_end_for_TTECH.promotion.domain.model;
+package com.dino.back_end_for_TTECH.features.promotion.domain.model;
 
-import com.dino.back_end_for_TTECH.promotion.domain.Voucher;
+import com.dino.back_end_for_TTECH.features.promotion.domain.Voucher;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

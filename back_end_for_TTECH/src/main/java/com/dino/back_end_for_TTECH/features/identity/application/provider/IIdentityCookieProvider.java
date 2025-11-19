@@ -1,4 +1,4 @@
-package com.dino.back_end_for_TTECH.identity.application.provider;
+package com.dino.back_end_for_TTECH.features.identity.application.provider;
 
 import org.springframework.http.HttpHeaders;
 

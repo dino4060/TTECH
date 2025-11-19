@@ -1,4 +1,4 @@
-package com.dino.back_end_for_TTECH.identity.application.model;
+package com.dino.back_end_for_TTECH.features.identity.application.model;
 
 import java.time.Duration;
 import java.time.Instant;

@@ -3,8 +3,8 @@ package com.dino.back_end_for_TTECH.infrastructure.file;
 import com.dino.back_end_for_TTECH.infrastructure.common.Env;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
-import com.dino.back_end_for_TTECH.file.application.model.UploadRes;
-import com.dino.back_end_for_TTECH.file.application.provider.IFileProvider;
+import com.dino.back_end_for_TTECH.features.file.application.model.UploadRes;
+import com.dino.back_end_for_TTECH.features.file.application.provider.IFileProvider;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

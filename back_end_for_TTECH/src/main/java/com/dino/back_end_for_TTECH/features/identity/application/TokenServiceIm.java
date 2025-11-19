@@ -1,9 +1,9 @@
-package com.dino.back_end_for_TTECH.identity.application;
+package com.dino.back_end_for_TTECH.features.identity.application;
 
-import com.dino.back_end_for_TTECH.identity.application.service.ITokenService;
-import com.dino.back_end_for_TTECH.identity.domain.Token;
-import com.dino.back_end_for_TTECH.identity.domain.repository.ITokenRepository;
-import com.dino.back_end_for_TTECH.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.identity.application.service.ITokenService;
+import com.dino.back_end_for_TTECH.features.identity.domain.Token;
+import com.dino.back_end_for_TTECH.features.identity.domain.repository.ITokenRepository;
+import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import lombok.AccessLevel;

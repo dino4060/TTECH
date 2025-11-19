@@ -1,8 +1,8 @@
-package com.dino.back_end_for_TTECH.identity.api;
+package com.dino.back_end_for_TTECH.features.identity.api;
 
-import com.dino.back_end_for_TTECH.identity.application.model.AuthRes;
-import com.dino.back_end_for_TTECH.identity.application.model.LoginUsernameBody;
-import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForAdmin;
+import com.dino.back_end_for_TTECH.features.identity.application.model.AuthRes;
+import com.dino.back_end_for_TTECH.features.identity.application.model.LoginUsernameBody;
+import com.dino.back_end_for_TTECH.features.identity.application.service.IAuthServiceForAdmin;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;

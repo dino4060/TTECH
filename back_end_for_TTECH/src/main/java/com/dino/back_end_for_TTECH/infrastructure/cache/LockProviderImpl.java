@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.infrastructure.cache;
 
-import com.dino.back_end_for_TTECH.product.application.provider.IInventoryLockProvider;
+import com.dino.back_end_for_TTECH.features.product.application.provider.IInventoryLockProvider;
 import com.dino.back_end_for_TTECH.infrastructure.cache.pattern.LockFacade;
 import com.dino.back_end_for_TTECH.infrastructure.cache.pattern.LockTemplate;
 import lombok.AccessLevel;

@@ -1,12 +1,12 @@
-package com.dino.back_end_for_TTECH.ordering.application;
+package com.dino.back_end_for_TTECH.features.ordering.application;
 
-import com.dino.back_end_for_TTECH.ordering.application.mapper.ICartMapper;
-import com.dino.back_end_for_TTECH.ordering.application.model.CartLineBody;
-import com.dino.back_end_for_TTECH.ordering.application.model.CartLineData;
-import com.dino.back_end_for_TTECH.ordering.application.model.CartBody;
-import com.dino.back_end_for_TTECH.ordering.domain.Cart;
-import com.dino.back_end_for_TTECH.ordering.domain.CartLine;
-import com.dino.back_end_for_TTECH.ordering.domain.repository.ICartRepository;
+import com.dino.back_end_for_TTECH.features.ordering.application.mapper.ICartMapper;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.CartLineBody;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.CartLineData;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.CartBody;
+import com.dino.back_end_for_TTECH.features.ordering.domain.Cart;
+import com.dino.back_end_for_TTECH.features.ordering.domain.CartLine;
+import com.dino.back_end_for_TTECH.features.ordering.domain.repository.ICartRepository;
 import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.features.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;

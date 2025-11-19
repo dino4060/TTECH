@@ -1,10 +1,10 @@
-package com.dino.back_end_for_TTECH.ordering.application.mapper;
+package com.dino.back_end_for_TTECH.features.ordering.application.mapper;
 
-import com.dino.back_end_for_TTECH.ordering.application.model.OrderBody;
-import com.dino.back_end_for_TTECH.ordering.application.model.OrderData;
-import com.dino.back_end_for_TTECH.ordering.application.model.OrderLineData;
-import com.dino.back_end_for_TTECH.ordering.domain.Order;
-import com.dino.back_end_for_TTECH.ordering.domain.OrderLine;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderBody;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderData;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderLineData;
+import com.dino.back_end_for_TTECH.features.ordering.domain.Order;
+import com.dino.back_end_for_TTECH.features.ordering.domain.OrderLine;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

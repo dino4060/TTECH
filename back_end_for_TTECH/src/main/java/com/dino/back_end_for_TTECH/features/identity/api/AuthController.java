@@ -1,12 +1,18 @@
-package com.dino.back_end_for_TTECH.identity.api;
+package com.dino.back_end_for_TTECH.features.identity.api;
 
-import com.dino.back_end_for_TTECH.identity.application.model.*;
-import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForCustomer;
+import com.dino.back_end_for_TTECH.features.identity.application.model.AuthRes;
+import com.dino.back_end_for_TTECH.features.identity.application.model.LoginGoogleBody;
+import com.dino.back_end_for_TTECH.features.identity.application.model.LoginPhoneBody;
+import com.dino.back_end_for_TTECH.features.identity.application.model.RegisterBody;
+import com.dino.back_end_for_TTECH.features.identity.application.service.IAuthServiceForCustomer;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthController {

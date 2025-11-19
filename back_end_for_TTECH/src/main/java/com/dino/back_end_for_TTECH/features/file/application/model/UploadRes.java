@@ -1,4 +1,4 @@
-package com.dino.back_end_for_TTECH.file.application.model;
+package com.dino.back_end_for_TTECH.features.file.application.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

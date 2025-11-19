@@ -1,9 +1,8 @@
-package com.dino.back_end_for_TTECH.ordering.domain.repository;
+package com.dino.back_end_for_TTECH.features.ordering.domain.repository;
 
-import com.dino.back_end_for_TTECH.ordering.domain.Cart;
+import com.dino.back_end_for_TTECH.features.ordering.domain.Cart;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;

@@ -1,7 +1,7 @@
-package com.dino.back_end_for_TTECH.ordering.domain.repository;
+package com.dino.back_end_for_TTECH.features.ordering.domain.repository;
 
-import com.dino.back_end_for_TTECH.ordering.domain.Order;
-import com.dino.back_end_for_TTECH.ordering.domain.model.Status;
+import com.dino.back_end_for_TTECH.features.ordering.domain.Order;
+import com.dino.back_end_for_TTECH.features.ordering.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

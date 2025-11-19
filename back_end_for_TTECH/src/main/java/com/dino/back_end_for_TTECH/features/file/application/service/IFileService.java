@@ -1,6 +1,6 @@
-package com.dino.back_end_for_TTECH.file.application.service;
+package com.dino.back_end_for_TTECH.features.file.application.service;
 
-import com.dino.back_end_for_TTECH.file.application.model.UploadRes;
+import com.dino.back_end_for_TTECH.features.file.application.model.UploadRes;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface IFileService {

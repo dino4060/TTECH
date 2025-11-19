@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.shared.test.event;
 
-import com.dino.back_end_for_TTECH.ordering.application.event.IOrderEventPublisher;
-import com.dino.back_end_for_TTECH.ordering.domain.event.PlacedOrderEvent;
+import com.dino.back_end_for_TTECH.features.ordering.application.event.IOrderEventPublisher;
+import com.dino.back_end_for_TTECH.features.ordering.domain.event.PlacedOrderEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

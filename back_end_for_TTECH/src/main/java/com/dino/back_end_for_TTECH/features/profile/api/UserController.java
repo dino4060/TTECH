@@ -1,8 +1,8 @@
-package com.dino.back_end_for_TTECH.profile.api;
+package com.dino.back_end_for_TTECH.features.profile.api;
 
-import com.dino.back_end_for_TTECH.identity.application.model.CurrentUserRes;
-import com.dino.back_end_for_TTECH.profile.application.model.UserToUpdateBody;
-import com.dino.back_end_for_TTECH.profile.application.service.IUserService;
+import com.dino.back_end_for_TTECH.features.identity.application.model.CurrentUserRes;
+import com.dino.back_end_for_TTECH.features.profile.application.model.UserToUpdateBody;
+import com.dino.back_end_for_TTECH.features.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.shared.api.annotation.AuthUser;
 import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;

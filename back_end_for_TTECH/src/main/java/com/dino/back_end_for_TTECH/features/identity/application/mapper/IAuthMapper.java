@@ -1,7 +1,7 @@
-package com.dino.back_end_for_TTECH.identity.application.mapper;
+package com.dino.back_end_for_TTECH.features.identity.application.mapper;
 
-import com.dino.back_end_for_TTECH.identity.application.model.CurrentUserRes;
-import com.dino.back_end_for_TTECH.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.identity.application.model.CurrentUserRes;
+import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

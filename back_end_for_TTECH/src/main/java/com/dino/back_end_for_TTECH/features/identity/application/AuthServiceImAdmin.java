@@ -1,12 +1,12 @@
-package com.dino.back_end_for_TTECH.identity.application;
+package com.dino.back_end_for_TTECH.features.identity.application;
 
-import com.dino.back_end_for_TTECH.identity.application.pattern.AuthFacade;
-import com.dino.back_end_for_TTECH.identity.application.pattern.AuthTemplate;
-import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForAdmin;
-import com.dino.back_end_for_TTECH.identity.application.service.ITokenService;
-import com.dino.back_end_for_TTECH.identity.domain.model.Role;
-import com.dino.back_end_for_TTECH.profile.application.service.IUserService;
-import com.dino.back_end_for_TTECH.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.identity.application.pattern.AuthFacade;
+import com.dino.back_end_for_TTECH.features.identity.application.pattern.AuthTemplate;
+import com.dino.back_end_for_TTECH.features.identity.application.service.IAuthServiceForAdmin;
+import com.dino.back_end_for_TTECH.features.identity.application.service.ITokenService;
+import com.dino.back_end_for_TTECH.features.identity.domain.model.Role;
+import com.dino.back_end_for_TTECH.features.profile.application.service.IUserService;
+import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

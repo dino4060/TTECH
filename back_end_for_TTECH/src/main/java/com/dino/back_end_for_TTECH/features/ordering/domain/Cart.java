@@ -1,4 +1,4 @@
-package com.dino.back_end_for_TTECH.ordering.domain;
+package com.dino.back_end_for_TTECH.features.ordering.domain;
 
 import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;

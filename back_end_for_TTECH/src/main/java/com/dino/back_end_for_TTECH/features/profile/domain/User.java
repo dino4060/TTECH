@@ -1,8 +1,8 @@
-package com.dino.back_end_for_TTECH.profile.domain;
+package com.dino.back_end_for_TTECH.features.profile.domain;
 
-import com.dino.back_end_for_TTECH.identity.domain.model.Role;
-import com.dino.back_end_for_TTECH.identity.domain.model.UserStatus;
-import com.dino.back_end_for_TTECH.ordering.domain.Order;
+import com.dino.back_end_for_TTECH.features.identity.domain.model.Role;
+import com.dino.back_end_for_TTECH.features.identity.domain.model.UserStatus;
+import com.dino.back_end_for_TTECH.features.ordering.domain.Order;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;

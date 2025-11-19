@@ -1,4 +1,4 @@
-package com.dino.back_end_for_TTECH.profile.application.model;
+package com.dino.back_end_for_TTECH.features.profile.application.model;
 
 import org.springframework.lang.NonNull;
 

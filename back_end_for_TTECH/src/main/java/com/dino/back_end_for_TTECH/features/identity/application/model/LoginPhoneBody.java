@@ -1,8 +1,8 @@
-package com.dino.back_end_for_TTECH.identity.application.model;
+package com.dino.back_end_for_TTECH.features.identity.application.model;
 
-import com.dino.back_end_for_TTECH.identity.application.pattern.AuthFacade;
-import com.dino.back_end_for_TTECH.identity.application.pattern.ILoginBodyStrategy;
-import com.dino.back_end_for_TTECH.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.identity.application.pattern.AuthFacade;
+import com.dino.back_end_for_TTECH.features.identity.application.pattern.ILoginBodyStrategy;
+import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import jakarta.validation.constraints.Size;
 
 public record LoginPhoneBody(

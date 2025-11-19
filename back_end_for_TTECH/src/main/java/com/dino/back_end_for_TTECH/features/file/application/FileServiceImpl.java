@@ -1,8 +1,8 @@
-package com.dino.back_end_for_TTECH.file.application;
+package com.dino.back_end_for_TTECH.features.file.application;
 
-import com.dino.back_end_for_TTECH.file.application.service.IFileService;
-import com.dino.back_end_for_TTECH.file.application.model.UploadRes;
-import com.dino.back_end_for_TTECH.file.application.provider.IFileProvider;
+import com.dino.back_end_for_TTECH.features.file.application.service.IFileService;
+import com.dino.back_end_for_TTECH.features.file.application.model.UploadRes;
+import com.dino.back_end_for_TTECH.features.file.application.provider.IFileProvider;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

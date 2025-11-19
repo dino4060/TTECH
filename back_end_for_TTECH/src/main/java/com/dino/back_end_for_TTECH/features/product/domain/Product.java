@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.features.product.domain;
 
-import com.dino.back_end_for_TTECH.ordering.domain.CartLine;
-import com.dino.back_end_for_TTECH.ordering.domain.OrderLine;
+import com.dino.back_end_for_TTECH.features.ordering.domain.CartLine;
+import com.dino.back_end_for_TTECH.features.ordering.domain.OrderLine;
 import com.dino.back_end_for_TTECH.features.product.domain.model.ProductSpecification;
 import com.dino.back_end_for_TTECH.features.product.domain.model.ProductVariation;
 import com.dino.back_end_for_TTECH.features.product.domain.model.Status;

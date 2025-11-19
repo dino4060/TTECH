@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.infrastructure.event;
 
-import com.dino.back_end_for_TTECH.ordering.application.event.IOrderEventPublisher;
+import com.dino.back_end_for_TTECH.features.ordering.application.event.IOrderEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

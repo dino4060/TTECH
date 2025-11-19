@@ -1,14 +1,14 @@
-package com.dino.back_end_for_TTECH.ordering.application;
+package com.dino.back_end_for_TTECH.features.ordering.application;
 
-import com.dino.back_end_for_TTECH.ordering.application.mapper.IOrderMapper;
-import com.dino.back_end_for_TTECH.ordering.application.model.OrderBody;
-import com.dino.back_end_for_TTECH.ordering.application.model.OrderData;
-import com.dino.back_end_for_TTECH.ordering.application.model.OrderQuery;
-import com.dino.back_end_for_TTECH.ordering.domain.Order;
-import com.dino.back_end_for_TTECH.ordering.domain.OrderLine;
-import com.dino.back_end_for_TTECH.ordering.domain.model.Status;
-import com.dino.back_end_for_TTECH.ordering.domain.repository.IOrderRepository;
-import com.dino.back_end_for_TTECH.ordering.domain.specification.OrderSpecification;
+import com.dino.back_end_for_TTECH.features.ordering.application.mapper.IOrderMapper;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderBody;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderData;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderQuery;
+import com.dino.back_end_for_TTECH.features.ordering.domain.Order;
+import com.dino.back_end_for_TTECH.features.ordering.domain.OrderLine;
+import com.dino.back_end_for_TTECH.features.ordering.domain.model.Status;
+import com.dino.back_end_for_TTECH.features.ordering.domain.repository.IOrderRepository;
+import com.dino.back_end_for_TTECH.features.ordering.domain.specification.OrderSpecification;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import lombok.AccessLevel;

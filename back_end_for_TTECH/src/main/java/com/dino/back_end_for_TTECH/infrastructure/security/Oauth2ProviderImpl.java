@@ -2,8 +2,8 @@ package com.dino.back_end_for_TTECH.infrastructure.security;
 
 import org.springframework.stereotype.Service;
 
-import com.dino.back_end_for_TTECH.identity.application.model.GoogleUserRes;
-import com.dino.back_end_for_TTECH.identity.application.provider.IIdentityOauth2Provider;
+import com.dino.back_end_for_TTECH.features.identity.application.model.GoogleUserRes;
+import com.dino.back_end_for_TTECH.features.identity.application.provider.IIdentityOauth2Provider;
 import com.dino.back_end_for_TTECH.infrastructure.common.Env;
 import com.dino.back_end_for_TTECH.infrastructure.httpclient.oauth2.GoogleTokenClient;
 import com.dino.back_end_for_TTECH.infrastructure.httpclient.oauth2.GoogleUserClient;

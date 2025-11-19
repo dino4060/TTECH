@@ -1,4 +1,4 @@
-package com.dino.back_end_for_TTECH.ordering.domain.model;
+package com.dino.back_end_for_TTECH.features.ordering.domain.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

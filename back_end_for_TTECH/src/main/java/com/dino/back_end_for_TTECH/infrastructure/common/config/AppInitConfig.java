@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.infrastructure.common.config;
 
-import com.dino.back_end_for_TTECH.identity.application.service.IAuthServiceForAdmin;
+import com.dino.back_end_for_TTECH.features.identity.application.service.IAuthServiceForAdmin;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;

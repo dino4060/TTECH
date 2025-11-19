@@ -7,7 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
-import com.dino.back_end_for_TTECH.identity.application.provider.IIdentityCookieProvider;
+import com.dino.back_end_for_TTECH.features.identity.application.provider.IIdentityCookieProvider;
 import com.dino.back_end_for_TTECH.infrastructure.security.model.JwtType;
 
 import lombok.AccessLevel;

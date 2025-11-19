@@ -1,4 +1,4 @@
-package com.dino.back_end_for_TTECH.promotion.domain;
+package com.dino.back_end_for_TTECH.features.promotion.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

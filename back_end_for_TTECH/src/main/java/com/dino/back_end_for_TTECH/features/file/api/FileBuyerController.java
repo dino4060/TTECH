@@ -1,4 +1,4 @@
-package com.dino.back_end_for_TTECH.file.api;
+package com.dino.back_end_for_TTECH.features.file.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
