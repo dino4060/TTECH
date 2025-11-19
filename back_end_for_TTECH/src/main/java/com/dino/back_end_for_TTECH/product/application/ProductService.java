@@ -1,25 +1,22 @@
 package com.dino.back_end_for_TTECH.product.application;
 
-import com.dino.back_end_for_TTECH.pricing.application.PriceService;
 import com.dino.back_end_for_TTECH.product.application.mapper.IProductMapper;
+import com.dino.back_end_for_TTECH.product.application.model.ProductBody;
 import com.dino.back_end_for_TTECH.product.application.model.ProductData;
+import com.dino.back_end_for_TTECH.product.application.model.ProductFull;
 import com.dino.back_end_for_TTECH.product.application.model.ProductQuery;
-import com.dino.back_end_for_TTECH.product.application.model.ProductToSell;
-import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
-import com.dino.back_end_for_TTECH.product.application.service.ICategoryService;
-import com.dino.back_end_for_TTECH.product.application.service.ISupplierService;
 import com.dino.back_end_for_TTECH.product.domain.Product;
+import com.dino.back_end_for_TTECH.product.domain.Stock;
+import com.dino.back_end_for_TTECH.product.domain.model.Status;
 import com.dino.back_end_for_TTECH.product.domain.repository.IProductRepository;
-import com.dino.back_end_for_TTECH.product.domain.specification.ProductSpecification;
-import com.dino.back_end_for_TTECH.promotion.application.model.PageData;
-import com.dino.back_end_for_TTECH.promotion.application.model.PageQuery;
-import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
-import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
-import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
+import com.dino.back_end_for_TTECH.shared.application.exception.DatabaseException;
+import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundException;
+import com.dino.back_end_for_TTECH.shared.application.model.PageData;
+import com.dino.back_end_for_TTECH.shared.application.model.PageQuery;
+import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 // NOTE: == vs equal()
@@ -36,127 +33,134 @@ public class ProductService {
 
     private final PriceService priceService;
 
-    private final ICategoryService categoryService;
+    private final StockService stockService;
 
-    private final ISupplierService supplierService;
+    private final CategoryService categoryService;
+
+    private final SupplierService supplierService;
 
     private final IProductRepository productRepository;
 
     private final IProductMapper mapper;
 
 
-    // HELPERS //
+    // DOMAIN //
 
-    public Product getProduct(Long id) {
+    public Product get(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException("Product"));
     }
 
     private Product save(Product product) {
         try {
             return productRepository.save(product);
         } catch (Exception e) {
-            throw new AppException(ErrorCode.PRODUCT__SAVE_FAILED);
+            throw new DatabaseException("Failed to save the product.");
         }
     }
 
-    private void removeProduct(Long id) {
+    private void remove(Long id) {
         try {
             productRepository.deleteById(id);
         } catch (Exception e) {
-            throw new AppException(ErrorCode.PRODUCT__NOT_REMOVED);
+            throw new DatabaseException("Failed to delete the product.");
         }
     }
 
-    private void referUp(Product product) {
-        product.setSupplier(
-                this.supplierService.getSupplier(
-                        product.getSupplier().getId()));
-
-        product.setCategory(
-                this.categoryService.getCategory(
-                        product.getCategory().getId()));
+    private void linkParents(Product product) {
+        var sid = product.getSupplier().getId();
+        product.setSupplier(this.supplierService.get(sid));
+        var cid = product.getCategory().getId();
+        product.setCategory(this.categoryService.get(cid));
     }
 
-    private void buildBy(Product product) {
-        this.priceService.create(product);
+    private void linkChildren(Product product) {
+        this.priceService.linkCreate(product);
+        this.stockService.linkCreate(product);
+    }
+
+    private void linkChildren(ProductBody writeProduct, Product product) {
+        this.priceService.linkUpdate(writeProduct, product);
+        this.stockService.linkUpdate(writeProduct, product);
+    }
+
+    private boolean hasParents(Product product) {
+        return !product.getCartLines().isEmpty()
+                || !product.getOrderLines().isEmpty()
+                || !product.getSaleUnits().isEmpty()
+                || !product.getVoucherUnits().isEmpty();
+    }
+
+    private void genStatus(Product product, Stock stock) {
+        Status status = null;
+
+        boolean isInit = AppCheck.isBlank(product.getStatus());
+        if (isInit) status = Status.LIVE;
+
+        boolean isOutstock = stock.getAvailable() <= 0;
+        if (isOutstock) status = Status.OUTSTOCK;
+
+        boolean isRestock = stock.getAvailable() > 0 && product.isStatus(Status.OUTSTOCK);
+        if (isRestock) status = Status.LIVE;
+
+        boolean isSet = status != null;
+        if (isSet) product.setStatus(status.name());
     }
 
 
     // READ //
 
-    // LIST
-    // description: to integrate pagination
     public PageData<ProductData> list(PageQuery query) {
         Page<Product> page = this.productRepository.findAll(
                 this.mapper.toPageable(query));
 
         return this.mapper.toPageData(
                 page,
-                (Product product) -> this.mapper.toProductData(product));
+                (Product p) -> this.mapper.toProductData(p));
     }
 
-    // LIST
-    // description: to integrate pagination, searching
-    public AppPage<ProductToSell> list(ProductQuery query, Pageable pageable) {
-        var queryable = ProductSpecification.build(query);
+    public PageData<ProductFull> list(ProductQuery query) {
+        var page = this.productRepository.findAll(
+                this.mapper.toQueryable(query),
+                this.mapper.toPageable(query));
 
-        var page = this.productRepository.findAll(queryable, pageable);
-
-        var products = page.getContent().stream()
-                .map(this.mapper::toProductToSell).toList();
-
-        return AppPage.from(page, products);
+        return this.mapper.toPageData(
+                page,
+                (Product p) -> this.mapper.toProductFull(p));
     }
 
     // WRITE //
 
-    public ProductData createProduct(ProductToWrite body) {
-        // Map to product
+    public ProductData create(ProductBody body) {
+        // Prepare product
         Product product = mapper.toProduct(body);
-
-        // Refer up by product
-        this.referUp(product);
-
-        // todo1: Cascade inventory
-
-        // Cascade allPrice
-        this.priceService.create(product);
+        this.linkParents(product);
+        this.linkChildren(product);
+        this.genStatus(product, product.getStock());
 
         // Create product
-        product.create();
         Product saved = this.save(product);
-        return mapper.toProductInList(saved);
+        return mapper.toProductData(saved);
     }
 
-    public ProductData updateProduct(long id, ProductToWrite body) {
-        var product = this.getProduct(id);
-        var price = product.getPrice();
-        var priceBody = this.mapper.getPriceBody(body);
-
-        // Map to product
+    public ProductData update(long id, ProductBody body) {
+        // Prepare product
+        var product = this.get(id);
         this.mapper.toProduct(body, product);
-
-        // Refer up by product
-        this.referUp(product);
-
-        // Re-calculate retail allPrice
-        this.priceService.recalculate(price, priceBody);
-
-        // todo1: Update inventory
+        this.linkParents(product);
+        this.linkChildren(body, product);
+        this.genStatus(product, product.getStock());
 
         // Update product
-        product.update();
         Product saved = this.save(product);
-        return this.mapper.toProductInList(saved);
+        return this.mapper.toProductData(saved);
     }
 
-    public void deleteProduct(long id) {
-        Product product = this.getProduct(id);
+    public void delete(long id) {
+        Product product = this.get(id);
+        if (!this.hasParents(product))
+            throw new DatabaseException("Failed to delete the product.");
 
-        if (product.isInBusiness())
-            throw new AppException(ErrorCode.PRODUCT__IN_BUSINESS);
-
-        this.removeProduct(product.getId());
+        this.remove(id);
     }
 }

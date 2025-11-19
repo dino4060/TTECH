@@ -61,10 +61,10 @@ public class ProductSpecification {
 
     public static Specification<Product> build(ProductQuery query) {
         return Specification
-                .where(likeFullText(query.keywords()))
-                .and(hasSupplierId(query.supplier()))
-                .and(hasCategoryId(query.category()))
-                .and(inPriceRange(query.prices()));
+                .where(likeFullText(query.getKeywords()))
+                .and(hasSupplierId(query.getSupplier()))
+                .and(hasCategoryId(query.getCategory()))
+                .and(inPriceRange(query.getPrices()));
     }
 }
 

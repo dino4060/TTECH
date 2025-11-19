@@ -1,9 +1,9 @@
 package com.dino.back_end_for_TTECH.ordering.application.model;
 
-import com.dino.back_end_for_TTECH.product.application.model.ProductLeanRes;
+import com.dino.back_end_for_TTECH.product.application.model.ProductLean;
 
 public record OrderLineData(
-        ProductLeanRes product,
+        ProductLean product,
         int quantity,
         int mainPrice,
         int sidePrice

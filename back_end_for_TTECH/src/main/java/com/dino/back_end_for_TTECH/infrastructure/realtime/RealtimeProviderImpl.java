@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.infrastructure.realtime;
 
-import com.dino.back_end_for_TTECH.pricing.application.provider.IRealtimePriceProvider;
-import com.dino.back_end_for_TTECH.pricing.domain.Price;
+import com.dino.back_end_for_TTECH.product.application.provider.IRealtimePriceProvider;
+import com.dino.back_end_for_TTECH.product.domain.Price;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

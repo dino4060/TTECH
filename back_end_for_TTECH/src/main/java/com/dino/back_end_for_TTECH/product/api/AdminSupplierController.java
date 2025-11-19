@@ -1,8 +1,8 @@
 package com.dino.back_end_for_TTECH.product.api;
 
-import com.dino.back_end_for_TTECH.product.application.model.SupplierInList;
-import com.dino.back_end_for_TTECH.product.application.model.SupplierToWrite;
-import com.dino.back_end_for_TTECH.product.application.service.ISupplierService;
+import com.dino.back_end_for_TTECH.product.application.SupplierService;
+import com.dino.back_end_for_TTECH.product.application.model.SupplierBody;
+import com.dino.back_end_for_TTECH.product.application.model.SupplierData;
 import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,47 +12,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/admin/suppliers")
+@PreAuthorize(AuthConst.ADMIN)
+@AllArgsConstructor
 public class AdminSupplierController {
 
-    // PrivateAdminSupplierController //
-    @RestController
-    @RequestMapping("/api/admin/suppliers")
-    @PreAuthorize(AuthConst.ADMIN)
-    @AllArgsConstructor
-    public static class PrivateAdminSupplierController {
+    private final SupplierService supplierService;
 
-        private final ISupplierService supplierService;
+    // READ //
 
-        // READ //
-
-        @GetMapping("/list")
-        public ResponseEntity<List<SupplierInList>> listSuppliers() {
-            return ResponseEntity.ok().body(this.supplierService.listSuppliers());
-        }
-
-        // WRITE //
-
-        @PostMapping
-        public ResponseEntity<SupplierInList> createSupplier(
-                @RequestBody SupplierToWrite body
-        ) {
-            return ResponseEntity.ok().body(this.supplierService.createSupplier(body));
-        }
-
-        @PutMapping("/{id}")
-        public ResponseEntity<SupplierInList> updateSupplier(
-                @PathVariable long id,
-                @RequestBody SupplierToWrite body
-        ) {
-            return ResponseEntity.ok().body(this.supplierService.updateSupplier(id, body));
-        }
-
-        @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteSupplier(
-                @PathVariable long id
-        ) {
-            this.supplierService.deleteSupplier(id);
-            return ResponseEntity.ok().build();
-        }
+    @GetMapping("/list")
+    public ResponseEntity<List<SupplierData>> listSuppliers() {
+        return ResponseEntity.ok().body(this.supplierService.listSuppliers());
     }
+
+    // WRITE //
+
+    @PostMapping
+    public ResponseEntity<SupplierData> createSupplier(
+            @RequestBody SupplierBody body
+    ) {
+        return ResponseEntity.ok().body(this.supplierService.createSupplier(body));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SupplierData> updateSupplier(
+            @PathVariable long id,
+            @RequestBody SupplierBody body
+    ) {
+        return ResponseEntity.ok().body(this.supplierService.updateSupplier(id, body));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSupplier(
+            @PathVariable long id
+    ) {
+        this.supplierService.deleteSupplier(id);
+        return ResponseEntity.ok().build();
+    }
+
 }

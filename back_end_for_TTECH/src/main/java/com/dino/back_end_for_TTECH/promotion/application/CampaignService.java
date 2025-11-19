@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.promotion.application;
 
 import com.dino.back_end_for_TTECH.infrastructure.aop.exception.BadRequestException;
-import com.dino.back_end_for_TTECH.pricing.domain.Price;
+import com.dino.back_end_for_TTECH.product.domain.Price;
 import com.dino.back_end_for_TTECH.product.application.ProductService;
 import com.dino.back_end_for_TTECH.promotion.application.mapper.CampaignMapper;
 import com.dino.back_end_for_TTECH.promotion.application.model.*;
@@ -13,6 +13,7 @@ import com.dino.back_end_for_TTECH.promotion.domain.model.Status;
 import com.dino.back_end_for_TTECH.promotion.domain.repository.CampaignRepository;
 import com.dino.back_end_for_TTECH.promotion.domain.repository.SaleRepository;
 import com.dino.back_end_for_TTECH.promotion.domain.repository.VoucherRepository;
+import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -48,7 +49,7 @@ public class CampaignService {
         body.getUnits().forEach(line -> {
             line.setSale(body);
             line.setLive(false);
-            line.setProduct(this.productService.getProduct(line.getProduct().getId()));
+            line.setProduct(this.productService.get(line.getProduct().getId()));
         });
 
         this.manageStatus(body);
@@ -63,7 +64,7 @@ public class CampaignService {
         body.getUnits().forEach(line -> {
             line.setSale(body);
             line.setLive(true);
-            line.setProduct(this.productService.getProduct(line.getProduct().getId()));
+            line.setProduct(this.productService.get(line.getProduct().getId()));
         });
 
         var model = this.saleRepository.save(body);

@@ -1,13 +1,12 @@
 package com.dino.back_end_for_TTECH.product.domain;
 
-import com.dino.back_end_for_TTECH.inventory.domain.Stock;
-import com.dino.back_end_for_TTECH.pricing.domain.Price;
-import com.dino.back_end_for_TTECH.product.domain.model.ProductSpecification;
-import com.dino.back_end_for_TTECH.product.domain.model.ProductStatus;
-import com.dino.back_end_for_TTECH.product.domain.model.ProductTierVariation;
+import com.dino.back_end_for_TTECH.ordering.domain.CartLine;
+import com.dino.back_end_for_TTECH.ordering.domain.OrderLine;
+import com.dino.back_end_for_TTECH.product.domain.model.Status;
 import com.dino.back_end_for_TTECH.promotion.domain.SaleUnit;
+import com.dino.back_end_for_TTECH.promotion.domain.VoucherUnit;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
+import com.dino.back_end_for_TTECH.shared.domain.model.BaseStatus;
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
@@ -16,7 +15,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Table(name = "products")
@@ -29,7 +27,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Product extends BaseEntity {
+public class Product extends BaseEntity implements BaseStatus<Status> {
 
     @Id
     @SequenceGenerator(name = "products_seq", allocationSize = 1)
@@ -39,34 +37,21 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     String name;
 
-    String serialNumber;
-
-    int retailPrice;
-
-    int guaranteeMonths;
-
     @Column(nullable = false)
     String thumb;
 
-    String video;
+    String version;
+
+    String color;
+
+    String status;
+
+    int guaranteeMonths;
 
     List<String> photos;
 
-    String sizeGuidePhoto;
-
     @Column(columnDefinition = "text")
     String description;
-
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    List<ProductSpecification> specifications;
-
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    List<ProductTierVariation> tierVariations;
-
-    @Enumerated(EnumType.STRING)
-    ProductStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -82,32 +67,31 @@ public class Product extends BaseEntity {
     @OneToOne(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     Stock stock;
 
-    // SETTERS //
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<CartLine> cartLines;
 
-    public void setStatus() {
-        this.status = ProductStatus.LIVE; // todo1: or OUT_OF_STOCK
-    }
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<OrderLine> orderLines;
 
-    // INSTANCE METHODS //
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<SaleUnit> saleUnits;
 
-    public void create() {
-        this.setStatus();
-    }
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<VoucherUnit> voucherUnits;
 
-    public void update() {
-        this.setStatus();
-    }
 
-    public Optional<SaleUnit> getActiveSales() {
-        /*
-         * get sales, check in period, in limit, is the highest priority (// TEMP)
-         */
-        return Optional.empty();
-    }
+//     String serialNumber;
+//
+//     int retailPrice;
+//
+//     String video;
+//
+//    @Type(JsonType.class)
+//    @Column(columnDefinition = "jsonb")
+//    List<ProductSpecification> specifications;
+//
+//    @Type(JsonType.class)
+//    @Column(columnDefinition = "jsonb")
+//    List<ProductVariation> variations;
 
-    public boolean isInBusiness() {
-        // logic: get products > each product > check non in cart item || in non order item > flag = false
-        // todo1: isInBusiness
-        return false;
-    }
 }

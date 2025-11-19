@@ -1,8 +1,8 @@
 package com.dino.back_end_for_TTECH.product.api;
 
-import com.dino.back_end_for_TTECH.product.application.model.CategoryInList;
-import com.dino.back_end_for_TTECH.product.application.model.CategoryToWrite;
-import com.dino.back_end_for_TTECH.product.application.service.ICategoryService;
+import com.dino.back_end_for_TTECH.product.application.CategoryService;
+import com.dino.back_end_for_TTECH.product.application.model.CategoryBody;
+import com.dino.back_end_for_TTECH.product.application.model.CategoryData;
 import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,47 +12,42 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/admin/categories")
+@PreAuthorize(AuthConst.ADMIN)
+@AllArgsConstructor
 public class AdminCategoryController {
 
-    // PrivateAdminCategoryController //
-    @RestController
-    @RequestMapping("/api/admin/categories")
-    @PreAuthorize(AuthConst.ADMIN)
-    @AllArgsConstructor
-    public static class PrivateAdminCategoryController {
+    private final CategoryService categoryService;
 
-        private final ICategoryService categoryService;
+    // READ //
 
-        // READ //
+    @GetMapping("/list")
+    public ResponseEntity<List<CategoryData>> listCategories() {
+        return ResponseEntity.ok().body(this.categoryService.listCategories());
+    }
 
-        @GetMapping("/list")
-        public ResponseEntity<List<CategoryInList>> listCategories() {
-            return ResponseEntity.ok().body(this.categoryService.listCategories());
-        }
+    // WRITE //
 
-        // WRITE //
+    @PostMapping
+    public ResponseEntity<CategoryData> createCategory(
+            @RequestBody CategoryBody body
+    ) {
+        return ResponseEntity.ok().body(this.categoryService.createCategory(body));
+    }
 
-        @PostMapping
-        public ResponseEntity<CategoryInList> createCategory(
-                @RequestBody CategoryToWrite body
-        ) {
-            return ResponseEntity.ok().body(this.categoryService.createCategory(body));
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryData> updateCategory(
+            @PathVariable long id,
+            @RequestBody CategoryBody body
+    ) {
+        return ResponseEntity.ok().body(this.categoryService.updateCategory(id, body));
+    }
 
-        @PutMapping("/{id}")
-        public ResponseEntity<CategoryInList> updateCategory(
-                @PathVariable long id,
-                @RequestBody CategoryToWrite body
-        ) {
-            return ResponseEntity.ok().body(this.categoryService.updateCategory(id, body));
-        }
-
-        @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteCategory(
-                @PathVariable long id
-        ) {
-            this.categoryService.deleteCategory(id);
-            return ResponseEntity.ok().build();
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(
+            @PathVariable long id
+    ) {
+        this.categoryService.deleteCategory(id);
+        return ResponseEntity.ok().build();
     }
 }

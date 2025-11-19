@@ -1,9 +1,9 @@
 package com.dino.back_end_for_TTECH.product.api;
 
 import com.dino.back_end_for_TTECH.product.application.ProductService;
+import com.dino.back_end_for_TTECH.product.application.model.ProductBody;
 import com.dino.back_end_for_TTECH.product.application.model.ProductData;
-import com.dino.back_end_for_TTECH.product.application.model.ProductToWrite;
-import com.dino.back_end_for_TTECH.promotion.application.model.PageQuery;
+import com.dino.back_end_for_TTECH.shared.application.model.PageQuery;
 import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -27,23 +27,25 @@ public class AdminProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductData> create(@RequestBody ProductToWrite body) {
-        ProductData newProduct = this.productService.createProduct(body);
+    public ResponseEntity<ProductData> create(
+            @RequestBody ProductBody body
+    ) {
+        ProductData newProduct = this.productService.create(body);
         return ResponseEntity.ok(newProduct);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductData> update(
             @PathVariable long id,
-            @RequestBody ProductToWrite body
+            @RequestBody ProductBody body
     ) {
-        ProductData updatedProduct = this.productService.updateProduct(id, body);
+        ProductData updatedProduct = this.productService.update(id, body);
         return ResponseEntity.ok(updatedProduct);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        this.productService.deleteProduct(id);
+        this.productService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -3,7 +3,7 @@ package com.dino.back_end_for_TTECH.profile.domain;
 import com.dino.back_end_for_TTECH.identity.domain.model.Role;
 import com.dino.back_end_for_TTECH.identity.domain.model.UserStatus;
 import com.dino.back_end_for_TTECH.ordering.domain.Order;
-import com.dino.back_end_for_TTECH.shared.application.utils.AppUtils;
+import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -125,7 +125,7 @@ public class User extends BaseEntity {
     }
 
     public void addRole(Role role) {
-        boolean isNull = AppUtils.isNull(this.getRoles());
+        boolean isNull = AppCheck.isNull(this.getRoles());
         if (isNull) this.setRoles(new HashSet<>());
         this.getRoles().add(role);
     }

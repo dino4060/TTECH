@@ -1,13 +1,13 @@
 package com.dino.back_end_for_TTECH.ordering.application.model;
 
-import com.dino.back_end_for_TTECH.pricing.application.model.PriceData;
-import com.dino.back_end_for_TTECH.product.application.model.ProductLeanRes;
+import com.dino.back_end_for_TTECH.product.application.model.PriceData;
+import com.dino.back_end_for_TTECH.product.application.model.ProductLean;
 
 public record CartLineData(
         Long id,
         int quantity,
         String photo,
-        ProductLeanRes product,
+        ProductLean product,
         PriceData price
 ) {
 }

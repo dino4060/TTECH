@@ -2,7 +2,7 @@ package com.dino.back_end_for_TTECH.product.application.model;
 
 import java.util.List;
 
-public record ProductData(
+public record ProductFull(
         long id,
         String name,
         String thumb,
@@ -15,6 +15,8 @@ public record ProductData(
         int guaranteeMonths,
 
         PriceData price,
-        StockData stock
+        StockData stock,
+        CategoryData category,
+        SupplierData supplier
 ) {
 }
