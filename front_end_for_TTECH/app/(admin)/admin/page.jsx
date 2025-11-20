@@ -37,7 +37,7 @@ const Page = () => {
 				{route === "order" && <AdminOrderManagement />}
 				{route === "customer" && <AdminCustomerManagement />}
 				{route === "message" && <CustomerMessage />}
-				{route === "campaign" && <AdminCampaignManagement />}
+				{route === "promotion" && <AdminCampaignManagement />}
 				{route === "discount" && <AdminDiscountManagement />}
 				{route === "supplier" && <AdminSupplierManagement />}
 				{route === "category" && <AdminCategoryManagement />}

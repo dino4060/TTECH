@@ -45,7 +45,7 @@ const CampaignForm = ({
 				totalLimit: -1,
 				usedCount: 0,
 				levelType: "PRODUCT",
-        product: product,
+				product: product,
 			}))
 		)
 	}, [chosenProducts])
@@ -127,7 +127,6 @@ const CampaignForm = ({
 					whileHover={{ scale: 1.1 }}
 					onClick={() => {
 						setMode("add")
-						// clearinput
 						setCurrentDiscountClicked({
 							discountId: "",
 							discountCode: "",
@@ -136,14 +135,18 @@ const CampaignForm = ({
 							discountDateTo: "",
 						})
 					}}
-					className='px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold border-blue-500 border-b-blue-500 bg-white flex-1 shrink-0 text-center'
+					className='
+            px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold
+            border-blue-500 border-b-blue-500 bg-white flex-1 shrink-0 text-center'
 				>
 					THÊM
 				</motion.div>
 				<motion.div
 					onClick={handleDelete}
 					whileHover={{ scale: 1.1 }}
-					className='px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold border-red-500 border-b-red-500 bg-white flex-1 shrink-0 text-center'
+					className='
+            px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold
+            border-red-500 border-b-red-500 bg-white flex-1 shrink-0 text-center'
 				>
 					XÓA
 				</motion.div>
@@ -193,7 +196,9 @@ const CampaignForm = ({
 
 				<div className='flex justify-between mb-4 mt-8'>
 					<h3 className='text-[2.2rem] font-semibold '>
-						Danh sách sản phẩm
+						{saleUnits.length !== 0
+							? "Danh sách sản phẩm"
+							: "Chưa có sản phẩm"}
 					</h3>
 					<div className='flex gap-4'>
 						<button
@@ -219,25 +224,24 @@ const CampaignForm = ({
 
 				{saleUnits.length !== 0 && (
 					<div className='overflow-x-auto'>
-						<table className='w-full border-spacing-1 border-separate table-auto text-xl bg-white relative'>
+						<table className='w-full border-spacing-1 border-separate table-fixed text-xl bg-white relative'>
 							<thead class=' text-black uppercase sticky top-2'>
 								<tr className=''>
-									<th className='w-[40%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+									<th className='w-[40%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white shrink-0 text-center'>
 										Tên sản phẩm
 									</th>
-									<th className='w-[25%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+									<th className='w-[25%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white shrink-0 text-center'>
 										Giảm giá
 									</th>
-									<th className='w-[25%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+									<th className='w-[25%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white shrink-0 text-center'>
 										Hạn mức
 									</th>
-
 									{!manage ? (
-										<th className='w-[10%] py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+										<th className='w-[10%] py-2 border border-b-4 rounded-md border-blue-500 bg-white shrink-0 text-center'>
 											Trạng thái
 										</th>
 									) : (
-										<th className='w-[10%] py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+										<th className='w-[10%] py-2 border border-b-4 rounded-md border-blue-500 bg-white shrink-0 text-center'>
 											Quản lý
 										</th>
 									)}
@@ -266,11 +270,13 @@ const CampaignForm = ({
 														className='w-full h-full object-cover rounded-xl'
 													/>
 												</div>
-												<div>
+												<div className='flex-1 min-w-0'>
 													<div className='text-[1.4rem] whitespace-nowrap overflow-hidden text-ellipsis'>
 														{x.product.name}
 													</div>
-													<div className='text-left'>{`ID: ${x.product.id}`}</div>
+													<div className='text-left'>
+														ID: {x.product.id}
+													</div>
 												</div>
 											</div>
 										</th>

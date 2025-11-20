@@ -1,13 +1,8 @@
 "use client"
-import { useEffect, useState } from "react"
-import SupplierRenderList from "./supplierManagement/SupplierRenderList"
-import { handleSupplier } from "@/app/api/handleSupplier"
-import SupplierForm from "./supplierManagement/SupplierForm"
 import { handleDiscount } from "@/app/api/handleDiscount."
-import DiscountRenderList from "./discountManagement/DiscountRenderList"
-import DiscountForm from "./discountManagement/DiscountForm"
-import CampaignList from "./campaignManagement/CampaignList"
+import { useEffect, useState } from "react"
 import CampaignForm from "./campaignManagement/CampaignForm"
+import CampaignList from "./campaignManagement/CampaignList"
 
 const AdminCampaignManagement = () => {
 	const [discountList, setDiscountList] = useState([])
