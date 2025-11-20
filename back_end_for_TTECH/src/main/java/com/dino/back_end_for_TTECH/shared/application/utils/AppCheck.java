@@ -19,8 +19,8 @@ public class AppCheck {
         return Objects.isNull(object);
     }
 
-    public static boolean isBlank(String string) {
-        return !StringUtils.hasText(string);
+    public static boolean isBlank(String text) {
+        return !StringUtils.hasText(text);
     }
 
     public static boolean isZero(int number) {

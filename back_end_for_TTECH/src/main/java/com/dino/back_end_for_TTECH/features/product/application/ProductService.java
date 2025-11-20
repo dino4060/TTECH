@@ -68,18 +68,24 @@ public class ProductService {
     private void linkParents(Product product) {
         var sid = product.getSeries().getId();
         product.setSeries(this.supplierService.get(sid));
+
         var cid = product.getCategory().getId();
         product.setCategory(this.categoryService.get(cid));
     }
 
-    private void linkChildren(Product product) {
-        this.priceService.linkCreate(product);
-        this.stockService.linkCreate(product);
+    private void linkCreateChildren(ProductBody body, Product product) {
+        var price = product.getPrice();
+        price.setProduct(product);
+        this.priceService.create(body.price(), price);
+
+        var stock = product.getStock();
+        stock.setProduct(product);
+        this.stockService.create(body.stock(), stock);
     }
 
-    private void linkChildren(ProductBody body, Product product) {
-        this.priceService.linkUpdate(body, product);
-        this.stockService.linkUpdate(body, product);
+    private void linkUpdateChildren(ProductBody body, Product product) {
+        this.priceService.recalculate(body.price(), product.getPrice());
+        this.stockService.restock(body.stock(), product.getStock());
     }
 
     private boolean hasParents(Product product) {
@@ -98,7 +104,8 @@ public class ProductService {
         boolean isOutstock = stock.getAvailable() <= 0;
         if (isOutstock) status = Status.OUTSTOCK;
 
-        boolean isRestock = stock.getAvailable() > 0 && product.isStatus(Status.OUTSTOCK);
+        boolean isRestock = stock.getAvailable() > 0 && (
+                product.isStatus(null) || product.isStatus(Status.OUTSTOCK));
         if (isRestock) status = Status.LIVE;
 
         boolean isSet = status != null;
@@ -123,11 +130,11 @@ public class ProductService {
         // Prepare product
         Product product = mapper.toProduct(body);
         this.linkParents(product);
-        this.linkChildren(product);
+        this.linkCreateChildren(body, product);
         this.genStatus(product, product.getStock());
 
         // Create product
-        Product saved = this.save(product);
+        Product saved = productRepository.save(product);//this.save(product);
         return mapper.toProductData(saved);
     }
 
@@ -136,7 +143,7 @@ public class ProductService {
         var product = this.get(id);
         this.mapper.toProduct(body, product);
         this.linkParents(product);
-        this.linkChildren(body, product);
+        this.linkUpdateChildren(body, product);
         this.genStatus(product, product.getStock());
 
         // Update product

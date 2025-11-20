@@ -24,7 +24,8 @@ import org.hibernate.annotations.SQLRestriction;
 public class Price extends BaseEntity {
 
     @Id
-    @SequenceGenerator(name = "prices_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prices_seq")
+    @SequenceGenerator(name = "prices_seq", sequenceName = "prices_seq", allocationSize = 1)
     @Column(name = "price_id")
     Long id;
 
@@ -43,18 +44,4 @@ public class Price extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false, updatable = false)
     Product product;
-
-    // INSTANCE METHODS //
-
-    public void init() {
-        this.mainPrice = this.getRetailPrice();
-        this.sidePrice = -1;
-        this.dealPercent = 0;
-    }
-
-    public void sale(SaleUnit productSale) {
-        this.setSidePrice(this.getMainPrice());
-        this.setMainPrice(productSale.getDealPrice());
-        this.setDealPercent(productSale.getDealPercent());
-    }
 }

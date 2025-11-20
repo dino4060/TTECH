@@ -33,7 +33,8 @@ import java.util.List;
 public class Product extends BaseEntity implements BaseStatus<Status> {
 
     @Id
-    @SequenceGenerator(name = "products_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_seq")
+    @SequenceGenerator(name = "products_seq", sequenceName = "products_seq", allocationSize = 1)
     @Column(name = "product_id")
     Long id;
 

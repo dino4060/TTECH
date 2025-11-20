@@ -25,6 +25,25 @@ public class StockService {
 
     StockLockProvider lockProvider;
 
+    public void create(StockBody body, Stock model) {
+        model.setTotal(body.restock());
+        model.setAvailable(body.restock());
+        model.setSold(0);
+
+//        this.stockRepository.save(model);
+    }
+
+    @Transactional
+    public void restock(StockBody body, Stock model) {
+        var restock = body.restock();
+        if (restock == 0) return;
+
+        model.setTotal(model.getTotal() + restock);
+        model.setAvailable(model.getAvailable() + restock);
+
+        this.stockRepository.save(model);
+    }
+
     @Transactional(readOnly = true)
     public Stock checkStock(Long productId, int quantity) {
         Stock stock = stockRepository.findByProductId(productId)
@@ -53,25 +72,5 @@ public class StockService {
     @Transactional
     public void reserve(Long productId, int quantity) {
         this.reserveStockWithLock(productId, quantity);
-    }
-
-    @Transactional
-    public void restock(StockBody body, Stock stock) {
-        var restock = body.restock();
-        if (restock == 0) return;
-
-        stock.setTotal(stock.getTotal() + restock);
-        stock.setAvailable(stock.getAvailable() + restock);
-
-        this.stockRepository.save(stock);
-    }
-
-    public void linkCreate(Product product) {
-        product.getStock().setProduct(product);
-        product.getStock().init();
-    }
-
-    public void linkUpdate(ProductBody source, Product destination) {
-        this.restock(source.stock(), destination.getStock());
     }
 }

@@ -79,15 +79,11 @@ const AdminProductManagement = () => {
 		<>
 			<div className='container mx-auto mt-14 p-6 bg-white rounded-3xl'>
 				<ProductAction
-					setList={setList}
 					filter={filter}
+					category={category}
+					series={series}
 					setFilter={setFilter}
 					setTrigger={setTrigger}
-					category={category}
-					setCategory={setCategory}
-					series={series}
-					setSeries={setSeries}
-					currentProductChoose={currentProductChoose}
 					setCurrentProductChoose={setCurrentProductChoose}
 				/>
 				<div className='flex gap-3 mt-4 flex-1'>

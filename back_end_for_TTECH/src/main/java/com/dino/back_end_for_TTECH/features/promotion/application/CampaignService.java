@@ -136,7 +136,7 @@ public class CampaignService {
         model.setStatus(Status.ONGOING.name());
         model.getUnits().forEach(line -> {
             var price = line.getProduct().getPrice();
-            price.sale(line);
+            // price.sale(line);
             this.asyncProductPrice(price);
         });
         this.saleRepository.save(model);

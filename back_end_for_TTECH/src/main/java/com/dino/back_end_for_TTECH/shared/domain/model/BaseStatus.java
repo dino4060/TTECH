@@ -6,7 +6,10 @@ public interface BaseStatus<S extends Enum<S>> {
     void setStatus(String status);
 
     default boolean isStatus(S status) {
-        return this.getStatus().equals(status.name());
+        if (status == null)
+            return this.getStatus() == null;
+        else
+            return this.getStatus().equals(status.name());
     }
 
     default void writeStatus(S status) {
