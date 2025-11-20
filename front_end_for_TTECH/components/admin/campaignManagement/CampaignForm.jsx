@@ -39,13 +39,13 @@ const CampaignForm = ({
 
 		setSaleUnits(
 			chosenProducts.map((product) => ({
-				product: product,
 				isLive: true,
 				dealPrice: 0,
 				dealPercent: 0,
 				totalLimit: -1,
 				usedCount: 0,
 				levelType: "PRODUCT",
+        product: product,
 			}))
 		)
 	}, [chosenProducts])
@@ -217,7 +217,7 @@ const CampaignForm = ({
 					</div>
 				</div>
 
-				{chosenProducts.length !== 0 && (
+				{saleUnits.length !== 0 && (
 					<div className='overflow-x-auto'>
 						<table className='w-full border-spacing-1 border-separate table-auto text-xl bg-white relative'>
 							<thead class=' text-black uppercase sticky top-2'>
@@ -244,7 +244,7 @@ const CampaignForm = ({
 								</tr>
 							</thead>
 							<tbody>
-								{chosenProducts.map((x) => (
+								{saleUnits.map((x) => (
 									<motion.tr
 										initial={{
 											backgroundColor: "#f8fafc",
@@ -262,22 +262,22 @@ const CampaignForm = ({
 											<div className='flex gap-2 '>
 												<div className='w-14 h-14 shrink-0 rounded-xl bg-sky-300'>
 													<img
-														src={x.thumb}
+														src={x.product.thumb}
 														className='w-full h-full object-cover rounded-xl'
 													/>
 												</div>
 												<div>
 													<div className='text-[1.4rem] whitespace-nowrap overflow-hidden text-ellipsis'>
-														{x.name}
+														{x.product.name}
 													</div>
-													<div className='text-left'>{`ID: ${x.id}`}</div>
+													<div className='text-left'>{`ID: ${x.product.id}`}</div>
 												</div>
 											</div>
 										</th>
 
-										<PriceCell x={x} />
+										<PriceCell saleUnit={x} />
 
-										<LimitCell x={x} />
+										<LimitCell saleUnit={x} />
 
 										{!manage ? (
 											<th className='px-4 py-2 font-normal shrink-0 text-center'>

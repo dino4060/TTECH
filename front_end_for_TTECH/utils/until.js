@@ -128,9 +128,13 @@ export const convertToVND = (money) => {
 	})
 }
 
-export const convertTokVND = (money, hasUnit = true) => {
+export const convertTokVND = (number, hasUnit = true) => {
 	const unit = hasUnit ? " VND" : ""
-	return `${money.toLocaleString("vi-VN")} k${unit}`
+	return `${number.toLocaleString("vi-VN")} k${unit}`
+}
+
+export const convertPercent = (number) => {
+	return `${number} %`
 }
 
 export function getCurrentDate(separator = "") {

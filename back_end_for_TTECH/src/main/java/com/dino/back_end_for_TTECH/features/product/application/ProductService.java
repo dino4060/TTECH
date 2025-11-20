@@ -9,7 +9,7 @@ import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.features.product.domain.Stock;
 import com.dino.back_end_for_TTECH.features.product.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
-import com.dino.back_end_for_TTECH.shared.application.exception.DatabaseError;
+import com.dino.back_end_for_TTECH.shared.application.exception.BadRequestException;
 import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundError;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
@@ -47,22 +47,6 @@ public class ProductService {
     public Product get(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundError("Product"));
-    }
-
-    private Product save(Product product) {
-        try {
-            return productRepository.save(product);
-        } catch (Exception e) {
-            throw new DatabaseError("Product");
-        }
-    }
-
-    private void remove(Long id) {
-        try {
-            productRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new DatabaseError("Product");
-        }
     }
 
     private void linkParents(Product product) {
@@ -134,7 +118,7 @@ public class ProductService {
         this.genStatus(product, product.getStock());
 
         // Create product
-        Product saved = productRepository.save(product);//this.save(product);
+        Product saved = productRepository.save(product);
         return mapper.toProductData(saved);
     }
 
@@ -147,15 +131,15 @@ public class ProductService {
         this.genStatus(product, product.getStock());
 
         // Update product
-        Product saved = this.save(product);
+        Product saved = productRepository.save(product);
         return this.mapper.toProductData(saved);
     }
 
     public void delete(long id) {
         Product product = this.get(id);
         if (!this.hasParents(product))
-            throw new DatabaseError("Product");
+            throw new BadRequestException("The product is on sale");
 
-        this.remove(id);
+        this.productRepository.delete(product);
     }
 }

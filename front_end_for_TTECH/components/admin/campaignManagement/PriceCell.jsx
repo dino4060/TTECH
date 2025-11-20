@@ -2,14 +2,14 @@ import { convertTokVND } from "@/utils/until"
 import { el } from "@faker-js/faker"
 import React, { useState, useEffect } from "react"
 
-const PriceCell = ({ x }) => {
-	const mainPrice = x?.price?.skuPrices[0]?.mainPrice
+const PriceCell = ({ saleUnit: x }) => {
+	const mainPrice = x.product.price.mainPrice
 
 	const [dealPrice, setDealPrice] = useState(
-		x?.price?.skuPrices[0]?.sidePrice || -1
+		x.product.price.sidePrice || -1
 	)
 	const [discountPercent, setDiscountPercent] = useState(
-		x?.price?.skuPrices[0]?.dealPercent || 0
+		x.product.price.dealPercent || 0
 	)
 	const [changeType, setChangeType] = useState("off")
 
@@ -17,11 +17,7 @@ const PriceCell = ({ x }) => {
 	useEffect(() => {
 		if (changeType !== "dealPrice") return
 
-		if (
-			dealPrice &&
-			dealPrice > 0 &&
-			dealPrice < mainPrice
-		) {
+		if (dealPrice && dealPrice > 0 && dealPrice < mainPrice) {
 			setDiscountPercent(
 				parseInt((1 - dealPrice / mainPrice) * 100)
 			)

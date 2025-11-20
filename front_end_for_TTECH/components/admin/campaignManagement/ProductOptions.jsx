@@ -4,8 +4,10 @@ import { AnimatePresence } from "framer-motion"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { CiFilter, CiPercent } from "react-icons/ci"
-import { convertTokVND } from "@/utils/until"
-import { useRouter, useSearchParams } from "next/navigation"
+import {
+	convertPercent,
+	convertTokVND,
+} from "@/utils/until"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { adminProductApi } from "@/lib/api/product.api"
 
@@ -16,15 +18,17 @@ const ProductOptions = ({
 	setChosenProducts,
 	chosenProductIds,
 }) => {
-	const [productOptions, setProductOptions] = useState([])
+	const [products, setProducts] = useState([])
 	const [stickedProducts, setStickedProducts] = useState(
 		new Set()
 	)
 	const [loading, setLoading] = useState(false)
 
-	const getProductOptions = async () => {
-		const { data } = await clientFetch(adminProductApi.list())
-		setProductOptions(data.items)
+	const getProducts = async () => {
+		const { success, data } = await clientFetch(
+			adminProductApi.list()
+		)
+		success && setProducts(data.items)
 	}
 
 	const onStick = (product) => {
@@ -48,7 +52,7 @@ const ProductOptions = ({
 		e.key === "Escape" && setShow(false)
 
 	useEffect(() => {
-		getProductOptions()
+		getProducts()
 
 		window.addEventListener("keydown", onEscape)
 
@@ -103,13 +107,13 @@ const ProductOptions = ({
 												Tên sản phẩm
 											</th>
 											<th className='w-[15%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
-												Giá bán chính
-											</th>
-											<th className='w-[15%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
-												Giá bán phụ
+												Giá bán lẻ
 											</th>
 											<th className='w-[15%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
 												% Khuyến mãi
+											</th>
+											<th className='w-[15%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
+												Giá chính thức
 											</th>
 											<th className='w-[15%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
 												Tồn kho
@@ -117,7 +121,7 @@ const ProductOptions = ({
 										</tr>
 									</thead>
 									<tbody>
-										{productOptions.map(
+										{products.map(
 											(x) =>
 												!chosenProductIds.has(x.id) && (
 													<motion.tr
@@ -163,26 +167,16 @@ const ProductOptions = ({
 															</div>
 														</th>
 														<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
-															{convertTokVND(
-																x.price.skuPrices[0].mainPrice
-															)}
+															{convertTokVND(x.price.retailPrice)}
 														</th>
 														<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
-															{x?.price?.skuPrices[0]?.sidePrice
-																? convertTokVND(
-																		x.price.skuPrices[0].sidePrice
-																  )
-																: ""}
+															{convertPercent(x.price.dealPercent)}
 														</th>
 														<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
-															{x?.price?.skuPrices[0]?.dealPercent
-																? convertTokVND(
-																		x.price.skuPrices[0].dealPercent
-																  )
-																: ""}
+															{convertTokVND(x.price.mainPrice)}
 														</th>
 														<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
-															{x.skus[0].inventory.stocks} PCS
+															{x.stock.available} PCS
 														</th>
 													</motion.tr>
 												)

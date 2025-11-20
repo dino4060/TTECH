@@ -1,13 +1,13 @@
 import { convertTokVND } from "@/utils/until"
 import React, { useState, useEffect } from "react"
 
-const LimitCell = ({ x }) => {
+const LimitCell = ({ saleUnit: x }) => {
 	const [limit, setLimit] = useState(0)
 	const [available, setAvailable] = useState(-1)
 
 	useEffect(() => {
 		if (limit && limit > 0) {
-			const stock = x.skus[0].inventory.stocks
+			const stock = x.product.stock.available
 			setAvailable(limit > stock ? stock : limit)
 		} else {
 			setLimit(0)
@@ -35,16 +35,13 @@ const LimitCell = ({ x }) => {
 							onWheel={onPreventScroll}
 							className='w-[100px] text-right outline-none border border-black/50 rounded-lg pr-[5px]'
 						/>
-						{/* <span className='absolute right-2 top-1/2 transform -translate-y-1/2'>
-						k
-					</span> */}
 					</div>
 				</div>
 
 				{/* Stock */}
 				<div className='flex justify-between items-center w-full'>
 					<span>Tồn kho</span>
-					<span>{x.skus[0].inventory.stocks}</span>
+					<span>{x.product.stock.available}</span>
 				</div>
 
 				{/* Available */}
