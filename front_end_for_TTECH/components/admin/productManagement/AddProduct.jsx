@@ -29,7 +29,6 @@ const AddProduct = ({
 }) => {
   const [data, setData] = useState({
     name: "",
-    serialNumber: "",
     retailPrice: "",
     guaranteeMonths: "",
     description: "",
@@ -77,7 +76,6 @@ const AddProduct = ({
 
     const productDetail = {
       name: data.name,
-      serialNumber: data.serialNumber,
       description: data.description,
       retailPrice: Number.parseInt(data.retailPrice),
       guaranteeMonths: Number.parseInt(data.guaranteeMonths),
@@ -86,8 +84,7 @@ const AddProduct = ({
       supplier: { id: Number.parseInt(data.supplierId) },
       category: { id: Number.parseInt(data.categoryId) },
       skus: [{
-        code: data.serialNumber,
-        retailPrice: Number.parseInt(data.retailPrice), // .parsePrice(data.retailPrice),
+        retailPrice: Number.parseInt(data.retailPrice),
         inventory: { stocks: Number.parseInt(data.stocks) },
       }],
       price: {
@@ -116,7 +113,6 @@ const AddProduct = ({
 
     setData({
       name: "",
-      serialNumber: "",
       retailPrice: "",
       guaranteeMonths: "",
       stocks: "",
@@ -140,7 +136,6 @@ const AddProduct = ({
     const { value, id } = e.target
 
     if (
-      id === "serialNumber" ||
       id === "retailPrice" ||
       id === "guaranteeMonths" ||
       id === "stocks"
@@ -157,7 +152,6 @@ const AddProduct = ({
 
     if (
       id === "name" ||
-      id === "serialNumber" ||
       id === "retailPrice" ||
       id === "guaranteeMonths" ||
       id === "stocks" ||
@@ -283,10 +277,6 @@ const AddProduct = ({
                   {
                     key: "retailPrice",
                     name: "Giá bán lẻ (1K)",
-                  },
-                  {
-                    key: "serialNumber",
-                    name: "Số seri",
                   },
                   {
                     key: "guaranteeMonths",

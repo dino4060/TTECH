@@ -69,8 +69,8 @@ public class Product extends BaseEntity implements BaseStatus<Status> {
     Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "supplier_id")
-    Supplier supplier;
+    @JoinColumn(name = "series_id")
+    Series series;
 
     @OneToOne(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     Price price;

@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.infrastructure.cache;
 
-import com.dino.back_end_for_TTECH.features.product.application.provider.IInventoryLockProvider;
+import com.dino.back_end_for_TTECH.features.product.application.provider.StockLockProvider;
 import com.dino.back_end_for_TTECH.infrastructure.cache.pattern.LockFacade;
 import com.dino.back_end_for_TTECH.infrastructure.cache.pattern.LockTemplate;
 import lombok.AccessLevel;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class LockProviderImpl implements IInventoryLockProvider {
+public class LockProviderImpl implements StockLockProvider {
 
     LockFacade lockFacade;
 

@@ -14,7 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
                     "LEFT JOIN FETCH p.price " +
                     "LEFT JOIN FETCH p.stock " +
                     "LEFT JOIN FETCH p.category " +
-                    "LEFT JOIN FETCH p.supplier",
+                    "LEFT JOIN FETCH p.series",
             countQuery = "SELECT COUNT(p) FROM Product p")
     Page<Product> findAllWithRelations(Pageable pageable);
 }

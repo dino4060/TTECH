@@ -2,7 +2,7 @@ const RESOURCE_NAMES = [
 	"categories",
 	"auth",
 	"users",
-	"suppliers",
+	"series",
 	"products",
 	"carts",
 	"orders",

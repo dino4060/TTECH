@@ -3,7 +3,7 @@ import type { TBase, TId } from "./base.types";
 import { TCategoryInList } from "./category.types";
 import { TPriceInList } from "./price.types";
 import { TSkuInList, TSkuToWrite } from "./sku.types";
-import { TSupplierInList } from "./supplier.types";
+import { TSupplierInList } from "./series.types";
 
 // NESTED TYPES //
 

@@ -1,22 +1,27 @@
 export const timeout = async (seconds: number) => {
-  await new Promise<void>((resolve) => setTimeout(() => resolve(), seconds * 1000));
+	await new Promise<void>((resolve) =>
+		setTimeout(() => resolve(), seconds * 1000)
+	)
 }
 
-export const isBrowser = typeof window !== "undefined";
+export const isBrowser = typeof window !== "undefined"
 
 export const parseJwtExp = (token: string) => {
-  try {
-    console.log(`>>> parseJwtExp: token: ${token}`);
+	try {
+		console.log(`>>> parseJwtExp: token: ${token}`)
 
-    if (!token) return null;
+		if (!token) return null
 
-    const payload = JSON.parse(atob(token.split('.')[1]));
+		const payload = JSON.parse(atob(token.split(".")[1]))
 
-    console.log('>>> parseJwtExp: payload: ', payload);
+		console.log(">>> parseJwtExp: payload: ", payload)
 
-    return payload.exp as number; // Epoch timestamp, Unix timestamp (integer in seconds)
+		return payload.exp as number // Epoch timestamp, Unix timestamp (integer in seconds)
+	} catch (e) {
+		throw new Error(">>> parseJwtExp: failed")
+	}
+}
 
-  } catch (e) {
-    throw new Error('>>> parseJwtExp: failed');
-  }
+export const check = (value: string, key: string = "") => {
+	console.log("Check ", key, ": ", value)
 }

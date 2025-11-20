@@ -1,8 +1,8 @@
 package com.dino.back_end_for_TTECH.features.product.api;
 
-import com.dino.back_end_for_TTECH.features.product.application.SupplierService;
-import com.dino.back_end_for_TTECH.features.product.application.model.SupplierBody;
-import com.dino.back_end_for_TTECH.features.product.application.model.SupplierData;
+import com.dino.back_end_for_TTECH.features.product.application.SeriesService;
+import com.dino.back_end_for_TTECH.features.product.application.model.SeriesBody;
+import com.dino.back_end_for_TTECH.features.product.application.model.SeriesData;
 import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,39 +12,39 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/suppliers")
+@RequestMapping("/api/admin/series")
 @PreAuthorize(AuthConst.ADMIN)
 @AllArgsConstructor
-public class AdminSupplierController {
+public class AdminSeriesController {
 
-    private final SupplierService supplierService;
+    private final SeriesService supplierService;
 
     // READ //
 
     @GetMapping("/list")
-    public ResponseEntity<List<SupplierData>> listSuppliers() {
-        return ResponseEntity.ok().body(this.supplierService.listSuppliers());
+    public ResponseEntity<List<SeriesData>> list() {
+        return ResponseEntity.ok().body(this.supplierService.list());
     }
 
     // WRITE //
 
     @PostMapping
-    public ResponseEntity<SupplierData> createSupplier(
-            @RequestBody SupplierBody body
+    public ResponseEntity<SeriesData> create(
+            @RequestBody SeriesBody body
     ) {
         return ResponseEntity.ok().body(this.supplierService.createSupplier(body));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SupplierData> updateSupplier(
+    public ResponseEntity<SeriesData> update(
             @PathVariable long id,
-            @RequestBody SupplierBody body
+            @RequestBody SeriesBody body
     ) {
         return ResponseEntity.ok().body(this.supplierService.updateSupplier(id, body));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSupplier(
+    public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
         this.supplierService.deleteSupplier(id);

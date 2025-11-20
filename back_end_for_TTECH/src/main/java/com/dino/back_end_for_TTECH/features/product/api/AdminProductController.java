@@ -3,6 +3,7 @@ package com.dino.back_end_for_TTECH.features.product.api;
 import com.dino.back_end_for_TTECH.features.product.application.ProductService;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductData;
+import com.dino.back_end_for_TTECH.features.product.application.model.ProductQuery;
 import com.dino.back_end_for_TTECH.shared.application.model.PageQuery;
 import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import jakarta.validation.Valid;
@@ -21,7 +22,7 @@ public class AdminProductController {
 
     @GetMapping("/list")
     public ResponseEntity<?> list(
-            @Valid @ModelAttribute PageQuery query
+            @Valid @ModelAttribute ProductQuery query
     ) {
         return ResponseEntity.ok(this.productService.list(query));
     }

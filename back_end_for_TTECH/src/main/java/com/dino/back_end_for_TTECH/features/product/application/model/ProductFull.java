@@ -17,6 +17,6 @@ public record ProductFull(
         PriceData price,
         StockData stock,
         CategoryData category,
-        SupplierData supplier
+        SeriesData series
 ) {
 }

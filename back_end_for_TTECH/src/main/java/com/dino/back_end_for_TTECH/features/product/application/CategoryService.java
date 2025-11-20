@@ -64,7 +64,7 @@ public class CategoryService {
     // READ //
 
     @Cacheable(value = CacheValue.CATEGORIES, key = CacheKey.LIST)
-    public List<CategoryData> listCategories() {
+    public List<CategoryData> list() {
         var categories = this.categoryRepository.findAll();
 
         return categories.stream()

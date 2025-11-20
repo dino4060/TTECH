@@ -7,13 +7,12 @@ import ProductRenderList from "./productManagement/ProductRenderList"
 import useDebounce from "@/customHook/useDeboune"
 import { useEffect } from "react"
 import { handleProduct } from "@/app/api/handleProduct"
-import { handleCategory } from "@/app/api/handleCategory"
-import { handleSupplier } from "@/app/api/handleSupplier"
 import { UserAuth } from "@/context/AuthContext"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { adminCategoryApi } from "@/lib/api/category.api"
-import { adminSupplierApi } from "@/lib/api/supplier.api"
+import { adminSeriesApi } from "@/lib/api/series.api"
 import { adminProductApi } from "@/lib/api/product.api"
+import { check } from "@/lib/utils"
 
 const AdminProductManagement = () => {
 	const { token, user, logout } = UserAuth()
@@ -27,8 +26,8 @@ const AdminProductManagement = () => {
 	const [triggerImage, setTriggerImage] = useState(false)
 	const [trigger, setTrigger] = useState(false)
 	const [list, setList] = useState([])
-	const [supplier, setSupplier] = useState([{}])
-	const [category, setCategory] = useState([{}])
+	const [series, setSeries] = useState([])
+	const [category, setCategory] = useState([])
 	const [allImageOfProduct, setAllImageOfProduct] = useState(
 		[]
 	)
@@ -47,17 +46,15 @@ const AdminProductManagement = () => {
 	}, [currentProductChoose, triggerImage])
 
 	const getData = async () => {
-		try {
-			const { data: categories } = await clientFetch(
-				adminCategoryApi.list()
-			)
-			setCategory(categories)
+		const { success, data: categories } = await clientFetch(
+			adminCategoryApi.list()
+		)
+		setCategory(success ? categories : [])
 
-			const { data: suppliers } = await clientFetch(
-				adminSupplierApi.list()
-			)
-			setSupplier(suppliers)
-		} catch (error) {}
+		const { data: series } = await clientFetch(
+			adminSeriesApi.list()
+		)
+		setSeries(success ? series : [])
 	}
 
 	useEffect(() => {
@@ -67,12 +64,11 @@ const AdminProductManagement = () => {
 	const filterDebounce = useDebounce(filter, 1000)
 
 	const getProduct = async () => {
-		try {
-			const {
-				data: { items: products },
-			} = await clientFetch(adminProductApi.list())
-			setList(products)
-		} catch (error) {}
+		const {
+			success,
+			data: { items: products },
+		} = await clientFetch(adminProductApi.list())
+		setList(success ? products : [])
 	}
 
 	useEffect(() => {
@@ -89,8 +85,8 @@ const AdminProductManagement = () => {
 					setTrigger={setTrigger}
 					category={category}
 					setCategory={setCategory}
-					supplier={supplier}
-					setSupplier={setSupplier}
+					series={series}
+					setSeries={setSeries}
 					currentProductChoose={currentProductChoose}
 					setCurrentProductChoose={setCurrentProductChoose}
 				/>
@@ -98,7 +94,6 @@ const AdminProductManagement = () => {
 					<ProductRenderList
 						filter={filterDebounce}
 						list={list}
-						setList={setList}
 						setCurrentProductChoose={setCurrentProductChoose}
 						currentProductChoose={currentProductChoose}
 					/>
@@ -108,8 +103,8 @@ const AdminProductManagement = () => {
 						currentProductChoose={currentProductChoose}
 						category={category}
 						setCategory={setCategory}
-						supplier={supplier}
-						setSupplier={setSupplier}
+						series={series}
+						setSeries={setSeries}
 						allImageOfProduct={allImageOfProduct}
 						setAllImageOfProduct={setAllImageOfProduct}
 						triggerImage={triggerImage}

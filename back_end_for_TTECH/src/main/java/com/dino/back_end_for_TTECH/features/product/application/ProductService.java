@@ -12,11 +12,9 @@ import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRep
 import com.dino.back_end_for_TTECH.shared.application.exception.DatabaseError;
 import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundError;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
-import com.dino.back_end_for_TTECH.shared.application.model.PageQuery;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 // NOTE: == vs equal()
@@ -37,7 +35,7 @@ public class ProductService {
 
     private final CategoryService categoryService;
 
-    private final SupplierService supplierService;
+    private final SeriesService supplierService;
 
     private final ProductRepository productRepository;
 
@@ -68,8 +66,8 @@ public class ProductService {
     }
 
     private void linkParents(Product product) {
-        var sid = product.getSupplier().getId();
-        product.setSupplier(this.supplierService.get(sid));
+        var sid = product.getSeries().getId();
+        product.setSeries(this.supplierService.get(sid));
         var cid = product.getCategory().getId();
         product.setCategory(this.categoryService.get(cid));
     }
@@ -79,9 +77,9 @@ public class ProductService {
         this.stockService.linkCreate(product);
     }
 
-    private void linkChildren(ProductBody writeProduct, Product product) {
-        this.priceService.linkUpdate(writeProduct, product);
-        this.stockService.linkUpdate(writeProduct, product);
+    private void linkChildren(ProductBody body, Product product) {
+        this.priceService.linkUpdate(body, product);
+        this.stockService.linkUpdate(body, product);
     }
 
     private boolean hasParents(Product product) {
@@ -110,23 +108,13 @@ public class ProductService {
 
     // READ //
 
-    public PageData<ProductData> list(PageQuery query) {
-        Page<Product> page = this.productRepository.findAll(
-                this.mapper.toPageable(query));
-
-        return this.mapper.toPageData(
-                page,
-                (Product p) -> this.mapper.toProductData(p));
-    }
-
     public PageData<ProductFull> list(ProductQuery query) {
         var page = this.productRepository.findAll(
                 this.mapper.toQueryable(query),
                 this.mapper.toPageable(query));
 
         return this.mapper.toPageData(
-                page,
-                (Product p) -> this.mapper.toProductFull(p));
+                page, (Product p) -> this.mapper.toProductFull(p));
     }
 
     // WRITE //

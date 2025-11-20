@@ -39,27 +39,7 @@ public class Stock extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false, updatable = false)
     Product product;
 
-    // CHECKING METHODS //
-
-    public void setTotal(int total) {
-        boolean condition = 0 <= total;
-        if (!condition) throw new AppException(ErrorCode.INVENTORY__TOTAL_LIMIT);
-        this.total = total;
-    }
-
-    public void setAvailable(int available) {
-        boolean condition = 0 <= available;
-        if (!condition) throw new AppException(ErrorCode.INVENTORY__STOCKS_LIMIT);
-        this.available = available;
-    }
-
-    public void setSold(int sold) {
-        boolean condition = 0 <= sold;
-        if (!condition) throw new AppException(ErrorCode.INVENTORY__SALES_LIMIT);
-        this.sold = sold;
-    }
-
-    // INSTANCE METHODS //
+    // INSTANCE //
 
     public void init() {
         this.setTotal(this.available);

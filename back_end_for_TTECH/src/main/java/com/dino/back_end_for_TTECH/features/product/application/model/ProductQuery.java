@@ -17,5 +17,5 @@ public class ProductQuery extends PageQuery {
     String keywords;
     List<Integer> prices;
     Long category;
-    Long supplier;
+    Long series;
 }

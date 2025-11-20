@@ -1,6 +1,5 @@
 package com.dino.back_end_for_TTECH.features.product.application;
 
-import com.dino.back_end_for_TTECH.features.product.application.mapper.PriceMapper;
 import com.dino.back_end_for_TTECH.features.product.application.model.PriceBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductBody;
 import com.dino.back_end_for_TTECH.features.product.domain.Price;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 public class PriceService {
 
     private final PriceRepository priceRepository;
-
-    private final PriceMapper mapper;
 
     // METHODS //
 
@@ -44,6 +41,6 @@ public class PriceService {
     }
 
     public void linkUpdate(ProductBody source, Product destination) {
-        this.recalculate(this.mapper.toPriceBody(source), destination.getPrice());
+        this.recalculate(source.price(), destination.getPrice());
     }
 }

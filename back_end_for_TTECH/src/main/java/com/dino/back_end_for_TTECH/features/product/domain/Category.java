@@ -34,6 +34,21 @@ public class Category extends BaseEntity {
 
     int position;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    Category parent;
+
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    List<Category> children;
+
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     List<Product> products;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "category_series",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "series_id")
+    )
+    List<Series> series;
 }

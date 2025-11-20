@@ -22,21 +22,21 @@ public class AdminCategoryController {
     // READ //
 
     @GetMapping("/list")
-    public ResponseEntity<List<CategoryData>> listCategories() {
-        return ResponseEntity.ok().body(this.categoryService.listCategories());
+    public ResponseEntity<List<CategoryData>> list() {
+        return ResponseEntity.ok().body(this.categoryService.list());
     }
 
     // WRITE //
 
     @PostMapping
-    public ResponseEntity<CategoryData> createCategory(
+    public ResponseEntity<CategoryData> create(
             @RequestBody CategoryBody body
     ) {
         return ResponseEntity.ok().body(this.categoryService.createCategory(body));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryData> updateCategory(
+    public ResponseEntity<CategoryData> update(
             @PathVariable long id,
             @RequestBody CategoryBody body
     ) {
@@ -44,7 +44,7 @@ public class AdminCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(
+    public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
         this.categoryService.deleteCategory(id);

@@ -10,7 +10,6 @@ const ProductRenderList = ({
   setCurrentProductChoose,
   filter,
   list,
-  setList,
 }) => {
   const handleClick = (x) => {
     setCurrentProductChoose(x)

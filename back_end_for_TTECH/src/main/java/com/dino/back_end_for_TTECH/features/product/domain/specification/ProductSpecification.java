@@ -20,10 +20,10 @@ public class ProductSpecification {
         };
     }
 
-    public static Specification<Product> hasSupplierId(Long supplierId) {
+    public static Specification<Product> hasSeriesId(Long seriesId) {
         return (root, query, builder) -> {
-            if (supplierId == null) return null;
-            return builder.equal(root.get("supplier").get("id"), supplierId);
+            if (seriesId == null) return null;
+            return builder.equal(root.get("series").get("id"), seriesId);
         };
     }
 
@@ -62,7 +62,7 @@ public class ProductSpecification {
     public static Specification<Product> build(ProductQuery query) {
         return Specification
                 .where(likeFullText(query.getKeywords()))
-                .and(hasSupplierId(query.getSupplier()))
+                .and(hasSeriesId(query.getSeries()))
                 .and(hasCategoryId(query.getCategory()))
                 .and(inPriceRange(query.getPrices()));
     }

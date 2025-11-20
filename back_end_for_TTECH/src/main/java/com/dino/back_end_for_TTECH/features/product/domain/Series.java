@@ -12,26 +12,38 @@ import org.hibernate.annotations.SQLRestriction;
 import java.util.List;
 
 @Entity
-@Table(name = "suppliers")
+@Table(name = "series")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE suppliers SET is_deleted = true WHERE supplier_id = ?")
+@SQLDelete(sql = "UPDATE series SET is_deleted = true WHERE series_id = ?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Supplier extends BaseEntity {
+public class Series extends BaseEntity {
 
     @Id
     @SequenceGenerator(name = "suppliers_seq", allocationSize = 1)
-    @Column(name = "supplier_id")
+    @Column(name = "series_id")
     Long id;
 
     @Column(length = 40, nullable = false)
     String name;
 
-    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
+    Integer position;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    Series parent;
+
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    List<Series> children;
+
+    @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
     List<Product> products;
+
+    @ManyToMany(mappedBy = "series", fetch = FetchType.LAZY)
+    List<Category> categories;
 }

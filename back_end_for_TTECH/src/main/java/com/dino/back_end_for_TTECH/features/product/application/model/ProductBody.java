@@ -10,14 +10,12 @@ public record ProductBody(
         String version,
         String color,
 
-        int retailPrice,
-        int guaranteeMonths,
         List<String> photos,
         String description,
+        int guaranteeMonths,
 
         AppId category,
-        AppId supplier,
-
+        AppId series,
         PriceBody price,
         StockBody stock
 ) {

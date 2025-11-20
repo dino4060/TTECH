@@ -1,12 +1,11 @@
 package com.dino.back_end_for_TTECH.features.product.application;
 
-import com.dino.back_end_for_TTECH.features.product.application.mapper.StockMapper;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.StockBody;
-import com.dino.back_end_for_TTECH.features.product.application.provider.IInventoryLockProvider;
+import com.dino.back_end_for_TTECH.features.product.application.provider.StockLockProvider;
+import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.features.product.domain.Stock;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.StockRepository;
-import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import lombok.AccessLevel;
@@ -22,15 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class StockService {
 
-    StockRepository inventoryRepository;
+    StockRepository stockRepository;
 
-    IInventoryLockProvider lockProvider;
-
-    StockMapper mapper;
+    StockLockProvider lockProvider;
 
     @Transactional(readOnly = true)
     public Stock checkStock(Long productId, int quantity) {
-        Stock stock = inventoryRepository.findByProductId(productId)
+        Stock stock = stockRepository.findByProductId(productId)
                 .orElseThrow(() -> new AppException(ErrorCode.INVENTORY__NOT_FOUND));
 
         if (stock.getAvailable() < quantity)
@@ -44,7 +41,7 @@ public class StockService {
         Stock stock = this.checkStock(productId, quantity);
 
         stock.update(quantity);
-        this.inventoryRepository.save(stock);
+        this.stockRepository.save(stock);
     }
 
     @Transactional
@@ -60,13 +57,13 @@ public class StockService {
 
     @Transactional
     public void restock(StockBody body, Stock stock) {
-        var quantity = body.restock();
-        if (quantity == 0) return;
+        var restock = body.restock();
+        if (restock == 0) return;
 
-        stock.setTotal(stock.getTotal() + quantity);
-        stock.setAvailable(stock.getAvailable() + quantity);
+        stock.setTotal(stock.getTotal() + restock);
+        stock.setAvailable(stock.getAvailable() + restock);
 
-        this.inventoryRepository.save(stock);
+        this.stockRepository.save(stock);
     }
 
     public void linkCreate(Product product) {
@@ -75,6 +72,6 @@ public class StockService {
     }
 
     public void linkUpdate(ProductBody source, Product destination) {
-        this.restock(this.mapper.toStockBody(source), destination.getStock());
+        this.restock(source.stock(), destination.getStock());
     }
 }

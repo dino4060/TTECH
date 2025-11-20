@@ -20,7 +20,7 @@ public class CategoryController {
     // READ //
 
     @GetMapping("/list")
-    public ResponseEntity<List<CategoryData>> listCategories() {
-        return ResponseEntity.ok().body(this.categoryService.listCategories());
+    public ResponseEntity<List<CategoryData>> list() {
+        return ResponseEntity.ok().body(this.categoryService.list());
     }
 }

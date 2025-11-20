@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.infrastructure.realtime;
 
-import com.dino.back_end_for_TTECH.features.product.application.provider.IRealtimePriceProvider;
+import com.dino.back_end_for_TTECH.features.product.application.provider.PriceRealtimeProvider;
 import com.dino.back_end_for_TTECH.features.product.domain.Price;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class RealtimeProviderImpl implements IRealtimePriceProvider {
+public class RealtimeProviderImpl implements PriceRealtimeProvider {
 
     SimpMessagingTemplate messagingTemplate;
 
