@@ -3,6 +3,7 @@ import { handleDiscount } from "@/app/api/handleDiscount."
 import { useEffect, useState } from "react"
 import CampaignForm from "./campaignManagement/CampaignForm"
 import CampaignList from "./campaignManagement/CampaignList"
+import CampaignAction from "./campaignManagement/CampaignAction"
 
 const AdminCampaignManagement = () => {
 	const [discountList, setDiscountList] = useState([])
@@ -33,14 +34,15 @@ const AdminCampaignManagement = () => {
 				/>
 			</div>
 			<div className='flex-[6] bg-white'>
-				<CampaignForm
+				<CampaignAction />
+				{/* <CampaignForm
 					currentDiscountClicked={currentDiscountClicked}
 					setCurrentDiscountClicked={setCurrentDiscountClicked}
 					mode={mode}
 					setMode={setMode}
 					triggerGetData={triggerGetData}
 					setTriggerGetData={setTriggerGetData}
-				/>
+				/> */}
 			</div>
 		</div>
 	)

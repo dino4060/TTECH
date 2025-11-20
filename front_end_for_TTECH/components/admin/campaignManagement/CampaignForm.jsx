@@ -270,13 +270,11 @@ const CampaignForm = ({
 														className='w-full h-full object-cover rounded-xl'
 													/>
 												</div>
-												<div className='flex-1 min-w-0'>
+												<div className='flex-1 min-w-0 text-left'>
 													<div className='text-[1.4rem] whitespace-nowrap overflow-hidden text-ellipsis'>
 														{x.product.name}
 													</div>
-													<div className='text-left'>
-														ID: {x.product.id}
-													</div>
+													<div>ID: {x.product.id}</div>
 												</div>
 											</div>
 										</th>
