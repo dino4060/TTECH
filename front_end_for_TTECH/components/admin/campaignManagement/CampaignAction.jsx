@@ -1,14 +1,6 @@
 "use client"
 import { motion } from "framer-motion"
 import { Fragment, useState } from "react"
-import {
-	CiDiscount1,
-	CiGift,
-	CiUser,
-	CiCreditCard1,
-	CiShoppingTag,
-	CiMail,
-} from "react-icons/ci"
 import CampaignAdd from "./CampaignAdd"
 
 const CampaignAction = ({}) => {
@@ -17,18 +9,18 @@ const CampaignAction = ({}) => {
 	return (
 		<Fragment>
 			<div className='flex gap-2 justify-end p-1'>
-				{actions.map((action, index) => (
+				{actions.map(({ key, name }) => (
 					<motion.div
-						key={index}
+						key={key}
 						className={`
 							px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold
-							border-blue-500 border-b-blue-500 flex-1 shrink-0 text-center uppercase
-							${action.key === action ? "bg-blue-50" : "bg-white"}
+							border-pink-500 border-b-pink-500 flex-1 shrink-0 text-center uppercase
+							${key === action ? "bg-pink-50" : "bg-white"}
 						`}
 						whileHover={{ scale: 1.1 }}
-						onClick={() => setAction(action.key)}
+						onClick={() => setAction(key)}
 					>
-						{action.name}
+						{name}
 					</motion.div>
 				))}
 			</div>

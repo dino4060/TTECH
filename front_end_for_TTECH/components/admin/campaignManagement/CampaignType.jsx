@@ -1,14 +1,17 @@
 "use client"
 import { motion } from "framer-motion"
-import { Fragment, useState } from "react"
 import {
-	CiDiscount1,
-	CiGift,
-	CiUser,
-	CiCreditCard1,
-	CiShoppingTag,
-	CiMail,
-} from "react-icons/ci"
+	CirclePercentIcon,
+	MessagesSquareIcon,
+	PackagePlusIcon,
+	PencilLineIcon,
+	TagIcon,
+	TicketIcon,
+	UserRoundCheckIcon,
+	UserRoundPlusIcon,
+	ZapIcon,
+} from "lucide-react"
+import { Fragment } from "react"
 
 const CampaignType = ({}) => {
 	return (
@@ -17,81 +20,34 @@ const CampaignType = ({}) => {
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.3 }}
-				className='mt-8'
+				className='flex flex-col gap-8'
 			>
-				{/* Giảm giá section */}
-				<div className='mb-8'>
-					<h2 className='text-2xl font-bold mb-2'>Giảm giá</h2>
-					<p className='text-gray-600 mb-6'>
-						Đặt ưu đãi giảm giá cho sản phẩm để thu hút khách hàng
-						và tăng doanh số
-					</p>
-					<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-						{campaignTypes.slice(0, 3).map((type, index) => (
-							<motion.div
-								key={index}
-								className='p-6 border border-gray-200 rounded-lg bg-white hover:border-blue-500 hover:shadow-md transition-all cursor-pointer'
-								whileHover={{ scale: 1.02 }}
-							>
-								<div className='flex items-start gap-4'>
-									<div className='p-3 bg-blue-50 rounded-lg'>
-										<type.icon className='w-8 h-8 text-blue-600' />
+				{campaignTypeGroup.map(({ key, name, note, types }) => (
+					<div key={key}>
+						<h3 className='text-[2.2rem] font-bold'>{name}</h3>
+						<p className='text-xl text-gray-600 mb-6'>{note}</p>
+						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+							{types.map((type) => (
+								<motion.div
+									key={type.key}
+									className='p-6 border border-gray-300 rounded-lg bg-white hover:border-pink-500 hover:shadow-md transition-all cursor-pointer'
+									whileHover={{ scale: 1.02 }}
+								>
+									<div className='flex items-center gap-4'>
+										<div className='p-3 bg-pink-50 rounded-lg'>
+											<type.icon className='w-8 h-8 text-pink-500' />
+										</div>
+										<div className='flex-1 min-w-0'>
+											<h3 className='text-2xl font-semibold flex items-center gap-2'>
+												{type.name}
+											</h3>
+										</div>
 									</div>
-									<div className='flex-1 min-w-0'>
-										<h3 className='text-lg font-semibold mb-2 flex items-center gap-2'>
-											{type.title}
-											{type.badge && (
-												<span className='text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded'>
-													{type.badge}
-												</span>
-											)}
-										</h3>
-										<p className='text-gray-600 text-sm leading-relaxed'>
-											{type.description}
-										</p>
-									</div>
-								</div>
-							</motion.div>
-						))}
+								</motion.div>
+							))}
+						</div>
 					</div>
-				</div>
-
-				{/* Voucher section */}
-				<div>
-					<h2 className='text-2xl font-bold mb-2'>Voucher</h2>
-					<p className='text-gray-600 mb-6'>
-						Trao tặng voucher để khuyến khích khách tăng giá trị
-						đơn hàng
-					</p>
-					<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-						{campaignTypes.slice(3).map((type, index) => (
-							<motion.div
-								key={index}
-								className='p-6 border border-gray-200 rounded-lg bg-white hover:border-blue-500 hover:shadow-md transition-all cursor-pointer'
-								whileHover={{ scale: 1.02 }}
-							>
-								<div className='flex items-start gap-4'>
-									<div className='p-3 bg-blue-50 rounded-lg'>
-										<type.icon className='w-8 h-8 text-blue-600' />
-									</div>
-									<div className='flex-1 min-w-0'>
-										<h3 className='text-lg font-semibold mb-2 flex items-center gap-2'>
-											{type.title}
-											{type.badge && (
-												<span className='text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded'>
-													{type.badge}
-												</span>
-											)}
-										</h3>
-										<p className='text-gray-600 text-sm leading-relaxed'>
-											{type.description}
-										</p>
-									</div>
-								</div>
-							</motion.div>
-						))}
-					</div>
-				</div>
+				))}
 			</motion.div>
 		</Fragment>
 	)
@@ -99,60 +55,66 @@ const CampaignType = ({}) => {
 
 export default CampaignType
 
-const campaignTypes = [
+const campaignTypeGroup = [
 	{
-		icon: CiDiscount1,
-		title: "Giảm giá sản phẩm",
-		description:
-			"Thiết lập giảm giá hàng ngày để tạo sức hút và thúc đẩy doanh số.",
+		key: "SALE",
+		name: "Giảm giá",
+		note:
+			"Ưu đãi giảm giá sản phẩm giúp tăng sức cạnh tranh với đối thủ",
+		types: [
+			{
+				key: "DAILY_SALE",
+				name: "Giảm giá hằng ngày",
+				icon: CirclePercentIcon,
+			},
+			{
+				key: "FLASH_SALE",
+				name: "Flash Sale",
+				icon: ZapIcon,
+			},
+			{
+				key: "NEW_ARRIVAL_SALE",
+				name: "Giảm giá hàng mới về",
+				icon: PackagePlusIcon,
+			},
+		],
 	},
 	{
-		icon: CiShoppingTag,
-		title: "Flash Sale của shop",
-		description:
-			"Tung ưu đãi có thời hạn để khuyến khích mua hàng nhanh chóng, bán hàng tồn dư thừa hoặc thu hút khách mới.",
-	},
-	{
-		icon: CiGift,
-		title: "Giảm giá hàng mới về",
-		description:
-			"Đặt giảm giá giới hạn cho sản phẩm mới để khuyến khích mọi người mua hàng.",
-	},
-	{
-		icon: CiCreditCard1,
-		title: "Voucher đánh giá",
-		badge: "Mới",
-		description:
-			"Khuyến khích nhiều đánh giá chất lượng cao hơn bằng cách tặng voucher giảm giá",
-	},
-	{
-		icon: CiGift,
-		title: "Voucher",
-		description:
-			"Khuyến khích khách gia tăng tổng giá trị đơn hàng và thúc đẩy doanh số tổng thể.",
-	},
-	{
-		icon: CiUser,
-		title: "Voucher cho khách mới của người bán",
-		description:
-			"Voucher chỉ cho những khách chưa bao giờ mua từ cửa hàng của bạn.",
-	},
-	{
-		icon: CiMail,
-		title: "Voucher qua chat",
-		description:
-			"Gửi voucher độc quyền cho khách hàng qua tin nhắn chat.",
-	},
-	{
-		icon: CiUser,
-		title: "Voucher cho khách mua tiếp",
-		description:
-			"Voucher cho những khách đã mua nhiều lần từ cửa hàng của bạn.",
-	},
-	{
-		icon: CiShoppingTag,
-		title: "Mã khuyến mãi",
-		description:
-			"Chia sẻ mã trên TikTok và các nền tảng mạng xã hội khác để tăng lưu lượng truy cập và tỷ lệ chuyển đổi.",
+		key: "VOUCHER",
+		name: "Voucher",
+		note:
+			"Trao tặng voucher thúc đẩy khách hàng chi tiêu nhiều hơn",
+		types: [
+			{
+				key: "PUBLIC_VOUCHER",
+				name: "Voucher đơn hàng",
+				icon: TicketIcon,
+			},
+			{
+				key: "CODE_VOUCHER",
+				name: "Voucher mã dành riêng",
+				icon: TagIcon,
+			},
+			{
+				key: "REVIEW_VOUCHER",
+				name: "Voucher đánh giá",
+				icon: PencilLineIcon,
+			},
+			{
+				key: "NEW_CUSTOMER_VOUCHER",
+				name: "Voucher khách mới",
+				icon: UserRoundPlusIcon,
+			},
+			{
+				key: "LOYAL_CUSTOMER_VOUCHER",
+				name: "Voucher khách quen",
+				icon: UserRoundCheckIcon,
+			},
+			{
+				key: "MESSAGE_VOUCHER",
+				name: "Voucher tin nhắn",
+				icon: MessagesSquareIcon,
+			},
+		],
 	},
 ]
