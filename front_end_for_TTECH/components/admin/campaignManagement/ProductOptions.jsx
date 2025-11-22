@@ -39,10 +39,10 @@ const ProductOptions = ({
 
 	const onSubmit = () => {
 		setAppliedProducts([
-			...appliedProducts,
 			...stickedProducts,
+			...appliedProducts,
 		])
-		setStickedProducts([])
+		setStickedProducts(new Set())
 		setShow(false)
 	}
 
@@ -55,7 +55,6 @@ const ProductOptions = ({
 
 	useEffect(() => {
 		getProducts()
-
 		window.addEventListener("keydown", onEscape)
 
 		return () => {
@@ -81,15 +80,17 @@ const ProductOptions = ({
 							<h1 className='text-black font-semibold text-4xl text-center'>
 								Lựa chọn sản phẩm
 							</h1>
-							<div className='flex gap-4'>
+							<div className='flex gap-2'>
 								<button
-									className=' bg-blue-500 rounded-full text-white py-3 px-10 text-2xl flex items-center justify-center font-bold'
+									className='self-center px-5 py-2 text-2xl text-white bg-blue-500
+                    flex items-center justify-center rounded-full'
 									onClick={() => onSubmit()}
 								>
 									Hoàn tất
 								</button>
 								<button
-									className=' bg-gray-500 rounded-full text-white py-3 px-10 text-2xl flex items-center justify-center font-bold'
+									className='self-center px-5 py-2 text-2xl text-white bg-blue-500
+                    flex items-center justify-center rounded-full'
 									onClick={() => onCancel()}
 								>
 									Hủy

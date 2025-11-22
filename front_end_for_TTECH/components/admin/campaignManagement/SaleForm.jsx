@@ -46,11 +46,7 @@ const SaleForm = ({ action, header, onReturn }) => {
 					</h3>
 
 					{action === "ADD" && (
-						// <div onClick={() => return()}></div>
-						<CiLogout
-							size={18}
-							onClick={() => onReturn()}
-						/>
+						<CiLogout size={18} onClick={() => onReturn()} />
 					)}
 				</div>
 
@@ -70,7 +66,7 @@ const SaleForm = ({ action, header, onReturn }) => {
 					</div>
 				))}
 
-				<div className='flex justify-between mb-4 mt-8'>
+				<div className='flex justify-between items-center mb-4 mt-8'>
 					<h3 className='text-[2.2rem] font-semibold '>
 						{saleUnits.length !== 0
 							? "Danh sách sản phẩm áp dụng"
@@ -78,7 +74,7 @@ const SaleForm = ({ action, header, onReturn }) => {
 					</h3>
 					<div className='flex gap-2'>
 						<button
-							className='px-4 py-1 text-white text-2xl bg-blue-500 rounded-full'
+							className='self-center px-5 py-2 text-white text-2xl bg-blue-500 rounded-full'
 							onClick={() => {
 								setShow(!show)
 							}}
@@ -87,12 +83,12 @@ const SaleForm = ({ action, header, onReturn }) => {
 						</button>
 						{saleUnits.length > 0 && (
 							<button
+								className='self-center px-5 py-2 text-white text-2xl bg-blue-500 rounded-full'
 								onClick={() => {
 									setManage(!manage)
 								}}
-								className='px-4 py-1 text-white text-2xl bg-gray-500 rounded-full'
 							>
-								Quản lý
+								Xóa
 							</button>
 						)}
 					</div>
@@ -117,9 +113,7 @@ const SaleForm = ({ action, header, onReturn }) => {
 											Trạng thái
 										</th>
 									) : (
-										<th className='w-[10%] py-2 border border-b-4 rounded-md border-blue-500 bg-white shrink-0 text-center'>
-											Quản lý
-										</th>
+										<th className='w-[10%] py-2 border border-b-4 rounded-md border-blue-500 bg-white shrink-0 text-center'></th>
 									)}
 								</tr>
 							</thead>
@@ -187,9 +181,10 @@ const SaleForm = ({ action, header, onReturn }) => {
 				)}
 
 				<button className='bg-blue-500 w-full p-4 mt-4 text-2xl font-semibold text-white rounded-2xl'>
-					{action === "ADD" ? "XÁC NHẬN THÊM" : "XÁC NHẬN SỬA"}
+					{action === "ADD" ? "THÊM HOÀN TẤT" : "SỬA HOÀN TẤT"}
 				</button>
 			</motion.div>
+
 			<ProductOptions
 				show={show}
 				setShow={setShow}
