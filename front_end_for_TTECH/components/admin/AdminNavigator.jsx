@@ -22,7 +22,7 @@ const AdminNavigator = ({ route, onRouteChange }) => {
 		<div className='mx-4 mt-4'>
 			<div className='flex justify-between items-center'>
 				<div
-					//onClick={router.push("/account")}
+					// onClick={router.push("/")}
 					className='flex items-center gap-2'
 				>
 					<Image

@@ -3,6 +3,7 @@
 import { AnimatePresence } from "framer-motion"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
+import { CiFilter, CiPercent } from "react-icons/ci"
 import {
 	convertPercent,
 	convertTokVND,
@@ -13,14 +14,15 @@ import { adminProductApi } from "@/lib/api/product.api"
 const ProductOptions = ({
 	show,
 	setShow,
-	appliedProducts,
-	setAppliedProducts,
-	appliedProductIds,
+	chosenProducts,
+	setChosenProducts,
+	chosenProductIds,
 }) => {
 	const [products, setProducts] = useState([])
 	const [stickedProducts, setStickedProducts] = useState(
 		new Set()
 	)
+	const [loading, setLoading] = useState(false)
 
 	const getProducts = async () => {
 		const { success, data } = await clientFetch(
@@ -37,16 +39,12 @@ const ProductOptions = ({
 		setStickedProducts(newList)
 	}
 
-	const onSubmit = () => {
-		setAppliedProducts([
-			...appliedProducts,
-			...stickedProducts,
-		])
-		setStickedProducts([])
+	const onSubmit = async () => {
+		setChosenProducts([...chosenProducts, ...stickedProducts])
 		setShow(false)
 	}
 
-	const onCancel = () => {
+	const onCancel = async () => {
 		setShow(false)
 	}
 
@@ -83,16 +81,16 @@ const ProductOptions = ({
 							</h1>
 							<div className='flex gap-4'>
 								<button
-									className=' bg-blue-500 rounded-full text-white py-3 px-10 text-2xl flex items-center justify-center font-bold'
 									onClick={() => onSubmit()}
+									className=' bg-blue-500 rounded-full text-white py-3 px-10 text-2xl flex items-center justify-center font-bold'
 								>
-									Hoàn tất
+									{loading ? <CircleLoader /> : "Hoàn tất"}
 								</button>
 								<button
-									className=' bg-gray-500 rounded-full text-white py-3 px-10 text-2xl flex items-center justify-center font-bold'
 									onClick={() => onCancel()}
+									className=' bg-gray-500 rounded-full text-white py-3 px-10 text-2xl flex items-center justify-center font-bold'
 								>
-									Hủy
+									{"Hủy"}
 								</button>
 							</div>
 						</div>
@@ -125,7 +123,7 @@ const ProductOptions = ({
 									<tbody>
 										{products.map(
 											(x) =>
-												!appliedProductIds.has(x.id) && (
+												!chosenProductIds.has(x.id) && (
 													<motion.tr
 														onClick={() => onStick(x)}
 														initial={{

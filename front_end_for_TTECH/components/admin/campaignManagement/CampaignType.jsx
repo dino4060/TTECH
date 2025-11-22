@@ -12,8 +12,17 @@ import {
 	ZapIcon,
 } from "lucide-react"
 import { Fragment } from "react"
+import SaleForm from "./SaleForm"
+import VoucherForm from "./VoucherForm"
 
-const CampaignType = ({}) => {
+const CampaignType = ({ setRenderStep2 }) => {
+	const nextStep = (renderForm) => {
+		const onReturn = () => setRenderStep2(null)
+		const saleForm = () => renderForm("ADD", onReturn)
+		setRenderStep2(() => {
+			return saleForm
+		})
+	}
 	return (
 		<Fragment>
 			<motion.div
@@ -22,19 +31,25 @@ const CampaignType = ({}) => {
 				transition={{ duration: 0.3 }}
 				className='flex flex-col gap-8'
 			>
-				{campaignTypeGroup.map(({ key, name, note, types }) => (
-					<div key={key}>
-						<h3 className='text-[2.2rem] font-bold'>{name}</h3>
-						<p className='text-xl text-gray-600 mb-6'>{note}</p>
+				{campaignTypeGroup.map((group) => (
+					<div key={group.key}>
+						<h3 className='text-[2.2rem] font-bold'>
+							{group.name}
+						</h3>
+						<p className='text-xl text-gray-600 mb-6'>
+							{group.note}
+						</p>
 						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-							{types.map((type) => (
+							{group.types.map((type) => (
 								<motion.div
 									key={type.key}
-									className='p-6 border border-gray-300 rounded-lg bg-white hover:border-pink-500 hover:shadow-md transition-all cursor-pointer'
+									className='p-6 border border-gray-300 rounded-lg bg-white hover:border-pink-500
+                    hover:shadow-md transition-all cursor-pointer'
 									whileHover={{ scale: 1.02 }}
+									onClick={() => nextStep(type.renderForm)}
 								>
 									<div className='flex items-center gap-4'>
-										<div className='p-3 bg-pink-50 rounded-lg'>
+										<div className='p-3 bg-pink-100 rounded-lg'>
 											<type.icon className='w-8 h-8 text-pink-500' />
 										</div>
 										<div className='flex-1 min-w-0'>
@@ -66,16 +81,37 @@ const campaignTypeGroup = [
 				key: "DAILY_SALE",
 				name: "Giảm giá hằng ngày",
 				icon: CirclePercentIcon,
+				renderForm: (action, onReturn) => (
+					<SaleForm
+						header={"Giảm giá hằng ngày"}
+						action={action}
+						onReturn={onReturn}
+					/>
+				),
 			},
 			{
 				key: "FLASH_SALE",
 				name: "Flash Sale",
 				icon: ZapIcon,
+				renderForm: (action, onReturn) => (
+					<SaleForm
+						header={"Giảm giá Flash Sale"}
+						action={action}
+						onReturn={onReturn}
+					/>
+				),
 			},
 			{
 				key: "NEW_ARRIVAL_SALE",
 				name: "Giảm giá hàng mới về",
 				icon: PackagePlusIcon,
+				renderForm: (action, onReturn) => (
+					<SaleForm
+						header={"Giảm giá hàng mới về"}
+						action={action}
+						onReturn={onReturn}
+					/>
+				),
 			},
 		],
 	},
@@ -89,31 +125,73 @@ const campaignTypeGroup = [
 				key: "PUBLIC_VOUCHER",
 				name: "Voucher đơn hàng",
 				icon: TicketIcon,
+				renderForm: (action, onReturn) => (
+					<VoucherForm
+						header={"Voucher đơn hàng"}
+						action={action}
+						onReturn={onReturn}
+					/>
+				),
 			},
 			{
 				key: "CODE_VOUCHER",
 				name: "Voucher mã dành riêng",
 				icon: TagIcon,
+				renderForm: (action, onReturn) => (
+					<VoucherForm
+						header={"Voucher mã dành riêng"}
+						action={action}
+						onReturn={onReturn}
+					/>
+				),
 			},
 			{
 				key: "REVIEW_VOUCHER",
 				name: "Voucher đánh giá",
 				icon: PencilLineIcon,
+				renderForm: (action, onReturn) => (
+					<VoucherForm
+						header={"Voucher đánh giá"}
+						action={action}
+						onReturn={onReturn}
+					/>
+				),
 			},
 			{
 				key: "NEW_CUSTOMER_VOUCHER",
 				name: "Voucher khách mới",
 				icon: UserRoundPlusIcon,
+				renderForm: (action, onReturn) => (
+					<VoucherForm
+						header={"Voucher khách mới"}
+						action={action}
+						onReturn={onReturn}
+					/>
+				),
 			},
 			{
 				key: "LOYAL_CUSTOMER_VOUCHER",
 				name: "Voucher khách quen",
 				icon: UserRoundCheckIcon,
+				renderForm: (action, onReturn) => (
+					<VoucherForm
+						header={"Voucher khách quen"}
+						action={action}
+						onReturn={onReturn}
+					/>
+				),
 			},
 			{
 				key: "MESSAGE_VOUCHER",
 				name: "Voucher tin nhắn",
 				icon: MessagesSquareIcon,
+				renderForm: (action, onReturn) => (
+					<VoucherForm
+						header={"Voucher tin nhắn"}
+						action={action}
+						onReturn={onReturn}
+					/>
+				),
 			},
 		],
 	},

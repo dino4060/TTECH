@@ -15,7 +15,7 @@ const CampaignAction = ({}) => {
 						className={`
 							px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold
 							border-pink-500 border-b-pink-500 flex-1 shrink-0 text-center uppercase
-							${key === action ? "bg-pink-50" : "bg-white"}
+							${key === action ? "bg-pink-100" : "bg-white"}
 						`}
 						whileHover={{ scale: 1.1 }}
 						onClick={() => setAction(key)}

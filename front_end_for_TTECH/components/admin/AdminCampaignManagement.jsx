@@ -1,7 +1,7 @@
 "use client"
 import { handleDiscount } from "@/app/api/handleDiscount."
 import { useEffect, useState } from "react"
-import CampaignForm from "./campaignManagement/CampaignForm"
+import CampaignForm from "./campaignManagement/CampaignForm.temp"
 import CampaignList from "./campaignManagement/CampaignList"
 import CampaignAction from "./campaignManagement/CampaignAction"
 
@@ -35,7 +35,7 @@ const AdminCampaignManagement = () => {
 			</div>
 			<div className='flex-[6] bg-white'>
 				<CampaignAction />
-				{/* <CampaignForm
+				{/* <CampaignForm2
 					currentDiscountClicked={currentDiscountClicked}
 					setCurrentDiscountClicked={setCurrentDiscountClicked}
 					mode={mode}

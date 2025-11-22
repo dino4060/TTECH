@@ -57,11 +57,11 @@ const Header = () => {
 	return (
 		<div className='fixed top-0 z-30 inset-x-0 px-10 h-[50px] bg-white/20 backdrop-blur-md'>
 			<div className='mx-3 mt-3'>
-				<div className='flex w-full items-center gap-[10px] justify-evenly '>
+				<div className='flex w-full items-center gap-[10px] justify-evenly'>
 					<div className='lg:hidden p-2'>
 						<CategoryPhone />
 					</div>
-					<div onClick={handleOnClickLogo} className='shinks-0'>
+					<div onClick={handleOnClickLogo} className='shrink-0'>
 						<Image
 							alt=''
 							src={"/images/1x/Asset1.png"}

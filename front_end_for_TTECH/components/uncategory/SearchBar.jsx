@@ -115,10 +115,7 @@ const SearchBar = () => {
 									</motion.div>
 								</div>
 
-								<div
-									className='w-full mt-10 
-                flex flex-col justify-start items-start'
-								>
+								<div className='w-full mt-10flex flex-col justify-start items-start'>
 									{filteredProducts?.slice(0, 6)?.map((x, i) => (
 										<motion.h1
 											onClick={() => {
