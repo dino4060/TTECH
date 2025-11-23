@@ -1,11 +1,15 @@
+import Notification from "@/components/uncategory/Notification"
+import { adminCampaignApi } from "@/lib/api/campaign.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
+import { CiLogout } from "react-icons/ci"
 import LimitCell from "./LimitCell"
 import PriceCell from "./PriceCell"
 import ProductOptions from "./ProductOptions"
-import { CiLogout } from "react-icons/ci"
+import { checkSubmitForm } from "@/lib/utils/check"
 
-const SaleForm = ({ action, header, onReturn }) => {
+const SaleForm = ({ type: saleType, action, onReturn }) => {
 	const [show, setShow] = useState(false)
 	const [manage, setManage] = useState(false)
 	const [saleUnits, setSaleUnits] = useState([])
@@ -13,8 +17,48 @@ const SaleForm = ({ action, header, onReturn }) => {
 	const [appliedProductIds, setAppliedProductIds] = useState(
 		new Set()
 	)
+	const [saleData, setSaleData] = useState({
+		name: "",
+		startTime: null,
+		endTime: null,
+	})
+	const [feedback, setFeedback] = useState({})
+	const [notification, setNotification] = useState("")
+	const [refreshPage, setRefreshPage] = useState(false)
 
-	const onDelete = (productId) => {
+	const onChangeSale = (key, value) => {
+		setSaleData((prev) => ({ ...prev, [key]: value }))
+		setFeedback((prev) => ({ ...prev, [key]: null }))
+	}
+
+	const onSubmitSale = async () => {
+		if (action === "ADD") {
+			const body = {
+				...saleData,
+				promotionType: saleType.key,
+			}
+			const isValid = checkSubmitForm(
+				campaignForm,
+				body,
+				feedback
+			)
+			if (!isValid) {
+				setFeedback({ ...feedback })
+				return
+			}
+
+			const { success } = await clientFetch(
+				adminCampaignApi.createSale(body)
+			)
+			if (success) {
+				setNotification("Tạo chiến dịch giảm giá thành công")
+				setRefreshPage(!refreshPage)
+			}
+		} else {
+		}
+	}
+
+	const onDeleteSaleUnit = (productId) => {
 		setSaleUnits(
 			saleUnits.filter((u) => u.product.id !== productId)
 		)
@@ -60,7 +104,7 @@ const SaleForm = ({ action, header, onReturn }) => {
 			>
 				<div className='flex justify-between items-center mb-4'>
 					<h3 className='text-[2.2rem] font-semibold'>
-						{header}
+						{saleType.name}
 					</h3>
 
 					{action === "ADD" && (
@@ -69,18 +113,32 @@ const SaleForm = ({ action, header, onReturn }) => {
 				</div>
 
 				{campaignForm.map((input) => (
-					<div className=' mb-3 w-full' key={input.key}>
-						<h2 className={`text-xl mb-1`}>{input.name}</h2>
+					<div
+						key={input.key}
+						className='mb-3 w-full flex flex-col gap-1'
+					>
+						<h2 className='text-[1.4rem] flex gap-1'>
+							{input.name}
+							{input.required && (
+								<span className='text-red-500'>*</span>
+							)}
+						</h2>
 						<input
-							id={input.key}
+							className={`outline-none w-full p-4 text-2xl font-medium border border-black/50 rounded-2xl ${
+								input.disabled && "text-black/50"
+							}`}
 							type={input.type}
 							disabled={input.disabled}
-							// value={currentCampaign?.[input.key]}
 							placeholder={input.name}
-							className={`outline-none w-full border border-black/50 p-4  text-2xl rounded-2xl font-[500] ${
-								input.key === "id" && "text-black/50"
-							}`}
+							onChange={(e) =>
+								onChangeSale(input.key, e.target.value)
+							}
 						/>
+						{input.required && (
+							<h2 className='text-red-500 text-[1.4rem]'>
+								{feedback[input.key]}
+							</h2>
+						)}
 					</div>
 				))}
 
@@ -191,7 +249,7 @@ const SaleForm = ({ action, header, onReturn }) => {
 											<td className='px-4 py-2 font-normal shrink-0 text-center'>
 												<span
 													className='text-[1.4rem] font-semibold text-red-500'
-													onClick={() => onDelete(u.product.id)}
+													onClick={() => onDeleteSaleUnit(u.product.id)}
 												>
 													Xóa
 												</span>
@@ -204,7 +262,10 @@ const SaleForm = ({ action, header, onReturn }) => {
 					</div>
 				)}
 
-				<button className='bg-blue-500 w-full p-4 mt-4 text-2xl font-semibold text-white rounded-2xl'>
+				<button
+					className='bg-blue-500 w-full p-4 mt-4 text-2xl font-semibold text-white rounded-2xl'
+					onClick={() => onSubmitSale()}
+				>
 					{action === "ADD" ? "THÊM HOÀN TẤT" : "SỬA HOÀN TẤT"}
 				</button>
 			</motion.div>
@@ -215,6 +276,16 @@ const SaleForm = ({ action, header, onReturn }) => {
 				setNewProducts={setNewProducts}
 				appliedProductIds={appliedProductIds}
 			/>
+
+			{notification && (
+				<Notification
+					notification={{
+						text: notification,
+						style: "success",
+					}}
+					setNotifications={setNotification}
+				/>
+			)}
 		</Fragment>
 	)
 }
@@ -227,23 +298,27 @@ const campaignForm = [
 		name: "ID chiến dịch khuyến mãi",
 		type: "text",
 		disabled: true,
+		required: false,
 	},
 	{
 		key: "name",
 		name: "Tên chiến dịch khuyến mãi",
 		type: "text",
-		disabled: true,
+		disabled: false,
+		required: true,
 	},
 	{
 		key: "startTime",
 		name: "Thời gian bắt đầu",
 		type: "datetime-local",
-		disabled: true,
+		disabled: false,
+		required: true,
 	},
 	{
 		key: "endTime",
 		name: "Thời gian kết thúc",
 		type: "datetime-local",
-		disabled: true,
+		disabled: false,
+		required: true,
 	},
 ]

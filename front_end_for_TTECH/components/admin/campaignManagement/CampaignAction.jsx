@@ -9,18 +9,18 @@ const CampaignAction = ({}) => {
 	return (
 		<Fragment>
 			<div className='flex gap-2 justify-end p-1'>
-				{actions.map(({ key, name }) => (
+				{actions.map((action) => (
 					<motion.div
-						key={key}
+						key={action.key}
 						className={`
 							px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold
 							border-pink-500 border-b-pink-500 flex-1 shrink-0 text-center uppercase
-							${key === action ? "bg-pink-100" : "bg-white"}
+							${action.key === action ? "bg-pink-100" : "bg-white"}
 						`}
 						whileHover={{ scale: 1.1 }}
-						onClick={() => setAction(key)}
+						onClick={() => setAction(action.key)}
 					>
-						{name}
+						{action.name}
 					</motion.div>
 				))}
 			</div>

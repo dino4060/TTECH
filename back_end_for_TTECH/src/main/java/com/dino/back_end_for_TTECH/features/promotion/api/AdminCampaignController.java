@@ -1,7 +1,10 @@
 package com.dino.back_end_for_TTECH.features.promotion.api;
 
 import com.dino.back_end_for_TTECH.features.promotion.application.CampaignService;
+import com.dino.back_end_for_TTECH.features.promotion.application.CampaignServiceTemp;
+import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignBody;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignQuery;
+import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleBody;
 import com.dino.back_end_for_TTECH.features.promotion.domain.Sale;
 import com.dino.back_end_for_TTECH.features.promotion.domain.Voucher;
 import jakarta.validation.Valid;
@@ -10,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin/campaigns")
@@ -26,14 +31,14 @@ public class AdminCampaignController {
     }
 
     @PostMapping("/sales")
-    public ResponseEntity<Object> create(@Valid @RequestBody Sale body) {
-        this.campaignService.create(body);
-        return ResponseEntity.ok(null);
+    public ResponseEntity<Object> create(@Valid @RequestBody CampaignBody body) {
+        // this.campaignService.create(body);
+        return ResponseEntity.ok(Map.of());
     }
 
     @PostMapping("/vouchers")
     public ResponseEntity<Object> create(@Valid @RequestBody Voucher body) {
-        var data = this.campaignService.create(body);
-        return ResponseEntity.ok(data);
+        this.campaignService.create(body);
+        return ResponseEntity.ok(null);
     }
 }

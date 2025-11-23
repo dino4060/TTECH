@@ -61,7 +61,7 @@ public enum ErrorCode {
     SYSTEM__VALIDATION_UNSUPPORTED(1003, "Validation is unsupported", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__METHOD_NOT_SUPPORTED(1004, "Method '%s' is not supported", HttpStatus.BAD_REQUEST),
     SYSTEM__ROUTE_NOT_SUPPORTED(1005, "Route '%s' not supported", HttpStatus.BAD_REQUEST),
-    SYSTEM__BODY_REQUIRED(1006, "Body is required", HttpStatus.BAD_REQUEST),
+    SYSTEM__BODY_REQUIRED(1006, "Can not read body", HttpStatus.BAD_REQUEST),
     SYSTEM__ID_INVALID(1006, "Id is invalid", HttpStatus.BAD_REQUEST),
     // SECURITY //
     SECURITY__UNAUTHORIZED(1011, "Quyền truy cập thất bại", HttpStatus.FORBIDDEN),

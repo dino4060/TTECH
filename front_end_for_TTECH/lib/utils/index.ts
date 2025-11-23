@@ -21,7 +21,3 @@ export const parseJwtExp = (token: string) => {
 		throw new Error(">>> parseJwtExp: failed")
 	}
 }
-
-export const check = (value: string, key: string = "") => {
-	console.log("Check ", key, ": ", value)
-}

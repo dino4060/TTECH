@@ -16,11 +16,10 @@ import SaleForm from "./SaleForm"
 import VoucherForm from "./VoucherForm"
 
 const CampaignType = ({ setRenderStep2 }) => {
-	const nextStep = (renderForm) => {
+	const nextStep = (type) => {
 		const onReturn = () => setRenderStep2(null)
-		const saleForm = () => renderForm("ADD", onReturn)
 		setRenderStep2(() => {
-			return saleForm
+			return () => type.renderForm(type, "ADD", onReturn)
 		})
 	}
 	return (
@@ -46,7 +45,7 @@ const CampaignType = ({ setRenderStep2 }) => {
 									className='p-6 border border-gray-300 rounded-lg bg-white hover:border-pink-500
                     hover:shadow-md transition-all cursor-pointer'
 									whileHover={{ scale: 1.02 }}
-									onClick={() => nextStep(type.renderForm)}
+									onClick={() => nextStep(type)}
 								>
 									<div className='flex items-center gap-4'>
 										<div className='p-3 bg-pink-100 rounded-lg'>
@@ -81,9 +80,9 @@ const campaignTypeGroup = [
 				key: "DAILY_SALE",
 				name: "Giảm giá hằng ngày",
 				icon: CirclePercentIcon,
-				renderForm: (action, onReturn) => (
+				renderForm: (type, action, onReturn) => (
 					<SaleForm
-						header={"Giảm giá hằng ngày"}
+						type={type}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -93,9 +92,9 @@ const campaignTypeGroup = [
 				key: "FLASH_SALE",
 				name: "Flash Sale",
 				icon: ZapIcon,
-				renderForm: (action, onReturn) => (
+				renderForm: (type, action, onReturn) => (
 					<SaleForm
-						header={"Giảm giá Flash Sale"}
+						type={type}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -105,9 +104,9 @@ const campaignTypeGroup = [
 				key: "NEW_ARRIVAL_SALE",
 				name: "Giảm giá hàng mới về",
 				icon: PackagePlusIcon,
-				renderForm: (action, onReturn) => (
+				renderForm: (type, action, onReturn) => (
 					<SaleForm
-						header={"Giảm giá hàng mới về"}
+						type={type}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -125,9 +124,9 @@ const campaignTypeGroup = [
 				key: "PUBLIC_VOUCHER",
 				name: "Voucher đơn hàng",
 				icon: TicketIcon,
-				renderForm: (action, onReturn) => (
+				renderForm: (type, action, onReturn) => (
 					<VoucherForm
-						header={"Voucher đơn hàng"}
+						type={type}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -137,9 +136,9 @@ const campaignTypeGroup = [
 				key: "CODE_VOUCHER",
 				name: "Voucher mã dành riêng",
 				icon: TagIcon,
-				renderForm: (action, onReturn) => (
+				renderForm: (type, action, onReturn) => (
 					<VoucherForm
-						header={"Voucher mã dành riêng"}
+						type={type}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -149,9 +148,9 @@ const campaignTypeGroup = [
 				key: "REVIEW_VOUCHER",
 				name: "Voucher đánh giá",
 				icon: PencilLineIcon,
-				renderForm: (action, onReturn) => (
+				renderForm: (type, action, onReturn) => (
 					<VoucherForm
-						header={"Voucher đánh giá"}
+						type={type}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -161,9 +160,9 @@ const campaignTypeGroup = [
 				key: "NEW_CUSTOMER_VOUCHER",
 				name: "Voucher khách mới",
 				icon: UserRoundPlusIcon,
-				renderForm: (action, onReturn) => (
+				renderForm: (type, action, onReturn) => (
 					<VoucherForm
-						header={"Voucher khách mới"}
+						type={type}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -173,9 +172,9 @@ const campaignTypeGroup = [
 				key: "LOYAL_CUSTOMER_VOUCHER",
 				name: "Voucher khách quen",
 				icon: UserRoundCheckIcon,
-				renderForm: (action, onReturn) => (
+				renderForm: (type, action, onReturn) => (
 					<VoucherForm
-						header={"Voucher khách quen"}
+						type={type}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -185,9 +184,9 @@ const campaignTypeGroup = [
 				key: "MESSAGE_VOUCHER",
 				name: "Voucher tin nhắn",
 				icon: MessagesSquareIcon,
-				renderForm: (action, onReturn) => (
+				renderForm: (type, action, onReturn) => (
 					<VoucherForm
-						header={"Voucher tin nhắn"}
+						type={type}
 						action={action}
 						onReturn={onReturn}
 					/>
