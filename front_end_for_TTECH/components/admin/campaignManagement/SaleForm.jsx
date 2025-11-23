@@ -10,27 +10,64 @@ const SaleForm = ({ action, header, onReturn }) => {
 	const [manage, setManage] = useState(false)
 	const [saleUnits, setSaleUnits] = useState([])
 	const [appliedProducts, setAppliedProducts] = useState([])
+	const [newProduct, setNewProduct] = useState(new Set())
 	const [appliedProductIds, setAppliedProductIds] = useState(
 		new Set()
 	)
 
-	useEffect(() => {
-		setAppliedProductIds(
-			new Set(appliedProducts.map((product) => product.id))
-		)
-
+	const onDelete = (productId) => {
 		setSaleUnits(
-			appliedProducts.map((product) => ({
+			saleUnits.filter((u) => u.product.id !== productId)
+		)
+	}
+
+	// useEffect(() => {
+	// 	setAppliedProductIds(
+	// 		new Set(saleUnits.map((s) => s.product.id))
+	// 	)
+	// }, [saleUnits])
+
+	useEffect(() => {
+		if (newProduct.size == 0) return
+
+		setSaleUnits((prev) => [
+			...newProduct.map((p) => ({
+				product: p,
 				isLive: true,
 				dealPrice: 0,
 				dealPercent: 0,
 				totalLimit: -1,
 				usedCount: 0,
 				levelType: "PRODUCT",
-				product,
-			}))
+			})),
+			...prev,
+		])
+
+		setAppliedProductIds(
+			(prev) =>
+				new Set(...newProduct.map((p) => p.id), ...prev)
 		)
-	}, [appliedProducts])
+
+		setNewProduct(new Set())
+	}, [newProduct])
+
+	// useEffect(() => {
+	// 	setAppliedProductIds(
+	// 		new Set(appliedProducts.map((product) => product.id))
+	// 	)
+
+	// 	setSaleUnits(
+	// 		appliedProducts.map((product) => ({
+	// 			isLive: true,
+	// 			dealPrice: 0,
+	// 			dealPercent: 0,
+	// 			totalLimit: -1,
+	// 			usedCount: 0,
+	// 			levelType: "PRODUCT",
+	// 			product,
+	// 		}))
+	// 	)
+	// }, [appliedProducts])
 
 	return (
 		<Fragment>
@@ -72,6 +109,7 @@ const SaleForm = ({ action, header, onReturn }) => {
 							? "Danh sách sản phẩm áp dụng"
 							: "Chưa có sản phẩm áp dụng"}
 					</h3>
+
 					<div className='flex gap-2'>
 						<button
 							className='self-center px-5 py-2 text-white text-2xl bg-blue-500 rounded-full'
@@ -81,6 +119,7 @@ const SaleForm = ({ action, header, onReturn }) => {
 						>
 							Chọn sản phẩm
 						</button>
+
 						{saleUnits.length > 0 && (
 							<button
 								className='self-center px-5 py-2 text-white text-2xl bg-blue-500 rounded-full'
@@ -117,9 +156,12 @@ const SaleForm = ({ action, header, onReturn }) => {
 									)}
 								</tr>
 							</thead>
+
 							<tbody>
 								{saleUnits.map((x) => (
 									<motion.tr
+										key={x.product.id}
+										className='cursor-pointer'
 										initial={{
 											backgroundColor: "#f8fafc",
 											padding: 0,
@@ -129,8 +171,6 @@ const SaleForm = ({ action, header, onReturn }) => {
 											padding: "10px 0px",
 										}}
 										transition={{ type: "spring" }}
-										key={x.id}
-										className='cursor-pointer'
 									>
 										<th className='px-4 py-2 font-normal shrink-0 text-center'>
 											<div className='flex gap-2 '>
@@ -168,7 +208,10 @@ const SaleForm = ({ action, header, onReturn }) => {
 											</th>
 										) : (
 											<th className='px-4 py-2 font-normal shrink-0 text-center'>
-												<span className='text-[1.4rem] font-semibold text-red-500'>
+												<span
+													className='text-[1.4rem] font-semibold text-red-500'
+													onClick={() => onDelete(x.product.id)}
+												>
 													Xóa
 												</span>
 											</th>
@@ -188,9 +231,12 @@ const SaleForm = ({ action, header, onReturn }) => {
 			<ProductOptions
 				show={show}
 				setShow={setShow}
-				appliedProducts={appliedProducts}
-				setAppliedProducts={setAppliedProducts}
+				// appliedProducts={appliedProducts}
+				// setAppliedProducts={setAppliedProducts}
 				appliedProductIds={appliedProductIds}
+				// setSaleUnits={setSaleUnits}
+				newProduct={newProduct}
+				setNewProduct={setNewProduct}
 			/>
 		</Fragment>
 	)

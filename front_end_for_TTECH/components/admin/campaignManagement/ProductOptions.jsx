@@ -13,14 +13,16 @@ import { adminProductApi } from "@/lib/api/product.api"
 const ProductOptions = ({
 	show,
 	setShow,
-	appliedProducts,
-	setAppliedProducts,
+	// appliedProducts,
+	// setAppliedProducts,
 	appliedProductIds,
+	newProduct: stickedProducts,
+	setNewProduct: setStickedProducts,
 }) => {
 	const [products, setProducts] = useState([])
-	const [stickedProducts, setStickedProducts] = useState(
-		new Set()
-	)
+	// const [stickedProducts, setStickedProducts] = useState(
+	// 	new Set()
+	// )
 
 	const getProducts = async () => {
 		const { success, data } = await clientFetch(
@@ -30,23 +32,38 @@ const ProductOptions = ({
 	}
 
 	const onStick = (product) => {
-		const newList = new Set(stickedProducts)
-		newList.has(product)
-			? newList.delete(product)
-			: newList.add(product)
-		setStickedProducts(newList)
+		// const newList = new Set(stickedProducts)
+		stickedProducts.has(product)
+			? stickedProducts.delete(product)
+			: stickedProducts.add(product)
+		setStickedProducts(stickedProducts)
 	}
 
 	const onSubmit = () => {
-		setAppliedProducts([
-			...stickedProducts,
-			...appliedProducts,
-		])
-		setStickedProducts(new Set())
+		// setSaleUnits((prev) => [
+		// 	...stickedProducts.map((p) => ({
+		// 		isLive: true,
+		// 		dealPrice: 0,
+		// 		dealPercent: 0,
+		// 		totalLimit: -1,
+		// 		usedCount: 0,
+		// 		levelType: "PRODUCT",
+		// 		product: p,
+		// 	})),
+		// 	...prev,
+		// ])
+
+		// setAppliedProducts([
+		// 	...stickedProducts,
+		// 	...appliedProducts,
+		// ])
+
+		// setStickedProducts(new Set())
 		setShow(false)
 	}
 
 	const onCancel = () => {
+		// setStickedProducts(new Set())
 		setShow(false)
 	}
 
