@@ -1,5 +1,4 @@
 "use client"
-
 import { AnimatePresence } from "framer-motion"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
@@ -13,16 +12,13 @@ import { adminProductApi } from "@/lib/api/product.api"
 const ProductOptions = ({
 	show,
 	setShow,
-	// appliedProducts,
-	// setAppliedProducts,
+	setNewProducts,
 	appliedProductIds,
-	newProduct: stickedProducts,
-	setNewProduct: setStickedProducts,
 }) => {
 	const [products, setProducts] = useState([])
-	// const [stickedProducts, setStickedProducts] = useState(
-	// 	new Set()
-	// )
+	const [stickedProducts, setStickedProduct] = useState(
+		new Set()
+	)
 
 	const getProducts = async () => {
 		const { success, data } = await clientFetch(
@@ -32,38 +28,19 @@ const ProductOptions = ({
 	}
 
 	const onStick = (product) => {
-		// const newList = new Set(stickedProducts)
 		stickedProducts.has(product)
 			? stickedProducts.delete(product)
 			: stickedProducts.add(product)
-		setStickedProducts(stickedProducts)
+		setStickedProduct(new Set(stickedProducts))
 	}
 
 	const onSubmit = () => {
-		// setSaleUnits((prev) => [
-		// 	...stickedProducts.map((p) => ({
-		// 		isLive: true,
-		// 		dealPrice: 0,
-		// 		dealPercent: 0,
-		// 		totalLimit: -1,
-		// 		usedCount: 0,
-		// 		levelType: "PRODUCT",
-		// 		product: p,
-		// 	})),
-		// 	...prev,
-		// ])
-
-		// setAppliedProducts([
-		// 	...stickedProducts,
-		// 	...appliedProducts,
-		// ])
-
-		// setStickedProducts(new Set())
-		setShow(false)
+		setNewProducts(stickedProducts)
+		onRefresh()
 	}
 
-	const onCancel = () => {
-		// setStickedProducts(new Set())
+	const onRefresh = () => {
+		setStickedProduct(new Set())
 		setShow(false)
 	}
 
@@ -103,12 +80,12 @@ const ProductOptions = ({
                     flex items-center justify-center rounded-full'
 									onClick={() => onSubmit()}
 								>
-									Hoàn tất
+									Chọn hoàn tất
 								</button>
 								<button
 									className='self-center px-5 py-2 text-2xl text-white bg-blue-500
                     flex items-center justify-center rounded-full'
-									onClick={() => onCancel()}
+									onClick={() => onRefresh()}
 								>
 									Hủy
 								</button>
@@ -142,10 +119,11 @@ const ProductOptions = ({
 									</thead>
 									<tbody>
 										{products.map(
-											(x) =>
-												!appliedProductIds.has(x.id) && (
+											(p) =>
+												!appliedProductIds.has(p.id) && (
 													<motion.tr
-														onClick={() => onStick(x)}
+														key={p.id}
+														className='cursor-pointer'
 														initial={{
 															backgroundColor: "#f8fafc",
 															padding: 0,
@@ -155,8 +133,7 @@ const ProductOptions = ({
 															padding: "10px 0px",
 														}}
 														transition={{ type: "spring" }}
-														key={x.id}
-														className='cursor-pointer'
+														onClick={() => onStick(p)}
 													>
 														<motion.th
 															whileTap={{ scale: 0.95 }}
@@ -164,9 +141,9 @@ const ProductOptions = ({
 														>
 															<div className='flex justify-center items-center gap-2'>
 																<input
-																	type='checkbox'
-																	checked={stickedProducts.has(x)}
 																	className='w-6 h-6 cursor-pointer'
+																	type='checkbox'
+																	checked={stickedProducts.has(p)}
 																/>
 															</div>
 														</motion.th>
@@ -174,29 +151,29 @@ const ProductOptions = ({
 															<div className='flex gap-2 '>
 																<div className='w-14 h-14 shrink-0 rounded-xl bg-sky-300'>
 																	<img
-																		src={x.thumb}
+																		src={p.thumb}
 																		className='w-full h-full object-cover rounded-xl'
 																	/>
 																</div>
 																<div>
 																	<div className='text-[1.4rem] whitespace-nowrap overflow-hidden text-ellipsis'>
-																		{x.name}
+																		{p.name}
 																	</div>
-																	<div className='text-left'>{`ID: ${x.id}`}</div>
+																	<div className='text-left'>{`ID: ${p.id}`}</div>
 																</div>
 															</div>
 														</th>
 														<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
-															{convertTokVND(x.price.retailPrice)}
+															{convertTokVND(p.price.retailPrice)}
 														</th>
 														<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
-															{convertPercent(x.price.dealPercent)}
+															{convertPercent(p.price.dealPercent)}
 														</th>
 														<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
-															{convertTokVND(x.price.mainPrice)}
+															{convertTokVND(p.price.mainPrice)}
 														</th>
 														<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
-															{x.stock.available} PCS
+															{p.stock.available}
 														</th>
 													</motion.tr>
 												)
@@ -207,10 +184,8 @@ const ProductOptions = ({
 						</div>
 					</div>
 					<div
-						onClick={() => {
-							setShow(false)
-						}}
 						className='bg-white/20  backdrop-blur-md absolute inset-0'
+						onClick={() => setShow(false)}
 					></div>
 				</motion.div>
 			)}

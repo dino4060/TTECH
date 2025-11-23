@@ -9,8 +9,7 @@ const SaleForm = ({ action, header, onReturn }) => {
 	const [show, setShow] = useState(false)
 	const [manage, setManage] = useState(false)
 	const [saleUnits, setSaleUnits] = useState([])
-	const [appliedProducts, setAppliedProducts] = useState([])
-	const [newProduct, setNewProduct] = useState(new Set())
+	const [newProducts, setNewProducts] = useState(new Set())
 	const [appliedProductIds, setAppliedProductIds] = useState(
 		new Set()
 	)
@@ -19,19 +18,16 @@ const SaleForm = ({ action, header, onReturn }) => {
 		setSaleUnits(
 			saleUnits.filter((u) => u.product.id !== productId)
 		)
+
+		appliedProductIds.delete(productId)
+		setAppliedProductIds(new Set(appliedProductIds))
 	}
 
-	// useEffect(() => {
-	// 	setAppliedProductIds(
-	// 		new Set(saleUnits.map((s) => s.product.id))
-	// 	)
-	// }, [saleUnits])
-
 	useEffect(() => {
-		if (newProduct.size == 0) return
+		if (newProducts.size == 0) return
 
 		setSaleUnits((prev) => [
-			...newProduct.map((p) => ({
+			...Array.from(newProducts).map((p) => ({
 				product: p,
 				isLive: true,
 				dealPrice: 0,
@@ -45,29 +41,14 @@ const SaleForm = ({ action, header, onReturn }) => {
 
 		setAppliedProductIds(
 			(prev) =>
-				new Set(...newProduct.map((p) => p.id), ...prev)
+				new Set([
+					...Array.from(newProducts).map((p) => p.id),
+					...prev,
+				])
 		)
 
-		setNewProduct(new Set())
-	}, [newProduct])
-
-	// useEffect(() => {
-	// 	setAppliedProductIds(
-	// 		new Set(appliedProducts.map((product) => product.id))
-	// 	)
-
-	// 	setSaleUnits(
-	// 		appliedProducts.map((product) => ({
-	// 			isLive: true,
-	// 			dealPrice: 0,
-	// 			dealPercent: 0,
-	// 			totalLimit: -1,
-	// 			usedCount: 0,
-	// 			levelType: "PRODUCT",
-	// 			product,
-	// 		}))
-	// 	)
-	// }, [appliedProducts])
+		setNewProducts(new Set())
+	}, [newProducts])
 
 	return (
 		<Fragment>
@@ -231,12 +212,8 @@ const SaleForm = ({ action, header, onReturn }) => {
 			<ProductOptions
 				show={show}
 				setShow={setShow}
-				// appliedProducts={appliedProducts}
-				// setAppliedProducts={setAppliedProducts}
+				setNewProducts={setNewProducts}
 				appliedProductIds={appliedProductIds}
-				// setSaleUnits={setSaleUnits}
-				newProduct={newProduct}
-				setNewProduct={setNewProduct}
 			/>
 		</Fragment>
 	)
