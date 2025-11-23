@@ -24,10 +24,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PROTECTED)
-public abstract class Sale extends Campaign {
+public class Sale extends Campaign {
 
     @OneToMany(mappedBy = "sale", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<SaleUnit> units = new ArrayList<>();
-
-    public abstract int getPriority();
 }

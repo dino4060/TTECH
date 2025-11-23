@@ -1,29 +1,20 @@
 package com.dino.back_end_for_TTECH.features.promotion.application;
 
-import com.dino.back_end_for_TTECH.features.product.application.ProductService;
-import com.dino.back_end_for_TTECH.features.product.domain.Price;
-import com.dino.back_end_for_TTECH.features.promotion.application.mapper.CampaignMapper;
+import com.dino.back_end_for_TTECH.features.promotion.application.mapper.SaleMapper;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignQuery;
-import com.dino.back_end_for_TTECH.features.promotion.domain.Campaign;
+import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleBody;
+import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleData;
 import com.dino.back_end_for_TTECH.features.promotion.domain.Sale;
-import com.dino.back_end_for_TTECH.features.promotion.domain.Voucher;
-import com.dino.back_end_for_TTECH.features.promotion.domain.model.PromoType;
 import com.dino.back_end_for_TTECH.features.promotion.domain.model.Status;
-import com.dino.back_end_for_TTECH.features.promotion.domain.repository.CampaignRepository;
 import com.dino.back_end_for_TTECH.features.promotion.domain.repository.SaleRepository;
-import com.dino.back_end_for_TTECH.features.promotion.domain.repository.VoucherRepository;
-import com.dino.back_end_for_TTECH.infrastructure.aop.exception.BadRequestException;
-import com.dino.back_end_for_TTECH.shared.application.model.PageData;
-import jakarta.validation.Valid;
+import com.dino.back_end_for_TTECH.shared.application.exception.DateTimePairError;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
@@ -31,21 +22,46 @@ import java.time.ZoneId;
 @Slf4j
 public class CampaignService {
 
-    ProductService productService;
-    CampaignRepository campaignRepository;
-    CampaignMapper mapper;
+    SaleRepository saleRepo;
+    SaleMapper saleMapper;
 
-    SaleRepository saleRepository;
-    VoucherRepository voucherRepository;
+    private void genStatus(Sale model) {
+        var now = LocalDateTime.now();
+        var startTime = model.getStartTime();
+        var endTime = model.getEndTime();
 
+        // Validate: startTime < endTime
+        if (startTime == null || endTime == null || !startTime.isBefore(endTime)) {
+            throw new DateTimePairError("startTime", "endTime");
+        }
+
+        // startTime < endTime < now => ENDED
+        if (endTime.isBefore(now)) {
+            model.setStatus(Status.ENDED);
+        }
+        // startTime < now < endTime => ONGOING
+        else if (startTime.isBefore(now) && now.isBefore(endTime)) {
+            model.setStatus(Status.ONGOING);
+        }
+        // now < startTime < endTime => UPCOMING
+        else if (now.isBefore(startTime)) {
+            model.setStatus(Status.UPCOMING);
+        }
+        // Default => Error
+        else {
+            throw new DateTimePairError("startTime", "endTime");
+        }
+    }
 
     public Object list(CampaignQuery query) {
         return null;
     }
 
-    public void create( Sale body) {
-    }
+    public SaleData create(SaleBody body) {
+        var newBody = this.saleMapper.toModel(body);
+        this.genStatus(newBody);
 
-    public void create(Voucher body) {
+        var model = this.saleRepo.save(newBody);
+        return this.saleMapper.toData(model);
     }
 }

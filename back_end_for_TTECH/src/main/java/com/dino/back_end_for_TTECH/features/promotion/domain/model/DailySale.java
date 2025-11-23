@@ -11,11 +11,11 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NormalSale extends Sale {
+public class DailySale extends Sale {
     // max 3 days
 
-    @Override
-    public int getPriority() {
-        return 2;
-    }
+//    @Override
+//    public int getPriority() {
+//        return 2;
+//    }
 }

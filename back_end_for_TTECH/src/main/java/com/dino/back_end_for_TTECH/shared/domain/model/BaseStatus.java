@@ -5,14 +5,14 @@ public interface BaseStatus<S extends Enum<S>> {
 
     void setStatus(String status);
 
-    default boolean isStatus(S status) {
+    default boolean hasStatus(S status) {
         if (status == null)
             return this.getStatus() == null;
         else
             return this.getStatus().equals(status.name());
     }
 
-    default void writeStatus(S status) {
+    default void setStatus(S status) {
         this.setStatus(status.name());
     }
 }

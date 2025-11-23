@@ -1,16 +1,20 @@
 package com.dino.back_end_for_TTECH.features.promotion.domain;
 
-import java.time.Instant;
-
 import com.dino.back_end_for_TTECH.features.promotion.domain.model.Status;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
+import com.dino.back_end_for_TTECH.shared.domain.model.BaseStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "campaigns")
@@ -24,7 +28,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PROTECTED)
-public class Campaign extends BaseEntity {
+public class Campaign extends BaseEntity implements BaseStatus<Status> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "campaigns_seq")
@@ -40,16 +44,17 @@ public class Campaign extends BaseEntity {
 
     String name;
 
-    Instant startTime;
+    LocalDateTime startTime;
 
-    Instant endTime;
+    LocalDateTime endTime;
 
     String status;
 
     private boolean isPeriodActive() {
         // Instant.isXXX use () => !isXXX use []
-        Instant now = Instant.now();
-        return !now.isBefore(this.startTime) && !now.isAfter(this.endTime);
+//        Instant now = Instant.now();
+//        return !now.isBefore(this.startTime) && !now.isAfter(this.endTime);
+        return true;
     }
 
     private boolean isStatusActive() {

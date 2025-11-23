@@ -31,14 +31,8 @@ public class AdminCampaignController {
     }
 
     @PostMapping("/sales")
-    public ResponseEntity<Object> create(@Valid @RequestBody CampaignBody body) {
-        // this.campaignService.create(body);
-        return ResponseEntity.ok(Map.of());
-    }
-
-    @PostMapping("/vouchers")
-    public ResponseEntity<Object> create(@Valid @RequestBody Voucher body) {
+    public ResponseEntity<Object> create(@Valid @RequestBody SaleBody body) {
         this.campaignService.create(body);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(Map.of());
     }
 }

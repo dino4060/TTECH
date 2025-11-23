@@ -92,15 +92,15 @@ public class CampaignServiceTemp {
         var phaseEndTime = LocalDateTime.ofInstant(now, ZoneId.systemDefault())
                 .plusHours(1).withMinute(0).withSecond(0).withNano(0)
                 .atZone(ZoneId.systemDefault()).toInstant();
-        if (!model.getStartTime().isBefore(phaseStartTime) && !model.getEndTime().isAfter(phaseEndTime)) {
-            this.enqueue(model);
-            return;
-        }
+//        if (!model.getStartTime().isBefore(phaseStartTime) && !model.getEndTime().isAfter(phaseEndTime)) {
+//            this.enqueue(model);
+//            return;
+//        }
         // if duration is upcoming
-        if (model.getStartTime().isAfter(phaseEndTime)) {
-            this.wait(model);
-            return;
-        }
+//        if (model.getStartTime().isAfter(phaseEndTime)) {
+//            this.wait(model);
+//            return;
+//        }
         // if duration is ended
         throw new BadRequestException("The ongoing duration is in the past");
     }

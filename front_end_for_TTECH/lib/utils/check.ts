@@ -1,8 +1,8 @@
-export const checkV = (value: string) => {
+export const checkV = (value: any) => {
 	console.log("Check : ", value)
 }
 
-export const checkKV = (key: string, value: string) => {
+export const checkKV = (key: string, value: any) => {
 	console.log("Check ", key, ": ", value)
 }
 
@@ -12,28 +12,42 @@ type FormField = {
 	type: "text" | "number" | "select" | "checkbox"
 	disabled: boolean
 	required: boolean
+	side?: {
+		test: (value: any) => boolean
+		message: string
+	}
 }
 
 export const checkSubmitForm = (
-	form: FormField[],
+	Form: FormField[],
 	body: Record<string, any>,
 	feedback: Record<string, string>
 ) => {
-	let isOke = true
+	let isValid = true
 
-	form.map((ff) => {
-		if (ff.type === "text") {
-			body[ff.key] = body[ff.key]?.trim() || ""
+	Form.map((FF) => {
+		if (FF.type === "text") {
+			body[FF.key] = body[FF.key]?.trim() || ""
 		}
 
-		if (ff.required && !body[ff.key]) {
-			feedback[ff.key] = `Vui lòng nhập ${ff.name}`
+		if (FF.required && !body[FF.key]) {
+			feedback[FF.key] = `Vui lòng nhập ${FF.name}`
 		}
 
-		if (feedback[ff.key]) {
-			isOke = false
+		if (feedback[FF.key]) {
+			isValid = false
 		}
 	})
 
-	return isOke
+	return isValid
+}
+
+export const checkDateTimePair = (
+	data: Record<string, any>,
+	startKey: string,
+	endKey: string
+) => {
+	const startTime = new Date(data[startKey])
+	const endTime = new Date(data[endKey])
+	return startTime <= endTime
 }

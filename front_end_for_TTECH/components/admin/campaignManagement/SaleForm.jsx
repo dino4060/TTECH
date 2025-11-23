@@ -7,7 +7,11 @@ import { CiLogout } from "react-icons/ci"
 import LimitCell from "./LimitCell"
 import PriceCell from "./PriceCell"
 import ProductOptions from "./ProductOptions"
-import { checkSubmitForm } from "@/lib/utils/check"
+import {
+	checkDateTimePair,
+	checkSubmitForm,
+	checkV,
+} from "@/lib/utils/check"
 
 const SaleForm = ({ type: saleType, action, onReturn }) => {
 	const [show, setShow] = useState(false)
@@ -33,10 +37,7 @@ const SaleForm = ({ type: saleType, action, onReturn }) => {
 
 	const onSubmitSale = async () => {
 		if (action === "ADD") {
-			const body = {
-				...saleData,
-				promotionType: saleType.key,
-			}
+			const body = { ...saleData, promotionType: saleType.key }
 			const isValid = checkSubmitForm(
 				campaignForm,
 				body,
@@ -46,13 +47,25 @@ const SaleForm = ({ type: saleType, action, onReturn }) => {
 				setFeedback({ ...feedback })
 				return
 			}
+			const isValidDateTime = checkDateTimePair(
+				body,
+				"startTime",
+				"endTime"
+			)
+			if (!isValidDateTime) {
+				setFeedback({
+					...feedback,
+					endTime: "Thời gian kết thúc phải sau bắt đầu",
+				})
+				return
+			}
 
 			const { success } = await clientFetch(
 				adminCampaignApi.createSale(body)
 			)
 			if (success) {
 				setNotification("Tạo chiến dịch giảm giá thành công")
-				setRefreshPage(!refreshPage)
+				setRefreshPage(!refreshPage) // todo
 			}
 		} else {
 		}

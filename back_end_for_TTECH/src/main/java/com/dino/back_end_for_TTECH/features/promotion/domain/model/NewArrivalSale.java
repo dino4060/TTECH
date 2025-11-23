@@ -14,8 +14,8 @@ import lombok.experimental.FieldDefaults;
 public class NewArrivalSale extends Sale {
     // max 3 days
 
-    @Override
-    public int getPriority() {
-        return 3;
-    }
+//    @Override
+//    public int getPriority() {
+//        return 3;
+//    }
 }

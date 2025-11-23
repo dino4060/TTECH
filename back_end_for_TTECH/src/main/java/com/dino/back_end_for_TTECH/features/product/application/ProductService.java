@@ -89,11 +89,11 @@ public class ProductService {
         if (isOutstock) status = Status.OUTSTOCK;
 
         boolean isRestock = stock.getAvailable() > 0 && (
-                product.isStatus(null) || product.isStatus(Status.OUTSTOCK));
+                product.hasStatus(null) || product.hasStatus(Status.OUTSTOCK));
         if (isRestock) status = Status.LIVE;
 
         boolean isSet = status != null;
-        if (isSet) product.writeStatus(status);
+        if (isSet) product.setStatus(status);
     }
 
 
