@@ -1,15 +1,14 @@
 import { convertTokVND } from "@/utils/until"
-import { el } from "@faker-js/faker"
-import React, { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 
-const PriceCell = ({ saleUnit: x }) => {
-	const mainPrice = x.product.price.mainPrice
+const PriceCell = ({ saleUnit }) => {
+	const mainPrice = saleUnit.product.price.mainPrice
 
 	const [dealPrice, setDealPrice] = useState(
-		x.product.price.sidePrice || -1
+		saleUnit.product.price.sidePrice || -1
 	)
 	const [discountPercent, setDiscountPercent] = useState(
-		x.product.price.dealPercent || 0
+		saleUnit.product.price.dealPercent || 0
 	)
 	const [changeType, setChangeType] = useState("off")
 
@@ -64,9 +63,8 @@ const PriceCell = ({ saleUnit: x }) => {
 	const onPreventScroll = (e) => e.target.blur()
 
 	return (
-		<th className='font-normal px-4 py-2 flex-1 shrink-0'>
+		<td className='font-normal px-4 py-2 flex-1 shrink-0'>
 			<div className='flex flex-col justify-between items-center text-center gap-2'>
-				{/* Row 1: Giá khuyến mãi (Deal Price) */}
 				<div className='flex justify-between items-center w-full'>
 					<span>Giá giảm</span>
 					<div className='relative'>
@@ -83,7 +81,6 @@ const PriceCell = ({ saleUnit: x }) => {
 					</div>
 				</div>
 
-				{/* Row 2: Phần trăm (Discount Percent) */}
 				<div className='flex justify-between items-center w-full'>
 					<span>Phần trăm</span>
 					<div className='relative'>
@@ -100,13 +97,12 @@ const PriceCell = ({ saleUnit: x }) => {
 					</div>
 				</div>
 
-				{/* Row 3: Giá bán lẻ (Main Price) */}
 				<div className='flex justify-between items-center w-full'>
 					<span>Giá gốc</span>
 					<span>{convertTokVND(mainPrice, false)}</span>
 				</div>
 			</div>
-		</th>
+		</td>
 	)
 }
 

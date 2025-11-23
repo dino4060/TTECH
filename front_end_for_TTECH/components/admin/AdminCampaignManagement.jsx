@@ -35,7 +35,7 @@ const AdminCampaignManagement = () => {
 			</div>
 			<div className='flex-[6] bg-white'>
 				<CampaignAction />
-				{/* <CampaignForm2
+				{/* <CampaignForm
 					currentDiscountClicked={currentDiscountClicked}
 					setCurrentDiscountClicked={setCurrentDiscountClicked}
 					mode={mode}

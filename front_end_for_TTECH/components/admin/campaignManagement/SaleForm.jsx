@@ -139,9 +139,9 @@ const SaleForm = ({ action, header, onReturn }) => {
 							</thead>
 
 							<tbody>
-								{saleUnits.map((x) => (
+								{saleUnits.map((u) => (
 									<motion.tr
-										key={x.product.id}
+										key={u.product.id}
 										className='cursor-pointer'
 										initial={{
 											backgroundColor: "#f8fafc",
@@ -153,49 +153,49 @@ const SaleForm = ({ action, header, onReturn }) => {
 										}}
 										transition={{ type: "spring" }}
 									>
-										<th className='px-4 py-2 font-normal shrink-0 text-center'>
+										<td className='px-4 py-2 font-normal shrink-0 text-center'>
 											<div className='flex gap-2 '>
 												<div className='w-14 h-14 shrink-0 rounded-xl bg-sky-300'>
 													<img
-														src={x.product.thumb}
+														src={u.product.thumb}
 														className='w-full h-full object-cover rounded-xl'
 													/>
 												</div>
 												<div className='flex-1 min-w-0 text-left'>
 													<div className='text-[1.4rem] whitespace-nowrap overflow-hidden text-ellipsis'>
-														{x.product.name}
+														{u.product.name}
 													</div>
-													<div>ID: {x.product.id}</div>
+													<div>ID: {u.product.id}</div>
 												</div>
 											</div>
-										</th>
+										</td>
 
-										<PriceCell saleUnit={x} />
+										<PriceCell saleUnit={u} />
 
-										<LimitCell saleUnit={x} />
+										<LimitCell saleUnit={u} />
 
 										{!manage ? (
-											<th className='px-4 py-2 font-normal shrink-0 text-center'>
+											<td className='px-4 py-2 font-normal shrink-0 text-center'>
 												<span
 													style={{
-														backgroundColor: x.isLive
+														backgroundColor: u.isLive
 															? "#06b6d4"
 															: "#ef4444",
 													}}
 													className='p-2 rounded-xl text-white'
 												>
-													{x.isLive ? "LIVE" : "OFF"}
+													{u.isLive ? "LIVE" : "OFF"}
 												</span>
-											</th>
+											</td>
 										) : (
-											<th className='px-4 py-2 font-normal shrink-0 text-center'>
+											<td className='px-4 py-2 font-normal shrink-0 text-center'>
 												<span
 													className='text-[1.4rem] font-semibold text-red-500'
-													onClick={() => onDelete(x.product.id)}
+													onClick={() => onDelete(u.product.id)}
 												>
 													Xóa
 												</span>
-											</th>
+											</td>
 										)}
 									</motion.tr>
 								))}

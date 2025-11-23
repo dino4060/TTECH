@@ -1,13 +1,13 @@
 import { convertTokVND } from "@/utils/until"
 import React, { useState, useEffect } from "react"
 
-const LimitCell = ({ saleUnit: x }) => {
+const LimitCell = ({ saleUnit }) => {
 	const [limit, setLimit] = useState(0)
 	const [available, setAvailable] = useState(-1)
 
 	useEffect(() => {
 		if (limit && limit > 0) {
-			const stock = x.product.stock.available
+			const stock = saleUnit.product.stock.available
 			setAvailable(limit > stock ? stock : limit)
 		} else {
 			setLimit(0)
@@ -22,9 +22,8 @@ const LimitCell = ({ saleUnit: x }) => {
 	const onPreventScroll = (e) => e.target.blur()
 
 	return (
-		<th className='font-normal px-4 py-2 flex-1 shrink-0'>
+		<td className='font-normal px-4 py-2 flex-1 shrink-0'>
 			<div className='flex flex-col justify-between items-center text-center gap-2'>
-				{/* Limit */}
 				<div className='flex justify-between items-center w-full'>
 					<span>Hạn mức</span>
 					<div className='relative'>
@@ -38,13 +37,11 @@ const LimitCell = ({ saleUnit: x }) => {
 					</div>
 				</div>
 
-				{/* Stock */}
 				<div className='flex justify-between items-center w-full'>
 					<span>Tồn kho</span>
-					<span>{x.product.stock.available}</span>
+					<span>{saleUnit.product.stock.available}</span>
 				</div>
 
-				{/* Available */}
 				<div className='flex justify-between items-center w-full'>
 					<span>Khả dụng</span>
 					<span>
@@ -52,7 +49,7 @@ const LimitCell = ({ saleUnit: x }) => {
 					</span>
 				</div>
 			</div>
-		</th>
+		</td>
 	)
 }
 
