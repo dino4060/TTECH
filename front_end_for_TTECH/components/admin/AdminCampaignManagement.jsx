@@ -8,17 +8,18 @@ const AdminCampaignManagement = () => {
 	const [currentCamp, setCurrentCamp] = useState({})
 
 	return (
-		<div className='container mx-auto flex mt-10 gap-5 bg-white'>
+		<div className='container mx-auto flex mt-10 gap-10'>
 			<div className='flex-[4]'>
 				<CampaignList
 					currentCamp={currentCamp}
 					setCurrentCamp={setCurrentCamp}
-					isAsync={isAsyncList}
+					setAsyncList={isAsyncList}
 				/>
 			</div>
 			<div className='flex-[6] bg-white'>
 				<CampaignAction
 					currentCamp={currentCamp}
+					setCurrentCamp={setCurrentCamp}
 					setAsyncList={setAsyncList}
 				/>
 			</div>

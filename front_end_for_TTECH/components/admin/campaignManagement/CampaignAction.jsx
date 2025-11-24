@@ -1,34 +1,46 @@
 "use client"
 import { motion } from "framer-motion"
-import { Fragment, useState } from "react"
-import CampaignAdd from "./CampaignAdd"
+import { Fragment, useEffect, useState } from "react"
+import CampaignAdd, { CampTypeUn } from "./CampaignAdd"
+import SaleForm from "./SaleForm"
+import CampaignEdit from "./CampaignEdit"
 
-const CampaignAction = ({ currentCamp, setAsyncList }) => {
-	const [action, setAction] = useState("ADD")
+const CampaignAction = ({
+	currentCamp,
+	setCurrentCamp,
+	setAsyncList,
+}) => {
+	const [action, setAction] = useState(ActionKeyUn.ADD)
+
+	useEffect(() => {
+		currentCamp?.id && setAction(ActionKeyUn.EDIT)
+	}, [currentCamp])
 
 	return (
 		<Fragment>
-			<div className='flex gap-2 justify-end p-1 '>
-				{actions.map((action) => (
+			<div className='flex gap-2 justify-end p-1 bg-white'>
+				{Actions.map((Action) => (
 					<motion.div
-						key={action.key}
+						key={Action.key}
 						className={`
 							px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold
 							border-pink-500 border-b-pink-500 flex-1 shrink-0 text-center uppercase
-							${action.key === action ? "bg-pink-100" : "bg-white"}
+							${Action.key === action ? "bg-pink-100" : "bg-white"}
 						`}
 						whileHover={{ scale: 1.1 }}
-						onClick={() => setAction(action.key)}
+						onClick={() => setAction(Action.key)}
 					>
-						{action.name}
+						{Action.name}
 					</motion.div>
 				))}
 			</div>
 
-			<div className='p-10 '>
-				{actions
-					.find((a) => a.key === action)
-					.render(setAsyncList, currentCamp)}
+			<div className='p-10 pt-8 pb-12'>
+				{Actions.find((a) => a.key === action).render(
+					currentCamp,
+					setCurrentCamp,
+					setAsyncList
+				)}
 			</div>
 		</Fragment>
 	)
@@ -36,31 +48,45 @@ const CampaignAction = ({ currentCamp, setAsyncList }) => {
 
 export default CampaignAction
 
-const actions = [
+export const ActionKeyUn = {
+	ADD: "ADD",
+	EDIT: "EDIT",
+	REMOVE: "REMOVE",
+	ANALYZE: "ANALYZE",
+}
+
+const Actions = [
 	{
-		key: "ANALYZE",
+		key: ActionKeyUn.ANALYZE,
 		name: "phân tích",
 		render: () => <div>Phân tích</div>,
 	},
 	{
-		key: "ADD",
+		key: ActionKeyUn.ADD,
 		name: "thêm mới",
-		render: (currentCamp, setAsyncList) => (
+		render: (currentCamp, setCurrentCamp, setAsyncList) => (
 			<CampaignAdd
 				currentCamp={currentCamp}
+				setCurrentCamp={setCurrentCamp}
 				setAsyncList={setAsyncList}
 			/>
 		),
 	},
 	{
-		key: "UPDATE",
+		key: ActionKeyUn.EDIT,
 		name: "cập nhật",
-		render: (setAsyncList, currentCamp) => (
-			<div>Cập nhật</div>
+		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+			<CampaignEdit
+				// CampType={CampTypeUn[currentCamp.promotionType]}
+				// action={ActionKeyUn.EDIT}
+				currentCamp={currentCamp}
+				setCurrentCamp={setCurrentCamp}
+				setAsyncList={setAsyncList}
+			/>
 		),
 	},
 	{
-		key: "DELETE",
+		key: ActionKeyUn.REMOVE,
 		name: "xóa",
 		render: () => <div>Xóa</div>,
 	},

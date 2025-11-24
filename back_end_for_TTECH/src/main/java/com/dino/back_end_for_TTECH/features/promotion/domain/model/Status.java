@@ -1,5 +1,5 @@
 package com.dino.back_end_for_TTECH.features.promotion.domain.model;
 
 public enum Status {
-    UPCOMING, ONGOING, LIMITED, SECONDARY, DEACTIVATED, ENDED
+    UPCOMING, ONGOING, ENDED, LIMITED, SECONDARY, DEACTIVATED
 }

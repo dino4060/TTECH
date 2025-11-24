@@ -6,9 +6,9 @@ import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 
 const CampaignList = ({
-	isAsync,
 	currentCamp,
 	setCurrentCamp,
+	setAsyncList,
 }) => {
 	const [campList, setCampList] = useState([])
 
@@ -21,11 +21,11 @@ const CampaignList = ({
 		}
 
 		getCampList()
-	}, [isAsync])
+	}, [setAsyncList])
 	return (
 		<motion.div>
-			<table className='w-full border-spacing-1 border-separate table-auto text-xl relative'>
-				<thead class=' text-black uppercase sticky top-2'>
+			<table className='bg-white w-full border-spacing-1 border-separate table-auto text-xl relative'>
+				<thead class='text-black uppercase sticky top-2'>
 					<tr>
 						{CampaignTable.map((col) => (
 							<th
@@ -43,7 +43,7 @@ const CampaignList = ({
 						<motion.tr
 							key={c.id}
 							className='cursor-pointer'
-							variants={TableRowVariant}
+							variants={RowVariantUn}
 							initial='init'
 							whileHover='hover'
 							animate={
@@ -70,7 +70,7 @@ const CampaignList = ({
 
 export default CampaignList
 
-const TableRowVariant = {
+const RowVariantUn = {
 	init: {
 		backgroundColor: "#f8fafc",
 		padding: 0,
@@ -113,7 +113,7 @@ const CampaignTable = [
 			<Fragment>
 				<span
 					className='p-2 rounded-xl text-white'
-					style={{ backgroundColor: StatusColor[camp.status] }}
+					style={{ backgroundColor: StatusColorUn[camp.status] }}
 				>
 					{camp.status}
 				</span>
@@ -122,7 +122,7 @@ const CampaignTable = [
 	},
 ]
 
-const StatusColor = {
+const StatusColorUn = {
 	UPCOMING: "#8b5cf6",
 	ONGOING: "#06b6d4", // "#10b981"
 	ENDED: "#94a3b8", // "#ef4444"

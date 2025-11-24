@@ -9,32 +9,39 @@ import PriceCell from "./PriceCell"
 import ProductOptions from "./ProductOptions"
 import {
 	checkDateTimePair,
+	checkKV,
 	checkSubmitForm,
 	checkV,
 } from "@/lib/utils/check"
+import { ActionKeyUn } from "./CampaignAction"
 
 const SaleForm = ({
 	CampType: SaleType,
 	action,
 	onReturn,
-	currentCamp,
+	currentCamp: saleData,
+	setCurrentCamp: setSaleData,
 	setAsyncList,
 }) => {
 	const [show, setShow] = useState(false)
-	const [manage, setManage] = useState(false)
+	const [remove, setRemove] = useState(false)
 	const [saleUnits, setSaleUnits] = useState([])
 	const [newProducts, setNewProducts] = useState(new Set())
 	const [appliedProductIds, setAppliedProductIds] = useState(
 		new Set()
 	)
-	const [saleData, setSaleData] = useState({
-		name: "",
-		startTime: null,
-		endTime: null,
-	})
 	const [feedback, setFeedback] = useState({})
 	const [notification, setNotification] = useState("")
-	const [refreshPage, setRefreshPage] = useState(false)
+
+	const cleanForm = () => {
+		setSaleData({
+			promotionType: SaleType.key,
+			id: "",
+			name: "",
+			startTime: "",
+			endTime: "",
+		})
+	}
 
 	const onChangeSale = (key, value) => {
 		setSaleData((prev) => ({ ...prev, [key]: value }))
@@ -43,12 +50,8 @@ const SaleForm = ({
 
 	const onSubmitSale = async () => {
 		if (action === "ADD") {
-			const body = { ...saleData, promotionType: SaleType.key }
-			const isValid = checkSubmitForm(
-				campaignForm,
-				body,
-				feedback
-			)
+			const body = { ...saleData }
+			const isValid = checkSubmitForm(CampForm, body, feedback)
 			if (!isValid) {
 				setFeedback({ ...feedback })
 				return
@@ -71,7 +74,8 @@ const SaleForm = ({
 			)
 			if (success) {
 				setNotification("Tạo chiến dịch giảm giá thành công")
-				setRefreshPage(!refreshPage) // todo
+				cleanForm()
+				setAsyncList((prev) => !prev)
 			}
 		} else {
 		}
@@ -86,6 +90,12 @@ const SaleForm = ({
 		setAppliedProductIds(new Set(appliedProductIds))
 	}
 
+	// Change action => Clean form
+	useEffect(() => {
+		action === ActionKeyUn.ADD && cleanForm()
+	}, [action])
+
+	// Choose new products => Render new sale units
 	useEffect(() => {
 		if (newProducts.size == 0) return
 
@@ -131,31 +141,32 @@ const SaleForm = ({
 					)}
 				</div>
 
-				{campaignForm.map((input) => (
+				{CampForm.map((FF) => (
 					<div
-						key={input.key}
+						key={FF.key}
 						className='mb-3 w-full flex flex-col gap-1'
 					>
 						<h2 className='text-[1.4rem] flex gap-1'>
-							{input.name}
-							{input.required && (
+							{FF.name}
+							{FF.required && (
 								<span className='text-red-500'>*</span>
 							)}
 						</h2>
 						<input
 							className={`outline-none w-full p-4 text-2xl font-medium border border-black/50 rounded-2xl ${
-								input.disabled && "text-black/50"
+								FF.disabled && "text-black/50"
 							}`}
-							type={input.type}
-							disabled={input.disabled}
-							placeholder={input.name}
+							type={FF.type}
+							disabled={FF.disabled}
+							placeholder={FF.name}
+							value={saleData[FF.key]}
 							onChange={(e) =>
-								onChangeSale(input.key, e.target.value)
+								onChangeSale(FF.key, e.target.value)
 							}
 						/>
-						{input.required && (
+						{FF.required && (
 							<h2 className='text-red-500 text-[1.4rem]'>
-								{feedback[input.key]}
+								{feedback[FF.key]}
 							</h2>
 						)}
 					</div>
@@ -182,7 +193,7 @@ const SaleForm = ({
 							<button
 								className='self-center px-5 py-2 text-white text-2xl bg-blue-500 rounded-full'
 								onClick={() => {
-									setManage(!manage)
+									setRemove(!remove)
 								}}
 							>
 								Xóa
@@ -205,7 +216,7 @@ const SaleForm = ({
 									<th className='w-[25%] px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white shrink-0 text-center'>
 										Hạn mức
 									</th>
-									{!manage ? (
+									{!remove ? (
 										<th className='w-[10%] py-2 border border-b-4 rounded-md border-blue-500 bg-white shrink-0 text-center'>
 											Trạng thái
 										</th>
@@ -251,7 +262,7 @@ const SaleForm = ({
 
 										<LimitCell saleUnit={u} />
 
-										{!manage ? (
+										{!remove ? (
 											<td className='px-4 py-2 font-normal shrink-0 text-center'>
 												<span
 													style={{
@@ -311,7 +322,7 @@ const SaleForm = ({
 
 export default SaleForm
 
-const campaignForm = [
+const CampForm = [
 	{
 		key: "id",
 		name: "ID chiến dịch khuyến mãi",
