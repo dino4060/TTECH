@@ -1,21 +1,13 @@
 "use client"
 import { UserAuth } from "@/context/AuthContext"
-import { v4 as uuidv4 } from "uuid"
 
-import { handleCart } from "@/app/api/handleCart"
-import { handleDetailOrder } from "@/app/api/handleDetailOrder"
-import { handleOrder } from "@/app/api/handleOrder"
-import {
-	isValidEmail,
-	isValidPhoneNumber,
-} from "@/utils/until"
+import { orderApi } from "@/lib/api/order.api"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { isValidPhoneNumber } from "@/utils/until"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 import CircleLoader from "../uncategory/CircleLoader"
-import { handleTransaction } from "@/app/api/handleTransaction"
-import { clientFetch } from "@/lib/http/fetch.client"
-import { orderApi } from "@/lib/api/order.api"
 
 const OrderFormData = ({
 	cart,
@@ -23,14 +15,23 @@ const OrderFormData = ({
 	totalPrice,
 	discount,
 }) => {
-	const { user, token } = UserAuth()
-
+	const { user } = UserAuth()
 	const router = useRouter()
-
 	const [paymentType, setPaymentType] = useState("COD")
 	const paymentTypeRef = useRef()
-
 	const [loading, setLoading] = useState(false)
+	const [data, setData] = useState({
+		customerName: user?.name,
+		customerPhone: user?.phone,
+		address: "",
+		note: "",
+	})
+	const [error, setError] = useState({
+		name: "",
+		address: "",
+		email: "",
+		phone: "",
+	})
 
 	const Fields = [
 		{
@@ -157,20 +158,6 @@ const OrderFormData = ({
 		},
 	}
 
-	const [data, setData] = useState({
-		customerName: user?.name,
-		customerPhone: user?.phone,
-		address: "",
-		note: "",
-	})
-
-	const [error, setError] = useState({
-		name: "",
-		address: "",
-		email: "",
-		phone: "",
-	})
-
 	const onChangeValue = (e, x) => {
 		const { value } = e.target
 
@@ -193,7 +180,7 @@ const OrderFormData = ({
 	}
 
 	const onSubmitOrder = async () => {
-		if (!cart.cartLines.length) {
+		if (!cart.lines.length) {
 			alert("Chưa có sản phẩm")
 			return
 		}
@@ -210,7 +197,9 @@ const OrderFormData = ({
 
 		const order = {
 			...data,
-			total: Math.ceil(totalPrice),
+			allPrice: totalPrice,
+			allDiscount: 0,
+			total: totalPrice, // Math.ceil(totalPrice),
 		}
 
 		setLoading(true)

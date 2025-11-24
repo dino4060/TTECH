@@ -87,17 +87,17 @@ public class CartService {
     }
 
     @Transactional
-    public CartLineData updateQuantity(CartLineBody request, CurrentUser currentUser) {
+    public CartLineData updateQuantity(CartLineBody body, CurrentUser currentUser) {
         var cart = this.getCartWithProduct(currentUser);
 
-        var updatedCartItem = cart.updateQuantity(request.productId(), request.quantity());
+        var updatedCartItem = cart.updateQuantity(body.productId(), body.quantity());
         this.cartRepository.save(cart);
 
         return this.cartMapper.toLineData(updatedCartItem);
     }
 
     @Transactional
-    public Deleted removeCartItems(CartBody request, CurrentUser currentUser) {
+    public Deleted removeLineItems(CartBody request, CurrentUser currentUser) {
         var cart = this.getCartWithProduct(currentUser);
 
         var removedCartItems = cart.removeLines(request.productIds());
@@ -107,7 +107,7 @@ public class CartService {
     }
 
     @Transactional
-    public Deleted removeCartItems(List<Long> productIds, CurrentUser currentUser) {
+    public Deleted removeLineItems(List<Long> productIds, CurrentUser currentUser) {
         var cart = this.getCartWithProduct(currentUser);
 
         var removedCartItems = cart.removeLinesByProductIds(productIds);

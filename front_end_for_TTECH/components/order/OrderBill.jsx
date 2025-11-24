@@ -1,9 +1,7 @@
 "use client"
-
 import { convertTokVND, convertToVND } from "@/utils/until"
 import { useEffect, useState } from "react"
 import OrderFormData from "./OrderFormData"
-import { handleDiscount } from "@/app/api/handleDiscount."
 
 const OrderBill = ({ cart, setCart }) => {
 	const [totalPrice, setTotalPrice] = useState(0)
@@ -18,10 +16,10 @@ const OrderBill = ({ cart, setCart }) => {
 
 	useEffect(() => {
 		let total = 0
-		if (!cart?.cartLines) return
-		cart?.cartLines
-			.map((x) => x?.quantity * x?.price?.mainPrice || 0)
-			.forEach((x) => (total += x))
+		if (!cart?.lines) return
+		cart.lines
+			.map((l) => l.quantity * l.product.price.mainPrice)
+			.forEach((l) => (total += l))
 		setTotalPrice(total)
 	}, [cart])
 
@@ -53,23 +51,23 @@ const OrderBill = ({ cart, setCart }) => {
 				<thead>
 					<tr>
 						<th className='p-2'>Sản phẩm</th>
-						<th className='p-2 w-[16%]'>Số lượng</th>
-						<th className='p-2'>Tổng tiền</th>
+						<th className='p-2 w-[20%]'>Số lượng</th>
+						<th className='p-2 w-[20%]'>Tổng tiền</th>
 					</tr>
 				</thead>
 				<tbody className=''>
-					{cart?.cartLines?.map((x, i) => (
+					{cart?.lines?.map((l) => (
 						<tr
-							key={i}
+							key={l}
 							className='border-t border-slate-500/60 my-2'
 						>
 							<td className='p-2'>
-								{x?.product?.name || "loading"}
+								{l?.product?.name || "loading"}
 							</td>
-							<td className='p-2'>{x?.quantity}</td>
+							<td className='p-2'>{l?.quantity}</td>
 							<td className='p-2'>
 								{convertTokVND(
-									x?.quantity * x?.price?.mainPrice || 0,
+									l?.quantity * l?.product?.price?.mainPrice || 0,
 									false
 								)}
 							</td>

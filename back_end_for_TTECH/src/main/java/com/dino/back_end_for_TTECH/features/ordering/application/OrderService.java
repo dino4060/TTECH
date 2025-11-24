@@ -50,34 +50,32 @@ public class OrderService {
     }
 
     public Order checkout(OrderBody body, CurrentUser user) {
-        var model = this.orderMapper.toModel(body);
-        model.setBuyer(user.toUser());
-        model.setOrderTime(Instant.now());
-        model.setStatus(Status.PENDING.toString());
+        var newOrder = this.orderMapper.toModel(body);
+        newOrder.setBuyer(user.toUser());
+        newOrder.setOrderTime(Instant.now());
+        newOrder.setStatus(Status.PENDING.toString());
 
         var cart = this.cartService.get(user);
-
         cart.getLines().forEach(cartLine -> {
             OrderLine orderLine = new OrderLine();
 
             var quantity = cartLine.getQuantity();
             var product = cartLine.getProduct();
             var price = product.getPrice();
-            var inventory = product.getStock();
+            var stock = product.getStock();
 
-            orderLine.setOrder(model);
+            orderLine.setOrder(newOrder);
             orderLine.newQuantity(cartLine.getQuantity());
             orderLine.setProduct(product);
             orderLine.newMainPrice(price.getMainPrice());
             orderLine.newSidePrice(price.getSidePrice());
 
-            model.getLines().add(orderLine);
-            inventory.reserve(quantity);
+            newOrder.getLines().add(orderLine);
+            stock.reserve(quantity);
         });
-
         cart.getLines().clear();
 
-        var result = this.orderRepository.save(model);
+        var result = this.orderRepository.save(newOrder);
         return result;
     }
 }

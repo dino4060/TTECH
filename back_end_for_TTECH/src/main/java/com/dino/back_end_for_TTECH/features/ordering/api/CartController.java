@@ -35,10 +35,10 @@ public class CartController {
 
     @PostMapping("/lines")
     public ResponseEntity<CartLineData> addLineItem(
-            @Valid @RequestBody CartLineBody dto,
+            @Valid @RequestBody CartLineBody body,
             @AuthUser CurrentUser currentUser
     ) {
-        var line = this.cartService.addLineItem(dto, currentUser);
+        var line = this.cartService.addLineItem(body, currentUser);
         return ResponseEntity.ok(line);
     }
 
@@ -53,10 +53,10 @@ public class CartController {
 
     @DeleteMapping("/lines")
     public ResponseEntity<Deleted> removeLines(
-            @Valid @RequestBody CartBody request,
+            @Valid @RequestBody CartBody body,
             @AuthUser CurrentUser currentUser
     ) {
-        var deleteRes = this.cartService.removeCartItems(request, currentUser);
+        var deleteRes = this.cartService.removeLineItems(body, currentUser);
         return ResponseEntity.ok(deleteRes);
     }
 }

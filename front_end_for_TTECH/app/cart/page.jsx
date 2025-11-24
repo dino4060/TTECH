@@ -1,22 +1,19 @@
 "use client"
-
 import CartDetail from "@/components/cart/CartDetail"
 import OrderBill from "@/components/order/OrderBill"
-import { useEffect, useState } from "react"
-import { handleCart } from "../api/handleCart"
-import { handleDiscount } from "../api/handleDiscount."
-import { TTECH_TOKEN } from "@/lib/constants/string"
-import clientLocal from "@/lib/storage/local.client"
-import { clientFetch } from "@/lib/http/fetch.client"
 import { cartApi } from "@/lib/api/cart.api"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { useEffect, useState } from "react"
 
 const Page = () => {
 	const [cart, setCart] = useState([1, 2, 3, 4])
 
 	useEffect(() => {
 		const getCart = async () => {
-			const { data } = await clientFetch(cartApi.get())
-			setCart(data)
+			const { success, data } = await clientFetch(
+				cartApi.get()
+			)
+			success && setCart(data)
 		}
 		getCart()
 	}, [])
