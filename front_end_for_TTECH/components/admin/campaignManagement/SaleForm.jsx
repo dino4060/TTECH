@@ -14,7 +14,7 @@ import {
 } from "@/lib/utils/check"
 
 const SaleForm = ({
-	campType: saleType,
+	CampType: SaleType,
 	action,
 	onReturn,
 	currentCamp,
@@ -43,7 +43,7 @@ const SaleForm = ({
 
 	const onSubmitSale = async () => {
 		if (action === "ADD") {
-			const body = { ...saleData, promotionType: saleType.key }
+			const body = { ...saleData, promotionType: SaleType.key }
 			const isValid = checkSubmitForm(
 				campaignForm,
 				body,
@@ -123,7 +123,7 @@ const SaleForm = ({
 			>
 				<div className='flex justify-between items-center mb-4'>
 					<h3 className='text-[2.2rem] font-semibold'>
-						{saleType.name}
+						{SaleType.name}
 					</h3>
 
 					{action === "ADD" && (

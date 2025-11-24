@@ -15,24 +15,7 @@ import { Fragment } from "react"
 import SaleForm from "./SaleForm"
 import VoucherForm from "./VoucherForm"
 
-const CampaignType = ({
-	setRenderStep2,
-	currentCamp,
-	setAsyncList,
-}) => {
-	const nextStep = (campType) => {
-		const onReturn = () => setRenderStep2(null)
-		setRenderStep2(() => {
-			return () =>
-				campType.renderForm(
-					campType,
-					"ADD",
-					onReturn,
-					currentCamp,
-					setAsyncList
-				)
-		})
-	}
+const CampaignType = ({ setCurrentCampType }) => {
 	return (
 		<Fragment>
 			<motion.div
@@ -56,7 +39,7 @@ const CampaignType = ({
 									className='p-6 border border-gray-300 rounded-lg bg-white hover:border-pink-500
                     hover:shadow-md transition-all cursor-pointer'
 									whileHover={{ scale: 1.02 }}
-									onClick={() => nextStep(type)}
+									onClick={() => setCurrentCampType(type)}
 								>
 									<div className='flex items-center gap-4'>
 										<div className='p-3 bg-pink-100 rounded-lg'>
@@ -92,14 +75,14 @@ const CampaignTypeGroups = [
 				name: "Giảm giá hằng ngày",
 				icon: CirclePercentIcon,
 				renderForm: (
-					campType,
+					CampType,
 					action,
 					onReturn,
 					currentCamp,
 					setAsyncList
 				) => (
 					<SaleForm
-						campType={campType}
+						CampType={CampType}
 						action={action}
 						onReturn={onReturn}
 						currentCamp={currentCamp}
@@ -112,14 +95,14 @@ const CampaignTypeGroups = [
 				name: "Flash Sale",
 				icon: ZapIcon,
 				renderForm: (
-					campType,
+					CampType,
 					action,
 					onReturn,
 					currentCamp,
 					setAsyncList
 				) => (
 					<SaleForm
-						campType={campType}
+						CampType={CampType}
 						action={action}
 						onReturn={onReturn}
 						currentCamp={currentCamp}
@@ -132,14 +115,14 @@ const CampaignTypeGroups = [
 				name: "Giảm giá hàng mới về",
 				icon: PackagePlusIcon,
 				renderForm: (
-					campType,
+					CampType,
 					action,
 					onReturn,
 					currentCamp,
 					setAsyncList
 				) => (
 					<SaleForm
-						campType={campType}
+						CampType={CampType}
 						action={action}
 						onReturn={onReturn}
 						currentCamp={currentCamp}
@@ -159,9 +142,9 @@ const CampaignTypeGroups = [
 				key: "PUBLIC_VOUCHER",
 				name: "Voucher đơn hàng",
 				icon: TicketIcon,
-				renderForm: (campType, action, onReturn) => (
+				renderForm: (CampType, action, onReturn) => (
 					<VoucherForm
-						campType={campType}
+						CampType={CampType}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -171,9 +154,9 @@ const CampaignTypeGroups = [
 				key: "CODE_VOUCHER",
 				name: "Voucher mã dành riêng",
 				icon: TagIcon,
-				renderForm: (campType, action, onReturn) => (
+				renderForm: (CampType, action, onReturn) => (
 					<VoucherForm
-						campType={campType}
+						CampType={CampType}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -183,9 +166,9 @@ const CampaignTypeGroups = [
 				key: "REVIEW_VOUCHER",
 				name: "Voucher đánh giá",
 				icon: PencilLineIcon,
-				renderForm: (campType, action, onReturn) => (
+				renderForm: (CampType, action, onReturn) => (
 					<VoucherForm
-						campType={campType}
+						CampType={CampType}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -195,9 +178,9 @@ const CampaignTypeGroups = [
 				key: "NEW_CUSTOMER_VOUCHER",
 				name: "Voucher khách mới",
 				icon: UserRoundPlusIcon,
-				renderForm: (campType, action, onReturn) => (
+				renderForm: (CampType, action, onReturn) => (
 					<VoucherForm
-						campType={campType}
+						CampType={CampType}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -207,9 +190,9 @@ const CampaignTypeGroups = [
 				key: "LOYAL_CUSTOMER_VOUCHER",
 				name: "Voucher khách quen",
 				icon: UserRoundCheckIcon,
-				renderForm: (campType, action, onReturn) => (
+				renderForm: (CampType, action, onReturn) => (
 					<VoucherForm
-						campType={campType}
+						CampType={CampType}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -219,9 +202,9 @@ const CampaignTypeGroups = [
 				key: "MESSAGE_VOUCHER",
 				name: "Voucher tin nhắn",
 				icon: MessagesSquareIcon,
-				renderForm: (campType, action, onReturn) => (
+				renderForm: (CampType, action, onReturn) => (
 					<VoucherForm
-						campType={campType}
+						CampType={CampType}
 						action={action}
 						onReturn={onReturn}
 					/>
