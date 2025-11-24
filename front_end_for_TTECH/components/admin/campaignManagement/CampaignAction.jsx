@@ -8,7 +8,7 @@ const CampaignAction = ({}) => {
 
 	return (
 		<Fragment>
-			<div className='flex gap-2 justify-end p-1'>
+			<div className='flex gap-2 justify-end p-1 '>
 				{actions.map((action) => (
 					<motion.div
 						key={action.key}
@@ -25,7 +25,7 @@ const CampaignAction = ({}) => {
 				))}
 			</div>
 
-			<div className='p-10'>
+			<div className='p-10 '>
 				{actions.find((a) => a.key === action).render()}
 			</div>
 		</Fragment>

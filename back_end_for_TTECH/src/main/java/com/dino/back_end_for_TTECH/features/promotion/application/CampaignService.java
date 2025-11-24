@@ -1,13 +1,18 @@
 package com.dino.back_end_for_TTECH.features.promotion.application;
 
+import com.dino.back_end_for_TTECH.features.promotion.application.mapper.CampaignMapper;
 import com.dino.back_end_for_TTECH.features.promotion.application.mapper.SaleMapper;
+import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignData;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignQuery;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleBody;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleData;
+import com.dino.back_end_for_TTECH.features.promotion.domain.Campaign;
 import com.dino.back_end_for_TTECH.features.promotion.domain.Sale;
 import com.dino.back_end_for_TTECH.features.promotion.domain.model.Status;
+import com.dino.back_end_for_TTECH.features.promotion.domain.repository.CampaignRepository;
 import com.dino.back_end_for_TTECH.features.promotion.domain.repository.SaleRepository;
 import com.dino.back_end_for_TTECH.shared.application.exception.DateTimePairError;
+import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,6 +26,9 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class CampaignService {
+
+    CampaignRepository campaignRepo;
+    CampaignMapper campaignMapper;
 
     SaleRepository saleRepo;
     SaleMapper saleMapper;
@@ -53,8 +61,13 @@ public class CampaignService {
         }
     }
 
-    public Object list(CampaignQuery query) {
-        return null;
+    public PageData<CampaignData> list(CampaignQuery query) {
+        var page = this.campaignRepo.findAll(
+                this.campaignMapper.toQueryable(query),
+                this.campaignMapper.toPageable(query));
+
+        return this.campaignMapper.toPageData(
+                page, (Campaign c) -> this.campaignMapper.toData(c));
     }
 
     public SaleData create(SaleBody body) {

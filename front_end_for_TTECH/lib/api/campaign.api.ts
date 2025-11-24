@@ -6,9 +6,17 @@ import { RESOURCES } from "../constants/resources"
 export const campaignApi = {}
 
 export const adminCampaignApi = {
-	createSale: (body = {}): TApi<{}[]> => ({
-		route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales`,
-		method: HttpMethod.POST,
-		body,
+	list: (query = {}): TApi<{}[]> => ({
+		route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}`,
+		method: HttpMethod.GET,
+		query,
 	}),
+
+	saleApi: {
+		create: (body = {}): TApi<{}[]> => ({
+			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales`,
+			method: HttpMethod.POST,
+			body,
+		}),
+	},
 }

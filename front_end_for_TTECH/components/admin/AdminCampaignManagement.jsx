@@ -1,7 +1,6 @@
 "use client"
 import { handleDiscount } from "@/app/api/handleDiscount."
 import { useEffect, useState } from "react"
-import CampaignForm from "./campaignManagement/CampaignForm.temp"
 import CampaignList from "./campaignManagement/CampaignList"
 import CampaignAction from "./campaignManagement/CampaignAction"
 
@@ -13,36 +12,26 @@ const AdminCampaignManagement = () => {
 	const [currentDiscountClicked, setCurrentDiscountClicked] =
 		useState({})
 
-	const getData = async () => {
-		const response = await handleDiscount.getAllDiscount()
-		if (Array.isArray(response)) setDiscountList(response)
-	}
+	// const getData = async () => {
+	// 	const response = await handleDiscount.getAllDiscount()
+	// 	if (Array.isArray(response)) setDiscountList(response)
+	// }
 
-	useEffect(() => {
-		getData()
-	}, [triggerGetData])
+	// useEffect(() => {
+	// 	getData()
+	// }, [triggerGetData])
 
 	return (
-		<div className='container mx-auto flex mt-10 gap-5'>
+		<div className='container mx-auto flex mt-10 gap-5 bg-white'>
 			<div className='flex-[4]'>
 				<CampaignList
-					discountList={discountList}
-					setDiscountList={setDiscountList}
-					currentDiscountClicked={currentDiscountClicked}
-					setCurrentDiscountClicked={setCurrentDiscountClicked}
-					setMode={setMode}
+					isRefresh={false}
+					currentCamp={currentDiscountClicked}
+					setCurrentCamp={setCurrentDiscountClicked}
 				/>
 			</div>
 			<div className='flex-[6] bg-white'>
 				<CampaignAction />
-				{/* <CampaignForm
-					currentDiscountClicked={currentDiscountClicked}
-					setCurrentDiscountClicked={setCurrentDiscountClicked}
-					mode={mode}
-					setMode={setMode}
-					triggerGetData={triggerGetData}
-					setTriggerGetData={setTriggerGetData}
-				/> */}
 			</div>
 		</div>
 	)

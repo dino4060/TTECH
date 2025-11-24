@@ -61,7 +61,7 @@ const SaleForm = ({ type: saleType, action, onReturn }) => {
 			}
 
 			const { success } = await clientFetch(
-				adminCampaignApi.createSale(body)
+				adminCampaignApi.saleApi.create(body)
 			)
 			if (success) {
 				setNotification("Tạo chiến dịch giảm giá thành công")

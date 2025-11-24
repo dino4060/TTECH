@@ -1,9 +1,8 @@
 package com.dino.back_end_for_TTECH.features.promotion.application.mapper;
 
+import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignData;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignQuery;
-import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleBody;
 import com.dino.back_end_for_TTECH.features.promotion.domain.Campaign;
-import com.dino.back_end_for_TTECH.features.promotion.domain.Sale;
 import com.dino.back_end_for_TTECH.features.promotion.domain.sepecification.CampaignSpecification;
 import com.dino.back_end_for_TTECH.shared.application.mapper.PageMapper;
 import org.mapstruct.Mapper;
@@ -16,4 +15,6 @@ public interface CampaignMapper extends PageMapper {
     default Specification<Campaign> toQueryable(CampaignQuery query) {
         return CampaignSpecification.build(query);
     }
+
+    CampaignData toData(Campaign campaign);
 }
