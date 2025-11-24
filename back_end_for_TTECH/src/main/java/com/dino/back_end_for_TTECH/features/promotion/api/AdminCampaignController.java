@@ -25,14 +25,27 @@ public class AdminCampaignController {
     CampaignService campaignService;
 
     @GetMapping
-    public ResponseEntity<Object> list(@Valid @ModelAttribute CampaignQuery query) {
+    public ResponseEntity<Object> list(
+            @Valid @ModelAttribute CampaignQuery query
+    ) {
         var data = this.campaignService.list(query);
         return ResponseEntity.ok(data);
     }
 
     @PostMapping("/sales")
-    public ResponseEntity<Object> create(@Valid @RequestBody SaleBody body) {
+    public ResponseEntity<Object> create(
+            @Valid @RequestBody SaleBody body
+    ) {
         this.campaignService.create(body);
+        return ResponseEntity.ok(Map.of());
+    }
+
+    @PutMapping("/sales/{id}")
+    public ResponseEntity<Object> update(
+            @PathVariable long id,
+            @Valid @RequestBody SaleBody body
+    ) {
+        this.campaignService.update(id, body);
         return ResponseEntity.ok(Map.of());
     }
 }

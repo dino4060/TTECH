@@ -9,7 +9,7 @@ export const checkKV = (key: string, value: any) => {
 type FormField = {
 	key: string
 	name: string
-	type: "text" | "number" | "select" | "checkbox"
+	type: "text" | "number" | "datetime-local"
 	disabled: boolean
 	required: boolean
 	side?: {
@@ -21,8 +21,14 @@ type FormField = {
 export const checkSubmitForm = (
 	Form: FormField[],
 	body: Record<string, any>,
-	feedback: Record<string, string>
+	feedback: Record<string, string>,
+	idModelName?: string
 ) => {
+	if (idModelName && !body["id"]) {
+		feedback["id"] = `Vui lòng chọn ${idModelName}`
+		return false
+	}
+
 	let isValid = true
 
 	Form.map((FF) => {

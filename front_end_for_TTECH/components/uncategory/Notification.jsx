@@ -31,7 +31,7 @@ const Notification = ({
 }) => {
 	const { text, style, keep } = notification
 
-	const duration = keep || 2000
+	const duration = keep || 3000
 
 	useEffect(() => {
 		const timer = setTimeout(() => {

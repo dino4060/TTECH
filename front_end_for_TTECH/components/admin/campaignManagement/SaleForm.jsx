@@ -1,19 +1,18 @@
 import Notification from "@/components/uncategory/Notification"
 import { adminCampaignApi } from "@/lib/api/campaign.api"
 import { clientFetch } from "@/lib/http/fetch.client"
-import { motion } from "framer-motion"
-import { Fragment, useEffect, useState } from "react"
-import { CiLogout } from "react-icons/ci"
-import LimitCell from "./LimitCell"
-import PriceCell from "./PriceCell"
-import ProductOptions from "./ProductOptions"
 import {
 	checkDateTimePair,
 	checkKV,
 	checkSubmitForm,
-	checkV,
 } from "@/lib/utils/check"
-import { ActionKeyUn } from "./CampaignAction"
+import { motion } from "framer-motion"
+import { Fragment, useEffect, useState } from "react"
+import { CiLogout } from "react-icons/ci"
+import { ActionKeyUn as ActionUn } from "./CampaignAction"
+import LimitCell from "./LimitCell"
+import PriceCell from "./PriceCell"
+import ProductOptions from "./ProductOptions"
 
 const SaleForm = ({
 	CampType: SaleType,
@@ -49,39 +48,62 @@ const SaleForm = ({
 	}
 
 	const onSubmitSale = async () => {
-		if (action === "ADD") {
-			const body = { ...saleData }
-			const isValid = checkSubmitForm(CampForm, body, feedback)
-			if (!isValid) {
-				setFeedback({ ...feedback })
-				return
-			}
-			const isValidDateTime = checkDateTimePair(
-				body,
-				"startTime",
-				"endTime"
-			)
-			if (!isValidDateTime) {
-				setFeedback({
-					...feedback,
-					endTime: "Thời gian kết thúc phải sau bắt đầu",
-				})
-				return
-			}
+		// Prepare data for ADD or EDIT
+		const { id, idModelName, api, notification } =
+			action === ActionUn.ADD
+				? {
+						id: 0,
+						idModelName: "",
+						api: (id, body) => {
+							return adminCampaignApi.saleApi.create(body)
+						},
+						notification: "Tạo dữ liệu thành công",
+				  }
+				: {
+						id: saleData.id,
+						idModelName: "Chiến dịch khuyến mãi",
+						api: (id, body) => {
+							return adminCampaignApi.saleApi.update(id, body)
+						},
+						notification: "Cập nhật dữ liệu thành công",
+				  }
 
-			const { success } = await clientFetch(
-				adminCampaignApi.saleApi.create(body)
-			)
-			if (success) {
-				setNotification("Tạo chiến dịch giảm giá thành công")
-				cleanForm()
-				setAsyncList((prev) => !prev)
-			}
-		} else {
+		// Validate form
+		const body = { ...saleData }
+		const isValid = checkSubmitForm(
+			CampForm,
+			body,
+			feedback,
+			idModelName
+		)
+		if (!isValid) {
+			setFeedback({ ...feedback })
+			return
+		}
+		const isValidDateTime = checkDateTimePair(
+			body,
+			"startTime",
+			"endTime"
+		)
+		if (!isValidDateTime) {
+			setFeedback({
+				...feedback,
+				endTime: "Thời gian kết thúc phải sau bắt đầu",
+			})
+			return
+		}
+
+		// Call API
+		checkKV("x1", api(id, body))
+		const { success } = await clientFetch(api(id, body))
+		if (success) {
+			setNotification(notification)
+			cleanForm()
+			setAsyncList((prev) => !prev)
 		}
 	}
 
-	const onDeleteSaleUnit = (productId) => {
+	const onRemoveSaleUnit = (productId) => {
 		setSaleUnits(
 			saleUnits.filter((u) => u.product.id !== productId)
 		)
@@ -92,8 +114,12 @@ const SaleForm = ({
 
 	// Change action => Clean form
 	useEffect(() => {
-		action === ActionKeyUn.ADD && cleanForm()
+		action === ActionUn.ADD && cleanForm()
 	}, [action])
+
+	useEffect(() => {
+		setFeedback({})
+	}, [saleData])
 
 	// Choose new products => Render new sale units
 	useEffect(() => {
@@ -136,7 +162,7 @@ const SaleForm = ({
 						{SaleType.name}
 					</h3>
 
-					{action === "ADD" && (
+					{action === ActionUn.dealPercent && (
 						<CiLogout size={18} onClick={() => onReturn()} />
 					)}
 				</div>
@@ -164,7 +190,7 @@ const SaleForm = ({
 								onChangeSale(FF.key, e.target.value)
 							}
 						/>
-						{FF.required && (
+						{feedback[FF.key] && (
 							<h2 className='text-red-500 text-[1.4rem]'>
 								{feedback[FF.key]}
 							</h2>
@@ -279,7 +305,7 @@ const SaleForm = ({
 											<td className='px-4 py-2 font-normal shrink-0 text-center'>
 												<span
 													className='text-[1.4rem] font-semibold text-red-500'
-													onClick={() => onDeleteSaleUnit(u.product.id)}
+													onClick={() => onRemoveSaleUnit(u.product.id)}
 												>
 													Xóa
 												</span>
@@ -296,7 +322,9 @@ const SaleForm = ({
 					className='bg-blue-500 w-full p-4 mt-4 text-2xl font-semibold text-white rounded-2xl'
 					onClick={() => onSubmitSale()}
 				>
-					{action === "ADD" ? "THÊM HOÀN TẤT" : "SỬA HOÀN TẤT"}
+					{action === "HOÀN TẤT " + ActionUn.ADD
+						? "THÊM"
+						: "SỬA"}
 				</button>
 			</motion.div>
 
@@ -326,7 +354,7 @@ const CampForm = [
 	{
 		key: "id",
 		name: "ID chiến dịch khuyến mãi",
-		type: "text",
+		type: "number",
 		disabled: true,
 		required: false,
 	},

@@ -12,7 +12,9 @@ import com.dino.back_end_for_TTECH.features.promotion.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.promotion.domain.repository.CampaignRepository;
 import com.dino.back_end_for_TTECH.features.promotion.domain.repository.SaleRepository;
 import com.dino.back_end_for_TTECH.shared.application.exception.DateTimePairError;
+import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundError;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -43,6 +45,10 @@ public class CampaignService {
             throw new DateTimePairError("startTime", "endTime");
         }
 
+        // Validate: status is DEACTIVATED => bypass
+        if (model.hasStatus(Status.DEACTIVATED))
+            return;
+
         // startTime < endTime < now => ENDED
         if (endTime.isBefore(now)) {
             model.setStatus(Status.ENDED);
@@ -71,10 +77,21 @@ public class CampaignService {
     }
 
     public SaleData create(SaleBody body) {
-        var newBody = this.saleMapper.toModel(body);
-        this.genStatus(newBody);
+        var newModel = this.saleMapper.toModel(body);
+        this.genStatus(newModel);
 
-        var model = this.saleRepo.save(newBody);
+        var model = this.saleRepo.save(newModel);
+        return this.saleMapper.toData(model);
+    }
+
+    public SaleData update(long id, SaleBody body) {
+        var currentModel = this.saleRepo
+                .findById(id)
+                .orElseThrow(() -> new NotFoundError("Sale"));
+        this.saleMapper.toModel(body, currentModel);
+        this.genStatus(currentModel);
+
+        var model = this.saleRepo.save(currentModel);
         return this.saleMapper.toData(model);
     }
 }

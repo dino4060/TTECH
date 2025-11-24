@@ -1,15 +1,15 @@
 import { AlertCircle } from "lucide-react"
 import SaleForm from "./SaleForm"
 import { CampTypeUn } from "./CampaignAdd"
-import { ActionKeyUn } from "./CampaignAction"
+import { ActionKeyUn as ActionUn } from "./CampaignAction"
 
 const CampaignEdit = ({
 	currentCamp,
 	setCurrentCamp,
 	setAsyncList,
 }) => {
-	// Nếu chưa chọn campaign
-	if (!currentCamp?.id) {
+	// Nếu promotionType là falsy
+	if (!currentCamp?.promotionType) {
 		return (
 			<div className='flex flex-col items-center justify-center min-h-[200px] gap-6'>
 				<div className='bg-gray-50 border-2 border-gray-300 rounded-2xl p-8 max-w-xl'>
@@ -27,7 +27,7 @@ const CampaignEdit = ({
 		)
 	}
 
-	// Validate promotionType có tồn tại trong CampTypeUn không
+	// Nếu promotionType ngoài phạm vi
 	const campType = CampTypeUn[currentCamp.promotionType]
 
 	if (!campType) {
@@ -40,18 +40,9 @@ const CampaignEdit = ({
 							Loại chiến dịch không hợp lệ
 						</h2>
 					</div>
-					<p className='text-red-700 text-lg leading-relaxed'>
-						Loại chiến dịch "{currentCamp.promotionType}" không
-						được hỗ trợ.
+					<p className='text-red-700 text-[1.4rem] leading-relaxed'>
+						Loại "{currentCamp.promotionType}" không được hỗ trợ.
 					</p>
-					<div className='mt-4 bg-white rounded-lg p-4'>
-						<p className='text-sm text-gray-600'>
-							<strong>Campaign ID:</strong> {currentCamp.id}
-						</p>
-						<p className='text-sm text-gray-600'>
-							<strong>Type:</strong> {currentCamp.promotionType}
-						</p>
-					</div>
 				</div>
 			</div>
 		)
@@ -61,7 +52,7 @@ const CampaignEdit = ({
 	return (
 		<SaleForm
 			CampType={campType}
-			action={ActionKeyUn.EDIT}
+			action={ActionUn.EDIT}
 			currentCamp={currentCamp}
 			setCurrentCamp={setCurrentCamp}
 			setAsyncList={setAsyncList}

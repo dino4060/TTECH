@@ -18,5 +18,11 @@ export const adminCampaignApi = {
 			method: HttpMethod.POST,
 			body,
 		}),
+
+		update: (id: number, body = {}): TApi<{}[]> => ({
+			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales/${id}`,
+			method: HttpMethod.PUT,
+			body,
+		}),
 	},
 }
