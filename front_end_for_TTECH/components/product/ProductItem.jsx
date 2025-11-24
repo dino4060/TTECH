@@ -1,79 +1,83 @@
 "use client"
-
-import { handleCart } from "@/app/api/handleCart"
-import { UserAuth } from "@/context/AuthContext"
-import { convertTokVND, convertToVND } from "@/utils/until"
+import { cartApi } from "@/lib/api/cart.api"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { convertToD } from "@/utils/until"
 import { AnimatePresence, motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import CircleLoader from "../uncategory/CircleLoader"
 import Notification from "../uncategory/Notification"
-import { clientFetch } from "@/lib/http/fetch.client"
-import { cartApi } from "@/lib/api/cart.api"
 
 const ProductItem = ({
-	product_id,
-	category_id,
 	loading,
-	name_pr,
-	detail,
+	productId,
+	name,
+	thumb,
+	highlight,
 	price,
-	quantity_pr,
-	img_href,
-	guarantee_period,
-	skus,
 }) => {
+	const {
+		mainPrice = 0,
+		sidePrice = 0,
+		dealPercent = 0,
+	} = price || {}
 	const router = useRouter()
-	const { user, setUser, token } = UserAuth()
-
-	const [notifications, setNotifications] = useState(false)
+	const [notification, setNotification] = useState("")
 
 	const addToCart = async () => {
-		const result = await clientFetch(
-			cartApi.addLine({ skuId: skus[0].id, quantity: 1 })
+		const { success, data } = await clientFetch(
+			cartApi.addLine({ productId, quantity: 1 })
 		)
+		success && setNotification("Đã thêm vào giỏi hàng")
 	}
+
 	return (
 		<div className='flex flex-col bg-white p-4 items-center mb-10'>
-			<AnimatePresence>
-				{notifications && (
-					<Notification
-						setNotifications={setNotifications}
-						notifications={notifications}
-						notification={{
-							style: "success",
-							text: "Sản phẩm đã được thêm vào giỏi hàng của bạn",
-						}}
-					/>
-				)}
-			</AnimatePresence>
+			{notification && (
+				<Notification
+					setNotifications={() => setNotification("")}
+					notification={{
+						text: notification,
+						style: "success",
+					}}
+				/>
+			)}
 
 			<div className='relative w-[200px] h-[200px] object-cover rounded-3xl flex items-center justify-center'>
 				{loading ? (
 					<CircleLoader />
 				) : (
-					<img
-						src={img_href}
-						alt=''
-						className='rounded-[30px]'
-					/>
+					<img src={thumb} alt='' className='rounded-[30px]' />
 				)}
 			</div>
 			<h1 className='text-[1.7rem] z-10 font-[700] mt-5 max-w-[85%] overflow-hidden whitespace-nowrap overflow-ellipsis'>
-				{name_pr || "Loading..."}
+				{name || "Loading..."}
 			</h1>
 
 			<h2 className='text-[1.3rem] text-center w-2/3 display-2-line min-h-[3.9rem] font-[500] mt-5'>
-				{detail || "Loading..."}
+				{highlight || "Loading..."}
 			</h2>
 
-			<h2 className=' text-[1.6rem] font-[700] mt-5'>
-				{convertTokVND(price) || "Loading..."}
-			</h2>
+			{dealPercent > 0 ? (
+				// Có giảm giá
+				<div className='flex gap-3 items-center mt-5 text-black-500'>
+					<h2 className='text-[1.8rem] font-bold'>
+						{convertToD(mainPrice)}
+					</h2>
+					<h2 className='text-xl text-gray-400 line-through'>
+						{convertToD(sidePrice)}
+					</h2>
+				</div>
+			) : (
+				// Không giảm giá
+				<h2 className='text-[1.8rem] font-bold mt-5 text-black-500'>
+					{convertToD(mainPrice) || "Loading..."}
+				</h2>
+			)}
 
 			<div
 				onClick={() => {
-					router.push("/products/" + product_id)
+					router.push("/products/" + productId)
 				}}
 				className='text-[1.2rem] mb-6 text-blue-500 text-center cursor-pointer'
 			>
@@ -81,10 +85,7 @@ const ProductItem = ({
 			</div>
 
 			<motion.button
-				onClick={async () => {
-					await addToCart(product_id)
-					setNotifications(true)
-				}}
+				onClick={async () => await addToCart(productId)}
 				whileHover={{
 					scale: [1, 1.1],
 				}}

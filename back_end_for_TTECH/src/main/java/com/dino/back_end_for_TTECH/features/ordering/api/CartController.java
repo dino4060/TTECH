@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.features.ordering.api;
 
 import com.dino.back_end_for_TTECH.features.ordering.application.CartService;
-import com.dino.back_end_for_TTECH.features.ordering.application.mapper.ICartMapper;
+import com.dino.back_end_for_TTECH.features.ordering.application.mapper.CartMapper;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.CartBody;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.CartData;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.CartLineBody;
@@ -17,50 +17,46 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/carts")
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CartController {
 
-    @RestController
-    @RequestMapping("/api/carts")
-    @AllArgsConstructor
-    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-    public static class PrivateCartController {
+    CartService cartService;
+    CartMapper cartMapper;
 
-        CartService cartService;
-        ICartMapper cartMapper;
+    @GetMapping
+    public ResponseEntity<CartData> get(
+            @AuthUser CurrentUser currentUser
+    ) {
+        var cart = this.cartService.get(currentUser);
+        return ResponseEntity.ok(this.cartMapper.toCartData(cart));
+    }
 
-        @GetMapping
-        public ResponseEntity<CartData> get(
-                @AuthUser CurrentUser currentUser
-        ) {
-            var cart = this.cartService.get(currentUser);
-            return ResponseEntity.ok(this.cartMapper.customCartData(cart));
-        }
+    @PostMapping("/lines")
+    public ResponseEntity<CartLineData> addLineItem(
+            @Valid @RequestBody CartLineBody dto,
+            @AuthUser CurrentUser currentUser
+    ) {
+        var line = this.cartService.addLineItem(dto, currentUser);
+        return ResponseEntity.ok(line);
+    }
 
-        @PostMapping("/lines")
-        public ResponseEntity<CartLineData> addLine(
-                @Valid @RequestBody CartLineBody dto,
-                @AuthUser CurrentUser currentUser
-        ) {
-            var line = this.cartService.addCartItem(dto, currentUser);
-            return ResponseEntity.ok(line);
-        }
+    @PatchMapping("/lines")
+    public ResponseEntity<CartLineData> updateQuantity(
+            @Valid @RequestBody CartLineBody body,
+            @AuthUser CurrentUser currentUser
+    ) {
+        var updatedItem = this.cartService.updateQuantity(body, currentUser);
+        return ResponseEntity.ok(updatedItem);
+    }
 
-        @PatchMapping("/lines")
-        public ResponseEntity<CartLineData> updateQuantity(
-                @Valid @RequestBody CartLineBody body,
-                @AuthUser CurrentUser currentUser
-        ) {
-            var updatedItem = this.cartService.updateQuantity(body, currentUser);
-            return ResponseEntity.ok(updatedItem);
-        }
-
-        @DeleteMapping("/lines")
-        public ResponseEntity<Deleted> removeLines(
-                @Valid @RequestBody CartBody request,
-                @AuthUser CurrentUser currentUser
-        ) {
-            var deleteRes = this.cartService.removeCartItems(request, currentUser);
-            return ResponseEntity.ok(deleteRes);
-        }
+    @DeleteMapping("/lines")
+    public ResponseEntity<Deleted> removeLines(
+            @Valid @RequestBody CartBody request,
+            @AuthUser CurrentUser currentUser
+    ) {
+        var deleteRes = this.cartService.removeCartItems(request, currentUser);
+        return ResponseEntity.ok(deleteRes);
     }
 }

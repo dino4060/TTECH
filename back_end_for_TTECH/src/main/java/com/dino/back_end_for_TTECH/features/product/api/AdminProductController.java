@@ -4,7 +4,6 @@ import com.dino.back_end_for_TTECH.features.product.application.ProductService;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductData;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductQuery;
-import com.dino.back_end_for_TTECH.shared.application.model.PageQuery;
 import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

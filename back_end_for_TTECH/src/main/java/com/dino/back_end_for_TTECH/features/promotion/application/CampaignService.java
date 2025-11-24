@@ -14,7 +14,6 @@ import com.dino.back_end_for_TTECH.features.promotion.domain.repository.SaleRepo
 import com.dino.back_end_for_TTECH.shared.application.exception.DateTimePairError;
 import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundError;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

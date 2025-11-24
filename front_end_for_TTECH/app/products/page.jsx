@@ -1,13 +1,10 @@
 "use client"
-
 import FilterProduct from "@/components/product/FilterProduct"
-import PaginationControls from "@/components/uncategory/PaginationControls"
 import ProductItem from "@/components/product/ProductItem"
-import { useEffect, useState } from "react"
-import { handleProduct } from "../api/handleProduct"
-import { useRouter } from "next/navigation"
-import { clientFetch } from "@/lib/http/fetch.client"
+import PaginationControls from "@/components/uncategory/PaginationControls"
 import { productApi } from "@/lib/api/product.api"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { useEffect, useState } from "react"
 
 export default function Page({ searchParams }) {
 	const [filter, setFilter] = useState(searchParams) // { keywords, category, supplier, prices }
@@ -16,7 +13,7 @@ export default function Page({ searchParams }) {
 	const [currentPage, setCurrentPage] = useState(
 		searchParams.pageNumber
 	)
-	const [list, setList] = useState([
+	const [productList, setProductList] = useState([
 		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
 	])
 
@@ -38,13 +35,14 @@ export default function Page({ searchParams }) {
 
 	useEffect(() => {
 		const getProduct = async () => {
-			const { data } = await clientFetch(
+			const { success, data } = await clientFetch(
 				productApi.list(filter)
 			)
-			setCurrentPage(data?.pagination?.page)
-			setTotalPages(data?.pagination?.totalPages)
-			setList(data?.items)
-			setLoading(false)
+			success &&
+				(setTotalPages(data?.totalPages),
+				setCurrentPage(data?.page),
+				setProductList(data?.items),
+				setLoading(false))
 		}
 
 		getProduct()
@@ -56,44 +54,34 @@ export default function Page({ searchParams }) {
 				onFilterChange={setFilter}
 				filter={filter}
 			/>
+
 			<div className='flex justify-center'>
 				<div className='grid gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
-					{list?.map((x, i) => (
+					{productList.map((p) => (
 						<ProductItem
+							key={p.id}
 							loading={loading}
-							key={i}
-							product_id={x?.id || ""}
-							category_id={x?.category?.id || ""}
-							name_pr={x?.name || ""}
-							name_serial={x?.serialNumber || ""}
-							detail={x?.description || ""}
-							price={x?.price?.skuPrices[0]?.mainPrice || 0}
-							quantity_pr={x?.skus?.[0].inventory.stocks || ""}
-							img_href={x?.thumb || null}
-							guarantee_period={x?.guaranteeMonths || ""}
-							skus={x.skus}
+							productId={p?.id || 0}
+							name={p?.name || ""}
+							thumb={p?.thumb || ""}
+							highlight={p?.description || ""}
+							price={p?.price || null}
 						/>
 					))}
 				</div>
 			</div>
+
 			<PaginationControls
-				currentPage={currentPage}
 				totalPages={totalPages}
+				currentPage={currentPage}
 				onPageChange={(pageNumber) => {
 					const categoryId = searchParams.categoryId
 
 					if (categoryId) {
-						setFilter({
-							...filter,
-							pageNumber,
-							categoryId,
-						})
+						setFilter({ ...filter, pageNumber, categoryId })
 					} else {
 						const { categoryId, ...rest } = filter
-						setFilter({
-							...rest,
-							pageNumber,
-						})
+						setFilter({ ...rest, pageNumber })
 					}
 				}}
 			/>

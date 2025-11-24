@@ -1,12 +1,8 @@
 package com.dino.back_end_for_TTECH.features.promotion.api;
 
 import com.dino.back_end_for_TTECH.features.promotion.application.CampaignService;
-import com.dino.back_end_for_TTECH.features.promotion.application.CampaignServiceTemp;
-import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignBody;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignQuery;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleBody;
-import com.dino.back_end_for_TTECH.features.promotion.domain.Sale;
-import com.dino.back_end_for_TTECH.features.promotion.domain.Voucher;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

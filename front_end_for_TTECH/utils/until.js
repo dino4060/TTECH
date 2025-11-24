@@ -133,6 +133,11 @@ export const convertTokVND = (number, hasUnit = true) => {
 	return `${number.toLocaleString("vi-VN")} k${unit}`
 }
 
+export const convertToD = (number, hasUnit = true) => {
+	const unit = hasUnit ? "đ" : ""
+	return `${number.toLocaleString("vi-VN")}.000${unit}`
+}
+
 export const convertPercent = (number) => {
 	return `${number} %`
 }

@@ -98,9 +98,7 @@ public class Cart extends BaseEntity {
                     line.increaseQuantity(quantity);
                     return line;
                 })
-                .orElseGet(() -> {
-                    return this.addLine(product, quantity);
-                });
+                .orElseGet(() -> this.addLine(product, quantity));
     }
 
     /**

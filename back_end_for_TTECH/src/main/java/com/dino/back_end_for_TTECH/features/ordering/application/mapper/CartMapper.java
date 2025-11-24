@@ -11,20 +11,9 @@ import org.mapstruct.ReportingPolicy;
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface ICartMapper {
+public interface CartMapper {
 
-    @Mapping(source = "line.product", target = "product")
-    @Mapping(source = "line.product.price", target = "price")
     CartLineData toLineData(CartLine line);
 
-    CartData toCartData(Cart cart, List<CartLineData> cartLines);
-
-    default CartData customCartData(Cart cart) {
-        return toCartData(
-                cart,
-                cart.getLines().stream()
-                        .map(line -> toLineData(line))
-                        .toList()
-        );
-    }
+    CartData toCartData(Cart cart);
 }

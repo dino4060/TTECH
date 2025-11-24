@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
 
 import java.util.Optional;
 
-public interface ICartRepository extends JpaRepository<Cart, Long> {
+public interface CartRepository extends JpaRepository<Cart, Long> {
 
     @EntityGraph(attributePaths = {"lines", "lines.product"})
     Optional<Cart> findWithProductByBuyerId(@NonNull Long buyerId);

@@ -3,10 +3,9 @@ import { adminCampaignApi } from "@/lib/api/campaign.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import {
 	checkDateTimePair,
-	checkKV,
 	checkSubmitForm,
 } from "@/lib/utils/check"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 import { CiLogout } from "react-icons/ci"
 import { ActionKeyUn as ActionUn } from "./CampaignAction"
@@ -32,7 +31,7 @@ const SaleForm = ({
 	const [feedback, setFeedback] = useState({})
 	const [notification, setNotification] = useState("")
 
-	const cleanForm = () => {
+	const cleanSaleData = () => {
 		setSaleData({
 			promotionType: SaleType.key,
 			id: "",
@@ -40,6 +39,10 @@ const SaleForm = ({
 			startTime: "",
 			endTime: "",
 		})
+	}
+
+	const cleanFeedback = () => {
+		setFeedback({})
 	}
 
 	const onChangeSale = (key, value) => {
@@ -94,11 +97,10 @@ const SaleForm = ({
 		}
 
 		// Call API
-		checkKV("x1", api(id, body))
 		const { success } = await clientFetch(api(id, body))
 		if (success) {
 			setNotification(notification)
-			cleanForm()
+			cleanSaleData()
 			setAsyncList((prev) => !prev)
 		}
 	}
@@ -112,11 +114,12 @@ const SaleForm = ({
 		setAppliedProductIds(new Set(appliedProductIds))
 	}
 
-	// Change action => Clean form
+	// Turn add mode => Clean sale data
 	useEffect(() => {
-		action === ActionUn.ADD && cleanForm()
+		action === ActionUn.ADD && cleanSaleData()
 	}, [action])
 
+	// Set new sale => Clean feedback
 	useEffect(() => {
 		setFeedback({})
 	}, [saleData])
@@ -334,16 +337,17 @@ const SaleForm = ({
 				setNewProducts={setNewProducts}
 				appliedProductIds={appliedProductIds}
 			/>
-
-			{notification && (
-				<Notification
-					notification={{
-						text: notification,
-						style: "success",
-					}}
-					setNotifications={setNotification}
-				/>
-			)}
+			<AnimatePresence>
+				{notification && (
+					<Notification
+						notification={{
+							text: notification,
+							style: "success",
+						}}
+						setNotifications={setNotification}
+					/>
+				)}
+			</AnimatePresence>
 		</Fragment>
 	)
 }

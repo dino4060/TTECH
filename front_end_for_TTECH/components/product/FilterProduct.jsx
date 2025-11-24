@@ -131,7 +131,7 @@ const FilterProduct = ({
 						size={30}
 					/>
 					<h1 className='text-2xl text-black/70  font-[400]'>
-						Ưu đãi ngập tràng, <br></br> khuyễn mại đến 60%
+						Ưu đãi ngập tràng, <br></br> khuyến mại đến 60%
 					</h1>
 				</div>
 			</div>

@@ -1,13 +1,13 @@
 package com.dino.back_end_for_TTECH.features.ordering.application;
 
-import com.dino.back_end_for_TTECH.features.ordering.application.mapper.ICartMapper;
+import com.dino.back_end_for_TTECH.features.ordering.application.mapper.CartMapper;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.CartBody;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.CartLineBody;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.CartLineData;
-import com.dino.back_end_for_TTECH.features.ordering.application.model.CartBody;
 import com.dino.back_end_for_TTECH.features.ordering.domain.Cart;
 import com.dino.back_end_for_TTECH.features.ordering.domain.CartLine;
-import com.dino.back_end_for_TTECH.features.ordering.domain.repository.ICartRepository;
-import com.dino.back_end_for_TTECH.features.product.domain.Product;
+import com.dino.back_end_for_TTECH.features.ordering.domain.repository.CartRepository;
+import com.dino.back_end_for_TTECH.features.product.application.ProductService;
 import com.dino.back_end_for_TTECH.features.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.application.utils.Deleted;
@@ -30,9 +30,11 @@ import java.util.Optional;
 @Slf4j
 public class CartService {
 
+    CartRepository cartRepository;
+    CartMapper cartMapper;
+
     IUserService userService;
-    ICartRepository cartRepository;
-    ICartMapper cartMapper;
+    ProductService productService;
 
     // HELPER //
 
@@ -72,15 +74,16 @@ public class CartService {
     // COMMAND //
 
     @Transactional
-    public CartLineData addCartItem(CartLineBody request, CurrentUser currentUser) {
-        var cart = this.findCartWithProduct(currentUser).orElseGet(() -> createCart(currentUser));
-        var product = new Product(); // todo1: this.productService.getProduct(request.productId());
+    public CartLineData addLineItem(CartLineBody body, CurrentUser currentUser) {
+        var cart = this.findCartWithProduct(currentUser)
+                .orElseGet(() -> createCart(currentUser));
+        var product = this.productService.get(body.productId());
 
-        // 1. addOrUpdateCartItem
-        var newProduct = cart.addOrUpdateLine(product, request.quantity());
+        // addOrUpdateCartItem
+        var cartLine = cart.addOrUpdateLine(product, body.quantity());
         this.cartRepository.save(cart);
 
-        return this.cartMapper.toLineData(newProduct);
+        return this.cartMapper.toLineData(cartLine);
     }
 
     @Transactional
