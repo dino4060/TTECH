@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import { Fragment, useState } from "react"
 import CampaignAdd from "./CampaignAdd"
 
-const CampaignAction = ({}) => {
+const CampaignAction = ({ currentCamp, setAsyncList }) => {
 	const [action, setAction] = useState("ADD")
 
 	return (
@@ -26,7 +26,9 @@ const CampaignAction = ({}) => {
 			</div>
 
 			<div className='p-10 '>
-				{actions.find((a) => a.key === action).render()}
+				{actions
+					.find((a) => a.key === action)
+					.render(setAsyncList, currentCamp)}
 			</div>
 		</Fragment>
 	)
@@ -43,12 +45,19 @@ const actions = [
 	{
 		key: "ADD",
 		name: "thêm mới",
-		render: () => <CampaignAdd />,
+		render: (currentCamp, setAsyncList) => (
+			<CampaignAdd
+				currentCamp={currentCamp}
+				setAsyncList={setAsyncList}
+			/>
+		),
 	},
 	{
 		key: "UPDATE",
 		name: "cập nhật",
-		render: () => <div>Cập nhật</div>,
+		render: (setAsyncList, currentCamp) => (
+			<div>Cập nhật</div>
+		),
 	},
 	{
 		key: "DELETE",

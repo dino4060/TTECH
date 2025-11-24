@@ -13,7 +13,13 @@ import {
 	checkV,
 } from "@/lib/utils/check"
 
-const SaleForm = ({ type: saleType, action, onReturn }) => {
+const SaleForm = ({
+	campType: saleType,
+	action,
+	onReturn,
+	currentCamp,
+	setAsyncList,
+}) => {
 	const [show, setShow] = useState(false)
 	const [manage, setManage] = useState(false)
 	const [saleUnits, setSaleUnits] = useState([])

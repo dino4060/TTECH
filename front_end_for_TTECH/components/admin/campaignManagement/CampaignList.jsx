@@ -6,11 +6,12 @@ import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 
 const CampaignList = ({
-	isRefresh,
+	isAsync,
 	currentCamp,
 	setCurrentCamp,
 }) => {
 	const [campList, setCampList] = useState([])
+
 	useEffect(() => {
 		const getCampList = async () => {
 			const { success, data } = await clientFetch(
@@ -20,7 +21,7 @@ const CampaignList = ({
 		}
 
 		getCampList()
-	}, [isRefresh])
+	}, [isAsync])
 	return (
 		<motion.div>
 			<table className='w-full border-spacing-1 border-separate table-auto text-xl relative'>

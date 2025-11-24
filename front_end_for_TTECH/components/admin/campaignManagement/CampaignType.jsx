@@ -15,11 +15,22 @@ import { Fragment } from "react"
 import SaleForm from "./SaleForm"
 import VoucherForm from "./VoucherForm"
 
-const CampaignType = ({ setRenderStep2 }) => {
-	const nextStep = (type) => {
+const CampaignType = ({
+	setRenderStep2,
+	currentCamp,
+	setAsyncList,
+}) => {
+	const nextStep = (campType) => {
 		const onReturn = () => setRenderStep2(null)
 		setRenderStep2(() => {
-			return () => type.renderForm(type, "ADD", onReturn)
+			return () =>
+				campType.renderForm(
+					campType,
+					"ADD",
+					onReturn,
+					currentCamp,
+					setAsyncList
+				)
 		})
 	}
 	return (
@@ -30,7 +41,7 @@ const CampaignType = ({ setRenderStep2 }) => {
 				transition={{ duration: 0.3 }}
 				className='flex flex-col gap-8'
 			>
-				{campaignTypeGroup.map((group) => (
+				{CampaignTypeGroups.map((group) => (
 					<div key={group.key}>
 						<h3 className='text-[2.2rem] font-bold'>
 							{group.name}
@@ -39,7 +50,7 @@ const CampaignType = ({ setRenderStep2 }) => {
 							{group.note}
 						</p>
 						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-							{group.types.map((type) => (
+							{group.CampaignTypes.map((type) => (
 								<motion.div
 									key={type.key}
 									className='p-6 border border-gray-300 rounded-lg bg-white hover:border-pink-500
@@ -69,22 +80,30 @@ const CampaignType = ({ setRenderStep2 }) => {
 
 export default CampaignType
 
-const campaignTypeGroup = [
+const CampaignTypeGroups = [
 	{
 		key: "SALE",
 		name: "Giảm giá",
 		note:
 			"Ưu đãi giảm giá sản phẩm giúp tăng sức cạnh tranh với đối thủ",
-		types: [
+		CampaignTypes: [
 			{
 				key: "DAILY_SALE",
 				name: "Giảm giá hằng ngày",
 				icon: CirclePercentIcon,
-				renderForm: (type, action, onReturn) => (
+				renderForm: (
+					campType,
+					action,
+					onReturn,
+					currentCamp,
+					setAsyncList
+				) => (
 					<SaleForm
-						type={type}
+						campType={campType}
 						action={action}
 						onReturn={onReturn}
+						currentCamp={currentCamp}
+						setAsyncList={setAsyncList}
 					/>
 				),
 			},
@@ -92,11 +111,19 @@ const campaignTypeGroup = [
 				key: "FLASH_SALE",
 				name: "Flash Sale",
 				icon: ZapIcon,
-				renderForm: (type, action, onReturn) => (
+				renderForm: (
+					campType,
+					action,
+					onReturn,
+					currentCamp,
+					setAsyncList
+				) => (
 					<SaleForm
-						type={type}
+						campType={campType}
 						action={action}
 						onReturn={onReturn}
+						currentCamp={currentCamp}
+						setAsyncList={setAsyncList}
 					/>
 				),
 			},
@@ -104,11 +131,19 @@ const campaignTypeGroup = [
 				key: "NEW_ARRIVAL_SALE",
 				name: "Giảm giá hàng mới về",
 				icon: PackagePlusIcon,
-				renderForm: (type, action, onReturn) => (
+				renderForm: (
+					campType,
+					action,
+					onReturn,
+					currentCamp,
+					setAsyncList
+				) => (
 					<SaleForm
-						type={type}
+						campType={campType}
 						action={action}
 						onReturn={onReturn}
+						currentCamp={currentCamp}
+						setAsyncList={setAsyncList}
 					/>
 				),
 			},
@@ -119,14 +154,14 @@ const campaignTypeGroup = [
 		name: "Voucher",
 		note:
 			"Trao tặng voucher thúc đẩy khách hàng chi tiêu nhiều hơn",
-		types: [
+		CampaignTypes: [
 			{
 				key: "PUBLIC_VOUCHER",
 				name: "Voucher đơn hàng",
 				icon: TicketIcon,
-				renderForm: (type, action, onReturn) => (
+				renderForm: (campType, action, onReturn) => (
 					<VoucherForm
-						type={type}
+						campType={campType}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -136,9 +171,9 @@ const campaignTypeGroup = [
 				key: "CODE_VOUCHER",
 				name: "Voucher mã dành riêng",
 				icon: TagIcon,
-				renderForm: (type, action, onReturn) => (
+				renderForm: (campType, action, onReturn) => (
 					<VoucherForm
-						type={type}
+						campType={campType}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -148,9 +183,9 @@ const campaignTypeGroup = [
 				key: "REVIEW_VOUCHER",
 				name: "Voucher đánh giá",
 				icon: PencilLineIcon,
-				renderForm: (type, action, onReturn) => (
+				renderForm: (campType, action, onReturn) => (
 					<VoucherForm
-						type={type}
+						campType={campType}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -160,9 +195,9 @@ const campaignTypeGroup = [
 				key: "NEW_CUSTOMER_VOUCHER",
 				name: "Voucher khách mới",
 				icon: UserRoundPlusIcon,
-				renderForm: (type, action, onReturn) => (
+				renderForm: (campType, action, onReturn) => (
 					<VoucherForm
-						type={type}
+						campType={campType}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -172,9 +207,9 @@ const campaignTypeGroup = [
 				key: "LOYAL_CUSTOMER_VOUCHER",
 				name: "Voucher khách quen",
 				icon: UserRoundCheckIcon,
-				renderForm: (type, action, onReturn) => (
+				renderForm: (campType, action, onReturn) => (
 					<VoucherForm
-						type={type}
+						campType={campType}
 						action={action}
 						onReturn={onReturn}
 					/>
@@ -184,9 +219,9 @@ const campaignTypeGroup = [
 				key: "MESSAGE_VOUCHER",
 				name: "Voucher tin nhắn",
 				icon: MessagesSquareIcon,
-				renderForm: (type, action, onReturn) => (
+				renderForm: (campType, action, onReturn) => (
 					<VoucherForm
-						type={type}
+						campType={campType}
 						action={action}
 						onReturn={onReturn}
 					/>
