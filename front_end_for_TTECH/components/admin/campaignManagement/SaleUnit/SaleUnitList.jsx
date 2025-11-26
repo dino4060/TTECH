@@ -1,4 +1,6 @@
-import { Fragment } from "react"
+"use client"
+import { motion } from "framer-motion"
+import { Fragment, useEffect, useState } from "react"
 import ProductOptions from "../ProductOptions"
 import LimitCell from "./LimitCell"
 import PriceCell from "./PriceCell"

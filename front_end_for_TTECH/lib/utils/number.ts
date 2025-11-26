@@ -113,3 +113,18 @@ export const calcPartOfPercent = (
 ) => {
 	return parseInt(String(total * (1 - percent / 100)))
 }
+
+export const calcPercentOfPart = (
+	part: number,
+	total: number
+) => {
+	return parseInt(String((1 - part / total) * 100))
+}
+
+export const convertDate = (date: string) => {
+	const datePortion = date?.slice(0, 10)
+	if (!datePortion) return ""
+	const [year, month, day] = datePortion?.split("-")
+	const formattedDate = `${day}/${month}/${year}`
+	return formattedDate
+}

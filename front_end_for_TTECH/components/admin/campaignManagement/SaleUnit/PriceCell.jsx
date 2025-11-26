@@ -1,3 +1,9 @@
+"use client"
+import { checkKV } from "@/lib/utils/check"
+import {
+	calcPartOfPercent,
+	calcPercentOfPart,
+} from "@/lib/utils/number"
 import { convertTokVND } from "@/utils/until"
 import { useEffect, useState } from "react"
 
@@ -19,11 +25,14 @@ const PriceCell = ({ saleUnit, onEditSaleUnit }) => {
 		// dealPrice > 0
 		if (dealPrice && dealPrice > 0 && dealPrice < mainPrice) {
 			const next = parseInt((1 - dealPrice / mainPrice) * 100)
-			setDealPercent(next)
+			const calc = calcPercentOfPart(dealPrice, mainPrice)
+			checkKV(next, calc)
+
+			setDealPercent(calcPercentOfPart(dealPrice, mainPrice))
 			onEditSaleUnit({
 				...saleUnit,
 				dealPrice,
-				dealPercent: next,
+				dealPercent: calcPercentOfPart(dealPrice, mainPrice),
 			})
 		}
 		// dealPrice = 0
@@ -60,12 +69,16 @@ const PriceCell = ({ saleUnit, onEditSaleUnit }) => {
 			dealPercent <= 100
 		) {
 			const next = parseInt(
-				mainPrice * (1 - dealPercent / 100)
+				(1 - dealPercent / 100) * mainPrice
 			)
-			setDealPrice(next)
+			const calc = setDealPrice(
+				calcPartOfPercent(dealPercent, mainPrice)
+			)
+			checkKV(next, calc)
+
 			onEditSaleUnit({
 				...saleUnit,
-				dealPrice: next,
+				dealPrice: calcPartOfPercent(dealPercent, mainPrice),
 				dealPercent,
 			})
 		}
