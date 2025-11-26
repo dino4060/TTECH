@@ -61,7 +61,7 @@ const CampaignList = ({
 										key={col.key}
 										className='px-2 py-2 flex-1 text-center font-[400] shrink-0'
 										whileHover={{ color: "rgb(59 130 246)" }}
-										whileTap={{ scale: 1.4 }}
+										whileTap={{ scale: 1.5 }}
 										onClick={(event) => {
 											event.stopPropagation()
 											onCopyId(c.id)

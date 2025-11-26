@@ -1,4 +1,3 @@
-import { AlertCircle } from "lucide-react"
 import { IoAlertCircleOutline } from "react-icons/io5"
 import { ActionKeyUn as ActionUn } from "./CampaignAction"
 import { CampTypeUn } from "./CampaignAdd"
@@ -9,7 +8,7 @@ const CampaignEdit = ({
 	setCurrentCamp,
 	setAsyncList,
 }) => {
-	// Nếu promotionType là falsy
+	// promotionType là falsy => Choose a camp
 	const campTypeKey = currentCamp?.promotionType
 
 	if (!campTypeKey) {
@@ -30,7 +29,7 @@ const CampaignEdit = ({
 		)
 	}
 
-	// Nếu promotionType ngoài phạm vi
+	// promotionType is out of limit => error
 	const campType = CampTypeUn[campTypeKey]
 
 	if (!campType) {
@@ -38,7 +37,7 @@ const CampaignEdit = ({
 		return null
 	}
 
-	// Render form chỉnh sửa
+	// Render form
 	return (
 		<SaleForm
 			CampType={campType}

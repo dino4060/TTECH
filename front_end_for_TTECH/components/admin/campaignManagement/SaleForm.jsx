@@ -11,6 +11,7 @@ import { Fragment, useEffect, useState } from "react"
 import { CiLogout } from "react-icons/ci"
 import { ActionKeyUn as ActionUn } from "./CampaignAction"
 import SaleUnitList from "./SaleUnit/SaleUnitList"
+import { IoChevronBackOutline } from "react-icons/io5"
 
 const SaleForm = ({
 	CampType: SaleType,
@@ -34,7 +35,9 @@ const SaleForm = ({
 
 	// Turn add mode => Clean sale data
 	useEffect(() => {
-		action === ActionUn.ADD && setSaleData(cleanSaleData)
+		if (action === ActionUn.ADD || !saleData?.id) {
+			setSaleData(cleanSaleData)
+		}
 	}, [action])
 
 	// Set new sale => Clean feedback
@@ -120,8 +123,11 @@ const SaleForm = ({
 						{SaleType.name}
 					</h3>
 
-					{action === ActionUn.dealPercent && (
-						<CiLogout size={18} onClick={() => onReturn()} />
+					{action === ActionUn.ADD && (
+						<IoChevronBackOutline
+							size={25}
+							onClick={() => onReturn()}
+						/>
 					)}
 				</div>
 
