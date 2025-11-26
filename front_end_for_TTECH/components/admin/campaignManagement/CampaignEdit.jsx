@@ -1,7 +1,8 @@
 import { AlertCircle } from "lucide-react"
-import SaleForm from "./SaleForm"
-import { CampTypeUn } from "./CampaignAdd"
+import { IoAlertCircleOutline } from "react-icons/io5"
 import { ActionKeyUn as ActionUn } from "./CampaignAction"
+import { CampTypeUn } from "./CampaignAdd"
+import SaleForm from "./SaleForm"
 
 const CampaignEdit = ({
 	currentCamp,
@@ -12,9 +13,9 @@ const CampaignEdit = ({
 	if (!currentCamp?.promotionType) {
 		return (
 			<div className='flex flex-col items-center justify-center min-h-[200px] gap-6'>
-				<div className='bg-gray-50 border-2 border-gray-300 rounded-2xl p-8 max-w-xl'>
+				<div className='bg-gray-50 border-2 border-gray-300 rounded-lg p-8 max-w-xl'>
 					<div className='flex items-center gap-4 mb-4'>
-						<AlertCircle className='w-12 h-12 text-gray-600' />
+						<IoAlertCircleOutline className='w-12 h-12 text-gray-600' />
 						<h2 className='text-2xl font-bold text-gray-800'>
 							Chưa chọn chiến dịch khuyến mãi
 						</h2>

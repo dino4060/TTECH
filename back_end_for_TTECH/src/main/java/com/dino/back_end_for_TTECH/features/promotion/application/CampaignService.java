@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+// TODO
+// Check genStatus, ProductService, case null pointer
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -39,17 +41,16 @@ public class CampaignService {
         var startTime = model.getStartTime();
         var endTime = model.getEndTime();
 
+        // model doesn't have startTime and endTime => don't manage time
+        if (startTime == null && endTime == null) {
+            model.setStatus(Status.ONGOING);
+        }
         // Validate: startTime < endTime
-        if (startTime == null || endTime == null || !startTime.isBefore(endTime)) {
+        else if (startTime == null || endTime == null || !startTime.isBefore(endTime)) {
             throw new DateTimePairError("startTime", "endTime");
         }
-
-        // Validate: status is DEACTIVATED => bypass
-        if (model.hasStatus(Status.DEACTIVATED))
-            return;
-
         // startTime < endTime < now => ENDED
-        if (endTime.isBefore(now)) {
+        else if (endTime.isBefore(now)) {
             model.setStatus(Status.ENDED);
         }
         // startTime < now < endTime => ONGOING

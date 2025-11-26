@@ -325,9 +325,9 @@ const SaleForm = ({
 					className='bg-blue-500 w-full p-4 mt-4 text-2xl font-semibold text-white rounded-2xl'
 					onClick={() => onSubmitSale()}
 				>
-					{action === "HOÀN TẤT " + ActionUn.ADD
-						? "THÊM"
-						: "SỬA"}
+					{action === ActionUn.ADD
+						? "HOÀN TẤT THÊM"
+						: "HOÀN TẤT SỬA"}
 				</button>
 			</motion.div>
 

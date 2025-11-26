@@ -1,9 +1,9 @@
 "use client"
 import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
-import CampaignAdd, { CampTypeUn } from "./CampaignAdd"
-import SaleForm from "./SaleForm"
+import CampaignAdd from "./CampaignAdd"
 import CampaignEdit from "./CampaignEdit"
+import CampaignRemove from "./CampaignRemove"
 
 const CampaignAction = ({
 	currentCamp,
@@ -35,7 +35,7 @@ const CampaignAction = ({
 				))}
 			</div>
 
-			<div className='p-10 pt-8 pb-12'>
+			<div className='p-10 pt-8'>
 				{Actions.find((a) => a.key === action).render(
 					currentCamp,
 					setCurrentCamp,
@@ -77,8 +77,6 @@ const Actions = [
 		name: "cập nhật",
 		render: (currentCamp, setCurrentCamp, setAsyncList) => (
 			<CampaignEdit
-				// CampType={CampTypeUn[currentCamp.promotionType]}
-				// action={ActionKeyUn.EDIT}
 				currentCamp={currentCamp}
 				setCurrentCamp={setCurrentCamp}
 				setAsyncList={setAsyncList}
@@ -88,6 +86,8 @@ const Actions = [
 	{
 		key: ActionKeyUn.REMOVE,
 		name: "xóa",
-		render: () => <div>Xóa</div>,
+		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+			<CampaignRemove />
+		),
 	},
 ]
