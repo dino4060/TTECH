@@ -32,5 +32,5 @@ public class Sale extends Campaign {
     @OneToMany(mappedBy = "sale", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<SaleUnit> units = new ArrayList<>();
 
-    Boolean isDeletedSale;
+    Boolean isDeletedSale = false;
 }

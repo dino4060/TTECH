@@ -9,8 +9,8 @@ import { AnimatePresence, motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 import { CiLogout } from "react-icons/ci"
 import { ActionKeyUn as ActionUn } from "./CampaignAction"
-import LimitCell from "./LimitCell"
-import PriceCell from "./PriceCell"
+import LimitCell from "./SaleUnit/LimitCell"
+import PriceCell from "./SaleUnit/PriceCell"
 import ProductOptions from "./ProductOptions"
 
 const SaleForm = ({
@@ -30,20 +30,24 @@ const SaleForm = ({
 	)
 	const [feedback, setFeedback] = useState({})
 	const [notification, setNotification] = useState("")
-
-	const cleanSaleData = () => {
-		setSaleData({
-			promotionType: SaleType.key,
-			id: "",
-			name: "",
-			startTime: "",
-			endTime: "",
-		})
+	const cleanSaleData = {
+		promotionType: SaleType.key,
+		id: "",
+		name: "",
+		startTime: "",
+		endTime: "",
+		units: [],
 	}
 
-	const cleanFeedback = () => {
+	// Turn add mode => Clean sale data
+	useEffect(() => {
+		action === ActionUn.ADD && setSaleData(cleanSaleData)
+	}, [action])
+
+	// Set new sale => Clean feedback
+	useEffect(() => {
 		setFeedback({})
-	}
+	}, [saleData])
 
 	const onChangeSale = (key, value) => {
 		setSaleData((prev) => ({ ...prev, [key]: value }))
@@ -72,7 +76,7 @@ const SaleForm = ({
 				  }
 
 		// Validate form
-		const body = { ...saleData }
+		const body = { ...saleData, units: saleUnits }
 		const isValid = checkSubmitForm(
 			CampForm,
 			body,
@@ -97,39 +101,27 @@ const SaleForm = ({
 		}
 
 		// Call API
-		const { success } = await clientFetch(api(id, body))
+		const { success, error } = await clientFetch(
+			api(id, body)
+		)
 		if (success) {
 			setNotification(notification)
-			cleanSaleData()
+			setSaleData(cleanSaleData)
 			setAsyncList((prev) => !prev)
+		} else {
+			alert(error)
 		}
 	}
 
-	const onRemoveSaleUnit = (productId) => {
-		setSaleUnits(
-			saleUnits.filter((u) => u.product.id !== productId)
-		)
+	// === Sale Units ===
 
-		appliedProductIds.delete(productId)
-		setAppliedProductIds(new Set(appliedProductIds))
-	}
-
-	// Turn add mode => Clean sale data
-	useEffect(() => {
-		action === ActionUn.ADD && cleanSaleData()
-	}, [action])
-
-	// Set new sale => Clean feedback
-	useEffect(() => {
-		setFeedback({})
-	}, [saleData])
-
-	// Choose new products => Render new sale units
+	// Choose new products =>  Add sale units
 	useEffect(() => {
 		if (newProducts.size == 0) return
 
 		setSaleUnits((prev) => [
 			...Array.from(newProducts).map((p) => ({
+				id: 0,
 				product: p,
 				isLive: true,
 				dealPrice: 0,
@@ -151,6 +143,23 @@ const SaleForm = ({
 
 		setNewProducts(new Set())
 	}, [newProducts])
+
+	const onRemoveSaleUnit = (productId) => {
+		setSaleUnits(
+			saleUnits.filter((u) => u.product.id !== productId)
+		)
+		appliedProductIds.delete(productId)
+		setAppliedProductIds(new Set(appliedProductIds))
+	}
+
+	const onEditSaleUnit = (saleUnit) => {
+		setSaleUnits(
+			saleUnits.map((u) => {
+				if (u.product.id !== saleUnit.product.id) return u
+				else return saleUnit
+			})
+		)
+	}
 
 	return (
 		<Fragment>
@@ -203,7 +212,7 @@ const SaleForm = ({
 
 				<div className='flex justify-between items-center mb-4 mt-8'>
 					<h3 className='text-[2.2rem] font-semibold '>
-						{saleUnits.length !== 0
+						{saleUnits.length > 0
 							? "Danh sách sản phẩm áp dụng"
 							: "Chưa có sản phẩm áp dụng"}
 					</h3>
@@ -211,9 +220,7 @@ const SaleForm = ({
 					<div className='flex gap-2'>
 						<button
 							className='self-center px-5 py-2 text-white text-2xl bg-blue-500 rounded-full'
-							onClick={() => {
-								setShow(!show)
-							}}
+							onClick={() => setShow(!show)}
 						>
 							Chọn sản phẩm
 						</button>
@@ -221,9 +228,7 @@ const SaleForm = ({
 						{saleUnits.length > 0 && (
 							<button
 								className='self-center px-5 py-2 text-white text-2xl bg-blue-500 rounded-full'
-								onClick={() => {
-									setRemove(!remove)
-								}}
+								onClick={() => setRemove(!remove)}
 							>
 								Xóa
 							</button>
@@ -287,9 +292,15 @@ const SaleForm = ({
 											</div>
 										</td>
 
-										<PriceCell saleUnit={u} />
+										<PriceCell
+											saleUnit={u}
+											onEditSaleUnit={onEditSaleUnit}
+										/>
 
-										<LimitCell saleUnit={u} />
+										<LimitCell
+											saleUnit={u}
+											onEditSaleUnit={onEditSaleUnit}
+										/>
 
 										{!remove ? (
 											<td className='px-4 py-2 font-normal shrink-0 text-center'>
@@ -321,6 +332,13 @@ const SaleForm = ({
 					</div>
 				)}
 
+				<ProductOptions
+					show={show}
+					setShow={setShow}
+					setNewProducts={setNewProducts}
+					appliedProductIds={appliedProductIds}
+				/>
+
 				<button
 					className='bg-blue-500 w-full p-4 mt-4 text-2xl font-semibold text-white rounded-2xl'
 					onClick={() => onSubmitSale()}
@@ -331,12 +349,6 @@ const SaleForm = ({
 				</button>
 			</motion.div>
 
-			<ProductOptions
-				show={show}
-				setShow={setShow}
-				setNewProducts={setNewProducts}
-				appliedProductIds={appliedProductIds}
-			/>
 			<AnimatePresence>
 				{notification && (
 					<Notification

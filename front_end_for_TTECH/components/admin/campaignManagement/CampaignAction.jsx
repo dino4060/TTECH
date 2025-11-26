@@ -74,7 +74,7 @@ const Actions = [
 	},
 	{
 		key: ActionKeyUn.EDIT,
-		name: "cập nhật",
+		name: "chỉnh sửa",
 		render: (currentCamp, setCurrentCamp, setAsyncList) => (
 			<CampaignEdit
 				currentCamp={currentCamp}

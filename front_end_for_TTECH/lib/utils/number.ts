@@ -106,3 +106,10 @@ export const formatTimeOnly = (isoString: string) => {
 
 	return `${hours}:${minutes}`
 }
+
+export const calcPartOfPercent = (
+	percent: number,
+	total: number
+) => {
+	return parseInt(String(total * (1 - percent / 100)))
+}

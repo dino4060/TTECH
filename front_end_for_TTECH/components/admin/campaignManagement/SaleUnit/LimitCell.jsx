@@ -1,17 +1,22 @@
-import { convertTokVND } from "@/utils/until"
-import React, { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 
-const LimitCell = ({ saleUnit }) => {
+const LimitCell = ({ saleUnit, onEditSaleUnit }) => {
 	const [limit, setLimit] = useState(0)
 	const [available, setAvailable] = useState(-1)
 
+	// Change limit => Change available
 	useEffect(() => {
+		// limit > 0
 		if (limit && limit > 0) {
 			const stock = saleUnit.product.stock.available
 			setAvailable(limit > stock ? stock : limit)
-		} else {
+			onEditSaleUnit({ ...saleUnit, limit })
+		}
+		// limit is falsy
+		else {
 			setLimit(0)
 			setAvailable(-1)
+			onEditSaleUnit({ ...saleUnit, limit: 0 })
 		}
 	}, [limit])
 

@@ -1,63 +1,96 @@
 import { convertTokVND } from "@/utils/until"
 import { useEffect, useState } from "react"
 
-const PriceCell = ({ saleUnit }) => {
+const PriceCell = ({ saleUnit, onEditSaleUnit }) => {
 	const mainPrice = saleUnit.product.price.mainPrice
 
 	const [dealPrice, setDealPrice] = useState(
 		saleUnit.product.price.sidePrice || -1
 	)
-	const [discountPercent, setDiscountPercent] = useState(
+	const [dealPercent, setDealPercent] = useState(
 		saleUnit.product.price.dealPercent || 0
 	)
-	const [changeType, setChangeType] = useState("off")
+	const [changeFF, setChangeFF] = useState("")
 
-	// Update discount percentage when deal price changes
+	// Change dealPrice => Update dealPercent
 	useEffect(() => {
-		if (changeType !== "dealPrice") return
+		if (changeFF !== "dealPrice") return
 
+		// dealPrice > 0
 		if (dealPrice && dealPrice > 0 && dealPrice < mainPrice) {
-			setDiscountPercent(
-				parseInt((1 - dealPrice / mainPrice) * 100)
-			)
-		} else if (dealPrice === 0) {
-			setDiscountPercent(100)
-		} else {
+			const next = parseInt((1 - dealPrice / mainPrice) * 100)
+			setDealPercent(next)
+			onEditSaleUnit({
+				...saleUnit,
+				dealPrice,
+				dealPercent: next,
+			})
+		}
+		// dealPrice = 0
+		else if (dealPrice === 0) {
+			setDealPercent(100)
+			onEditSaleUnit({
+				...saleUnit,
+				dealPrice,
+				dealPercent: 100,
+			})
+		}
+		// dealPrice is falsy, but not 0
+		else {
 			setDealPrice(-1)
-			setDiscountPercent(0)
+			setDealPercent(0)
+			onEditSaleUnit({
+				...saleUnit,
+				dealPrice: -1,
+				dealPercent: 0,
+			})
 		}
 
-		setChangeType("off")
-	}, [changeType])
+		setChangeFF("")
+	}, [changeFF])
 
-	// Update deal price when discount percentage changes
+	// Change dealPercent => Update dealPrice
 	useEffect(() => {
-		if (changeType !== "discountPercent") return
+		if (changeFF !== "dealPercent") return
 
+		// dealPercent = (0-100]
 		if (
-			discountPercent &&
-			discountPercent > 0 &&
-			discountPercent <= 100
+			dealPercent &&
+			dealPercent > 0 &&
+			dealPercent <= 100
 		) {
-			setDealPrice(
-				parseInt(mainPrice * (1 - discountPercent / 100))
+			const next = parseInt(
+				mainPrice * (1 - dealPercent / 100)
 			)
-		} else {
-			setDiscountPercent(0)
+			setDealPrice(next)
+			onEditSaleUnit({
+				...saleUnit,
+				dealPrice: next,
+				dealPercent,
+			})
+		}
+		// dealPercent is falsy
+		else {
 			setDealPrice(-1)
+			setDealPercent(0)
+			onEditSaleUnit({
+				...saleUnit,
+				dealPrice: -1,
+				dealPercent: 0,
+			})
 		}
 
-		setChangeType("off")
-	}, [changeType])
+		setChangeFF("")
+	}, [changeFF])
 
 	const onChangeDealPrice = (e) => {
 		setDealPrice(parseInt(e.target.value))
-		setChangeType("dealPrice")
+		setChangeFF("dealPrice")
 	}
 
 	const onChangeDiscountPercent = (e) => {
-		setDiscountPercent(parseInt(e.target.value))
-		setChangeType("discountPercent")
+		setDealPercent(parseInt(e.target.value))
+		setChangeFF("dealPercent")
 	}
 
 	const onPreventScroll = (e) => e.target.blur()
@@ -86,7 +119,7 @@ const PriceCell = ({ saleUnit }) => {
 					<div className='relative'>
 						<input
 							type='number'
-							value={discountPercent ? discountPercent : ""}
+							value={dealPercent ? dealPercent : ""}
 							onChange={onChangeDiscountPercent}
 							onWheel={onPreventScroll}
 							className='w-[100px] text-right outline-none border border-black/50 rounded-lg pr-[18px]'

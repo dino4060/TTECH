@@ -21,7 +21,12 @@ const CampaignRemove = ({ setAsyncList }) => {
 		const { success, error } = await clientFetch(
 			adminCampaignApi.saleApi.remove(campId)
 		)
-		success ? setAsyncList((prev) => !prev) : alert(error)
+		if (success) {
+			setCampId("")
+			setAsyncList((prev) => !prev)
+		} else {
+			alert(error)
+		}
 	}
 
 	return (
