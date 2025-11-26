@@ -87,7 +87,7 @@ const Actions = [
 		key: ActionKeyUn.REMOVE,
 		name: "xóa",
 		render: (currentCamp, setCurrentCamp, setAsyncList) => (
-			<CampaignRemove />
+			<CampaignRemove setAsyncList={setAsyncList} />
 		),
 	},
 ]

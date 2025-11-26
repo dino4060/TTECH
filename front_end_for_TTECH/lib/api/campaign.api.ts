@@ -24,5 +24,10 @@ export const adminCampaignApi = {
 			method: HttpMethod.PUT,
 			body,
 		}),
+
+		remove: (id: number): TApi<{}[]> => ({
+			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales/${id}`,
+			method: HttpMethod.DELETE,
+		}),
 	},
 }

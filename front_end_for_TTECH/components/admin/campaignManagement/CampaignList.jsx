@@ -1,9 +1,11 @@
 "use client"
+import { useIdContext } from "@/context/IdContext"
 import { adminCampaignApi } from "@/lib/api/campaign.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { toDateTimeVN } from "@/lib/utils/number"
 import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
+import { IoCopyOutline } from "react-icons/io5"
 
 const CampaignList = ({
 	currentCamp,
@@ -11,13 +13,14 @@ const CampaignList = ({
 	setAsyncList,
 }) => {
 	const [campList, setCampList] = useState([])
+	const { onCopyId } = useIdContext()
 
 	useEffect(() => {
 		const getCampList = async () => {
-			const { success, data } = await clientFetch(
+			const { success, data, error } = await clientFetch(
 				adminCampaignApi.list()
 			)
-			success && setCampList(data.items)
+			success ? setCampList(data.items) : alert(error)
 		}
 
 		getCampList()
@@ -25,7 +28,7 @@ const CampaignList = ({
 	return (
 		<motion.div>
 			<table className='bg-white w-full border-spacing-1 border-separate table-auto text-xl relative'>
-				<thead class='text-black uppercase sticky top-2'>
+				<thead className='text-black uppercase sticky top-2'>
 					<tr>
 						{CampaignTable.map((col) => (
 							<th
@@ -52,14 +55,29 @@ const CampaignList = ({
 							transition={{ type: "spring" }}
 							onClick={() => setCurrentCamp(c)}
 						>
-							{CampaignTable.map((col) => (
-								<td
-									key={col.key}
-									className='px-2 py-2 flex-1 text-center font-[400] shrink-0'
-								>
-									{col.renderData(c)}
-								</td>
-							))}
+							{CampaignTable.map((col) => {
+								return col.key === "id" ? (
+									<motion.td
+										key={col.key}
+										className='px-2 py-2 flex-1 text-center font-[400] shrink-0'
+										whileHover={{ color: "rgb(59 130 246)" }}
+										whileTap={{ scale: 1.4 }}
+										onClick={(event) => {
+											event.stopPropagation()
+											onCopyId(c.id)
+										}}
+									>
+										{col.renderData(c)}
+									</motion.td>
+								) : (
+									<td
+										key={col.key}
+										className='px-2 py-2 flex-1 text-center font-[400] shrink-0'
+									>
+										{col.renderData(c)}
+									</td>
+								)
+							})}
 						</motion.tr>
 					))}
 				</tbody>
@@ -89,7 +107,14 @@ const CampaignTable = [
 	{
 		key: "id",
 		header: "Id",
-		renderData: (camp) => <Fragment>{camp.id}</Fragment>,
+		renderData: (camp) => (
+			<Fragment>
+				<div className='flex justify-center items-center gap-1'>
+					{camp.id}
+					<IoCopyOutline />
+				</div>
+			</Fragment>
+		),
 	},
 	{
 		key: "name",

@@ -21,3 +21,18 @@ export const parseJwtExp = (token: string) => {
 		throw new Error(">>> parseJwtExp: failed")
 	}
 }
+
+export function copy(text: string) {
+	navigator.clipboard.writeText(text)
+}
+
+export function copyId(num: number) {
+	navigator.clipboard
+		.writeText(String(num))
+		.then(() => {
+			console.log("ID copied to clipboard: " + num)
+		})
+		.catch((err) => {
+			console.error("Failed to copy ID: ", err)
+		})
+}

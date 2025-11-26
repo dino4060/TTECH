@@ -11,7 +11,7 @@ const {
 
 const CartContext = createContext()
 
-export const CartContextProdiver = ({ children }) => {
+export const CartContextProvider = ({ children }) => {
 	const [totalProduct, setTotalProduct] = useState(0)
 
 	const [cart, setCart] = useState([1, 1, 1, 1, 1])

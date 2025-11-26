@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 // TODO
 // Check genStatus, ProductService, case null pointer
@@ -85,13 +86,19 @@ public class CampaignService {
     }
 
     public SaleData update(long id, SaleBody body) {
-        var currentModel = this.saleRepo
+        var editModel = this.saleRepo
                 .findById(id)
                 .orElseThrow(() -> new NotFoundError("Sale"));
-        this.saleMapper.toModel(body, currentModel);
-        this.genStatus(currentModel);
+        this.saleMapper.toModel(body, editModel);
+        this.genStatus(editModel);
 
-        var model = this.saleRepo.save(currentModel);
+        var model = this.saleRepo.save(editModel);
         return this.saleMapper.toData(model);
+    }
+
+    public void remove(long id) {
+        this.campaignRepo.delete(this.campaignRepo
+                .findById(id)
+                .orElseThrow(() ->  new NotFoundError("Campaign")));
     }
 }
