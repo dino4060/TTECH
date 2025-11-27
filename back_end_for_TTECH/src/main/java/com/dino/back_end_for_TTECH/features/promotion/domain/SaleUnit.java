@@ -12,14 +12,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.lang.Nullable;
 
-/**
- * Represents a allDiscount that:
- * - Be part of a allDiscount program,
- * - Can be applied to a product or spu.
- * <p>
- * Note for properties:
- * - totalLimit, buyerLimit == NULL is unlimited.
- */
 @Entity
 @Table(name = "sale_units")
 @DynamicInsert
@@ -38,7 +30,7 @@ public class SaleUnit extends BaseEntity {
     @Column(name = "unit_id")
     Long id;
 
-    boolean isLive;
+    boolean isOn;
 
     int dealPrice;
 
@@ -59,18 +51,6 @@ public class SaleUnit extends BaseEntity {
     Product product;
 
     // INSTANCE METHODS //
-
-//    public void calculate() {
-//        if (this.getSale().getDiscountType().equals(DiscountType.PERCENTAGE_OFF.name())) {
-//            this.setDealPrice((1 - this.getDealPercent() / 100) * this.getProduct().getPrice().getMainPrice());
-//            return;
-//        }
-//
-//        if (this.getSale().getDiscountType().equals(DiscountType.FIXED_PRICE.name())) {
-//            this.setDealPercent((1 - this.getDealPrice() / this.getProduct().getPrice().getMainPrice()) * 100);
-//            return;
-//        }
-//    }
 
     private boolean isWithinTotalLimit() {
         if (this.totalLimit == -1 || this.usedCount == -1)

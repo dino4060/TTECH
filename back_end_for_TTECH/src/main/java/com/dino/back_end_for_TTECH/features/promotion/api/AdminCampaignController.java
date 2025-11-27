@@ -2,15 +2,15 @@ package com.dino.back_end_for_TTECH.features.promotion.api;
 
 import com.dino.back_end_for_TTECH.features.promotion.application.CampaignService;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignQuery;
-import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleBody;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admin/campaigns")
@@ -26,30 +26,5 @@ public class AdminCampaignController {
     ) {
         var data = this.campaignService.list(query);
         return ResponseEntity.ok(data);
-    }
-
-    @PostMapping("/sales")
-    public ResponseEntity<?> create(
-            @Valid @RequestBody SaleBody body
-    ) {
-        this.campaignService.create(body);
-        return ResponseEntity.ok(Map.of());
-    }
-
-    @PutMapping("/sales/{id}")
-    public ResponseEntity<?> update(
-            @PathVariable long id,
-            @Valid @RequestBody SaleBody body
-    ) {
-        this.campaignService.update(id, body);
-        return ResponseEntity.ok(Map.of());
-    }
-
-    @DeleteMapping("/sales/{id}")
-    public ResponseEntity<?> remove(
-            @PathVariable long id
-    ) {
-        this.campaignService.remove(id);
-        return ResponseEntity.ok(Map.of());
     }
 }

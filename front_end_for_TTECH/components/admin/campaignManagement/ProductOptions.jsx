@@ -14,13 +14,14 @@ const ProductOptions = ({
 	setShow,
 	setNewProducts,
 	appliedProductIds,
+	isAsyncUnits,
 }) => {
 	const [products, setProducts] = useState([])
 	const [stickedProducts, setStickedProduct] = useState(
 		new Set()
 	)
 
-	const getProducts = async () => {
+	const fetchProducts = async () => {
 		const { success, data } = await clientFetch(
 			adminProductApi.list()
 		)
@@ -48,13 +49,16 @@ const ProductOptions = ({
 		e.key === "Escape" && setShow(false)
 
 	useEffect(() => {
-		getProducts()
 		window.addEventListener("keydown", onEscape)
 
 		return () => {
 			window.removeEventListener("keydown", onEscape)
 		}
 	}, [])
+
+	useEffect(() => {
+		fetchProducts()
+	}, [isAsyncUnits])
 
 	return (
 		<AnimatePresence>

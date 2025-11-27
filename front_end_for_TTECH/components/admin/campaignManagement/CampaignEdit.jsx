@@ -2,6 +2,9 @@ import { IoAlertCircleOutline } from "react-icons/io5"
 import { ActionKeyUn as ActionUn } from "./CampaignAction"
 import { CampTypeUn } from "./CampaignAdd"
 import SaleForm from "./SaleForm"
+import { adminCampaignApi } from "@/lib/api/campaign.api"
+import { useEffect, useState } from "react"
+import { clientFetch } from "@/lib/http/fetch.client"
 
 const CampaignEdit = ({
 	currentCamp,
@@ -38,11 +41,27 @@ const CampaignEdit = ({
 	}
 
 	// Render form
+	const [currentSale, setCurrentSale] = useState({
+		...currentCamp,
+		units: [],
+	})
+
+	const fetchCurrentSale = async (id) => {
+		const { success, data, error } = await clientFetch(
+			adminCampaignApi.saleApi.get(id)
+		)
+		success ? setCurrentSale(data) : alert(error)
+	}
+
+	useEffect(() => {
+		currentCamp?.id && fetchCurrentSale(currentCamp.id)
+	}, [currentCamp])
+
 	return (
 		<SaleForm
 			CampType={campType}
 			action={ActionUn.EDIT}
-			currentCamp={currentCamp}
+			currentCamp={currentSale}
 			setCurrentCamp={setCurrentCamp}
 			setAsyncList={setAsyncList}
 		/>

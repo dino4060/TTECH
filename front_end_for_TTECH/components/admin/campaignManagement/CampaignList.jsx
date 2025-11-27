@@ -10,7 +10,7 @@ import { IoCopyOutline } from "react-icons/io5"
 const CampaignList = ({
 	currentCamp,
 	setCurrentCamp,
-	setAsyncList,
+	isAsyncList,
 }) => {
 	const [campList, setCampList] = useState([])
 	const { onCopyId } = useIdContext()
@@ -24,7 +24,7 @@ const CampaignList = ({
 		}
 
 		getCampList()
-	}, [setAsyncList])
+	}, [isAsyncList])
 	return (
 		<motion.div
 			initial='hidden'

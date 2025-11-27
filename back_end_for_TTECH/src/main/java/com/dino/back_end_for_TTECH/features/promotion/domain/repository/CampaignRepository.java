@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 public interface CampaignRepository extends
         JpaRepository<Campaign, Long>,
         JpaSpecificationExecutor<Campaign> {
-
 }

@@ -149,12 +149,12 @@ public class ProductService {
     public void applySaleUnit(SaleUnit unit) {
         // turn off the current sale unit
         unit.getProduct().getSaleUnits().forEach(u -> {
-            unit.setLive(u.equals(unit));
-        });
+            u.setOn(u.equals(unit));});
 
         // apply the new sale unit
         var price = unit.getProduct().getPrice();
         price.setMainPrice(unit.getDealPrice());
+        price.setSidePrice(price.getRetailPrice());
         price.setDealPercent(unit.getDealPercent());
 
         this.productRepository.save(unit.getProduct());

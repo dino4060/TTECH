@@ -5,6 +5,7 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import {
 	checkDateTimePair,
 	checkSubmitForm,
+	checkV,
 } from "@/lib/utils/check"
 import { AnimatePresence, motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
@@ -16,11 +17,13 @@ const SaleForm = ({
 	CampType: SaleType,
 	action,
 	onReturn,
-	currentCamp: saleData,
-	setCurrentCamp: setSaleData,
+	currentCamp,
+	setCurrentCamp,
 	setAsyncList,
 }) => {
+	const [saleData, setSaleData] = useState({})
 	const [saleUnits, setSaleUnits] = useState([])
+	const [isAsyncUnits, setAsyncUnits] = useState(false)
 	const [feedback, setFeedback] = useState({})
 	const [notification, setNotification] = useState("")
 	const cleanSaleData = {
@@ -34,15 +37,15 @@ const SaleForm = ({
 
 	// Turn add mode => Clean sale data
 	useEffect(() => {
-		if (action === ActionUn.ADD || !saleData?.id) {
+		if (!currentCamp?.id) {
 			setSaleData(cleanSaleData)
+			setSaleUnits([])
+		} else {
+			setSaleData(currentCamp)
+			setSaleUnits(currentCamp.units)
 		}
-	}, [action])
-
-	// Set new sale => Clean feedback
-	useEffect(() => {
 		setFeedback({})
-	}, [saleData])
+	}, [currentCamp])
 
 	const onChangeSale = (key, value) => {
 		setSaleData((prev) => ({ ...prev, [key]: value }))
@@ -103,6 +106,7 @@ const SaleForm = ({
 			setNotification(notification)
 			setSaleData(cleanSaleData)
 			setSaleUnits([])
+			setAsyncUnits((prev) => ![prev])
 			setAsyncList((prev) => !prev)
 		} else {
 			alert(error)
@@ -164,6 +168,7 @@ const SaleForm = ({
 				<SaleUnitList
 					saleUnits={saleUnits}
 					setSaleUnits={setSaleUnits}
+					isAsyncUnits={isAsyncUnits}
 				/>
 
 				<button

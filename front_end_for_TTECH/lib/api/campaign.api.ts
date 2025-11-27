@@ -13,6 +13,11 @@ export const adminCampaignApi = {
 	}),
 
 	saleApi: {
+		get: (id: number): TApi<{}[]> => ({
+			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales/${id}`,
+			method: HttpMethod.GET,
+		}),
+
 		create: (body = {}): TApi<{}[]> => ({
 			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales`,
 			method: HttpMethod.POST,

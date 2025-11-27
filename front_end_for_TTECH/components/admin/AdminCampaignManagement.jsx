@@ -13,7 +13,7 @@ const AdminCampaignManagement = () => {
 				<CampaignList
 					currentCamp={currentCamp}
 					setCurrentCamp={setCurrentCamp}
-					setAsyncList={isAsyncList}
+					isAsyncList={isAsyncList}
 				/>
 			</div>
 			<div className='flex-[6] bg-white'>

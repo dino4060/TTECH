@@ -5,7 +5,11 @@ import ProductOptions from "../ProductOptions"
 import LimitCell from "./LimitCell"
 import PriceCell from "./PriceCell"
 
-const SaleUnitList = ({ saleUnits, setSaleUnits }) => {
+const SaleUnitList = ({
+	saleUnits,
+	setSaleUnits,
+	isAsyncUnits,
+}) => {
 	const [show, setShow] = useState(false)
 	const [remove, setRemove] = useState(false)
 	const [newProducts, setNewProducts] = useState(new Set())
@@ -21,7 +25,7 @@ const SaleUnitList = ({ saleUnits, setSaleUnits }) => {
 			...Array.from(newProducts).map((p) => ({
 				id: 0,
 				product: p,
-				isLive: true,
+				isOn: true,
 				dealPrice: 0,
 				dealPercent: 0,
 				totalLimit: -1,
@@ -44,8 +48,8 @@ const SaleUnitList = ({ saleUnits, setSaleUnits }) => {
 
 	// Clean setAsyncList
 	useEffect(() => {
-		saleUnits.length === 0 && setAppliedProductIds(new Set())
-	}, [saleUnits])
+		setAppliedProductIds(new Set())
+	}, [isAsyncUnits])
 
 	const onRemoveSaleUnit = (productId) => {
 		setSaleUnits(
@@ -162,13 +166,13 @@ const SaleUnitList = ({ saleUnits, setSaleUnits }) => {
 										<td className='px-4 py-2 font-normal shrink-0 text-center'>
 											<span
 												style={{
-													backgroundColor: u.isLive
+													backgroundColor: u.isOn
 														? "#06b6d4"
 														: "#ef4444",
 												}}
 												className='p-2 rounded-xl text-white'
 											>
-												{u.isLive ? "LIVE" : "OFF"}
+												{u.isOn ? "ON" : "OFF"}
 											</span>
 										</td>
 									) : (
@@ -193,6 +197,7 @@ const SaleUnitList = ({ saleUnits, setSaleUnits }) => {
 				setShow={setShow}
 				setNewProducts={setNewProducts}
 				appliedProductIds={appliedProductIds}
+				isAsyncUnits={isAsyncUnits}
 			/>
 		</Fragment>
 	)

@@ -1,27 +1,18 @@
 package com.dino.back_end_for_TTECH.features.promotion.application;
 
-import com.dino.back_end_for_TTECH.features.product.application.ProductService;
-import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
 import com.dino.back_end_for_TTECH.features.promotion.application.mapper.CampaignMapper;
-import com.dino.back_end_for_TTECH.features.promotion.application.mapper.SaleMapper;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignData;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignQuery;
-import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleBody;
-import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleData;
 import com.dino.back_end_for_TTECH.features.promotion.domain.Campaign;
-import com.dino.back_end_for_TTECH.features.promotion.domain.Sale;
 import com.dino.back_end_for_TTECH.features.promotion.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.promotion.domain.repository.CampaignRepository;
-import com.dino.back_end_for_TTECH.features.promotion.domain.repository.SaleRepository;
 import com.dino.back_end_for_TTECH.shared.application.exception.DateTimePairError;
-import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundError;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -34,13 +25,7 @@ public class CampaignService {
     CampaignRepository campaignRepo;
     CampaignMapper campaignMapper;
 
-    SaleRepository saleRepo;
-    SaleMapper saleMapper;
-
-    ProductService productService;
-    ProductRepository productRepo;
-
-    private void genStatus(Sale model) {
+    void genStatus(Campaign model) {
         var now = LocalDateTime.now();
         var startTime = model.getStartTime();
         var endTime = model.getEndTime();
@@ -78,48 +63,5 @@ public class CampaignService {
 
         return this.campaignMapper.toPageData(
                 page, (Campaign c) -> this.campaignMapper.toData(c));
-    }
-
-    @Transactional
-    public SaleData create(SaleBody saleBody) {
-        var sale = this.saleMapper.toModel(saleBody);
-        this.genStatus(sale);
-        sale.getUnits().forEach(u -> {
-            u.setSale(sale);
-            u.setProduct(productRepo
-                    .findById(u.getProduct().getId())
-                    .orElseThrow(() -> new NotFoundError("Product")));
-        });
-
-        var newSale = this.saleRepo.save(sale);
-
-        if (newSale.hasStatus(Status.ONGOING)) {
-            newSale.getUnits().forEach(u -> {
-                this.productService.applySaleUnit(u);
-            });
-        }
-
-        return this.saleMapper.toData(newSale);
-    }
-
-    public SaleData update(long id, SaleBody body) {
-        var editModel = this.saleRepo
-                .findById(id)
-                .orElseThrow(() -> new NotFoundError("Sale"));
-        this.saleMapper.toModel(body, editModel);
-        this.genStatus(editModel);
-
-        var model = this.saleRepo.save(editModel);
-        return this.saleMapper.toData(model);
-    }
-
-    public void remove(long id) {
-        this.campaignRepo.delete(this.campaignRepo
-                .findById(id)
-                .orElseThrow(() -> new NotFoundError("Campaign")));
-    }
-
-    void apply(Sale sale) {
-
     }
 }
