@@ -9,6 +9,7 @@ import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.features.product.domain.Stock;
 import com.dino.back_end_for_TTECH.features.product.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
+import com.dino.back_end_for_TTECH.features.promotion.domain.SaleUnit;
 import com.dino.back_end_for_TTECH.shared.application.exception.BadRequestException;
 import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundError;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
@@ -16,6 +17,7 @@ import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 // NOTE: == vs equal()
 // 1. == compares on stack
@@ -141,5 +143,20 @@ public class ProductService {
             throw new BadRequestException("The product is on sale");
 
         this.productRepository.delete(product);
+    }
+
+    @Transactional
+    public void applySaleUnit(SaleUnit unit) {
+        // turn off the current sale unit
+        unit.getProduct().getSaleUnits().forEach(u -> {
+            unit.setLive(u.equals(unit));
+        });
+
+        // apply the new sale unit
+        var price = unit.getProduct().getPrice();
+        price.setMainPrice(unit.getDealPrice());
+        price.setDealPercent(unit.getDealPercent());
+
+        this.productRepository.save(unit.getProduct());
     }
 }

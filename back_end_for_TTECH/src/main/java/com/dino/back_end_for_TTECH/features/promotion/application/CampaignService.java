@@ -1,5 +1,6 @@
 package com.dino.back_end_for_TTECH.features.promotion.application;
 
+import com.dino.back_end_for_TTECH.features.product.application.ProductService;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
 import com.dino.back_end_for_TTECH.features.promotion.application.mapper.CampaignMapper;
 import com.dino.back_end_for_TTECH.features.promotion.application.mapper.SaleMapper;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -35,8 +37,7 @@ public class CampaignService {
     SaleRepository saleRepo;
     SaleMapper saleMapper;
 
-    SaleUnitService unitService;
-
+    ProductService productService;
     ProductRepository productRepo;
 
     private void genStatus(Sale model) {
@@ -79,6 +80,7 @@ public class CampaignService {
                 page, (Campaign c) -> this.campaignMapper.toData(c));
     }
 
+    @Transactional
     public SaleData create(SaleBody saleBody) {
         var sale = this.saleMapper.toModel(saleBody);
         this.genStatus(sale);
@@ -91,9 +93,11 @@ public class CampaignService {
 
         var newSale = this.saleRepo.save(sale);
 
-        sale.getUnits().forEach(u -> {
-            this.unitService.apply(u);
-        });
+        if (newSale.hasStatus(Status.ONGOING)) {
+            newSale.getUnits().forEach(u -> {
+                this.productService.applySaleUnit(u);
+            });
+        }
 
         return this.saleMapper.toData(newSale);
     }
