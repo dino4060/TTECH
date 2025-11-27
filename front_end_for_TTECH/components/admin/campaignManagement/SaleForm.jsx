@@ -8,10 +8,9 @@ import {
 } from "@/lib/utils/check"
 import { AnimatePresence, motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
-import { CiLogout } from "react-icons/ci"
+import { IoChevronBackOutline } from "react-icons/io5"
 import { ActionKeyUn as ActionUn } from "./CampaignAction"
 import SaleUnitList from "./SaleUnit/SaleUnitList"
-import { IoChevronBackOutline } from "react-icons/io5"
 
 const SaleForm = ({
 	CampType: SaleType,

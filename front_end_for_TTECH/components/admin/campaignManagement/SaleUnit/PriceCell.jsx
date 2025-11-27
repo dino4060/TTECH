@@ -8,13 +8,15 @@ import { convertTokVND } from "@/utils/until"
 import { useEffect, useState } from "react"
 
 const PriceCell = ({ saleUnit, onEditSaleUnit }) => {
+	const retailPrice = saleUnit.product.price.retailPrice
 	const mainPrice = saleUnit.product.price.mainPrice
+	const percent = saleUnit.product.price.dealPercent
 
 	const [dealPrice, setDealPrice] = useState(
-		saleUnit.product.price.sidePrice || -1
+		percent ? mainPrice : -1
 	)
 	const [dealPercent, setDealPercent] = useState(
-		saleUnit.product.price.dealPercent || 0
+		percent || 0
 	)
 	const [changeFF, setChangeFF] = useState("")
 
@@ -23,16 +25,22 @@ const PriceCell = ({ saleUnit, onEditSaleUnit }) => {
 		if (changeFF !== "dealPrice") return
 
 		// dealPrice > 0
-		if (dealPrice && dealPrice > 0 && dealPrice < mainPrice) {
-			const next = parseInt((1 - dealPrice / mainPrice) * 100)
-			const calc = calcPercentOfPart(dealPrice, mainPrice)
+		if (
+			dealPrice &&
+			dealPrice > 0 &&
+			dealPrice < retailPrice
+		) {
+			const next = parseInt(
+				(1 - dealPrice / retailPrice) * 100
+			)
+			const calc = calcPercentOfPart(dealPrice, retailPrice)
 			checkKV(next, calc)
 
-			setDealPercent(calcPercentOfPart(dealPrice, mainPrice))
+			setDealPercent(calcPercentOfPart(dealPrice, retailPrice))
 			onEditSaleUnit({
 				...saleUnit,
 				dealPrice,
-				dealPercent: calcPercentOfPart(dealPrice, mainPrice),
+				dealPercent: calcPercentOfPart(dealPrice, retailPrice),
 			})
 		}
 		// dealPrice = 0
@@ -69,16 +77,16 @@ const PriceCell = ({ saleUnit, onEditSaleUnit }) => {
 			dealPercent <= 100
 		) {
 			const next = parseInt(
-				(1 - dealPercent / 100) * mainPrice
+				(1 - dealPercent / 100) * retailPrice
 			)
 			const calc = setDealPrice(
-				calcPartOfPercent(dealPercent, mainPrice)
+				calcPartOfPercent(dealPercent, retailPrice)
 			)
 			checkKV(next, calc)
 
 			onEditSaleUnit({
 				...saleUnit,
-				dealPrice: calcPartOfPercent(dealPercent, mainPrice),
+				dealPrice: calcPartOfPercent(dealPercent, retailPrice),
 				dealPercent,
 			})
 		}
@@ -145,7 +153,7 @@ const PriceCell = ({ saleUnit, onEditSaleUnit }) => {
 
 				<div className='flex justify-between items-center w-full'>
 					<span>Giá gốc</span>
-					<span>{convertTokVND(mainPrice, false)}</span>
+					<span>{convertTokVND(retailPrice, false)}</span>
 				</div>
 			</div>
 		</td>

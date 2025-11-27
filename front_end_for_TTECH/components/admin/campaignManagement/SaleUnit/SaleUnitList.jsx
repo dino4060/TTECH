@@ -42,6 +42,11 @@ const SaleUnitList = ({ saleUnits, setSaleUnits }) => {
 		setNewProducts(new Set())
 	}, [newProducts])
 
+	// Clean setAsyncList
+	useEffect(() => {
+		saleUnits.length === 0 && setAppliedProductIds(new Set())
+	}, [saleUnits])
+
 	const onRemoveSaleUnit = (productId) => {
 		setSaleUnits(
 			saleUnits.filter((u) => u.product.id !== productId)

@@ -10,13 +10,13 @@ const LimitCell = ({ saleUnit, onEditSaleUnit }) => {
 		if (limit && limit > 0) {
 			const stock = saleUnit.product.stock.available
 			setAvailable(limit > stock ? stock : limit)
-			onEditSaleUnit({ ...saleUnit, limit })
+			onEditSaleUnit({ ...saleUnit, totalLimit: limit })
 		}
 		// limit is falsy
 		else {
 			setLimit(0)
 			setAvailable(-1)
-			onEditSaleUnit({ ...saleUnit, limit: 0 })
+			onEditSaleUnit({ ...saleUnit, totalLimit: 0 })
 		}
 	}, [limit])
 
