@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 // TODO
 // Check genStatus, ProductService, case null pointer
@@ -99,6 +98,6 @@ public class CampaignService {
     public void remove(long id) {
         this.campaignRepo.delete(this.campaignRepo
                 .findById(id)
-                .orElseThrow(() ->  new NotFoundError("Campaign")));
+                .orElseThrow(() -> new NotFoundError("Campaign")));
     }
 }

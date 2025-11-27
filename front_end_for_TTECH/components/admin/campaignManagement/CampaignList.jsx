@@ -26,7 +26,11 @@ const CampaignList = ({
 		getCampList()
 	}, [setAsyncList])
 	return (
-		<motion.div>
+		<motion.div
+			initial='hidden'
+			animate='visible'
+			variants={TableVariantUn}
+		>
 			<table className='bg-white w-full border-spacing-1 border-separate table-auto text-xl relative'>
 				<thead className='text-black uppercase sticky top-2'>
 					<tr>
@@ -154,4 +158,16 @@ const StatusColorUn = {
 	LIMITED: "#f59e0b", // "#6b7280"
 	SECONDARY: "#f59e0b",
 	DEACTIVATED: "#94a3b8",
+}
+
+const TableVariantUn = {
+	hidden: { opacity: 0, y: 20 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		transition: {
+			duration: 0.5,
+			staggerChildren: 0.08,
+		},
+	},
 }

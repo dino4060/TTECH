@@ -1,20 +1,19 @@
 "use client"
 
+import AdminCampaignManagement from "@/components/admin/AdminCampaignManagement"
+import AdminCategoryManagement from "@/components/admin/AdminCategoryManagement"
+import AdminCustomerManagement from "@/components/admin/AdminCustomerManagement"
+import AdminProfileManagement from "@/components/admin/AdminProfileManagement"
+import AdminSupplierManagement from "@/components/admin/AdminSupplierManagement"
 import CustomerMessage from "@/components/admin/customerManagement/CustomerMessage"
+import { UserAuth } from "@/context/AuthContext"
+import { AnimatePresence } from "framer-motion"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 import AdminDashboard from "../../../components/admin/AdminDashboard"
 import AdminNavigator from "../../../components/admin/AdminNavigator"
 import AdminOrderManagement from "../../../components/admin/AdminOrderManagement"
 import AdminProductManagement from "../../../components/admin/AdminProductManagement"
-import { AnimatePresence } from "framer-motion"
-import { useEffect, useState } from "react"
-import AdminCustomerManagement from "@/components/admin/AdminCustomerManagement"
-import { UserAuth } from "@/context/AuthContext"
-import { useRouter } from "next/navigation"
-import AdminDiscountManagement from "@/components/admin/AdminDiscountManagement"
-import AdminSupplierManagement from "@/components/admin/AdminSupplierManagement"
-import AdminCategoryManagement from "@/components/admin/AdminCategoryManagement"
-import AdminProfileManagement from "@/components/admin/AdminProfileManagement"
-import AdminCampaignManagement from "@/components/admin/AdminCampaignManagement"
 
 const Page = () => {
 	const [route, setRoute] = useState("dashboard")
@@ -37,8 +36,7 @@ const Page = () => {
 				{route === "order" && <AdminOrderManagement />}
 				{route === "customer" && <AdminCustomerManagement />}
 				{route === "message" && <CustomerMessage />}
-				{route === "promotion" && <AdminCampaignManagement />}
-				{route === "discount" && <AdminDiscountManagement />}
+				{route === "marketing" && <AdminCampaignManagement />}
 				{route === "supplier" && <AdminSupplierManagement />}
 				{route === "category" && <AdminCategoryManagement />}
 				{route === "profile" && <AdminProfileManagement />}
