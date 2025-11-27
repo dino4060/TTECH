@@ -163,7 +163,7 @@ const CampTypeGroups = [
 		CampTypes: [
 			CampTypeUn.DAILY_SALE,
 			CampTypeUn.FLASH_SALE,
-			CampTypeUn.NEW_ARRIVAL_SALE,
+			// CampTypeUn.NEW_ARRIVAL_SALE,
 		],
 	},
 	{

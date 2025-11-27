@@ -1,5 +1,6 @@
 package com.dino.back_end_for_TTECH.features.promotion.application;
 
+import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
 import com.dino.back_end_for_TTECH.features.promotion.application.mapper.CampaignMapper;
 import com.dino.back_end_for_TTECH.features.promotion.application.mapper.SaleMapper;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.CampaignData;
@@ -22,8 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-// TODO
-// Check genStatus, ProductService, case null pointer
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -35,6 +34,10 @@ public class CampaignService {
 
     SaleRepository saleRepo;
     SaleMapper saleMapper;
+
+    SaleUnitService unitService;
+
+    ProductRepository productRepo;
 
     private void genStatus(Sale model) {
         var now = LocalDateTime.now();
@@ -76,12 +79,23 @@ public class CampaignService {
                 page, (Campaign c) -> this.campaignMapper.toData(c));
     }
 
-    public SaleData create(SaleBody body) {
-        var newModel = this.saleMapper.toModel(body);
-        this.genStatus(newModel);
+    public SaleData create(SaleBody saleBody) {
+        var sale = this.saleMapper.toModel(saleBody);
+        this.genStatus(sale);
+        sale.getUnits().forEach(u -> {
+            u.setSale(sale);
+            u.setProduct(productRepo
+                    .findById(u.getProduct().getId())
+                    .orElseThrow(() -> new NotFoundError("Product")));
+        });
 
-        var model = this.saleRepo.save(newModel);
-        return this.saleMapper.toData(model);
+        var newSale = this.saleRepo.save(sale);
+
+        sale.getUnits().forEach(u -> {
+            this.unitService.apply(u);
+        });
+
+        return this.saleMapper.toData(newSale);
     }
 
     public SaleData update(long id, SaleBody body) {
@@ -99,5 +113,9 @@ public class CampaignService {
         this.campaignRepo.delete(this.campaignRepo
                 .findById(id)
                 .orElseThrow(() -> new NotFoundError("Campaign")));
+    }
+
+    void apply(Sale sale) {
+
     }
 }
