@@ -1,5 +1,5 @@
 "use client"
-import { checkKV } from "@/lib/utils/check"
+import { checkKV, checkV } from "@/lib/utils/check"
 import {
 	calcPartOfPercent,
 	calcPercentOfPart,
@@ -9,16 +9,24 @@ import { useEffect, useState } from "react"
 
 const PriceCell = ({ saleUnit, onEditSaleUnit }) => {
 	const retailPrice = saleUnit.product.price.retailPrice
-	const mainPrice = saleUnit.product.price.mainPrice
-	const percent = saleUnit.product.price.dealPercent
-
+	const calcDealPrice = (saleUnit) => {
+		return saleUnit.dealPercent ? saleUnit.dealPrice : -1
+	}
+	const calcDealPercent = (saleUnit) => {
+		return saleUnit.dealPercent || 0
+	}
 	const [dealPrice, setDealPrice] = useState(
-		percent ? mainPrice : -1
+		calcDealPrice(saleUnit)
 	)
 	const [dealPercent, setDealPercent] = useState(
-		percent || 0
+		calcDealPercent(saleUnit)
 	)
 	const [changeFF, setChangeFF] = useState("")
+
+	useEffect(() => {
+		setDealPrice(calcDealPrice(saleUnit))
+		setDealPercent(calcDealPercent(saleUnit))
+	}, [saleUnit])
 
 	// Change dealPrice => Update dealPercent
 	useEffect(() => {
@@ -30,12 +38,6 @@ const PriceCell = ({ saleUnit, onEditSaleUnit }) => {
 			dealPrice > 0 &&
 			dealPrice < retailPrice
 		) {
-			const next = parseInt(
-				(1 - dealPrice / retailPrice) * 100
-			)
-			const calc = calcPercentOfPart(dealPrice, retailPrice)
-			checkKV(next, calc)
-
 			setDealPercent(calcPercentOfPart(dealPrice, retailPrice))
 			onEditSaleUnit({
 				...saleUnit,
@@ -76,14 +78,6 @@ const PriceCell = ({ saleUnit, onEditSaleUnit }) => {
 			dealPercent > 0 &&
 			dealPercent <= 100
 		) {
-			const next = parseInt(
-				(1 - dealPercent / 100) * retailPrice
-			)
-			const calc = setDealPrice(
-				calcPartOfPercent(dealPercent, retailPrice)
-			)
-			checkKV(next, calc)
-
 			onEditSaleUnit({
 				...saleUnit,
 				dealPrice: calcPartOfPercent(dealPercent, retailPrice),

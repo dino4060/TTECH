@@ -1,14 +1,56 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 const LimitCell = ({ saleUnit, onEditSaleUnit }) => {
-	const [limit, setLimit] = useState(0)
-	const [available, setAvailable] = useState(-1)
+	const stock = saleUnit.product.stock.available
+	const usedCount = saleUnit.usedCount
+	const calcAvailable = (saleUnit) => {
+		return saleUnit.totalLimit <= 0
+			? -1
+			: saleUnit.totalLimit - usedCount > stock
+			? stock
+			: saleUnit.totalLimit - usedCount
+	}
+
+	const [limit, setLimit] = useState(saleUnit.totalLimit)
+	const [available, setAvailable] = useState(
+		calcAvailable(saleUnit)
+	)
+
+	useEffect(() => {
+		setLimit(saleUnit.totalLimit)
+		setAvailable(calcAvailable(saleUnit))
+	}, [saleUnit, usedCount, stock])
+
+	// const stock = saleUnit.product.stock.available
+	// const usedCount = saleUnit.usedCount
+	// const initLimit = saleUnit.totalLimit
+	// const initAvailable =
+	// 	initLimit === 0
+	// 		? -1
+	// 		: initLimit - usedCount > stock
+	// 		? stock
+	// 		: initLimit - usedCount
+
+	// const [limit, setLimit] = useState(initLimit)
+	// const [available, setAvailable] = useState(initAvailable)
+
+	// useEffect(() => {
+	// 	const initLimit = saleUnit.totalLimit
+	// 	const initAvailable =
+	// 		initLimit === 0
+	// 			? -1
+	// 			: initLimit - usedCount > stock
+	// 			? stock
+	// 			: initLimit - usedCount
+
+	// 	setLimit(initLimit)
+	// 	setAvailable(initAvailable)
+	// }, [saleUnit])
 
 	// Change limit => Change available
 	useEffect(() => {
 		// limit > 0
 		if (limit && limit > 0) {
-			const stock = saleUnit.product.stock.available
 			setAvailable(limit > stock ? stock : limit)
 			onEditSaleUnit({ ...saleUnit, totalLimit: limit })
 		}

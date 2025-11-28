@@ -37,7 +37,7 @@ const SaleForm = ({
 
 	// Turn add mode => Clean sale data
 	useEffect(() => {
-		if (!currentCamp?.id) {
+		if (action === ActionUn.ADD || !currentCamp?.id) {
 			setSaleData(cleanSaleData)
 			setSaleUnits([])
 		} else {

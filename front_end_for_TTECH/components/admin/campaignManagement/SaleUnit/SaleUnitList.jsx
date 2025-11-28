@@ -28,7 +28,7 @@ const SaleUnitList = ({
 				isOn: true,
 				dealPrice: 0,
 				dealPercent: 0,
-				totalLimit: -1,
+				totalLimit: 0,
 				usedCount: 0,
 				levelType: "PRODUCT",
 			})),

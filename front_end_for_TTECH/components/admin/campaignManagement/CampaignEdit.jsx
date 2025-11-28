@@ -41,10 +41,7 @@ const CampaignEdit = ({
 	}
 
 	// Render form
-	const [currentSale, setCurrentSale] = useState({
-		...currentCamp,
-		units: [],
-	})
+	const [currentSale, setCurrentSale] = useState({})
 
 	const fetchCurrentSale = async (id) => {
 		const { success, data, error } = await clientFetch(
