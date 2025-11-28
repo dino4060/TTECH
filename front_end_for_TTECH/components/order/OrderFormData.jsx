@@ -8,6 +8,7 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 import CircleLoader from "../uncategory/CircleLoader"
+import { checkV } from "@/lib/utils/check"
 
 const OrderFormData = ({
 	cart,
@@ -23,41 +24,42 @@ const OrderFormData = ({
 	const [data, setData] = useState({
 		customerName: user?.name,
 		customerPhone: user?.phone,
-		address: "",
+		deliveryAddress: user?.address,
 		note: "",
+		paymentType: "COD",
 	})
 	const [error, setError] = useState({
-		name: "",
-		address: "",
-		email: "",
-		phone: "",
+		customerName: "",
+		deliveryAddress: "",
+		customerPhone: "",
+		paymentType: "",
 	})
 
 	const Fields = [
 		{
 			key: "customerName",
 			name: "Tên khách hàng",
+			require: true,
 			tag: "text",
 			placeholder: "Vui lòng nhập tên khách hàng",
-			require: true,
 		},
 		{
 			key: "customerPhone",
 			name: "Số điện thoại",
+			require: true,
 			tag: "text",
 			placeholder: "Vui lòng nhập số điện thoại",
-			require: true,
 			validate: {
 				test: isValidPhoneNumber,
 				feedback: "Sai định dạng số điện thoại",
 			},
 		},
 		{
-			key: "address",
+			key: "deliveryAddress",
 			name: "Địa chỉ",
+			require: true,
 			tag: "text",
 			placeholder: "Vui lòng nhập địa chỉ",
-			require: true,
 		},
 		{
 			key: "note",
@@ -68,6 +70,7 @@ const OrderFormData = ({
 		{
 			key: "paymentType",
 			name: "Hình thức thanh toán",
+			require: true,
 			tag: "ratio",
 			options: [
 				{
@@ -80,7 +83,6 @@ const OrderFormData = ({
 					name: "Chuyển khoản ngân hàng",
 				},
 			],
-			require: true,
 		},
 	]
 
@@ -144,7 +146,7 @@ const OrderFormData = ({
 									checked={option.default}
 									onChange={(e) => {
 										onChangeValue(e, x)
-										paymentTypeRef.current.focus()
+										// paymentTypeRef.current.focus()
 									}}
 								/>
 								<label htmlFor={option.key} className='text-2xl'>
@@ -187,7 +189,8 @@ const OrderFormData = ({
 
 		let isOke = true
 		Fields.forEach((field) => {
-			if (!data[field.key]) {
+			if (field.require && !data[field.key]) {
+				checkV(field.key)
 				isOke = false
 				error[field.key] = field.placeholder
 				setError({ ...error })
@@ -209,10 +212,11 @@ const OrderFormData = ({
 		)
 
 		if (success) {
-			setCart([])
+			setCart({ ...cart, lines: [] })
 
 			if (paymentType === "bank") {
-				alert("Chưa thực thi")
+				router.push("/upcomming/success")
+				// alert("Chưa thực thi")
 				// const result = await handleTransaction.bank(
 				// 	totalPrice,
 				// 	id // fix

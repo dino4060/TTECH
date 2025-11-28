@@ -108,108 +108,108 @@ const UserOrder = () => {
 					</h1>
 				</div>
 				<div className=''>
-					{orderList?.map(
-						({ id, orderTime, total, orderLines }) => (
-							<div key={id}>
-								<motion.div
-									variants={variant}
-									initial='initial'
-									animate={showDetail[id] ? "active" : "initial"}
-									transition={{ type: "spring", delay: 0.1 }}
-									className='flex gap-1 xl:gap-2 p-4 rounded-2xl mb-6'
+					{orderList?.map(({ id, orderTime, total, lines }) => (
+						<div key={id}>
+							<motion.div
+								variants={variant}
+								initial='initial'
+								animate={showDetail[id] ? "active" : "initial"}
+								transition={{ type: "spring", delay: 0.1 }}
+								className='flex gap-1 xl:gap-2 p-4 rounded-2xl mb-6'
+							>
+								<motion.h1
+									whileTap={{ color: "red" }}
+									onClick={() => copy(id)}
+									className='flex-1 shrink-0 flex items-center justify-center gap-2'
 								>
-									<motion.h1
-										whileTap={{ color: "red" }}
-										onClick={() => copy(id)}
-										className='flex-1 shrink-0 flex items-center justify-center gap-2'
+									{id}
+									<IoCopyOutline size={15} />
+								</motion.h1>
+								<h1 className='flex-1 shrink-0 flex items-center justify-center'>
+									{convertDate(orderTime)}
+								</h1>
+								<h1 className='flex-1 shrink-0 flex items-center justify-center'>
+									{convertToVND(total || 0)}
+								</h1>
+								<motion.h1
+									onClick={() => onClick(id)}
+									className='flex-1 shrink-0 flex items-center justify-center'
+								>
+									<AnimatePresence>
+										{!showDetail[id] ? (
+											<motion.div
+												initial={{ opacity: 0 }}
+												whileInView={{ opacity: 1 }}
+												exit={{ opacity: 0 }}
+											>
+												<CiMaximize1 size={20} />
+											</motion.div>
+										) : (
+											<motion.div
+												initial={{ opacity: 0 }}
+												whileInView={{ opacity: 1 }}
+												exit={{ opacity: 0 }}
+											>
+												<CiMinimize1 size={20} />
+											</motion.div>
+										)}
+									</AnimatePresence>
+								</motion.h1>
+							</motion.div>
+							<AnimatePresence>
+								{showDetail[id] && (
+									<motion.div
+										initial={{ scaleY: 0.1, opacity: 0 }}
+										whileInView={{ scaleY: 1, opacity: 1 }}
+										exit={{ scaleY: 0.1, opacity: 0 }}
+										className='flex flex-col gap-3 mt-2 origin-top'
 									>
-										{id}
-										<IoCopyOutline size={15} />
-									</motion.h1>
-									<h1 className='flex-1 shrink-0 flex items-center justify-center'>
-										{convertDate(orderTime)}
-									</h1>
-									<h1 className='flex-1 shrink-0 flex items-center justify-center'>
-										{convertToVND(total || 0)}
-									</h1>
-									<motion.h1
-										onClick={() => onClick(id)}
-										className='flex-1 shrink-0 flex items-center justify-center'
-									>
-										<AnimatePresence>
-											{!showDetail[id] ? (
-												<motion.div
-													initial={{ opacity: 0 }}
-													whileInView={{ opacity: 1 }}
-													exit={{ opacity: 0 }}
-												>
-													<CiMaximize1 size={20} />
-												</motion.div>
-											) : (
-												<motion.div
-													initial={{ opacity: 0 }}
-													whileInView={{ opacity: 1 }}
-													exit={{ opacity: 0 }}
-												>
-													<CiMinimize1 size={20} />
-												</motion.div>
-											)}
-										</AnimatePresence>
-									</motion.h1>
-								</motion.div>
-								<AnimatePresence>
-									{showDetail[id] && (
-										<motion.div
-											initial={{ scaleY: 0.1, opacity: 0 }}
-											whileInView={{ scaleY: 1, opacity: 1 }}
-											exit={{ scaleY: 0.1, opacity: 0 }}
-											className='flex flex-col gap-3 mt-2 origin-top'
-										>
-											<div className='flex gap-2'>
-												<div className='flex-1 text-center bg-blue-500 text-white/90 py-2 rounded-3xl'></div>
-												<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
-													Tên
-												</div>
-												<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
-													{" "}
-													Giá
-												</div>
-												<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
-													Số lượng
-												</div>
+										<div className='flex gap-2'>
+											<div className='flex-1 text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
+												Ảnh
 											</div>
+											<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
+												Tên sản phẩm
+											</div>
+											<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
+												{" "}
+												Giá
+											</div>
+											<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
+												Số lượng
+											</div>
+										</div>
 
-											{orderLines?.map(
-												(
-													{ product, quantity, mainPrice, sidePrice },
-													j
-												) => (
-													<div key={j} className='flex pt-6 pb-4'>
-														<div className='flex-1 text-center rounded-3xl'>
-															<img
-																src={product.thumb}
-																className='h-[70px] m-auto w-[70px] object-contain rounded-3xl'
-															/>
-														</div>
-														<div className='flex-[2] flex items-center text-center justify-center'>
-															{product.name}
-														</div>
-														<div className='flex-[2] flex items-center text-center justify-center'>
-															{" "}
-															{convertToVND(mainPrice || 0)}{" "}
-														</div>
-														<div className='flex-[2] flex items-center text-center justify-center'>
-															{quantity}{" "}
-														</div>
+										{lines?.map(
+											(
+												{ product, quantity, mainPrice, sidePrice },
+												j
+											) => (
+												<div key={j} className='flex pt-6 pb-4'>
+													<div className='flex-1 text-center rounded-3xl'>
+														<img
+															src={product.thumb}
+															className='h-[70px] m-auto w-[70px] object-contain rounded-3xl'
+														/>
 													</div>
-												)
-											)}
-										</motion.div>
-									)}
-								</AnimatePresence>
-							</div>
-						)
-					)}
+													<div className='flex-[2] flex items-center text-center justify-center'>
+														{product.name}
+													</div>
+													<div className='flex-[2] flex items-center text-center justify-center'>
+														{" "}
+														{convertToVND(mainPrice || 0)}{" "}
+													</div>
+													<div className='flex-[2] flex items-center text-center justify-center'>
+														{quantity}{" "}
+													</div>
+												</div>
+											)
+										)}
+									</motion.div>
+								)}
+							</AnimatePresence>
+						</div>
+					))}
 				</div>
 			</ul>
 		</div>

@@ -14,6 +14,6 @@ public class OrderSpecification {
 
     public static Specification<Order> build(OrderQuery query) {
         return Specification
-                .where(equalId(query.id()));
+                .where(equalId(query.getId()));
     }
 }

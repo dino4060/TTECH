@@ -1,7 +1,12 @@
 "use client"
-import { convertTokVND, convertToVND } from "@/utils/until"
+import {
+	convertToD,
+	convertTokVND,
+	convertToVND,
+} from "@/utils/until"
 import { useEffect, useState } from "react"
 import OrderFormData from "./OrderFormData"
+import { checkV } from "@/lib/utils/check"
 
 const OrderBill = ({ cart, setCart }) => {
 	const [totalPrice, setTotalPrice] = useState(0)
@@ -15,8 +20,12 @@ const OrderBill = ({ cart, setCart }) => {
 	})
 
 	useEffect(() => {
+		if (!cart?.lines) {
+			setTotalPrice(0)
+			return
+		}
+
 		let total = 0
-		if (!cart?.lines) return
 		cart.lines
 			.map((l) => l.quantity * l.product.price.mainPrice)
 			.forEach((l) => (total += l))
@@ -89,7 +98,7 @@ const OrderBill = ({ cart, setCart }) => {
 
 			<div className='text-black text-3xl grid grid-cols-2 px-[100px]  py-8 w-full rounded-full font-[600] mt-2'>
 				<div className=' '>Tổng:</div>{" "}
-				<div>{convertTokVND(totalPrice)}</div>
+				<div>{convertToD(totalPrice)}</div>
 				{discount.discountId && (
 					<>
 						<div className=''>Giảm:</div>

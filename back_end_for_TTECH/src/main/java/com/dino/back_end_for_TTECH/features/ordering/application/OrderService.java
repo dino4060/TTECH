@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.features.ordering.application;
 
-import com.dino.back_end_for_TTECH.features.ordering.application.mapper.IOrderMapper;
+import com.dino.back_end_for_TTECH.features.ordering.application.mapper.OrderMapper;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderBody;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderData;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderQuery;
@@ -10,6 +10,8 @@ import com.dino.back_end_for_TTECH.features.ordering.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.ordering.domain.repository.IOrderRepository;
 import com.dino.back_end_for_TTECH.features.ordering.domain.specification.OrderSpecification;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
+import com.dino.back_end_for_TTECH.shared.application.model.PageData;
+import com.dino.back_end_for_TTECH.shared.application.model.PageQuery;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,7 +30,7 @@ public class OrderService {
 
     CartService cartService;
     IOrderRepository orderRepository;
-    IOrderMapper orderMapper;
+    OrderMapper orderMapper;
 
     public AppPage<OrderData> list(OrderQuery query, Pageable pageable) {
         var queryable = OrderSpecification.build(query);
@@ -40,13 +42,12 @@ public class OrderService {
         return AppPage.from(page, items);
     }
 
-    public AppPage<OrderData> list(Pageable pageable, CurrentUser user) {
-        var page = this.orderRepository.findAllByBuyer(user.toUser(), pageable);
+    public PageData<OrderData> list(OrderQuery query, CurrentUser user) {
+        var page = this.orderRepository
+                .findAllByBuyer(user.toUser(), this.orderMapper.toPageable(query));
 
-        var items = page.getContent().stream()
-                .map(model -> this.orderMapper.toData(model)).toList();
-
-        return AppPage.from(page, items);
+        return this.orderMapper.toPageData(
+                page, (Order o) -> this.orderMapper.toData(o));
     }
 
     public Order checkout(OrderBody body, CurrentUser user) {

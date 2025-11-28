@@ -3,6 +3,8 @@ package com.dino.back_end_for_TTECH.features.ordering.api;
 import com.dino.back_end_for_TTECH.features.ordering.application.OrderService;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderBody;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderData;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderQuery;
+import com.dino.back_end_for_TTECH.features.product.application.model.ProductQuery;
 import com.dino.back_end_for_TTECH.shared.api.annotation.AuthUser;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
@@ -25,14 +27,12 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<AppPage<OrderData>> list(
-            @PageableDefault(
-                    page = 0, size = 50, sort = "id", direction = Sort.Direction.DESC
-            ) Pageable pageable,
+    public ResponseEntity<?> list(
+            @ModelAttribute OrderQuery query,
             @AuthUser CurrentUser user
     ) {
-        var result = this.orderService.list(pageable, user);
-        return ResponseEntity.ok(result);
+        var data = this.orderService.list(query, user);
+        return ResponseEntity.ok(data);
     }
 
     @PostMapping
