@@ -1,6 +1,7 @@
 package com.dino.back_end_for_TTECH.features.promotion.application;
 
 import com.dino.back_end_for_TTECH.features.product.application.ProductService;
+import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
 import com.dino.back_end_for_TTECH.features.promotion.application.mapper.SaleMapper;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleBody;
@@ -15,6 +16,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +65,7 @@ public class SaleService {
         return this.saleMapper.toData(newSale);
     }
 
+    @Transactional
     public SaleData update(long id, SaleBody body) {
         var editModel = this.saleRepo
                 .findById(id)
@@ -73,9 +77,42 @@ public class SaleService {
         return this.saleMapper.toData(model);
     }
 
+    @Transactional
     public void remove(long id) {
-        this.campaignRepo.delete(this.campaignRepo
+        var sale = this.saleRepo
                 .findById(id)
-                .orElseThrow(() -> new NotFoundError("Campaign")));
+                .orElseThrow(() -> new NotFoundError("Sale"));
+
+        var ongoingSale = sale.hasStatus(Status.ONGOING);
+        List<Product> cancelProducts = sale.getUnits().stream()
+                .filter(u -> u.isOn())
+                .map(u -> u.getProduct()).toList();
+
+        this.campaignRepo.delete(sale);
+
+        if (ongoingSale) {
+            cancelProducts.forEach(p -> {
+                this.productService.cancelSaleUnit(p);
+            });
+        }
+    }
+
+    public void removeAndCancelSaleUnit(long id) {
+        var sale = this.saleRepo
+                .findById(id)
+                .orElseThrow(() -> new NotFoundError("Sale"));
+
+        var ongoingSale = sale.hasStatus(Status.ONGOING);
+        List<Product> cancelProducts = sale.getUnits().stream()
+                .filter(u -> u.isOn())
+                .map(u -> u.getProduct()).toList();
+
+        this.campaignRepo.delete(sale);
+
+        if (ongoingSale) {
+            cancelProducts.forEach(p -> {
+                this.productService.cancelSaleUnit(p);
+            });
+        }
     }
 }

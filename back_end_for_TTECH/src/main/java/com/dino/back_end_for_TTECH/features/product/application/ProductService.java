@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+
 // NOTE: == vs equal()
 // 1. == compares on stack
 // if primitive types ==   -> value on stack   -> compare values
@@ -147,9 +149,10 @@ public class ProductService {
 
     @Transactional
     public void applySaleUnit(SaleUnit unit) {
-        // turn off the current sale unit
+        // turn off all old sale units
         unit.getProduct().getSaleUnits().forEach(u -> {
-            u.setOn(u.equals(unit));});
+            u.setOn(u.equals(unit));
+        });
 
         // apply the new sale unit
         var price = unit.getProduct().getPrice();
@@ -158,5 +161,65 @@ public class ProductService {
         price.setDealPercent(unit.getDealPercent());
 
         this.productRepository.save(unit.getProduct());
+    }
+
+    @Transactional
+    public void revertRetailPrice(Product product) {
+        var price = product.getPrice();
+        price.setMainPrice(price.getRetailPrice());
+        price.setSidePrice(0);
+        price.setDealPercent(0);
+
+        this.productRepository.save(product);
+    }
+
+
+    @Transactional
+    public void cancelSaleUnit(SaleUnit unit) {
+        if (!unit.isOn()) return;
+
+        Product product = unit.getProduct();
+
+        var ONGOING = com.dino.back_end_for_TTECH.features.promotion.domain.model.Status.ONGOING;
+        SaleUnit nextUnit = product.getSaleUnits().stream()
+                .filter(u -> !u.getId().equals(unit.getId()))
+                // sale is in ONGOING
+                .filter(u -> u.getSale().hasStatus(ONGOING))
+                //  limit is unlimited or available
+                .filter(u -> (u.getTotalLimit() == 0) || ((u.getTotalLimit() - u.getUsedCount()) > 0))
+                // Get newest
+                .max(Comparator.comparing(SaleUnit::getCreatedAt))
+                .orElse(null);
+
+
+        // apply next sale unit or revert to original price
+        if (nextUnit != null){
+            var sale = nextUnit.getSale();
+            applySaleUnit(nextUnit);
+        }
+        else this.revertRetailPrice(product);
+    }
+
+    @Transactional
+    public void cancelSaleUnit(Product product) {
+
+        var ONGOING = com.dino.back_end_for_TTECH.features.promotion.domain.model.Status.ONGOING;
+        SaleUnit nextUnit = product.getSaleUnits().stream()
+                // .filter(u -> !u.getId().equals(unit.getId()))
+                // sale is in ONGOING
+                .filter(u -> u.getSale().hasStatus(ONGOING))
+                //  limit is unlimited or available
+                .filter(u -> (u.getTotalLimit() == 0) || ((u.getTotalLimit() - u.getUsedCount()) > 0))
+                // Get newest
+                .max(Comparator.comparing(SaleUnit::getCreatedAt))
+                .orElse(null);
+
+
+        // apply next sale unit or revert to original price
+        if (nextUnit != null){
+            var sale = nextUnit.getSale();
+            applySaleUnit(nextUnit);
+        }
+        else this.revertRetailPrice(product);
     }
 }

@@ -16,6 +16,10 @@ const CampaignAction = ({
 		currentCamp?.id && setAction(ActionKeyUn.EDIT)
 	}, [currentCamp])
 
+	useEffect(() => {
+		action !== ActionKeyUn.EDIT && setCurrentCamp({})
+	}, [action])
+
 	return (
 		<Fragment>
 			<div className='flex gap-2 justify-end p-1 bg-white'>
