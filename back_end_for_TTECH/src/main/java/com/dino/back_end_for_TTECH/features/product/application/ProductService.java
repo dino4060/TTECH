@@ -173,7 +173,6 @@ public class ProductService {
         this.productRepository.save(product);
     }
 
-
     @Transactional
     public void cancelSaleUnit(SaleUnit unit) {
         if (!unit.isOn()) return;
@@ -205,7 +204,6 @@ public class ProductService {
 
         var ONGOING = com.dino.back_end_for_TTECH.features.promotion.domain.model.Status.ONGOING;
         SaleUnit nextUnit = product.getSaleUnits().stream()
-                // .filter(u -> !u.getId().equals(unit.getId()))
                 // sale is in ONGOING
                 .filter(u -> u.getSale().hasStatus(ONGOING))
                 //  limit is unlimited or available

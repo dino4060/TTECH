@@ -18,6 +18,7 @@ const CampaignRemove = ({ setAsyncList }) => {
 	}, [])
 
 	const onRemoveCamp = async (campId) => {
+		if (campId === "") return
 		const { success, error } = await clientFetch(
 			adminCampaignApi.saleApi.remove(campId)
 		)

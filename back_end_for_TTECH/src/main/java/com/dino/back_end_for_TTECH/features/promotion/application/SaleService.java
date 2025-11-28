@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -67,37 +68,33 @@ public class SaleService {
 
     @Transactional
     public SaleData update(long id, SaleBody body) {
-        var editModel = this.saleRepo
-                .findById(id)
-                .orElseThrow(() -> new NotFoundError("Sale"));
-        this.saleMapper.toModel(body, editModel);
-        this.campService.genStatus(editModel);
-
-        var model = this.saleRepo.save(editModel);
-        return this.saleMapper.toData(model);
-    }
-
-    @Transactional
-    public void remove(long id) {
         var sale = this.saleRepo
                 .findById(id)
                 .orElseThrow(() -> new NotFoundError("Sale"));
+        this.saleMapper.toModel(body, sale);
 
-        var ongoingSale = sale.hasStatus(Status.ONGOING);
-        List<Product> cancelProducts = sale.getUnits().stream()
-                .filter(u -> u.isOn())
-                .map(u -> u.getProduct()).toList();
+        var prevStatus = sale.getStatus();
+        this.campService.genStatus(sale);
 
-        this.campaignRepo.delete(sale);
+        var editModel = this.saleRepo.save(sale);
 
-        if (ongoingSale) {
-            cancelProducts.forEach(p -> {
-                this.productService.cancelSaleUnit(p);
-            });
-        }
+//        var editStatus = sale.getStatus();
+//        if (!prevStatus.equals(editStatus) && editModel.hasStatus(Status.ONGOING)) {
+//            editModel.getUnits().forEach(u -> {
+//                this.productService.applySaleUnit(u);
+//            });
+//        }
+//        if (!prevStatus.equals(editStatus) && editModel.hasStatus(Status.ENDED)) {
+//            editModel.getUnits().forEach(u -> {
+//                this.productService.cancelSaleUnit(u);
+//            });
+//        }
+
+        return this.saleMapper.toData(editModel);
     }
 
-    public void removeAndCancelSaleUnit(long id) {
+    // Don't @Transactional
+    public void remove(long id) {
         var sale = this.saleRepo
                 .findById(id)
                 .orElseThrow(() -> new NotFoundError("Sale"));

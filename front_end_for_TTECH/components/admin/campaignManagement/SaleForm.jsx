@@ -166,6 +166,7 @@ const SaleForm = ({
 				))}
 
 				<SaleUnitList
+					action={action}
 					saleUnits={saleUnits}
 					setSaleUnits={setSaleUnits}
 					isAsyncUnits={isAsyncUnits}

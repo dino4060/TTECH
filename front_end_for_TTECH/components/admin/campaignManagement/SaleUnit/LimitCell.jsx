@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react"
+import { ActionKeyUn } from "../CampaignAction"
 
-const LimitCell = ({ saleUnit, onEditSaleUnit }) => {
+const LimitCell = ({
+	saleUnit,
+	onEditSaleUnit,
+	action,
+}) => {
 	const stock = saleUnit.product.stock.available
 	const usedCount = saleUnit.usedCount
 	const calcAvailable = (saleUnit) => {
@@ -54,6 +59,7 @@ const LimitCell = ({ saleUnit, onEditSaleUnit }) => {
 							onChange={onChangeLimit}
 							onWheel={onPreventScroll}
 							className='w-[100px] text-right outline-none border border-black/50 rounded-lg pr-[5px]'
+							disabled={action === ActionKeyUn.EDIT}
 						/>
 					</div>
 				</div>
