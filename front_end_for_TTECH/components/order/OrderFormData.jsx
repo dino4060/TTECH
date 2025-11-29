@@ -1,14 +1,13 @@
 "use client"
 import { UserAuth } from "@/context/AuthContext"
-
 import { orderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"
+import { checkV } from "@/lib/utils/check"
 import { isValidPhoneNumber } from "@/utils/until"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 import CircleLoader from "../uncategory/CircleLoader"
-import { checkV } from "@/lib/utils/check"
 
 const OrderFormData = ({
 	cart,
@@ -214,7 +213,7 @@ const OrderFormData = ({
 		if (success) {
 			setCart({ ...cart, lines: [] })
 
-			if (paymentType === "bank") {
+			if (data.paymentType === "bank") {
 				router.push("/upcomming/success")
 				// alert("Chưa thực thi")
 				// const result = await handleTransaction.bank(
