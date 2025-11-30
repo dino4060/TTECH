@@ -1,7 +1,6 @@
 "use client"
+import { paymentApiRt } from "@/app/api/payment/momo/payment.api-route"
 import { UserAuth } from "@/context/AuthContext"
-import { orderApi } from "@/lib/api/order.api"
-import { clientFetch } from "@/lib/http/fetch.client"
 import { checkV } from "@/lib/utils/check"
 import { isValidPhoneNumber } from "@/utils/until"
 import { motion } from "framer-motion"
@@ -206,27 +205,31 @@ const OrderFormData = ({
 
 		setLoading(true)
 
-		const { success, error: message } = await clientFetch(
-			orderApi.checkout(order)
-		)
+		// const {
+		// 	success,
+		// 	data: newOrder,
+		// 	error: message,
+		// } = await clientFetch(orderApi.checkout(order))
 
-		if (success) {
-			setCart({ ...cart, lines: [] })
+		if (true) {
+			// success) {
+			// setCart({ ...cart, lines: [] })
+			setLoading(false)
 
-			if (data.paymentType === "bank") {
-				router.push("/upcomming/success")
-				// alert("Chưa thực thi")
+			if (true) {
+				// newOrder.paymentType === "BANK") {
 				// const result = await handleTransaction.bank(
 				// 	totalPrice,
-				// 	id // fix
+				// 	"1" // newOrder.id
 				// )
+				const result = await paymentApiRt.momoApiRt.createUrl()
 				// router.push(result)
 				// return
 			} else router.push("/upcomming/success")
 		} else {
+			setLoading(false)
 			alert("Thanh toán thất bại: " + message)
 		}
-		setLoading(false)
 	}
 
 	return (
