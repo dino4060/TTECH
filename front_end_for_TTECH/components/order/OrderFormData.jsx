@@ -141,7 +141,7 @@ const OrderFormData = ({
 									name={x.key}
 									value={option.key}
 									id={option.key}
-									checked={option.default}
+									checked={option.key === data.paymentType}
 									onChange={(e) => {
 										onChangeValue(e, x)
 										// paymentTypeRef.current.focus()
@@ -159,7 +159,7 @@ const OrderFormData = ({
 	}
 
 	const onChangeValue = (e, x) => {
-		const { value } = e.target
+		const value = e.target.value
 
 		let feedback = ""
 		if (x.require && !value.trim()) {
@@ -211,21 +211,40 @@ const OrderFormData = ({
 		// 	error: message,
 		// } = await clientFetch(orderApi.checkout(order))
 
-		if (true) {
-			// success) {
-			// setCart({ ...cart, lines: [] })
-			setLoading(false)
+		const success = true
 
-			if (true) {
-				// newOrder.paymentType === "BANK") {
+		if (success) {
+			// setCart({ ...cart, lines: [] })
+			const newOrder = { ...data, id: 1 }
+
+			if (newOrder.paymentType === "COD") {
+				setLoading(false)
+				router.push("/checkout/success")
+			}
+
+			if (newOrder.paymentType === "BANK") {
+				const response =
+					await paymentApiRt.momoApiRt.createPayUrl({
+						amount: newOrder.total,
+						orderId: newOrder.id,
+						returnUrl: "http://localhost:3000/checkout/success",
+					})
+
+				setLoading(false)
+				if (response.resultCode === 0) {
+					router.push(response.payUrl)
+				} else {
+					console.error("MoMo Client Error:", response)
+					alert("Có lỗi xảy ra: " + response.message)
+				}
+
 				// const result = await handleTransaction.bank(
 				// 	totalPrice,
-				// 	"1" // newOrder.id
+				//  newOrder.id
 				// )
-				const result = await paymentApiRt.momoApiRt.createUrl()
 				// router.push(result)
 				// return
-			} else router.push("/upcomming/success")
+			}
 		} else {
 			setLoading(false)
 			alert("Thanh toán thất bại: " + message)

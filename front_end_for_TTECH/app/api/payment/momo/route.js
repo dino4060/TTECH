@@ -4,18 +4,25 @@ import { NextResponse } from "next/server"
 
 export async function POST(request) {
 	try {
+		const {
+			amount: amountReq,
+			orderId: orderInfoReq,
+			returnUrl: redirectUrlReq,
+		} = await request.json()
+
 		//https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
 		//parameters
 		var accessKey = "F8BBA842ECF85"
 		var secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz"
-		var orderInfo = "pay with MoMo"
+		var orderInfo = orderInfoReq || "pay with MoMo"
 		var partnerCode = "MOMO"
 		var redirectUrl =
+			redirectUrlReq ||
 			"https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b"
 		var ipnUrl =
 			"https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b"
 		var requestType = "payWithMethod"
-		var amount = "50000"
+		var amount = amountReq || "50000"
 		var orderId = partnerCode + new Date().getTime()
 		var requestId = orderId
 		var extraData = ""
@@ -105,7 +112,7 @@ export async function POST(request) {
 
 		return Response.json(body)
 	} catch (error) {
-		console.error("MoMo API Error:", error)
+		console.error("MoMo API Route Error:", error)
 		return NextResponse.json(
 			{
 				message: "Internal server error",

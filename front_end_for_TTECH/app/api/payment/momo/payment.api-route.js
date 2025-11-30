@@ -1,23 +1,24 @@
 export const paymentApiRt = {
 	momoApiRt: {
-		createUrl: async () => {
+		createPayUrl: async ({ amount, orderId, returnUrl }) => {
 			try {
+				// route should be /api/payments/momo/pay-url
 				const response = await fetch("/api/payment/momo", {
 					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						amount,
+						orderId,
+						returnUrl,
+					}),
 				})
 				const data = await response.json()
 
-				if (data.resultCode === 0) {
-					// Redirect đến trang thanh toán MoMo
-					// window.location.href = data.payUrl
-				} else {
-					console.error("MoMo Error:", data)
-					alert("Có lỗi xảy ra: " + data.message)
-				}
-
 				return data
 			} catch (error) {
-				console.error("Payment Error:", error)
+				console.error("Fetch Momo API Route Error:", error)
 				throw error
 			}
 		},
