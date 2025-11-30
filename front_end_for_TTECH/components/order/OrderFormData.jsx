@@ -7,6 +7,8 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 import CircleLoader from "../uncategory/CircleLoader"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { orderApi } from "@/lib/api/order.api"
 
 const OrderFormData = ({
 	cart,
@@ -180,74 +182,57 @@ const OrderFormData = ({
 	}
 
 	const onSubmitOrder = async () => {
-		if (!cart.lines.length) {
-			alert("Chưa có sản phẩm")
-			return
-		}
+		if (!cart.lines.length) return
 
-		let isOke = true
-		Fields.forEach((field) => {
-			if (field.require && !data[field.key]) {
-				checkV(field.key)
-				isOke = false
-				error[field.key] = field.placeholder
+		let isValid = true
+		Fields.forEach((f) => {
+			if (f.require && !data[f.key]) {
+				checkV(f.key)
+				isValid = false
+				error[f.key] = f.placeholder
 				setError({ ...error })
 			}
 		})
-		if (!isOke) return
-
-		const order = {
-			...data,
-			allPrice: totalPrice,
-			allDiscount: 0,
-			total: totalPrice, // Math.ceil(totalPrice),
-		}
+		if (!isValid) return
 
 		setLoading(true)
 
-		// const {
-		// 	success,
-		// 	data: newOrder,
-		// 	error: message,
-		// } = await clientFetch(orderApi.checkout(order))
+		const res = await clientFetch(
+			orderApi.checkout({
+				...data,
+				allPrice: totalPrice,
+				allDiscount: 0,
+				total: totalPrice,
+			})
+		)
 
-		const success = true
+		if (res.success) {
+			setCart({ ...cart, lines: [] })
 
-		if (success) {
-			// setCart({ ...cart, lines: [] })
-			const newOrder = { ...data, id: 1 }
-
-			if (newOrder.paymentType === "COD") {
+			const order = res.data
+			if (order.paymentType === "COD") {
 				setLoading(false)
 				router.push("/checkout/success")
 			}
-
-			if (newOrder.paymentType === "BANK") {
-				const response =
+			if (order.paymentType === "BANK") {
+				const momoRes =
 					await paymentApiRt.momoApiRt.createPayUrl({
-						amount: newOrder.total,
-						orderId: newOrder.id,
+						amount: order.total,
+						orderId: order.id,
 						returnUrl: "http://localhost:3000/checkout/success",
 					})
 
 				setLoading(false)
-				if (response.resultCode === 0) {
-					router.push(response.payUrl)
+				if (momoRes.resultCode === 0) {
+					router.push(momoRes.payUrl)
 				} else {
-					console.error("MoMo Client Error:", response)
-					alert("Có lỗi xảy ra: " + response.message)
+					console.error("MoMo Client Error:", momoRes)
+					alert("Có lỗi xảy ra: " + momoRes.message)
 				}
-
-				// const result = await handleTransaction.bank(
-				// 	totalPrice,
-				//  newOrder.id
-				// )
-				// router.push(result)
-				// return
 			}
 		} else {
 			setLoading(false)
-			alert("Thanh toán thất bại: " + message)
+			alert("Thanh toán thất bại: " + res.error)
 		}
 	}
 

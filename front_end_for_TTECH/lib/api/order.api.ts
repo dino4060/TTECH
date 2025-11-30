@@ -1,4 +1,3 @@
-// src/lib/api/order.api.ts
 import type { TApi } from "@/types/base.types"
 import { HttpMethod } from "@/types/base.types"
 import { RESOURCES } from "../constants/resources"
@@ -12,6 +11,12 @@ export const orderApi = {
 	checkout: (body: any): TApi<{}[]> => ({
 		route: `${RESOURCES.ORDERS.PRIVATE}`,
 		method: HttpMethod.POST,
+		body,
+	}),
+
+	update: (body: any): TApi<{}[]> => ({
+		route: `${RESOURCES.ORDERS.PRIVATE}`,
+		method: HttpMethod.PATCH,
 		body,
 	}),
 }

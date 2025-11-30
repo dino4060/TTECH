@@ -11,7 +11,7 @@ import org.springframework.lang.NonNull;
 
 import java.util.List;
 
-public interface IOrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
+public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
 
     List<Order> findByIdIn(@NonNull List<Long> ids);
 

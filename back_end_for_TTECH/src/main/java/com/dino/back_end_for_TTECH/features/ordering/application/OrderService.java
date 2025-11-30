@@ -3,15 +3,18 @@ package com.dino.back_end_for_TTECH.features.ordering.application;
 import com.dino.back_end_for_TTECH.features.ordering.application.mapper.OrderMapper;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderBody;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderData;
+import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderEditBody;
 import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderQuery;
 import com.dino.back_end_for_TTECH.features.ordering.domain.Order;
 import com.dino.back_end_for_TTECH.features.ordering.domain.OrderLine;
+import com.dino.back_end_for_TTECH.features.ordering.domain.model.PaymentType;
 import com.dino.back_end_for_TTECH.features.ordering.domain.model.Status;
-import com.dino.back_end_for_TTECH.features.ordering.domain.repository.IOrderRepository;
+import com.dino.back_end_for_TTECH.features.ordering.domain.repository.OrderRepository;
 import com.dino.back_end_for_TTECH.features.ordering.domain.specification.OrderSpecification;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
+import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundModelEx;
+import com.dino.back_end_for_TTECH.shared.application.exception.NotPermitModelEx;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
-import com.dino.back_end_for_TTECH.shared.application.model.PageQuery;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -29,8 +32,16 @@ import java.time.Instant;
 public class OrderService {
 
     CartService cartService;
-    IOrderRepository orderRepository;
+    OrderRepository orderRepository;
     OrderMapper orderMapper;
+
+    private void genStatus(Order order) {
+        if (order.getPaymentType().equals(PaymentType.COD.name()))
+            order.setStatus(Status.PENDING);
+        if (order.getPaymentType().equals(PaymentType.BANK.name()))
+            order.setStatus(Status.UNPAID);
+
+    }
 
     public AppPage<OrderData> list(OrderQuery query, Pageable pageable) {
         var queryable = OrderSpecification.build(query);
@@ -54,7 +65,7 @@ public class OrderService {
         var newOrder = this.orderMapper.toModel(body);
         newOrder.setBuyer(user.toUser());
         newOrder.setOrderTime(Instant.now());
-        newOrder.setStatus(Status.PENDING.toString());
+        this.genStatus(newOrder);
 
         var cart = this.cartService.get(user);
         cart.getLines().forEach(cartLine -> {
@@ -78,5 +89,22 @@ public class OrderService {
 
         var result = this.orderRepository.save(newOrder);
         return this.orderMapper.toData(result);
+    }
+
+    public OrderData editPartially(OrderEditBody body, CurrentUser buyer) {
+        var editOrder = this.orderRepository
+                .findById(body.getId())
+                .orElseThrow(() -> new NotFoundModelEx("Order"));
+
+        if (!editOrder.getBuyer().getId().equals(buyer.id())) {
+            throw new NotPermitModelEx("Order");
+        }
+
+        if (body.getStatus() != null) {
+            editOrder.setStatus(body.getStatus());
+        }
+
+        var order = this.orderRepository.save(editOrder);
+        return this.orderMapper.toData(order);
     }
 }
