@@ -36,11 +36,11 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> checkout(
+    public ResponseEntity<?> checkout(
             @Valid @RequestBody OrderBody body,
             @AuthUser CurrentUser user
     ) {
-        this.orderService.checkout(body, user);
-        return ResponseEntity.ok(null);
+        var data = this.orderService.checkout(body, user);
+        return ResponseEntity.ok(data);
     }
 }

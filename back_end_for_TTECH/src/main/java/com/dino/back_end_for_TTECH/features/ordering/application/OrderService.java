@@ -50,7 +50,7 @@ public class OrderService {
                 page, (Order o) -> this.orderMapper.toData(o));
     }
 
-    public Order checkout(OrderBody body, CurrentUser user) {
+    public OrderData checkout(OrderBody body, CurrentUser user) {
         var newOrder = this.orderMapper.toModel(body);
         newOrder.setBuyer(user.toUser());
         newOrder.setOrderTime(Instant.now());
@@ -77,6 +77,6 @@ public class OrderService {
         cart.getLines().clear();
 
         var result = this.orderRepository.save(newOrder);
-        return result;
+        return this.orderMapper.toData(result);
     }
 }
