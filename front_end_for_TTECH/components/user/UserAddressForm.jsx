@@ -1,16 +1,42 @@
 "use client"
-import { Fragment } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { motion } from "framer-motion"
+import { PROVINCES } from "@/lib/utils/address/provinces"
+import { checkKV } from "@/lib/utils/check"
 
 const UserAddressForm = ({
 	formData,
 	formError,
+	provinceID: pId,
+	setProvinceID: setPId,
 	onChange,
 }) => {
+	const [wardList, setWardList] = useState([])
+
+	useEffect(() => {
+		if (formData.provinceId === "") {
+			setWardList([])
+		} else {
+			const PROVINCE = PROVINCES.find(
+				(p) => p.provinceID == formData.provinceId
+			)
+			PROVINCE?.wards && setWardList(PROVINCE.wards)
+			checkKV("PROVINCE: ", PROVINCE)
+			checkKV("PROVINCE?.wards: ", PROVINCE?.wards)
+		}
+	}, [formData])
+
 	return (
 		<Fragment>
 			{FormFieldList.map((FF) => {
 				const ReactComponent = FormInputMap[FF.type]
+
+				// if (FF.key === "ward") {
+				// 	FF.options = wardList.map((w) => ({
+				// 		key: w.wardID,
+				// 		name: w.wardName,
+				// 	}))
+				// }
 
 				return (
 					<ReactComponent
@@ -27,9 +53,20 @@ const UserAddressForm = ({
 
 export default UserAddressForm
 
+const PROVINCE_OPTIONS = [
+	{
+		key: "",
+		name: "",
+	},
+	...PROVINCES.map((p) => ({
+		key: p.provinceID,
+		name: p.provinceName,
+	})),
+]
+
 const FormFieldList = [
 	{
-		key: "province",
+		key: "provinceId",
 		name: "Địa chỉ tỉnh",
 		type: "select",
 		options: [
@@ -37,34 +74,17 @@ const FormFieldList = [
 				key: "",
 				name: "",
 			},
-			{
-				key: "HN",
-				name: "HN",
-			},
-			{
-				key: "HCM",
-				name: "HCM",
-			},
+			...PROVINCES.map((p) => ({
+				key: p.provinceID,
+				name: p.provinceName,
+			})),
 		],
 	},
 	{
-		key: "ward",
+		key: "wardId",
 		name: "Địa chỉ xã",
 		type: "select",
-		options: [
-			{
-				key: "",
-				name: "",
-			},
-			{
-				key: "HN",
-				name: "HN",
-			},
-			{
-				key: "HCM",
-				name: "HCM",
-			},
-		],
+		options: [],
 	},
 	{
 		key: "street",
@@ -136,6 +156,7 @@ const FormInputMap = {
 						name={FF.key}
 						value={FData[FF.key]}
 						onChange={(e) => onChange(e)}
+						disabled={FF.options.length === 0}
 					>
 						{FF.options.map((o) => (
 							<option value={o.key}>{o.name}</option>
