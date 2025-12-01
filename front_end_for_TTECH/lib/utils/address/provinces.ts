@@ -1,138 +1,213 @@
-const BA_DINH_WARDS = [
-	{
-		ghnWardCode: "1A0101",
-		WardID: 1010101,
-		WardName: "Phường Cống Vị",
-	},
-	{
-		ghnWardCode: "1A0102",
-		WardID: 1010102,
-		WardName: "Phường Điện Biên",
-	},
-	{
-		ghnWardCode: "1A0114",
-		WardID: 1010114,
-		WardName: "Phường Vĩnh Phúc",
-	},
+const HA_NOI_WARDS = [
+	[
+		{
+			wardID: 1020114,
+			ghnWardCode: "1A0114",
+			ghnDistrictID: 1484,
+			wardName: "Phường Vĩnh Phúc",
+		},
+		{
+			wardID: 102113,
+			ghnWardCode: "1A0113",
+			ghnDistrictID: 1484,
+			wardName: "Phường Trúc Bạch",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0112",
+			ghnDistrictID: 1484,
+			wardName: "Phường Thành Công",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0111",
+			ghnDistrictID: 1484,
+			wardName: "Phường Quán Thánh",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0110",
+			ghnDistrictID: 1484,
+			wardName: "Phường Phúc Xá",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0109",
+			ghnDistrictID: 1484,
+			wardName: "Phường Nguyễn Trung Trực",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0108",
+			ghnDistrictID: 1484,
+			wardName: "Phường Ngọc Khánh",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0107",
+			ghnDistrictID: 1484,
+			wardName: "Phường Ngọc Hà",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0106",
+			ghnDistrictID: 1484,
+			wardName: "Phường Liễu Giai",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0105",
+			ghnDistrictID: 1484,
+			wardName: "Phường Kim Mã",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0104",
+			ghnDistrictID: 1484,
+			wardName: "Phường Giảng Võ",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0103",
+			ghnDistrictID: 1484,
+			wardName: "Phường Đội Cấn",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0102",
+			ghnDistrictID: 1484,
+			wardName: "Phường Điện Biên",
+		},
+		{
+			wardID: 1020112,
+			ghnWardCode: "1A0101",
+			ghnDistrictID: 1484,
+			wardName: "Phường Cống Vị",
+		},
+	],
 ]
 
 const THU_DUC_WARDS = [
 	{
+		wardName: "Phường An Khánh",
+		wardID: 90768,
 		ghnWardCode: "90768",
-		WardID: 90768,
-		WardName: "Phường An Khánh",
+		ghnDistrictID: 3695,
 	},
 	{
-		WardCode: "90742",
-		WardID: 3695,
-		WardName: "Phường Linh Chiểu",
+		wardName: "Phường Bình Trưng",
+		wardID: 90766,
+		ghnWardCode: "90766",
+		ghnDistrictID: 3695,
 	},
 	{
-		ghnWardCode: "90735",
-		WardID: 90735,
-		WardName: "Phường Linh Xuân",
+		wardName: "Phường Cát Lái",
+		wardID: 90747,
+		ghnWardCode: "90747",
+		ghnDistrictID: 3695,
 	},
 	{
+		wardName: "Phường Hiệp Bình",
+		wardID: 90741,
 		ghnWardCode: "90741",
-		WardID: 90735,
-		WardName: "Phường Hiệp Phú",
+		ghnDistrictID: 3695,
+	},
+	{
+		wardName: "Phường Tam Bình",
+		wardID: 90736,
+		wardCode: "90736",
+		ghnDistrictID: 3695,
+	},
+	{
+		wardName: "Phường Thủ Đức",
+		wardID: 90745,
+		ghnWardCode: "90745",
+		ghnDistrictID: 3695,
+	},
+	{
+		wardName: "Phường Linh Xuân",
+		wardID: 90737,
+		ghnWardCode: "90737",
+		ghnDistrictID: 3695,
+	},
+	{
+		wardName: "Phường Tăng Nhơn Phú",
+		wardID: 90754,
+		ghnWardCode: "90754",
+		ghnDistrictID: 3695,
+	},
+	{
+		wardName: "Phường Phước Long",
+		wardID: 90762,
+		ghnWardCode: "90762",
+		ghnDistrictID: 3695,
+	},
+	{
+		wardName: "Phường Long Bình",
+		wardID: 90751,
+		ghnWardCode: "90751",
+		ghnDistrictID: 3695,
+	},
+	{
+		wardName: "Phường Long Phước",
+		wardID: 90760,
+		ghnWardCode: "90760",
+		ghnDistrictID: 3695,
+	},
+	{
+		wardName: "Phường Long Trường",
+		wardID: 90761,
+		ghnWardCode: "90761",
+		ghnDistrictID: 3695,
 	},
 ]
 
 const BA_TRI_WARDS = [
 	{
-		WardID: 560701,
-		ghnWardCode: "560701",
-		WardName: "Thị trấn Ba Tri",
-	},
-	{
-		WardID: 560702,
-		ghnWardCode: "560702",
-		WardName: "Xã An Bình Tây",
-	},
-	{
-		WardID: 910386,
-		ghnWardCode: "910386",
-		WardName: "Thị trấn Tiệm Tôm",
-	},
-]
-
-const HA_NOI_DISTRICTS = [
-	{
-		DistrictID: 1484,
-		DistrictName: "Quận Ba Đình",
-		ghnDistrictID: 1484,
-		wards: [...BA_DINH_WARDS],
-	},
-	{
-		DistrictID: 1488,
-		DistrictName: "Quận Hoàn Kiếm",
-		ghnDistrictID: 1488,
-		wards: [],
-	},
-	{
-		DistrictID: 1485,
-		DistrictName: "Quận Cầu Giấy",
-		ghnDistrictID: 1485,
-		wards: [],
-	},
-	{
-		DistrictID: 1488,
-		DistrictName: "Quận Hai Bà Trưng",
-		ghnDistrictID: 1488,
-		wards: [],
-	},
-]
-
-const HO_CHI_MINH_DISTRICTS = [
-	{
-		DistrictID: 1442,
-		DistrictName: "Quận 1",
-		ghnDistrictID: 1442,
-		wards: [],
-	},
-	{
-		DistrictID: 1462,
-		DistrictName: "Quận Bình Thạnh",
-		ghnDistrictID: 1462,
-		wards: [],
-	},
-	{
-		DistrictID: 1461,
-		DistrictName: "Quận Gò Vấp",
-		ghnDistrictID: 1461,
-		wards: [],
-	},
-	{
-		DistrictID: 3695,
-		DistrictName: "Thành phố Thủ Đức",
-		ghnDistrictID: 3695,
-		wards: [...THU_DUC_WARDS],
-	},
-]
-
-const BEN_TRE_DISTRICTS = [
-	{
-		DistrictID: 1558,
-		DistrictName: "Thành phố Bến Tre",
-		ghnDistrictID: 1558,
-		wards: [],
-	},
-	{
-		DistrictID: 1742,
-		DistrictName: "Huyện Châu Thành",
-		ghnDistrictID: 1742,
-		wards: [],
-	},
-	{
-		DistrictID: 1888,
-		DistrictName: "Huyện Ba Tri",
+		wardID: 560721,
+		ghnWardCode: "560721",
 		ghnDistrictID: 1888,
-		wards: [...BA_TRI_WARDS],
+		wardName: "Xã Tân Thủy",
+	},
+	{
+		wardID: 560710,
+		ghnWardCode: "560710",
+		ghnDistrictID: 1888,
+		wardName: "Xã Bảo Thạnh",
+	},
+	{
+		wardID: 560701,
+		ghnWardCode: "560701",
+		ghnDistrictID: 1888,
+		wardName: "Xã Ba Tri",
+	},
+	{
+		wardID: 560722,
+		ghnWardCode: "560722",
+		ghnDistrictID: 1888,
+		wardName: "Xã Tân Xuân",
+	},
+	{
+		wardID: 560712,
+		ghnWardCode: "560712",
+		ghnDistrictID: 1888,
+		wardName: "Xã Mỹ Chánh",
+	},
+	{
+		wardID: 560707,
+		ghnWardCode: "560707",
+		ghnDistrictID: 1888,
+		wardName: "Xã An Ngãi Trung",
+	},
+	{
+		wardID: 560707,
+		ghnWardCode: "560704",
+		ghnDistrictID: 1888,
+		wardName: "Xã An Hiệp",
 	},
 ]
 
-const VN_PROVINCES = [
+export const PROVINCES = [
 	{
 		ProvinceID: 206,
 		ProvinceName: "An Giang",
@@ -149,7 +224,7 @@ const VN_PROVINCES = [
 		ProvinceID: 213,
 		ProvinceName: "Bến Tre",
 		ghnProvinceID: 213,
-		districts: [...BEN_TRE_DISTRICTS],
+		wards: [...BA_TRI_WARDS],
 	},
 	{
 		ProvinceID: 208,
@@ -173,7 +248,7 @@ const VN_PROVINCES = [
 		ProvinceID: 201,
 		ProvinceName: "Hà Nội",
 		ghnProvinceID: 201,
-		districts: [...HA_NOI_DISTRICTS],
+		wards: [...HA_NOI_WARDS],
 	},
 	{
 		ProvinceID: 204,
@@ -185,7 +260,7 @@ const VN_PROVINCES = [
 		ProvinceID: 202,
 		ProvinceName: "Hồ Chí Minh",
 		ghnProvinceID: 202,
-		districts: [...HO_CHI_MINH_DISTRICTS],
+		wards: [...THU_DUC_WARDS],
 	},
 	{
 		ProvinceID: 210,
