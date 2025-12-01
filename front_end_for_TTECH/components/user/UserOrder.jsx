@@ -1,6 +1,4 @@
 "use client"
-
-import { handleOrder } from "@/app/api/handleOrder"
 import { UserAuth } from "@/context/AuthContext"
 import { orderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"

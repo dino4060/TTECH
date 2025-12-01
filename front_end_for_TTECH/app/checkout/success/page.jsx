@@ -4,7 +4,7 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import { checkKV } from "@/lib/utils/check"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
-import { CiGrid41, CiHome } from "react-icons/ci"
+import { CiBoxes, CiHome } from "react-icons/ci"
 
 const Page = () => {
 	const router = useRouter()
@@ -34,7 +34,9 @@ const Page = () => {
 		<div className='w-full h-screen bg-black'>
 			<div className='fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2'>
 				<h1 className='text-[4rem] leading-[4rem] lg:text-[7rem] mx-auto text-blue-200 capitalize w-full lg:leading-[7rem] text-center font-[700]'>
-					Tuyệt! Đơn hàng của bạn đã được thanh toán thành công.
+					{`Tuyệt! Đơn hàng của bạn đã được ${
+						orderId ? "thanh toán" : "đặt hàng"
+					} thành công.`}
 				</h1>
 				<div className='flex justify-center items-center gap-10'>
 					<div className='flex flex-col items-center gap-5'>
@@ -52,7 +54,7 @@ const Page = () => {
 						<h2 className='text-4xl text-white text-center mt-20'>
 							Xem đơn hàng
 						</h2>
-						<CiGrid41
+						<CiBoxes
 							onClick={() => router.push("/account")}
 							size={50}
 							className='text-white cursor-pointer p-4 bg-blue-600 rounded-full'

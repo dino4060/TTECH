@@ -3,192 +3,189 @@ import { handleUser } from "@/app/api/handleUser"
 import { UserAuth } from "@/context/AuthContext"
 import { motion } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
-import { isValidEmail, isValidPhone } from "../../utils/until"
+import {
+	isValidEmail,
+	isValidPhoneNumber,
+} from "../../utils/until"
 import CircleLoader from "../uncategory/CircleLoader"
 import Notification from "../uncategory/Notification"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { userApi } from "@/lib/api/user.api"
+import UserAddressForm from "./UserAddressForm"
 
 const UserDataForm = () => {
-  const buttonRef = useRef()
-  const { user, setUser } = UserAuth()
-  const [backendError, setBackendError] = useState("")
+	const buttonRef = useRef()
+	const { user, setUser } = UserAuth()
+	const [formData, setFormData] = useState({})
+	const [formError, setFormError] = useState({
+		name: "",
+		email: "",
+		phone: "",
+		province: "",
+		ward: "",
+		street: "",
+	})
+	const [backendError, setBackendError] = useState("")
+	const [isValidForm, setValidForm] = useState(true)
+	const [loading, setLoading] = useState(false)
+	const [notifications, setNotifications] = useState(false)
 
-  useEffect(() => {
-    setFormData(user)
-  }, [])
+	const handleInputChange = (e) => {
+		const { id, value } = e.target
+		setFormData((prev) => ({
+			...prev,
+			[id]: value,
+		}))
 
-  const [formData, setFormData] = useState({})
+		let feedback = ""
+		if (id in ["name", "email", "phone"] && !value.trim()) {
+			feedback = `Vui lòng nhập ${
+				id === "name"
+					? "tên"
+					: id === "email"
+					? "email"
+					: id === "phone"
+					? "số điện thoại"
+					: ""
+			}`
+		} else if (id === "email" && !isValidEmail(value)) {
+			feedback = "Sai định dạng email"
+		} else if (id === "phone" && !isValidPhoneNumber(value)) {
+			feedback = "Số điện thoại gồm 10 số"
+		}
+		setFormError((prev) => ({
+			...prev,
+			[id]: feedback,
+		}))
+	}
 
-  const [formErrors, setFormErrors] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  })
+	const handleSubmit = async () => {
+		setLoading(true)
+		const api = await clientFetch(
+			userApi.update({ ...formData })
+		)
 
-  const [notifications, setNotifications] = useState(false)
-  const [loading, setLoading] = useState(false)
+		if (api.success) {
+			setUser(api.data)
+			setNotifications(true)
+			setBackendError("")
+		} else {
+			setBackendError(api.error)
+			setNotifications(false)
+		}
+		setLoading(false)
+	}
 
-  const [isValidFormData, setIsValidFormData] = useState(
-    () => {
-      return Object.values(formErrors).every((x) => x === "")
-    }
-  )
+	useEffect(() => {
+		setFormData(user)
+	}, [])
 
-  const handleInputChange = (e) => {
-    const { id, value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }))
+	useEffect(() => {
+		setValidForm(
+			Object.values(formError).every((e) => e === "")
+		)
+	}, [formError])
 
-    let errorMessage = ""
-    if (!value.trim()) {
-      errorMessage = `Vui lòng nhập ${id === "name"
-        ? "tên"
-        : id === "email"
-          ? "email"
-          : "số điện thoại"
-        }`
-    } else if (id === "email" && !isValidEmail(value)) {
-      errorMessage = "Sai định dạng email"
-    } else if (id === "phone" && !isValidPhone(value)) {
-      errorMessage = "Số điện thoại gồm 10 số"
-    }
+	return (
+		<div className='grid grid-cols-1 mt-5'>
+			{notifications && (
+				<Notification
+					notification={{
+						text: "Đã cập nhật thông tin",
+						style: "success",
+					}}
+					notifications={notifications}
+					setNotifications={setNotifications}
+				/>
+			)}
+			<div className=' text-white'>
+				<h1 className='text-[1.8rem] text-left px-4 text-black/80 font-[500] capitalize'>
+					Thông tin cá nhân
+				</h1>
 
-    setFormErrors((prevErrors) => ({
-      ...prevErrors,
-      [id]: errorMessage,
-    }))
-  }
+				<div className='w-full bg-slate-200/50 text-black text-[1.5rem]'>
+					<form
+						onSubmit={(e) => e.preventDefault()}
+						className='grid grid-cols-1 gap-2 px-4'
+					>
+						{[
+							{
+								labelName: "Họ và tên",
+								type: "text",
+								inputName: "name",
+							},
+							{
+								labelName: "Email",
+								type: "email",
+								inputName: "email",
+							},
+							{
+								labelName: "Số điện thoại",
+								type: "tel",
+								inputName: "phone",
+							},
+						].map(({ labelName, type, inputName }) => (
+							<div key={inputName}>
+								<div className='flex flex-col'>
+									<motion.label
+										className='text-black/70 text-[1.4rem] font-[600]'
+										htmlFor={inputName}
+									>
+										{labelName}
+									</motion.label>
+									<motion.input
+										id={inputName}
+										className='py-1 w-full outline-none border-[1px] border-gray-500/60 px-4 rounded-xl bg-slate-200'
+										whileFocus={{
+											borderColor: "#2563eb",
+											color: "#172554",
+										}}
+										style={{
+											borderColor:
+												formError[inputName] == "" ? "gray" : "red",
+										}}
+										type={type}
+										value={formData?.[inputName]}
+										onChange={handleInputChange}
+									/>
+								</div>
+								<h2 className='error-message text-[1rem] mt-2 text-red-500'>
+									{formError[inputName]}
+								</h2>
+							</div>
+						))}
 
-  const handleSubmit = async () => {
-    setLoading(true)
-    const userToUpdate = {
-      phone: formData?.phone,
-      email: formData?.email,
-      name: formData?.name,
-    }
+						<UserAddressForm
+							formData={formData}
+							formError={formError}
+							onChange={handleInputChange}
+						/>
 
-    const { success, data: currentUser, error } = await clientFetch(userApi.update(userToUpdate))
+						{/* thêm các input là selection box cho province */}
+						{backendError && (
+							<h2 className='error-message text-[1rem] mt-2 text-red-500'>
+								{backendError}
+							</h2>
+						)}
 
-    if (success) {
-      setUser(currentUser)
-      setNotifications(true)
-      setBackendError("")
-    } else {
-      setBackendError(error || "Có lỗi khi cập nhật hồ sơ")
-      setNotifications(false)
-    }
-    setLoading(false)
-
-  }
-
-  const showInfoCustomer = () => { }
-
-  useEffect(() => {
-    setIsValidFormData(
-      Object.values(formErrors).every((x) => x === "")
-    )
-  }, [formErrors, formData])
-
-  return (
-    <div className='grid grid-cols-1 mt-5'>
-      {notifications && (
-        <Notification
-          notification={{
-            text: "Đã cập nhật thông tin",
-            style: "success",
-          }}
-          notifications={notifications}
-          setNotifications={setNotifications}
-        />
-      )}
-      <div className=' text-white'>
-        <h1
-          onClick={showInfoCustomer}
-          className='text-[1.7rem] text-left px-2 text-black/80 font-[500] capitalize'
-        >
-          Cập nhật thông tin
-        </h1>
-        <div className='w-full bg-slate-200/50 text-black text-[1.5rem]'>
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className='grid grid-cols-1 gap-2 px-4'
-          >
-            {[
-              {
-                labelName: "Họ và tên",
-                type: "text",
-                inputName: "name",
-              },
-              {
-                labelName: "Email",
-                type: "email",
-                inputName: "email",
-              },
-              {
-                labelName: "Số điện thoại",
-                type: "tel",
-                inputName: "phone",
-              },
-            ].map(({ labelName, type, inputName }, i) => (
-              <div key={i}>
-                <div className='flex flex-col '>
-                  <motion.label
-                    className='text-black/70 text-[1.4rem] font-[600]'
-                    htmlFor={inputName}
-                  >
-                    {labelName}
-                  </motion.label>
-                  <motion.input
-                    whileFocus={{
-                      borderColor: "#2563eb",
-                      color: "#172554",
-                    }}
-                    style={{
-                      borderColor:
-                        formErrors[inputName] == "" ? "gray" : "red",
-                    }}
-                    onChange={handleInputChange}
-                    className='py-1 w-full outline-none border-[1px] border-gray-500/60 px-4 rounded-xl bg-slate-200'
-                    id={inputName}
-                    type={type}
-                    value={formData?.[inputName]}
-                  />
-                </div>
-                <h2 className='error-message text-[1rem] mt-2 text-red-500'>
-                  {formErrors[inputName]}
-                </h2>
-              </div>
-            ))}
-
-            {backendError && (
-              <h2 className='error-message text-[1rem] mt-2 text-red-500'>
-                {backendError}
-              </h2>
-            )}
-
-            <div></div>
-
-            <motion.button
-              ref={buttonRef}
-              onClick={handleSubmit}
-              disabled={!isValidFormData}
-              animate={{
-                backgroundColor: isValidFormData
-                  ? "#0284c7"
-                  : "#78716c",
-              }}
-              className='w-full py-2 font-[700] text-white flex items-center justify-center rounded-2xl text-center'
-            >
-              {loading ? <CircleLoader /> : "Cập nhật thông tin"}
-            </motion.button>
-          </form>
-        </div>
-      </div>
-    </div>
-  )
+						<motion.button
+							ref={buttonRef}
+							onClick={handleSubmit}
+							disabled={!isValidForm}
+							animate={{
+								backgroundColor: isValidForm
+									? "#0284c7"
+									: "#78716c",
+							}}
+							className='w-full py-2 font-[700] text-white flex items-center justify-center rounded-2xl text-center'
+						>
+							{loading ? <CircleLoader /> : "Cập nhật thông tin"}
+						</motion.button>
+					</form>
+				</div>
+			</div>
+		</div>
+	)
 }
 
 export default UserDataForm
