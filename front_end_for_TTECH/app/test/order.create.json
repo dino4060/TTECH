@@ -1,0 +1,35 @@
+{
+	"code": 200,
+	"code_message_value": "",
+	"data": {
+		"order_code": "LK68T9",
+		"sort_code": "0-000-0-00",
+		"trans_type": "truck",
+		"ward_encode": "",
+		"district_encode": "",
+		"fee": {
+			"main_service": 22000,
+			"insurance": 25000,
+			"cod_fee": 0,
+			"station_do": 0,
+			"station_pu": 0,
+			"return": 0,
+			"r2s": 0,
+			"return_again": 0,
+			"coupon": 0,
+			"document_return": 0,
+			"double_check": 0,
+			"double_check_deliver": 0,
+			"pick_remote_areas_fee": 0,
+			"deliver_remote_areas_fee": 0,
+			"pick_remote_areas_fee_return": 0,
+			"deliver_remote_areas_fee_return": 0,
+			"cod_failed_fee": 0
+		},
+		"total_fee": 47000,
+		"expected_delivery_time": "2025-12-02T16:59:59Z",
+		"operation_partner": ""
+	},
+	"message": "Success",
+	"message_display": "Tạo đơn hàng thành công. Mã đơn hàng: LK68T9"
+}

@@ -1,0 +1,73 @@
+{
+	"code": 200,
+	"message": "Success",
+	"data": {
+		"order_info": {
+			"order_code": "LK68T9",
+			"shop_id": 198235,
+			"status": "ready_to_pick",
+			"status_name": "Chờ lấy hàng",
+			"picktime": "2025-12-01T05:00:00Z",
+			"leadtime": "2025-12-02T16:59:59Z",
+			"leadtime_order": {
+				"from_estimate_date": "2025-12-02T16:59:59Z",
+				"to_estimate_date": "2025-12-02T16:59:59Z"
+			},
+			"to_name": "xxxx t124",
+			"to_phone": "xxxx 4321",
+			"to_address": "xxxx Quận 3 Hồ Chí Minh",
+			"from_name": "xxxx t124",
+			"from_phone": "xxxx 4321",
+			"from_address": "xxxx Quận 10 Hồ Chí Minh",
+			"return_name": "xxxx t124",
+			"return_phone": "xxxx 0444",
+			"return_address": "xxxx  NTT",
+			"payment_type_id": 2,
+			"order_version": "corev2",
+			"is_partial_return": false,
+			"danger_zone_sender": false,
+			"danger_zone_deliver": false,
+			"sub": 5,
+			"is_sss": false,
+			"items": [
+				{
+					"name": "Áo Polo",
+					"code": "Polo123",
+					"quantity": 1,
+					"length": 12,
+					"width": 12,
+					"height": 12,
+					"category": {
+						"level1": "Áo"
+					},
+					"weight": 1200,
+					"status": "ready_to_pick",
+					"item_order_code": "LK68T9_1",
+					"current_warehouse_id": 21694000
+				}
+			]
+		},
+		"tracking_logs": [
+			{
+				"order_code": "LK68T9",
+				"status": "ready_to_pick",
+				"status_name": "Chờ lấy hàng",
+				"location": {
+					"address": "xxxx Quận 10 Hồ Chí Minh",
+					"ward_code": "20308",
+					"district_id": 1444,
+					"warehouse_id": 21694000
+				},
+				"executor": {
+					"client_id": 2510633,
+					"name": "xxxx some",
+					"phone": "xxxx 9091"
+				},
+				"action_at": "2025-12-01T02:06:42.402Z",
+				"sync_data_at": null
+			}
+		],
+		"ticket_logs": [],
+		"is_sender": false
+	}
+}
