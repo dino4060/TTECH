@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.features.profile.application.service;
 
 import com.dino.back_end_for_TTECH.features.identity.application.model.CurrentUserRes;
-import com.dino.back_end_for_TTECH.features.profile.application.model.UserToUpdateBody;
+import com.dino.back_end_for_TTECH.features.profile.application.model.UserBody;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 
@@ -28,7 +28,7 @@ public interface IUserService {
 
     User createAdmin(String username, String email, String password);
 
-    CurrentUserRes updateCustomer(UserToUpdateBody body, CurrentUser currentUser);
+    CurrentUserRes updateCustomer(UserBody body, CurrentUser currentUser);
 
     // LEGACY //
 

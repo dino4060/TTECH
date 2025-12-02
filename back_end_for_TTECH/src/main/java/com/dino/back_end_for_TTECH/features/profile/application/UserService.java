@@ -4,7 +4,6 @@ import com.dino.back_end_for_TTECH.features.identity.application.model.CurrentUs
 import com.dino.back_end_for_TTECH.features.identity.application.provider.IIdentitySecurityProvider;
 import com.dino.back_end_for_TTECH.features.profile.application.mapper.IUserMapper;
 import com.dino.back_end_for_TTECH.features.profile.application.model.UserBody;
-import com.dino.back_end_for_TTECH.features.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.features.profile.domain.repository.IUserRepository;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceIm implements IUserService {
+public class UserService {
 
     private final IUserRepository userRepository;
     private final IUserMapper userMapper;
@@ -27,7 +26,7 @@ public class UserServiceIm implements IUserService {
 
     // READ //
 
-    @Override
+
     public void checkEmailNotExists(String email) {
         userRepository.findByEmail(email)
                 .ifPresent(user -> {
@@ -35,7 +34,7 @@ public class UserServiceIm implements IUserService {
                 });
     }
 
-    @Override
+
     public void checkPhoneNotExists(String phone) {
         userRepository.findByPhone(phone)
                 .ifPresent(user -> {
@@ -43,44 +42,44 @@ public class UserServiceIm implements IUserService {
                 });
     }
 
-    @Override
+
     public Optional<User> findUserByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
 
-    @Override
+
     public Optional<User> findUserByPhone(String phone) {
         return this.userRepository.findByPhone(phone);
     }
 
-    @Override
+
     public Optional<User> findUserByUsername(String username) {
         return this.userRepository.findByUsername(username);
     }
 
     // WRITE //
 
-    @Override
+
     public User createCustomer(String name, String email, String phone, String password) {
         String passHashed = this.securityProvider.hashPassword(password);
         User userToCreate = User.createCustomer(name, email, phone, passHashed);
         return this.userRepository.save(userToCreate);
     }
 
-    @Override
+
     public User createCustomer(String name, String email) {
         User user = User.createThirdCustomer(name, email);
         return this.userRepository.save(user);
     }
 
-    @Override
+
     public User createAdmin(String username, String email, String password) {
         String passHashed = this.securityProvider.hashPassword(password);
         User user = User.createAdmin(username, email, passHashed);
         return this.userRepository.save(user);
     }
 
-    @Override
+
     public CurrentUserRes updateCustomer(UserBody body, CurrentUser currentUser) {
         // 1. get and check
         User user = userRepository.findById(currentUser.id())
@@ -109,13 +108,13 @@ public class UserServiceIm implements IUserService {
 
     // LEGACY //
 
-    @Override
+
     public User getUserById(Long userId) {
         return this.userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER__NOT_FOUND));
     }
 
-    @Override
+
     public User getUser(CurrentUser currentUser) {
         return this.getUserById(currentUser.id());
     }

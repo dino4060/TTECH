@@ -1,37 +1,37 @@
 package com.dino.back_end_for_TTECH.features.profile.api;
 
 import com.dino.back_end_for_TTECH.features.identity.application.model.CurrentUserRes;
-import com.dino.back_end_for_TTECH.features.profile.application.model.UserToUpdateBody;
-import com.dino.back_end_for_TTECH.features.profile.application.service.IUserService;
+import com.dino.back_end_for_TTECH.features.profile.application.UserService;
+import com.dino.back_end_for_TTECH.features.profile.application.model.UserBody;
 import com.dino.back_end_for_TTECH.shared.api.annotation.AuthUser;
 import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/users")
+@PreAuthorize(AuthConst.CUSTOMER)
+@AllArgsConstructor
 public class UserController {
 
-    // PrivateUserController //
-    @RestController
-    @RequestMapping("/api/users")
-    @PreAuthorize(AuthConst.CUSTOMER)
-    @AllArgsConstructor
-    public static class PrivateUserController {
+    private final UserService userService;
 
-        private final IUserService userService;
+    // QUERY //
 
-        // QUERY //
-
-        // updateUser //
-        @PutMapping("/update")
-        public ResponseEntity<CurrentUserRes> updateUser(
-                @RequestBody UserToUpdateBody body,
-                @AuthUser CurrentUser currentUser
-        ) {
-            return ResponseEntity.ok(this.userService.updateCustomer(body, currentUser));
-        }
+    // updateUser //
+    @PutMapping("/update")
+    public ResponseEntity<CurrentUserRes> edit(
+            @Valid @RequestBody UserBody body,
+            @AuthUser CurrentUser currentUser
+    ) {
+        return ResponseEntity.ok(this.userService.updateCustomer(body, currentUser));
     }
+
 }
