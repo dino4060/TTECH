@@ -3,7 +3,7 @@ package com.dino.back_end_for_TTECH.features.product.api;
 import com.dino.back_end_for_TTECH.features.product.application.SeriesService;
 import com.dino.back_end_for_TTECH.features.product.application.model.SeriesBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.SeriesData;
-import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
+import com.dino.back_end_for_TTECH.shared.api.constant.HasRole;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/series")
-@PreAuthorize(AuthConst.ADMIN)
+@PreAuthorize(HasRole.ADMIN)
 @AllArgsConstructor
 public class AdminSeriesController {
 

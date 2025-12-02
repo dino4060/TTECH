@@ -3,7 +3,7 @@ package com.dino.back_end_for_TTECH.features.product.api;
 import com.dino.back_end_for_TTECH.features.product.application.CategoryService;
 import com.dino.back_end_for_TTECH.features.product.application.model.CategoryBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.CategoryData;
-import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
+import com.dino.back_end_for_TTECH.shared.api.constant.HasRole;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/categories")
-@PreAuthorize(AuthConst.ADMIN)
+@PreAuthorize(HasRole.ADMIN)
 @AllArgsConstructor
 public class AdminCategoryController {
 

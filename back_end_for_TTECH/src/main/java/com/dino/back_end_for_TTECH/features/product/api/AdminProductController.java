@@ -4,7 +4,7 @@ import com.dino.back_end_for_TTECH.features.product.application.ProductService;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductData;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductQuery;
-import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
+import com.dino.back_end_for_TTECH.shared.api.constant.HasRole;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin/products")
-@PreAuthorize(AuthConst.ADMIN)
+@PreAuthorize(HasRole.ADMIN)
 @AllArgsConstructor
 public class AdminProductController {
 

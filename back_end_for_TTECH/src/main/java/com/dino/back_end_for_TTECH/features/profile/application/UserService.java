@@ -20,7 +20,7 @@ public class UserService {
     private final UserMapper userMapper;
 
 
-    public CurrentUserRes updateCustomer(UserBody body, CurrentUser currentUser) {
+    public CurrentUserRes edit(UserBody body, CurrentUser currentUser) {
         User user =  this.userRepository
                 .findById(currentUser.id())
                 .orElseThrow(() -> new BadRequest("User not found"));

@@ -4,7 +4,7 @@ import com.dino.back_end_for_TTECH.features.identity.application.model.CurrentUs
 import com.dino.back_end_for_TTECH.features.profile.application.UserService;
 import com.dino.back_end_for_TTECH.features.profile.application.model.UserBody;
 import com.dino.back_end_for_TTECH.shared.api.annotation.AuthUser;
-import com.dino.back_end_for_TTECH.shared.api.constant.AuthConst;
+import com.dino.back_end_for_TTECH.shared.api.constant.HasRole;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/users")
-@PreAuthorize(AuthConst.CUSTOMER)
+@PreAuthorize(HasRole.CUSTOMER + " or " + HasRole.ADMIN)
 @AllArgsConstructor
 public class UserController {
 
@@ -28,7 +28,7 @@ public class UserController {
             @Valid @RequestBody UserBody body,
             @AuthUser CurrentUser currentUser
     ) {
-        return ResponseEntity.ok(this.userService.updateCustomer(body, currentUser));
+        return ResponseEntity.ok(this.userService.edit(body, currentUser));
     }
 
 }
