@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserService implements IUserService {
+public class UserServiceIm implements IUserService {
 
     private final IUserRepository userRepository;
     private final IUserMapper userMapper;

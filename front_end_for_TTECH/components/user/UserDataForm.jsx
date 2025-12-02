@@ -21,8 +21,8 @@ const UserDataForm = () => {
 		name: "",
 		email: "",
 		phone: "",
-		province: "",
-		ward: "",
+		provinceId: "",
+		wardId: "",
 		street: "",
 	})
 	const [backendError, setBackendError] = useState("")
