@@ -53,14 +53,43 @@ const UserDataForm = () => {
 		} else if (id === "phone" && !isValidPhoneNumber(value)) {
 			feedback = "Số điện thoại gồm 10 số"
 		}
+
 		setFormError((prev) => ({
 			...prev,
 			[id]: feedback,
 		}))
+		setBackendError("")
 	}
 
 	const handleSubmit = async () => {
 		setLoading(true)
+
+		let isValid = true
+		const NotEmptyFields = ["name", "email", "phone"]
+		NotEmptyFields.map((F) => {
+			let feedback = ""
+			if (!formData[F] || !formData[F].trim()) {
+				feedback = `Vui lòng nhập ${
+					F === "name"
+						? "tên"
+						: F === "email"
+						? "email"
+						: F === "phone"
+						? "số điện thoại"
+						: ""
+				}`
+				isValid = false
+			}
+			setFormError((prev) => ({
+				...prev,
+				[F]: feedback,
+			}))
+		})
+		if (isValid === false) {
+			setLoading(false)
+			return
+		}
+
 		const api = await clientFetch(
 			userApi.update({ ...formData })
 		)
