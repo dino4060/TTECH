@@ -23,10 +23,7 @@ public class UserController {
 
     private final UserService userService;
 
-    // QUERY //
-
-    // updateUser //
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<CurrentUserRes> edit(
             @Valid @RequestBody UserBody body,
             @AuthUser CurrentUser currentUser

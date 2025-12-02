@@ -10,8 +10,8 @@ import com.dino.back_end_for_TTECH.features.product.domain.Stock;
 import com.dino.back_end_for_TTECH.features.product.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
 import com.dino.back_end_for_TTECH.features.promotion.domain.SaleUnit;
-import com.dino.back_end_for_TTECH.shared.application.exception.BadRequestException;
-import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundModelEx;
+import com.dino.back_end_for_TTECH.shared.application.exception.BadRequest;
+import com.dino.back_end_for_TTECH.shared.application.exception.ModelNotFound;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
 import lombok.AllArgsConstructor;
@@ -50,7 +50,7 @@ public class ProductService {
 
     public Product get(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundModelEx("Product"));
+                .orElseThrow(() -> new ModelNotFound("Product"));
     }
 
     private void linkParents(Product product) {
@@ -142,7 +142,7 @@ public class ProductService {
     public void delete(long id) {
         Product product = this.get(id);
         if (!this.hasParents(product))
-            throw new BadRequestException("The product is on sale");
+            throw new BadRequest("The product is on sale");
 
         this.productRepository.delete(product);
     }

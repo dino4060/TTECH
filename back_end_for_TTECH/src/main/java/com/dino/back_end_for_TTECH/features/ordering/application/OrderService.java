@@ -12,8 +12,8 @@ import com.dino.back_end_for_TTECH.features.ordering.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.ordering.domain.repository.OrderRepository;
 import com.dino.back_end_for_TTECH.features.ordering.domain.specification.OrderSpecification;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
-import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundModelEx;
-import com.dino.back_end_for_TTECH.shared.application.exception.NotPermitModelEx;
+import com.dino.back_end_for_TTECH.shared.application.exception.ModelNotFound;
+import com.dino.back_end_for_TTECH.shared.application.exception.ModelForbidden;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import lombok.AccessLevel;
@@ -94,10 +94,10 @@ public class OrderService {
     public OrderData editPartially(OrderEditBody body, CurrentUser buyer) {
         var editOrder = this.orderRepository
                 .findById(body.getId())
-                .orElseThrow(() -> new NotFoundModelEx("Order"));
+                .orElseThrow(() -> new ModelNotFound("Order"));
 
         if (!editOrder.getBuyer().getId().equals(buyer.id())) {
-            throw new NotPermitModelEx("Order");
+            throw new ModelForbidden("Order");
         }
 
         if (body.getStatus() != null) {

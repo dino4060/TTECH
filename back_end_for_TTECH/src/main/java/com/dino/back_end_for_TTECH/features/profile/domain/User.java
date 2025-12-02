@@ -53,9 +53,11 @@ public class User extends BaseEntity {
 
     String password;
 
-    Boolean isEmailVerified;
+    Integer provinceId;
 
-    Boolean isPhoneVerified;
+    Integer wardId;
+
+    String street;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -83,8 +85,6 @@ public class User extends BaseEntity {
         user.setPhone(phone);
         user.setPassword(passHashed);
         user.addRole(Role.CUSTOMER);
-        user.setIsEmailVerified(false);
-        user.setIsPhoneVerified(false);
 
         return user;
     }
@@ -97,7 +97,6 @@ public class User extends BaseEntity {
         user.setUsername("user" + System.currentTimeMillis());
         user.setEmail(email);
         user.addRole(Role.CUSTOMER);
-        user.setIsEmailVerified(true);
 
         return user;
     }
@@ -111,7 +110,6 @@ public class User extends BaseEntity {
         user.setEmail(email);
         user.setPassword(passHashed);
         user.addRole(Role.ADMIN);
-        user.setIsEmailVerified(false);
 
         return user;
     }

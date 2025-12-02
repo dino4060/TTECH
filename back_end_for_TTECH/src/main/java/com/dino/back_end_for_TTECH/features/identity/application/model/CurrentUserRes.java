@@ -10,9 +10,10 @@ public record CurrentUserRes(
         String username,
         String email,
         String phone,
-        Boolean isEmailVerified,
-        Boolean isPhoneVerified,
         String status,
-        Set<Role> roles
+        Set<Role> roles,
+        Integer provinceId,
+        Integer wardId,
+        String street
 ) {
 }
