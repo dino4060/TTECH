@@ -10,7 +10,7 @@ import com.dino.back_end_for_TTECH.features.product.domain.Stock;
 import com.dino.back_end_for_TTECH.features.product.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
 import com.dino.back_end_for_TTECH.features.promotion.domain.SaleUnit;
-import com.dino.back_end_for_TTECH.shared.application.exception.BadRequest;
+import com.dino.back_end_for_TTECH.shared.application.exception.BadRequestE;
 import com.dino.back_end_for_TTECH.shared.application.exception.ModelNotFound;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
@@ -142,7 +142,7 @@ public class ProductService {
     public void delete(long id) {
         Product product = this.get(id);
         if (!this.hasParents(product))
-            throw new BadRequest("The product is on sale");
+            throw new BadRequestE("The product is on sale");
 
         this.productRepository.delete(product);
     }

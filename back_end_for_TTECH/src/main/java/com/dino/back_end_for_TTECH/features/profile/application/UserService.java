@@ -6,7 +6,9 @@ import com.dino.back_end_for_TTECH.features.profile.application.model.UserBody;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.features.profile.domain.repository.UserRepository;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
-import com.dino.back_end_for_TTECH.shared.application.exception.BadRequest;
+import com.dino.back_end_for_TTECH.shared.application.exception.BadRequestE;
+import com.dino.back_end_for_TTECH.shared.application.exception.DuplicationE;
+import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundE;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,14 +25,14 @@ public class UserService {
     public CurrentUserRes edit(UserBody body, CurrentUser currentUser) {
         User user =  this.userRepository
                 .findById(currentUser.id())
-                .orElseThrow(() -> new BadRequest("User not found"));
+                .orElseThrow(() -> new NotFoundE("User not found"));
 
         if (!body.getEmail().equals(user.getEmail())) {
             this.userRepository
                     .findByEmail(body.getEmail())
                     .ifPresent(existingUser -> {
                         if (!existingUser.getId().equals(currentUser.id())) {
-                            throw new BadRequest("Email already exists");
+                            throw new DuplicationE("Email already exists");
                         }
                     });
         }
@@ -40,7 +42,7 @@ public class UserService {
                     .findByPhone(body.getPhone())
                     .ifPresent(existingUser -> {
                         if (!existingUser.getId().equals(currentUser.id())) {
-                            throw new BadRequest("Phone already exists.");
+                            throw new DuplicationE("Phone already exists.");
                         }
                     });
         }

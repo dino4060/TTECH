@@ -180,7 +180,9 @@ const UserDataForm = () => {
 									</motion.label>
 									<motion.input
 										id={inputName}
-										className='py-1 w-full outline-none border-[1px] border-gray-500/60 px-4 rounded-xl bg-slate-200'
+										className='
+                      py-1 w-full outline-none border-[1px] border-gray-500/60 px-4 rounded-xl
+                      bg-slate-200'
 										whileFocus={{
 											borderColor: "#2563eb",
 											color: "#172554",

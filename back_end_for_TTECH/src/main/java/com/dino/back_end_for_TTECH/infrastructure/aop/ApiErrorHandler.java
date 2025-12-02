@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.infrastructure.aop;
 
-import com.dino.back_end_for_TTECH.shared.application.exception.BadRequest;
+import com.dino.back_end_for_TTECH.shared.application.exception.BadRequestE;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -23,8 +23,8 @@ public class ApiErrorHandler {
     /**
      * Handle app exception in the service tier
      */
-    @ExceptionHandler(value = BadRequest.class)
-    ResponseEntity<ApiResponse<Object>> handleException(BadRequest e) {
+    @ExceptionHandler(value = BadRequestE.class)
+    ResponseEntity<ApiResponse<Object>> handleException(BadRequestE e) {
         return ResponseEntity
                 .status(e.getStatusCode())
                 .body(ApiResponse.builder()

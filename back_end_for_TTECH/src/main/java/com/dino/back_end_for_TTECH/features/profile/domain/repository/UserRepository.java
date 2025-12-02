@@ -2,11 +2,13 @@ package com.dino.back_end_for_TTECH.features.profile.domain.repository;
 
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    // READ //
+public interface UserRepository extends
+        JpaRepository<User, Long>,
+        JpaSpecificationExecutor<User> {
 
     Optional<User> findByEmail(String email);
 
@@ -16,6 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByPhoneAndIdNot(String phone, Long excludedId);
 
-    Optional<User> findByUsername(String username);
     // value is NULL, database exists NULL, return EMPTY: O (safe)
+    Optional<User> findByUsername(String username);
 }
