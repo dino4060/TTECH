@@ -12,6 +12,7 @@ import Notification from "../uncategory/Notification"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { userApi } from "@/lib/api/user.api"
 import UserAddressForm from "./UserAddressForm"
+import { checkKV, checkV } from "@/lib/utils/check"
 
 const UserDataForm = () => {
 	const buttonRef = useRef()
@@ -32,10 +33,25 @@ const UserDataForm = () => {
 
 	const handleInputChange = (e) => {
 		const { id, value } = e.target
-		setFormData((prev) => ({
-			...prev,
-			[id]: value,
-		}))
+		checkV(`id ${id} value ${value}`)
+		if (id === "provinceId")
+			setFormData((prev) => ({
+				...prev,
+				[id]: value,
+				wardId: "",
+				street: "",
+			}))
+		else if (id === "wardId")
+			setFormData((prev) => ({
+				...prev,
+				[id]: value,
+				street: "",
+			}))
+		else
+			setFormData((prev) => ({
+				...prev,
+				[id]: value,
+			}))
 
 		let feedback = ""
 		if (id in ["name", "email", "phone"] && !value.trim()) {
@@ -171,7 +187,9 @@ const UserDataForm = () => {
 										}}
 										style={{
 											borderColor:
-												formError[inputName] == "" ? "gray" : "red",
+												formError[inputName] == ""
+													? "rgb(107 114 128)" // gray-500
+													: "rgb(239 68 68)", // red-500
 										}}
 										type={type}
 										value={formData?.[inputName]}

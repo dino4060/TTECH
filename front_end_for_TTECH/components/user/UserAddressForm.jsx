@@ -1,8 +1,7 @@
 "use client"
-import { Fragment, useEffect, useState } from "react"
-import { motion } from "framer-motion"
 import { PROVINCES } from "@/lib/utils/address/provinces"
-import { checkKV, checkV } from "@/lib/utils/check"
+import { motion } from "framer-motion"
+import { Fragment, useEffect, useState } from "react"
 
 const UserAddressForm = ({
 	formData,
@@ -101,13 +100,18 @@ const FormInputMap = {
 					</motion.label>
 					<motion.input
 						id={FF.key}
-						className='py-1 w-full outline-none border-[1px] border-gray-500/60 px-4 rounded-xl bg-slate-200'
+						className='
+              py-1 w-full outline-none border-[1px] border-gray-500/60 px-4 rounded-xl
+              bg-slate-200 disabled:bg-slate-300'
 						whileFocus={{
 							borderColor: "#2563eb",
 							color: "#172554",
 						}}
 						style={{
-							borderColor: FErr[FF.key] == "" ? "gray" : "red",
+							borderColor:
+								FErr[FF.key] == ""
+									? "rgb(107 114 128)" // gray-500
+									: "rgb(239 68 68)", // red-500
 						}}
 						name={FF.key}
 						type={FF.type}
@@ -141,7 +145,9 @@ const FormInputMap = {
 					</motion.label>
 					<motion.select
 						id={FF.key}
-						className='py-1 w-full outline-none border-[1px] border-gray-500/60 px-4 rounded-xl bg-slate-200'
+						className='
+              py-1 w-full outline-none border-[1px] border-gray-500/60 px-4 rounded-xl
+              bg-slate-200 disabled:bg-slate-300'
 						whileFocus={{
 							borderColor: "#2563eb",
 							color: "#172554",
