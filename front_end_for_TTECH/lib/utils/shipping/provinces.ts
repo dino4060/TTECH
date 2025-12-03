@@ -1,4 +1,4 @@
-const HA_NOI_WARDS = [
+const BA_DINH_WARDS = [
 	{
 		id: 1020114,
 		ghnWardCode: "1A0114",
@@ -210,7 +210,7 @@ export const PROVINCES = [
 		id: 201,
 		name: "Thành Phố Hà Nội",
 		ghnProvinceID: 201,
-		wards: [...HA_NOI_WARDS],
+		wards: [...BA_DINH_WARDS],
 	},
 	{
 		id: 225,
@@ -285,3 +285,54 @@ export const PROVINCES = [
 		wards: [],
 	},
 ]
+
+type TAddress = {
+	provinceId: number
+	wardId: number
+	street: number
+}
+
+export const findFullAddress = (
+	address: TAddress,
+	addressName = "địa chỉ"
+) => {
+	const province = PROVINCES.find(
+		(province) => province.id === address.provinceId
+	)
+
+	if (!province) {
+		alert(`Không tìm thấy thông tin tỉnh/tp ${addressName}`)
+		return null
+	}
+
+	const ward = province.wards.find(
+		(ward) => ward.id === address.wardId
+	)
+
+	if (!ward) {
+		alert(`Không tìm thấy thông tin phường/xã ${addressName}`)
+		return null
+	}
+
+	const street = address.street
+
+	return { province, ward, street }
+}
+
+export const findGhnAddress = (
+	address: TAddress,
+	addressName = "địa chỉ"
+) => {
+	const result = findFullAddress(address, addressName)
+
+	if (!result) {
+		return null
+	}
+
+	return {
+		provinceId: result.province.ghnProvinceID,
+		districtId: result.ward.ghnDistrictID,
+		wardCode: result.ward.ghnWardCode,
+    street: result.street
+	}
+}

@@ -1,4 +1,5 @@
 "use client"
+import { checkKV } from "@/lib/utils/check"
 import {
 	convertToD,
 	convertTokVND,
@@ -6,9 +7,11 @@ import {
 } from "@/utils/until"
 import { useEffect, useState } from "react"
 import CustomerDataForm from "./CustomerDataForm"
-import { clientFetch } from "@/lib/http/fetch.client"
-import { addressApi } from "@/lib/api/address.api"
-import { checkKV } from "@/lib/utils/check"
+import {
+	estimateGhnLeadtime,
+	formatDateTimeRange,
+	getWarehouseAddress,
+} from "./helper"
 
 const OrderBill = ({ cart, setCart }) => {
 	const calcDiscount = (totalPrice, dealPercent) => {
@@ -34,22 +37,29 @@ const OrderBill = ({ cart, setCart }) => {
 	const [shippingFee, setShippingFee] = useState(0)
 	const [warehouseAddr, setWarehouseAddr] = useState(null)
 	const [customerAddr, setCustomerAddr] = useState(null)
-
-	const getWarehouseAddress = async () => {
-		const api = await clientFetch(addressApi.getWarehouse())
-		if (api.success) setWarehouseAddr(api.data)
-		else alert("Lỗi lấy địa chỉ kho hàng: ", api.error)
-	}
+	const [deliveryTime, setDeliveryTime] = useState(null)
 
 	// check
 	useEffect(() => {
 		checkKV("warehouseAddr", warehouseAddr)
 		checkKV("customerAddr", customerAddr)
+
+		if (warehouseAddr && customerAddr) {
+			estimateGhnLeadtime(
+				warehouseAddr,
+				customerAddr,
+				setDeliveryTime
+			)
+		}
 	}, [warehouseAddr, customerAddr])
+
+	useEffect(() => {
+		checkKV("deliveryTime", deliveryTime)
+	}, [deliveryTime])
 
 	// init => get the warehouse address
 	useEffect(() => {
-		getWarehouseAddress()
+		getWarehouseAddress(setWarehouseAddr)
 	}, [])
 
 	// get cart => fill order line items
@@ -127,6 +137,19 @@ const OrderBill = ({ cart, setCart }) => {
 					</span>{" "}
 					giảm <span>{discount.discountAmount}%</span> cho đơn
 					hàng
+				</div>
+			)}
+
+			{deliveryTime && (
+				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-green-400 p-2 rounded-xl'>
+					Dự kiến giao hàng vào ngày:{" "}
+					<span className='font-bold'>
+						{formatDateTimeRange(
+							deliveryTime.from,
+							deliveryTime.to
+						)}
+					</span>
+					, giao bởi GHN
 				</div>
 			)}
 

@@ -1,4 +1,3 @@
-// app/api/payment/momo/route.js
 import crypto from "crypto"
 import { NextResponse } from "next/server"
 
