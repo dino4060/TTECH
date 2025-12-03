@@ -5,7 +5,7 @@ import {
 	convertToVND,
 } from "@/utils/until"
 import { useEffect, useState } from "react"
-import OrderFormData from "./OrderFormData"
+import CustomerDataForm from "./CustomerDataForm"
 import { checkV } from "@/lib/utils/check"
 
 const OrderBill = ({ cart, setCart }) => {
@@ -67,7 +67,7 @@ const OrderBill = ({ cart, setCart }) => {
 				<tbody className=''>
 					{cart?.lines?.map((l) => (
 						<tr
-							key={l}
+							key={l.id}
 							className='border-t border-slate-500/60 my-2'
 						>
 							<td className='p-2'>
@@ -126,7 +126,7 @@ const OrderBill = ({ cart, setCart }) => {
 
 			<div className='h-[1px] bg-black/40 w-full mt-[12px]'></div>
 
-			<OrderFormData
+			<CustomerDataForm
 				cart={cart}
 				setCart={setCart}
 				discount={discount}

@@ -43,9 +43,12 @@ public class Order extends BaseEntity implements BaseStatus<Status> {
 
     String note;
     String paymentType;
-    String deliveryAddress;
     String customerName;
     String customerPhone;
+
+    int provinceId;
+    int wardId;
+    String street;
 
     Instant orderTime;
 

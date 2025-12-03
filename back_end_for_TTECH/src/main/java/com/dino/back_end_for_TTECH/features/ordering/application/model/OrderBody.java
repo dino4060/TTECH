@@ -10,7 +10,10 @@ public class OrderBody {
 
         String note = "";
         String paymentType = "COD";
-        String deliveryAddress;
         String customerName;
         String customerPhone;
+
+        int provinceId;
+        int wardId;
+        String street;
 }
