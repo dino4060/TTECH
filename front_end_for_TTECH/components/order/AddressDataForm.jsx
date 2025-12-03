@@ -1,6 +1,5 @@
 "use client"
 import { PROVINCES } from "@/lib/utils/address/provinces"
-import { checkKV } from "@/lib/utils/check"
 import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 
@@ -21,7 +20,6 @@ const AddressDataForm = ({
 	)
 
 	useEffect(() => {
-		checkKV("formData", formData)
 		if (!formData.provinceId) {
 			setWardOpts(mapOptions([], "Chọn địa chỉ xã"))
 			return

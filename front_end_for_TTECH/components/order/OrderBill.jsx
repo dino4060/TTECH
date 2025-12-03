@@ -6,19 +6,53 @@ import {
 } from "@/utils/until"
 import { useEffect, useState } from "react"
 import CustomerDataForm from "./CustomerDataForm"
-import { checkV } from "@/lib/utils/check"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { addressApi } from "@/lib/api/address.api"
+import { checkKV } from "@/lib/utils/check"
 
 const OrderBill = ({ cart, setCart }) => {
-	const [totalPrice, setTotalPrice] = useState(0)
+	const calcDiscount = (totalPrice, dealPercent) => {
+		return Math.ceil(totalPrice * (dealPercent / 100))
+	}
+	const calcPayment = (
+		totalPrice,
+		dealPercent,
+		shippingFee
+	) => {
+		const totalDeal = calcDiscount(totalPrice, dealPercent)
+		return Math.ceil(totalPrice + shippingFee - totalDeal)
+	}
 
+	const [totalPrice, setTotalPrice] = useState(0)
 	const [discount, setDiscount] = useState({
-		discountId: null,
-		discountCode: "",
-		discountAmount: 0,
+		discountId: 123,
+		discountCode: "TTECH50K",
+		discountAmount: 50,
 		discountDateFrom: "",
 		discountDateTo: "",
 	})
+	const [shippingFee, setShippingFee] = useState(0)
+	const [warehouseAddr, setWarehouseAddr] = useState(null)
+	const [customerAddr, setCustomerAddr] = useState(null)
 
+	const getWarehouseAddress = async () => {
+		const api = await clientFetch(addressApi.getWarehouse())
+		if (api.success) setWarehouseAddr(api.data)
+		else alert("Lỗi lấy địa chỉ kho hàng: ", api.error)
+	}
+
+	// check
+	useEffect(() => {
+		checkKV("warehouseAddr", warehouseAddr)
+		checkKV("customerAddr", customerAddr)
+	}, [warehouseAddr, customerAddr])
+
+	// init => get the warehouse address
+	useEffect(() => {
+		getWarehouseAddress()
+	}, [])
+
+	// get cart => fill order line items
 	useEffect(() => {
 		if (!cart?.lines) {
 			setTotalPrice(0)
@@ -104,19 +138,16 @@ const OrderBill = ({ cart, setCart }) => {
 						<div className=''>Giảm:</div>
 						<div className='text-red-500'>
 							{convertToVND(
-								Math.ceil(
-									totalPrice *
-										(Number.parseInt(discount.discountAmount) / 100)
-								)
+								calcDiscount(totalPrice, discount.discountAmount)
 							)}
 						</div>
 						<div className=''>=</div>
 						<div>
 							{convertToVND(
-								Math.ceil(
-									totalPrice -
-										totalPrice *
-											(Number.parseInt(discount.discountAmount) / 100)
+								calcPayment(
+									totalPrice,
+									discount.discountAmount,
+									shippingFee
 								)
 							)}
 						</div>
@@ -129,12 +160,18 @@ const OrderBill = ({ cart, setCart }) => {
 			<CustomerDataForm
 				cart={cart}
 				setCart={setCart}
-				discount={discount}
-				totalPrice={
-					totalPrice -
-					totalPrice *
-						(Number.parseInt(discount.discountAmount) / 100)
-				}
+				totalPrice={totalPrice}
+				totalDiscount={calcDiscount(
+					totalPrice,
+					discount.discountAmount
+				)}
+				shippingFee={shippingFee}
+				totalPayment={calcPayment(
+					totalPrice,
+					discount.discountAmount,
+					shippingFee
+				)}
+				setCustomerAddr={setCustomerAddr}
 			/>
 		</div>
 	)

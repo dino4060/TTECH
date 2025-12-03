@@ -3,11 +3,10 @@ import { paymentApiRt } from "@/app/api/payment/momo/payment.api-route"
 import { UserAuth } from "@/context/AuthContext"
 import { orderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"
-import { checkV } from "@/lib/utils/check"
 import { isValidPhoneNumber } from "@/utils/until"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import CircleLoader from "../uncategory/CircleLoader"
 import AddressDataForm, {
 	FormFieldList,
@@ -17,7 +16,10 @@ const CustomerDataForm = ({
 	cart,
 	setCart,
 	totalPrice,
-	discount,
+	totalDiscount,
+	shippingFee,
+	totalPayment,
+	setCustomerAddr,
 }) => {
 	const { user } = UserAuth()
 	const router = useRouter()
@@ -75,7 +77,6 @@ const CustomerDataForm = ({
 		const FF = [...Fields, ...FormFieldList]
 		FF.forEach((f) => {
 			if (f.required && !data[f.key]) {
-				checkV(f.key)
 				isValid = false
 				error[f.key] = f.placeholder
 				setError({ ...error })
@@ -88,8 +89,9 @@ const CustomerDataForm = ({
 			orderApi.checkout({
 				...data,
 				allPrice: totalPrice,
-				allDiscount: 0,
-				total: totalPrice,
+				allDiscount: totalDiscount,
+				total: totalPayment,
+				shippingFee: shippingFee,
 			})
 		)
 
@@ -122,6 +124,13 @@ const CustomerDataForm = ({
 			alert("Thanh toán thất bại: " + res.error)
 		}
 	}
+
+	// change formData => set customerAddr
+	useEffect(() => {
+		const { provinceId, wardId, street } = data
+		if (provinceId && wardId && street)
+			setCustomerAddr({ provinceId, wardId, street })
+	}, [data])
 
 	return (
 		<div className='w-full'>
