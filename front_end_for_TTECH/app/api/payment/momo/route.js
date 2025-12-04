@@ -106,8 +106,6 @@ export async function POST(request) {
 
 		console.log("Body: ")
 		console.log(body)
-		console.log("resultCode: ")
-		console.log(body.resultCode)
 
 		return Response.json(body)
 	} catch (error) {

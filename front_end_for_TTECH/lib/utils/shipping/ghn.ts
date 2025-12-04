@@ -6,7 +6,7 @@ export const GHN_SHOP_ID = 198235
 export const GHN_TOKEN =
 	"55da518c-ccf9-11f0-b989-ea7e29c7fb39"
 
-export const GHN_HEAVY_SERVICE = {
+export const GHN_LIGHT_SERVICE = {
 	short_name: "Hàng nhẹ",
 	service_id: 53321,
 	service_type_id: 2,
@@ -16,7 +16,7 @@ export const GHN_HEAVY_SERVICE = {
 	ecom_extra_cost_id: 2,
 }
 
-export const GHN_LIGHT_SERVICE = {
+export const GHN_HEAVY_SERVICE = {
 	short_name: "Hàng nặng",
 	service_id: 100039,
 	service_type_id: 5,
@@ -25,3 +25,6 @@ export const GHN_LIGHT_SERVICE = {
 	ecom_config_fee_id: 0,
 	ecom_extra_cost_id: 0,
 }
+
+export const GHN_INSURANCE = 0 // 5000000
+export const GHN_COD_FAILED = 0

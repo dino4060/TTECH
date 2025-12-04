@@ -1,0 +1,33 @@
+{
+	"from_district_id": 3695,
+	"from_ward_code": "90745",
+	"to_district_id": 1888,
+	"to_ward_code": "560707",
+	"service_id": 53321,
+	"service_type_id": null,
+	"height": 9,
+	"length": 18,
+	"weight": 1140,
+	"width": 1140,
+	"insurance_value": 5000000,
+	"cod_failed_amount": 0,
+	"coupon": null,
+	"items": [
+		{
+			"name": "IPhone Test 1",
+			"quantity": 1,
+			"height": 3,
+			"weight": 380,
+			"length": 18,
+			"width": 10
+		},
+		{
+			"name": "IPhone Test 2",
+			"quantity": 2,
+			"height": 3,
+			"weight": 380,
+			"length": 18,
+			"width": 10
+		}
+	]
+}

@@ -1,5 +1,5 @@
 "use client"
-import { PROVINCES } from "@/lib/utils/shipping/provinces"
+import { PROVINCES } from "@/lib/utils/shipping/address"
 import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 

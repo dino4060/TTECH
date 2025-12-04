@@ -33,4 +33,38 @@ export const ghnApiRt = {
 			}
 		}
 	},
+
+	calcShippingFee: async ({
+		fromDistrictId,
+		fromWardCode,
+		toDistrictId,
+		toWardCode,
+		cartLineItems,
+	}) => {
+		try {
+			const response = await fetch("/api/shipping/ghn/fee", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					fromDistrictId,
+					fromWardCode,
+					toDistrictId,
+					toWardCode,
+					cartLineItems,
+				}),
+			})
+			const data = await response.json()
+
+			return data
+		} catch (error) {
+			console.error("Call GHN Fee API Route Error:", error)
+			return {
+				code: 500,
+				message: "Call GHN Fee API Route Error",
+				error: error.message,
+			}
+		}
+	},
 }

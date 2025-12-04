@@ -8,9 +8,10 @@ import {
 import { useEffect, useState } from "react"
 import CustomerDataForm from "./CustomerDataForm"
 import {
-	estimateGhnLeadtime,
+	fetchEstimateGhnLeadtime,
 	formatDateTimeRange,
-	getWarehouseAddress,
+	fetchGetWarehouseAddress,
+	fetchCalcGhnShippingFee,
 } from "./helper"
 
 const OrderBill = ({ cart, setCart }) => {
@@ -35,31 +36,34 @@ const OrderBill = ({ cart, setCart }) => {
 		discountDateTo: "",
 	})
 	const [shippingFee, setShippingFee] = useState(0)
+	const [deliveryTime, setDeliveryTime] = useState(null)
 	const [warehouseAddr, setWarehouseAddr] = useState(null)
 	const [customerAddr, setCustomerAddr] = useState(null)
-	const [deliveryTime, setDeliveryTime] = useState(null)
 
-	// check
 	useEffect(() => {
-		checkKV("warehouseAddr", warehouseAddr)
-		checkKV("customerAddr", customerAddr)
+		checkKV("shippingFee", shippingFee)
+	}, [shippingFee])
 
+	useEffect(() => {
 		if (warehouseAddr && customerAddr) {
-			estimateGhnLeadtime(
+			fetchEstimateGhnLeadtime(
 				warehouseAddr,
 				customerAddr,
 				setDeliveryTime
 			)
+
+			fetchCalcGhnShippingFee(
+				warehouseAddr,
+				customerAddr,
+				[], // cartLinesItems,
+				setShippingFee
+			)
 		}
 	}, [warehouseAddr, customerAddr])
 
-	useEffect(() => {
-		checkKV("deliveryTime", deliveryTime)
-	}, [deliveryTime])
-
 	// init => get the warehouse address
 	useEffect(() => {
-		getWarehouseAddress(setWarehouseAddr)
+		fetchGetWarehouseAddress(setWarehouseAddr)
 	}, [])
 
 	// get cart => fill order line items
@@ -164,18 +168,24 @@ const OrderBill = ({ cart, setCart }) => {
 								calcDiscount(totalPrice, discount.discountAmount)
 							)}
 						</div>
-						<div className=''>=</div>
-						<div>
-							{convertToVND(
-								calcPayment(
-									totalPrice,
-									discount.discountAmount,
-									shippingFee
-								)
-							)}
-						</div>
 					</>
 				)}
+				{shippingFee !== 0 && (
+					<>
+						<div className=''>Phí:</div>
+						<div className='text-red-500'>{shippingFee}</div>
+					</>
+				)}
+				<div className=''>=</div>
+				<div>
+					{convertToVND(
+						calcPayment(
+							totalPrice,
+							discount.discountAmount,
+							shippingFee
+						)
+					)}
+				</div>
 			</div>
 
 			<div className='h-[1px] bg-black/40 w-full mt-[12px]'></div>

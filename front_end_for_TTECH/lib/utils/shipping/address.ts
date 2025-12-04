@@ -289,7 +289,7 @@ export const PROVINCES = [
 type TAddress = {
 	provinceId: number
 	wardId: number
-	street: number
+	street: string
 }
 
 export const findFullAddress = (
@@ -333,6 +333,6 @@ export const findGhnAddress = (
 		provinceId: result.province.ghnProvinceID,
 		districtId: result.ward.ghnDistrictID,
 		wardCode: result.ward.ghnWardCode,
-    street: result.street
+		street: result.street,
 	}
 }

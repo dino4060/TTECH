@@ -1,9 +1,9 @@
 import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
 import { addressApi } from "@/lib/api/address.api"
 import { clientFetch } from "@/lib/http/fetch.client"
-import { findGhnAddress } from "@/lib/utils/shipping/provinces"
+import { findGhnAddress } from "@/lib/utils/shipping/address"
 
-export const getWarehouseAddress = async (
+export const fetchGetWarehouseAddress = async (
 	setWarehouseAddr
 ) => {
 	const api = await clientFetch(addressApi.getWarehouse())
@@ -11,12 +11,12 @@ export const getWarehouseAddress = async (
 	else alert("Lỗi lấy địa chỉ kho hàng: ", api.error)
 }
 
-export const estimateGhnLeadtime = async (
+export const fetchEstimateGhnLeadtime = async (
 	warehouseAddr,
 	customerAddr,
 	setDeliveryTime
 ) => {
-	// Get GHN parameters
+	// Prepare parameters
 	const warehouseGhnAddr = findGhnAddress(
 		warehouseAddr,
 		"kho hàng"
@@ -29,7 +29,7 @@ export const estimateGhnLeadtime = async (
 	)
 	if (!customerGhnAddr) return
 
-	// Call GHN API with mapped parameters
+	// Call GHN API
 	const ghnRes = await ghnApiRt.estimateLeadtime({
 		fromDistrictId: warehouseGhnAddr.districtId,
 		fromWardCode: warehouseGhnAddr.wardCode,
@@ -38,16 +38,49 @@ export const estimateGhnLeadtime = async (
 	})
 
 	if (ghnRes.code === 200) {
-		const { from_estimate_date_vn, to_estimate_date_vn } =
-			ghnRes.data.leadtime_order
-
 		setDeliveryTime({
-			from: from_estimate_date_vn,
-			to: to_estimate_date_vn,
+			from: ghnRes.data.leadtime_order.from_estimate_date_vn,
+			to: ghnRes.data.leadtime_order.to_estimate_date_vn,
 		})
 	} else {
-		console.error("Call Client GHN API Error:", ghnRes)
+		console.error("Fetch GHN Leadtime Error:", ghnRes)
 		alert("Lỗi dự tính thời gian giao hàng: " + ghnRes.error)
+	}
+}
+
+export const fetchCalcGhnShippingFee = async (
+	warehouseAddr,
+	customerAddr,
+	cartLinesItems,
+	setShippingFee
+) => {
+	// Prepare parameters
+	const warehouseGhnAddr = findGhnAddress(
+		warehouseAddr,
+		"kho hàng"
+	)
+	if (!warehouseGhnAddr) return
+
+	const customerGhnAddr = findGhnAddress(
+		customerAddr,
+		"giao hàng"
+	)
+	if (!customerGhnAddr) return
+
+	// Call GHN API
+	const ghnRes = await ghnApiRt.calcShippingFee({
+		fromDistrictId: warehouseGhnAddr.districtId,
+		fromWardCode: warehouseGhnAddr.wardCode,
+		toDistrictId: customerGhnAddr.districtId,
+		toWardCode: customerGhnAddr.wardCode,
+		cartLinesItems,
+	})
+
+	if (ghnRes.code === 200) {
+		setShippingFee(ghnRes.data.total)
+	} else {
+		console.error("Fetch GHN Fee Error:", ghnRes)
+		alert("Lỗi tính phí vận chuyển: " + ghnRes.error)
 	}
 }
 

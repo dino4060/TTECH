@@ -56,7 +56,6 @@ export async function POST(request) {
 
 		console.log("GHN Response:")
 		console.log(body)
-		console.log("Code:", body.code)
 
 		// Process leadtime_order dates if success
 		if (body.code === 200 && body.data?.leadtime_order) {
@@ -102,10 +101,10 @@ export async function POST(request) {
 			)
 		}
 	} catch (error) {
-		console.error("Call GHN API Error:", error)
+		console.error("Call Leadtime GHN API Error:", error)
 		return NextResponse.json(
 			{
-				message: "Call GHN API Error",
+				message: "Call Leadtime GHN API Error",
 				error: error.message,
 			},
 			{ status: 500 }
