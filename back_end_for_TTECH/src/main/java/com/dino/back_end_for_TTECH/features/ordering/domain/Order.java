@@ -43,15 +43,26 @@ public class Order extends BaseEntity implements BaseStatus<Status> {
 
     String note;
     String paymentType;
+
     String customerName;
     String customerPhone;
-
     int provinceId;
     int wardId;
     String street;
 
-    Instant orderTime;
+    String toUserName;
+    String toPhone;
+    Integer toProvinceId;
+    Integer toWardId;
+    String toStreet;
 
+    String fromUserName;
+    String fromPhone;
+    Integer fromProvinceId;
+    Integer fromWardId;
+    String fromStreet;
+
+    Instant orderTime;
     String status;
 
     @JsonIgnore
@@ -60,7 +71,7 @@ public class Order extends BaseEntity implements BaseStatus<Status> {
     User buyer;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     List<OrderLine> lines = new ArrayList<>();
 
 }

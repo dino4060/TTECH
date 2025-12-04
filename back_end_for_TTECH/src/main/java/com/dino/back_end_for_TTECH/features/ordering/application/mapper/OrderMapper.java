@@ -21,13 +21,4 @@ public interface OrderMapper extends PageMapper {
     OrderData toData(Order model);
 
     OrderLineData toOrderLineData(OrderLine orderLine);
-
-    default OrderData customData(Order model) {
-        OrderData data = this.toData(model);
-        model.getLines().forEach(line -> {
-            OrderLineData orderLineData = this.toOrderLineData(line);
-            data.getLines().add(orderLineData);
-        });
-        return data;
-    }
 }

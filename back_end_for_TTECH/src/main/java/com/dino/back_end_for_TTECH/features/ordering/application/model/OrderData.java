@@ -16,12 +16,20 @@ public class OrderData {
 
     String note;
     String paymentType;
-    String deliveryAddress;
-    String customerName;
-    String customerPhone;
+
+    String toUserName;
+    String toPhone;
+    Integer toProvinceId;
+    Integer toWardId;
+    String toStreet;
+
+    String fromUserName;
+    String fromPhone;
+    Integer fromProvinceId;
+    Integer fromWardId;
+    String fromStreet;
 
     Instant orderTime;
-
     String status;
 
     List<OrderLineData> lines;

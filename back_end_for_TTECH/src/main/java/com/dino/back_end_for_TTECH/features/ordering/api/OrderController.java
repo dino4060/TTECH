@@ -30,6 +30,14 @@ public class OrderController {
         return ResponseEntity.ok(data);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(
+            @PathVariable long id
+    ) {
+        var data = this.orderService.get(id);
+        return ResponseEntity.ok(data);
+    }
+
     @PostMapping
     public ResponseEntity<?> checkout(
             @Valid @RequestBody OrderBody body,

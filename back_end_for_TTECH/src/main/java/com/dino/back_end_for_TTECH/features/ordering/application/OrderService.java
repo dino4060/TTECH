@@ -14,6 +14,7 @@ import com.dino.back_end_for_TTECH.features.ordering.domain.specification.OrderS
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.application.exception.ModelNotFound;
 import com.dino.back_end_for_TTECH.shared.application.exception.ModelForbidden;
+import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundE;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppPage;
 import lombok.AccessLevel;
@@ -51,6 +52,15 @@ public class OrderService {
                 .map(model -> this.orderMapper.toData(model)).toList();
 
         return AppPage.from(page, items);
+    }
+
+    public OrderData get(long orderId) {
+        var order = this.orderRepository
+                .findById(orderId)
+                .orElseThrow(() -> new NotFoundE("Order not found"));
+
+
+        return  this.orderMapper.toData(order);
     }
 
     public PageData<OrderData> list(OrderQuery query, CurrentUser user) {

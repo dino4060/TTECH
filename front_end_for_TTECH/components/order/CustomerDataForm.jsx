@@ -127,9 +127,21 @@ const CustomerDataForm = ({
 
 	// change formData => set customerAddr
 	useEffect(() => {
-		const { provinceId, wardId, street } = data
-		if (provinceId && wardId && street)
-			setCustomerAddr({ provinceId, wardId, street })
+		const {
+			customerName: userName,
+			customerPhone: phone,
+			provinceId,
+			wardId,
+			street,
+		} = data
+		if (userName && phone && provinceId && wardId && street)
+			setCustomerAddr({
+				userName,
+				phone,
+				provinceId,
+				wardId,
+				street,
+			})
 	}, [data])
 
 	return (

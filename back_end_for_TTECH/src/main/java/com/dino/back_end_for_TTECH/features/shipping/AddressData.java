@@ -9,6 +9,8 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddressData {
+    String userName;
+    String phone;
     Integer provinceId;
     Integer wardId;
     String street;

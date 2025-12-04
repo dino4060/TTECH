@@ -1,3 +1,5 @@
+import { SMARTPHONE_SIZE } from "./product-size"
+
 export const GHN_V2_PUBLIC_API =
 	"https://dev-online-gateway.ghn.vn/shiip/public-api/v2"
 
@@ -27,4 +29,11 @@ export const GHN_HEAVY_SERVICE = {
 }
 
 export const GHN_INSURANCE = 5000000
+
 export const GHN_COD_FAILED = 0
+
+export const GHN_REQUIRED_NOTE_ENUM = {
+	CHO_THU_HANG: "CHOTHUHANG",
+	CHO_XEM_HANG_KHONG_THU: "CHOXEMHANGKHONGTHU",
+	KHONG_CHO_XEM_HANG: "KHONGCHOXEMHANG",
+}

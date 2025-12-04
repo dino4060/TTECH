@@ -8,6 +8,11 @@ export const orderApi = {
 		method: HttpMethod.GET,
 	}),
 
+	get: (id: number): TApi<{}[]> => ({
+		route: `${RESOURCES.ORDERS.PRIVATE}/${id}`,
+		method: HttpMethod.GET,
+	}),
+
 	checkout: (body: any): TApi<{}[]> => ({
 		route: `${RESOURCES.ORDERS.PRIVATE}`,
 		method: HttpMethod.POST,

@@ -1,211 +1,259 @@
-const BA_DINH_WARDS = [
+type TProvince = {
+	id: number
+	name: string
+	ghnProvinceID: number
+	wards: TWard[]
+}
+
+type TWard = {
+	id: number
+	name: string
+	ghnWardCode: string
+	districtName: string
+	ghnDistrictID: number
+}
+
+const BA_DINH_WARDS: TWard[] = [
 	{
 		id: 1020114,
 		ghnWardCode: "1A0114",
 		ghnDistrictID: 1484,
 		name: "Phường Vĩnh Phúc",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 102113,
 		ghnWardCode: "1A0113",
 		ghnDistrictID: 1484,
 		name: "Phường Trúc Bạch",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020112,
 		ghnWardCode: "1A0112",
 		ghnDistrictID: 1484,
 		name: "Phường Thành Công",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020111,
 		ghnWardCode: "1A0111",
 		ghnDistrictID: 1484,
 		name: "Phường Quán Thánh",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020110,
 		ghnWardCode: "1A0110",
 		ghnDistrictID: 1484,
 		name: "Phường Phúc Xá",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020109,
 		ghnWardCode: "1A0109",
 		ghnDistrictID: 1484,
 		name: "Phường Nguyễn Trung Trực",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020108,
 		ghnWardCode: "1A0108",
 		ghnDistrictID: 1484,
 		name: "Phường Ngọc Khánh",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020107,
 		ghnWardCode: "1A0107",
 		ghnDistrictID: 1484,
 		name: "Phường Ngọc Hà",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020106,
 		ghnWardCode: "1A0106",
 		ghnDistrictID: 1484,
 		name: "Phường Liễu Giai",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020105,
 		ghnWardCode: "1A0105",
 		ghnDistrictID: 1484,
 		name: "Phường Kim Mã",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020104,
 		ghnWardCode: "1A0104",
 		ghnDistrictID: 1484,
 		name: "Phường Giảng Võ",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020103,
 		ghnWardCode: "1A0103",
 		ghnDistrictID: 1484,
 		name: "Phường Đội Cấn",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020102,
 		ghnWardCode: "1A0102",
 		ghnDistrictID: 1484,
 		name: "Phường Điện Biên",
+		districtName: "Quận Ba Đình",
 	},
 	{
 		id: 1020102,
 		ghnWardCode: "1A0101",
 		ghnDistrictID: 1484,
 		name: "Phường Cống Vị",
+		districtName: "Quận Ba Đình",
 	},
 ]
 
-const THU_DUC_WARDS = [
+const THU_DUC_WARDS: TWard[] = [
 	{
 		name: "Phường An Khánh",
 		id: 90768,
 		ghnWardCode: "90768",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Bình Trưng",
 		id: 90766,
 		ghnWardCode: "90766",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Cát Lái",
 		id: 90747,
 		ghnWardCode: "90747",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Hiệp Bình",
 		id: 90741,
 		ghnWardCode: "90741",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Tam Bình",
 		id: 90736,
-		wardCode: "90736",
+		ghnWardCode: "90736",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Thủ Đức",
 		id: 90745,
 		ghnWardCode: "90745",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Linh Xuân",
 		id: 90737,
 		ghnWardCode: "90737",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Tăng Nhơn Phú",
 		id: 90754,
 		ghnWardCode: "90754",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Phước Long",
 		id: 90762,
 		ghnWardCode: "90762",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Long Bình",
 		id: 90751,
 		ghnWardCode: "90751",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Long Phước",
 		id: 90760,
 		ghnWardCode: "90760",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Long Trường",
 		id: 90761,
 		ghnWardCode: "90761",
 		ghnDistrictID: 3695,
+		districtName: "Thành Phố Thủ Đức",
 	},
 ]
 
-const BA_TRI_WARDS = [
+const BA_TRI_WARDS: TWard[] = [
 	{
 		id: 560721,
 		ghnWardCode: "560721",
 		ghnDistrictID: 1888,
 		name: "Xã Tân Thủy",
+		districtName: "Huyện Ba Tri",
 	},
 	{
 		id: 560710,
 		ghnWardCode: "560710",
 		ghnDistrictID: 1888,
 		name: "Xã Bảo Thạnh",
+		districtName: "Huyện Ba Tri",
 	},
 	{
 		id: 560701,
 		ghnWardCode: "560701",
 		ghnDistrictID: 1888,
 		name: "Xã Ba Tri",
+		districtName: "Huyện Ba Tri",
 	},
 	{
 		id: 560722,
 		ghnWardCode: "560722",
 		ghnDistrictID: 1888,
 		name: "Xã Tân Xuân",
+		districtName: "Huyện Ba Tri",
 	},
 	{
 		id: 560712,
 		ghnWardCode: "560712",
 		ghnDistrictID: 1888,
 		name: "Xã Mỹ Chánh",
+		districtName: "Huyện Ba Tri",
 	},
 	{
 		id: 560707,
 		ghnWardCode: "560707",
 		ghnDistrictID: 1888,
 		name: "Xã An Ngãi Trung",
+		districtName: "Huyện Ba Tri",
 	},
 	{
 		id: 560707,
 		ghnWardCode: "560704",
 		ghnDistrictID: 1888,
 		name: "Xã An Hiệp",
+		districtName: "Huyện Ba Tri",
 	},
 ]
 
-export const PROVINCES = [
+export const PROVINCES: TProvince[] = [
 	{
 		id: 201,
 		name: "Thành Phố Hà Nội",
@@ -287,17 +335,39 @@ export const PROVINCES = [
 ]
 
 type TAddress = {
+	userName: string
+	phone: string
 	provinceId: number
 	wardId: number
+	street: string
+}
+
+type TFullAddress = {
+	userName: string
+	phone: string
+	province: TProvince
+	ward: TWard
+	street: string
+}
+
+type TGhnAddress = {
+	userName: string
+	phone: string
+	provinceId: number
+	districtId: number
+	wardCode: string
 	street: string
 }
 
 export const findFullAddress = (
 	address: TAddress,
 	addressName = "địa chỉ"
-) => {
+): TFullAddress => {
+	const { userName, phone, provinceId, wardId, street } =
+		address
+
 	const province = PROVINCES.find(
-		(province) => province.id === address.provinceId
+		(province) => province.id === provinceId
 	)
 
 	if (!province) {
@@ -306,7 +376,7 @@ export const findFullAddress = (
 	}
 
 	const ward = province.wards.find(
-		(ward) => ward.id === address.wardId
+		(ward) => ward.id === wardId
 	)
 
 	if (!ward) {
@@ -314,25 +384,25 @@ export const findFullAddress = (
 		return null
 	}
 
-	const street = address.street
-
-	return { province, ward, street }
+	return { userName, phone, province, ward, street }
 }
 
 export const findGhnAddress = (
 	address: TAddress,
 	addressName = "địa chỉ"
-) => {
-	const result = findFullAddress(address, addressName)
+): TGhnAddress => {
+	const fullAddress = findFullAddress(address, addressName)
+	if (!fullAddress) return null
 
-	if (!result) {
-		return null
-	}
+	const { userName, phone, province, ward, street } =
+		fullAddress
 
 	return {
-		provinceId: result.province.ghnProvinceID,
-		districtId: result.ward.ghnDistrictID,
-		wardCode: result.ward.ghnWardCode,
-		street: result.street,
+		userName,
+		phone,
+		provinceId: province.ghnProvinceID,
+		districtId: ward.ghnDistrictID,
+		wardCode: ward.ghnWardCode,
+		street,
 	}
 }

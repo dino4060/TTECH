@@ -1,5 +1,6 @@
 import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
 import { addressApi } from "@/lib/api/address.api"
+import { orderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { findGhnAddress } from "@/lib/utils/shipping/address"
 import { roundTo1K } from "@/utils/until"
@@ -15,6 +16,45 @@ export const calcPayment = (
 ) => {
 	const totalDeal = calcDiscount(totalPrice, dealPercent)
 	return Math.ceil(totalPrice + shippingFee - totalDeal)
+}
+
+export const formatDateTimeRange = (
+	fromDateStr,
+	toDateStr
+) => {
+	// Parse dates (assuming format: "MM/DD/YYYY, HH:MM:SS AM/PM")
+	const fromDate = new Date(fromDateStr)
+	const toDate = new Date(toDateStr)
+
+	const fromDay = fromDate.getDate()
+	const fromMonth = fromDate.getMonth() + 1
+	const fromYear = fromDate.getFullYear()
+
+	const toDay = toDate.getDate()
+	const toMonth = toDate.getMonth() + 1
+	const toYear = toDate.getFullYear()
+
+	// Same day
+	if (
+		fromDay === toDay &&
+		fromMonth === toMonth &&
+		fromYear === toYear
+	) {
+		return `${fromDay}/${fromMonth}/${fromYear}`
+	}
+
+	// Same month and year
+	if (fromMonth === toMonth && fromYear === toYear) {
+		return `${fromDay} - ${toDay}/${toMonth}/${fromYear}`
+	}
+
+	// Different month, same year
+	if (fromYear === toYear) {
+		return `${fromDay}/${fromMonth} - ${toDay}/${toMonth}/${fromYear}`
+	}
+
+	// Different year
+	return `${fromDay}/${fromMonth}/${fromYear} - ${toDay}/${toMonth}/${toYear}`
 }
 
 export const fetchGetWarehouseAddress = async (
@@ -96,41 +136,29 @@ export const fetchCalcGhnShippingFee = async (
 	}
 }
 
-export const formatDateTimeRange = (
-	fromDateStr,
-	toDateStr
-) => {
-	// Parse dates (assuming format: "MM/DD/YYYY, HH:MM:SS AM/PM")
-	const fromDate = new Date(fromDateStr)
-	const toDate = new Date(toDateStr)
+export const createGhnParcel = async ({
+	warehouseAddr,
+	customerAddr,
+	order,
+	setParcel,
+}) => {
+	const orderId = 30
+	const apiRes = await clientFetch(orderApi.get(orderId))
 
-	const fromDay = fromDate.getDate()
-	const fromMonth = fromDate.getMonth() + 1
-	const fromYear = fromDate.getFullYear()
-
-	const toDay = toDate.getDate()
-	const toMonth = toDate.getMonth() + 1
-	const toYear = toDate.getFullYear()
-
-	// Same day
-	if (
-		fromDay === toDay &&
-		fromMonth === toMonth &&
-		fromYear === toYear
-	) {
-		return `${fromDay}/${fromMonth}/${fromYear}`
+	if (!apiRes.success) {
+		alert("Lỗi lấy đơn hàng: " + apiRes.error)
+		return
 	}
 
-	// Same month and year
-	if (fromMonth === toMonth && fromYear === toYear) {
-		return `${fromDay} - ${toDay}/${toMonth}/${fromYear}`
-	}
+	const ghnRes = await ghnApiRt.createParcel({
+		fromAddress: warehouseAddr,
+		toAddress: customerAddr,
+		order: apiRes.data,
+	})
 
-	// Different month, same year
-	if (fromYear === toYear) {
-		return `${fromDay}/${fromMonth} - ${toDay}/${toMonth}/${fromYear}`
+	if (ghnRes.code === 200) {
+		setParcel(ghnRes.data)
+	} else {
+		alert("Lỗi tạo bưu kiện: " + ghnRes.message)
 	}
-
-	// Different year
-	return `${fromDay}/${fromMonth}/${fromYear} - ${toDay}/${toMonth}/${toYear}`
 }
