@@ -66,11 +66,6 @@ export const fetchCalcGhnShippingFee = async (
 	cartLineItems,
 	setShippingFee
 ) => {
-	console.log(
-		"fetchCalcGhnShippingFee cartLinesItems",
-		cartLineItems
-	)
-
 	// Prepare parameters
 	const warehouseGhnAddr = findGhnAddress(
 		warehouseAddr,

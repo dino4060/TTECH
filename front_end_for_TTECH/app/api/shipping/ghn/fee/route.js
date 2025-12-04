@@ -18,8 +18,7 @@ export async function POST(request) {
 			cartLineItems = [],
 		} = await request.json()
 
-		console.log("POST cartLineItems", cartLineItems)
-
+		// Validate request
 		if (cartLineItems.length === 0) {
 			return NextResponse.json(
 				{
@@ -29,11 +28,6 @@ export async function POST(request) {
 				{ status: 400 }
 			)
 		}
-
-		// const cartLineItems = [
-		// 	{ product: { name: "IPhone Test 1" }, quantity: 1 },
-		// 	{ product: { name: "IPhone Test 2" }, quantity: 2 },
-		// ]
 
 		// Prepare parameters
 		let ghnLength = 0

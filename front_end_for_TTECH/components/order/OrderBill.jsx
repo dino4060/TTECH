@@ -1,5 +1,4 @@
 "use client"
-import { checkKV } from "@/lib/utils/check"
 import { convertTo000D, convertTokVND } from "@/utils/until"
 import { useEffect, useState } from "react"
 import CustomerDataForm from "./CustomerDataForm"
@@ -33,15 +32,12 @@ const OrderBill = ({ cart, setCart }) => {
 
 	// have address pair => calc shipping fee
 	useEffect(() => {
-		// checkKV("useEffect cart", cart)
-
 		if (
 			warehouseAddr &&
 			customerAddr &&
 			cart.lines &&
 			cart.lines.length > 0
 		) {
-			checkKV("useEffect cart.lines", cart.lines)
 			fetchEstimateGhnLeadtime(
 				warehouseAddr,
 				customerAddr,
