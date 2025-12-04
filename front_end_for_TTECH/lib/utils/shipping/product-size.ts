@@ -1,9 +1,9 @@
 export const SMARTPHONE_SIZE = {
 	product: "iPhone 15 Pro Max Box",
 	length_cm: 18,
-	width_cm: 10,
+	width_cm: 9,
 	height_cm: 3,
-	weight_gram: 380,
+	weight_gram: 200,
 }
 
 export const LAPTOP_SIZE = {
@@ -11,7 +11,7 @@ export const LAPTOP_SIZE = {
 	length_cm: 41,
 	width_cm: 30,
 	height_cm: 8,
-	weight_gram: 3000,
+	weight_gram: 2000,
 }
 
 export const HEADPHONE_SIZE = {
@@ -19,5 +19,5 @@ export const HEADPHONE_SIZE = {
 	length_cm: 21,
 	width_cm: 19,
 	height_cm: 7,
-	weight_gram: 370,
+	weight_gram: 200,
 }

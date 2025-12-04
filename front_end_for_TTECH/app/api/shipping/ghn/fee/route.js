@@ -24,10 +24,10 @@ export async function POST(request) {
 		]
 
 		// Prepare parameters
-		let ghnWeight = 0
-		let ghnHeight = 0
 		let ghnLength = 0
 		let ghnWidth = 0
+		let ghnHeight = 0
+		let ghnWeight = 0
 		const ghnLineItems = []
 
 		for (const cli of cartLineItems) {
@@ -41,10 +41,10 @@ export async function POST(request) {
 			ghnLineItems.push({
 				name: cli.product.name,
 				quantity: quantity,
-				weight: SMARTPHONE_SIZE.weight_gram,
-				height: SMARTPHONE_SIZE.height_cm,
 				length: SMARTPHONE_SIZE.length_cm,
 				width: SMARTPHONE_SIZE.width_cm,
+				height: SMARTPHONE_SIZE.height_cm,
+				weight: SMARTPHONE_SIZE.weight_gram,
 			})
 		}
 
@@ -59,10 +59,10 @@ export async function POST(request) {
 			service_id: parseInt(GHN_LIGHT_SERVICE.service_id),
 			service_type_id: null,
 
-			height: ghnHeight,
 			length: ghnLength,
+			width: ghnWidth,
+			height: ghnHeight,
 			weight: ghnWeight,
-			width: ghnWeight,
 
 			insurance_value: GHN_INSURANCE,
 			cod_failed_amount: GHN_COD_FAILED,
