@@ -9,13 +9,13 @@ const Page = () => {
 	const [cart, setCart] = useState([1, 2, 3, 4])
 
 	useEffect(() => {
-		const getCart = async () => {
-			const { success, data } = await clientFetch(
-				cartApi.get()
-			)
-			success && setCart(data)
+		const fetchGetCart = async () => {
+			const api = await clientFetch(cartApi.get())
+
+			if (api.success) setCart(api.data)
+			else alert("Lỗi lấy thông tin giỏ hàng: ", api.error)
 		}
-		getCart()
+		fetchGetCart()
 	}, [])
 
 	return (

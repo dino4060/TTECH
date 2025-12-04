@@ -15,13 +15,25 @@ export async function POST(request) {
 			fromWardCode,
 			toDistrictId,
 			toWardCode,
-			// cartLineItems = [],
+			cartLineItems = [],
 		} = await request.json()
 
-		const cartLineItems = [
-			{ product: { name: "IPhone Test 1" }, quantity: 1 },
-			{ product: { name: "IPhone Test 2" }, quantity: 2 },
-		]
+		console.log("POST cartLineItems", cartLineItems)
+
+		if (cartLineItems.length === 0) {
+			return NextResponse.json(
+				{
+					message: "Call GHN Fee API Error",
+					error: "cartLineItems must be length > 0",
+				},
+				{ status: 400 }
+			)
+		}
+
+		// const cartLineItems = [
+		// 	{ product: { name: "IPhone Test 1" }, quantity: 1 },
+		// 	{ product: { name: "IPhone Test 2" }, quantity: 2 },
+		// ]
 
 		// Prepare parameters
 		let ghnLength = 0
@@ -96,9 +108,7 @@ export async function POST(request) {
 		return NextResponse.json(
 			{
 				message: "Call GHN Fee API Error",
-				error:
-					error?.message ||
-					"Lỗi gọi API tính phí vận chuyển của GHN",
+				error: error.message,
 			},
 			{ status: 500 }
 		)

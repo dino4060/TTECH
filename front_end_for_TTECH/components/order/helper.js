@@ -56,7 +56,6 @@ export const fetchEstimateGhnLeadtime = async (
 			to: ghnRes.data.leadtime_order.to_estimate_date_vn,
 		})
 	} else {
-		console.error("Fetch GHN Leadtime Error:", ghnRes)
 		alert("Lỗi dự tính thời gian giao hàng: " + ghnRes.error)
 	}
 }
@@ -64,9 +63,14 @@ export const fetchEstimateGhnLeadtime = async (
 export const fetchCalcGhnShippingFee = async (
 	warehouseAddr,
 	customerAddr,
-	cartLinesItems,
+	cartLineItems,
 	setShippingFee
 ) => {
+	console.log(
+		"fetchCalcGhnShippingFee cartLinesItems",
+		cartLineItems
+	)
+
 	// Prepare parameters
 	const warehouseGhnAddr = findGhnAddress(
 		warehouseAddr,
@@ -86,13 +90,12 @@ export const fetchCalcGhnShippingFee = async (
 		fromWardCode: warehouseGhnAddr.wardCode,
 		toDistrictId: customerGhnAddr.districtId,
 		toWardCode: customerGhnAddr.wardCode,
-		cartLinesItems,
+		cartLineItems,
 	})
 
 	if (ghnRes.code === 200) {
 		setShippingFee(roundTo1K(ghnRes.data.total))
 	} else {
-		console.error("Fetch GHN Fee Error:", ghnRes)
 		alert("Lỗi tính phí vận chuyển: " + ghnRes.error)
 	}
 }

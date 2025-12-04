@@ -26,12 +26,22 @@ const OrderBill = ({ cart, setCart }) => {
 	const [warehouseAddr, setWarehouseAddr] = useState(null)
 	const [customerAddr, setCustomerAddr] = useState(null)
 
+	// init => get the warehouse address
 	useEffect(() => {
-		checkKV("shippingFee", shippingFee)
-	}, [shippingFee])
+		fetchGetWarehouseAddress(setWarehouseAddr)
+	}, [])
 
+	// have address pair => calc shipping fee
 	useEffect(() => {
-		if (warehouseAddr && customerAddr) {
+		// checkKV("useEffect cart", cart)
+
+		if (
+			warehouseAddr &&
+			customerAddr &&
+			cart.lines &&
+			cart.lines.length > 0
+		) {
+			checkKV("useEffect cart.lines", cart.lines)
 			fetchEstimateGhnLeadtime(
 				warehouseAddr,
 				customerAddr,
@@ -41,16 +51,11 @@ const OrderBill = ({ cart, setCart }) => {
 			fetchCalcGhnShippingFee(
 				warehouseAddr,
 				customerAddr,
-				[], // cartLinesItems,
+				cart.lines,
 				setShippingFee
 			)
 		}
-	}, [warehouseAddr, customerAddr])
-
-	// init => get the warehouse address
-	useEffect(() => {
-		fetchGetWarehouseAddress(setWarehouseAddr)
-	}, [])
+	}, [warehouseAddr, customerAddr, cart])
 
 	// get cart => fill order line items
 	useEffect(() => {

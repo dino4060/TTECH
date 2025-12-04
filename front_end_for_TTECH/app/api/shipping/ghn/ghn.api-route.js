@@ -41,6 +41,11 @@ export const ghnApiRt = {
 		toWardCode,
 		cartLineItems,
 	}) => {
+		console.log(
+			"calcShippingFee cartLineItems",
+			cartLineItems
+		)
+
 		try {
 			const response = await fetch("/api/shipping/ghn/fee", {
 				method: "POST",
