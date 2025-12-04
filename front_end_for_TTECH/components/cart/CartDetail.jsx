@@ -1,7 +1,7 @@
 "use client"
 import { cartApi } from "@/lib/api/cart.api"
 import { clientFetch } from "@/lib/http/fetch.client"
-import { convertToD } from "@/utils/until"
+import { convertTo000D } from "@/utils/until"
 import {
 	CiCircleMinus,
 	CiCirclePlus,
@@ -82,16 +82,16 @@ const CartDetail = ({ cart, setCart }) => {
 							// Có giảm giá
 							<div className='flex gap-3 items-center'>
 								<h3 className='text-[1.6rem] mt-4 select-none font-semibold'>
-									{convertToD(l?.product?.price?.mainPrice || 0)}
+									{convertTo000D(l?.product?.price?.mainPrice || 0)}
 								</h3>
 								<h2 className='text-xl mt-4 text-gray-400 line-through'>
-									{convertToD(l?.product?.price?.sidePrice || 0)}
+									{convertTo000D(l?.product?.price?.sidePrice || 0)}
 								</h2>
 							</div>
 						) : (
 							// Không giảm giá
 							<h3 className='text-[1.6rem] mt-4 select-none font-semibold'>
-								{convertToD(
+								{convertTo000D(
 									l?.product?.price?.mainPrice || "Loading..."
 								)}
 							</h3>

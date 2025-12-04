@@ -2,6 +2,19 @@ import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
 import { addressApi } from "@/lib/api/address.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { findGhnAddress } from "@/lib/utils/shipping/address"
+import { roundTo1K } from "@/utils/until"
+
+export const calcDiscount = (totalPrice, dealPercent) => {
+	return Math.ceil(totalPrice * (dealPercent / 100))
+}
+export const calcPayment = (
+	totalPrice,
+	dealPercent,
+	shippingFee
+) => {
+	const totalDeal = calcDiscount(totalPrice, dealPercent)
+	return Math.ceil(totalPrice + shippingFee - totalDeal)
+}
 
 export const fetchGetWarehouseAddress = async (
 	setWarehouseAddr
@@ -77,7 +90,7 @@ export const fetchCalcGhnShippingFee = async (
 	})
 
 	if (ghnRes.code === 200) {
-		setShippingFee(ghnRes.data.total)
+		setShippingFee(roundTo1K(ghnRes.data.total))
 	} else {
 		console.error("Fetch GHN Fee Error:", ghnRes)
 		alert("Lỗi tính phí vận chuyển: " + ghnRes.error)

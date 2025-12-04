@@ -1,7 +1,7 @@
 "use client"
 import { cartApi } from "@/lib/api/cart.api"
 import { clientFetch } from "@/lib/http/fetch.client"
-import { convertToD } from "@/utils/until"
+import { convertTo000D } from "@/utils/until"
 import { AnimatePresence, motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -62,16 +62,16 @@ const ProductItem = ({
 				// Có giảm giá
 				<div className='flex gap-3 items-center mt-5 text-black-500'>
 					<h2 className='text-[1.8rem] font-bold'>
-						{convertToD(mainPrice)}
+						{convertTo000D(mainPrice)}
 					</h2>
 					<h2 className='text-xl text-gray-400 line-through'>
-						{convertToD(sidePrice)}
+						{convertTo000D(sidePrice)}
 					</h2>
 				</div>
 			) : (
 				// Không giảm giá
 				<h2 className='text-[1.8rem] font-bold mt-5 text-black-500'>
-					{convertToD(mainPrice) || "Loading..."}
+					{convertTo000D(mainPrice) || "Loading..."}
 				</h2>
 			)}
 

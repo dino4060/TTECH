@@ -1,37 +1,23 @@
 "use client"
 import { checkKV } from "@/lib/utils/check"
-import {
-	convertToD,
-	convertTokVND,
-	convertToVND,
-} from "@/utils/until"
+import { convertTo000D, convertTokVND } from "@/utils/until"
 import { useEffect, useState } from "react"
 import CustomerDataForm from "./CustomerDataForm"
 import {
-	fetchEstimateGhnLeadtime,
-	formatDateTimeRange,
-	fetchGetWarehouseAddress,
+	calcDiscount,
+	calcPayment,
 	fetchCalcGhnShippingFee,
+	fetchEstimateGhnLeadtime,
+	fetchGetWarehouseAddress,
+	formatDateTimeRange,
 } from "./helper"
 
 const OrderBill = ({ cart, setCart }) => {
-	const calcDiscount = (totalPrice, dealPercent) => {
-		return Math.ceil(totalPrice * (dealPercent / 100))
-	}
-	const calcPayment = (
-		totalPrice,
-		dealPercent,
-		shippingFee
-	) => {
-		const totalDeal = calcDiscount(totalPrice, dealPercent)
-		return Math.ceil(totalPrice + shippingFee - totalDeal)
-	}
-
 	const [totalPrice, setTotalPrice] = useState(0)
 	const [discount, setDiscount] = useState({
 		discountId: 123,
-		discountCode: "TTECH50K",
-		discountAmount: 50,
+		discountCode: "TTECH10P",
+		discountAmount: 10,
 		discountDateFrom: "",
 		discountDateTo: "",
 	})
@@ -158,13 +144,15 @@ const OrderBill = ({ cart, setCart }) => {
 			)}
 
 			<div className='text-black text-3xl grid grid-cols-2 px-[100px]  py-8 w-full rounded-full font-[600] mt-2'>
-				<div className=' '>Tổng:</div>{" "}
-				<div>{convertToD(totalPrice)}</div>
+				<div>Tổng:</div>{" "}
+				<div className='text-right'>
+					{convertTo000D(totalPrice)}
+				</div>
 				{discount.discountId && (
 					<>
 						<div className=''>Giảm:</div>
-						<div className='text-red-500'>
-							{convertToVND(
+						<div className='text-red-500 text-right'>
+							{convertTo000D(
 								calcDiscount(totalPrice, discount.discountAmount)
 							)}
 						</div>
@@ -172,13 +160,15 @@ const OrderBill = ({ cart, setCart }) => {
 				)}
 				{shippingFee !== 0 && (
 					<>
-						<div className=''>Phí:</div>
-						<div className='text-red-500'>{shippingFee}</div>
+						<div className=''>Vận chuyển:</div>
+						<div className='text-red-500 text-right'>
+							{convertTo000D(shippingFee)}
+						</div>
 					</>
 				)}
-				<div className=''>=</div>
-				<div>
-					{convertToVND(
+				<div>{"="}</div>
+				<div className='text-right'>
+					{convertTo000D(
 						calcPayment(
 							totalPrice,
 							discount.discountAmount,
