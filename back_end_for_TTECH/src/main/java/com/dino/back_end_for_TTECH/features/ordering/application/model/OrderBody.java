@@ -6,6 +6,7 @@ import lombok.Data;
 public class OrderBody {
         int allPrice = 0;
         int allDiscount = 0;
+        int shippingFee = 0;
         int total = 0;
 
         String note = "";

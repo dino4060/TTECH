@@ -13,13 +13,16 @@ import {
 
 const OrderBill = ({ cart, setCart }) => {
 	const [totalPrice, setTotalPrice] = useState(0)
-	const [discount, setDiscount] = useState({
-		discountId: 123,
-		discountCode: "TTECH10P",
-		discountAmount: 10,
-		discountDateFrom: "",
-		discountDateTo: "",
-	})
+	const [discount, setDiscount] = useState(
+		null
+		//   {
+		// 	discountId: 123,
+		// 	discountCode: "TTECH10P",
+		// 	discountAmount: 10,
+		// 	discountDateFrom: "",
+		// 	discountDateTo: "",
+		// }
+	)
 	const [shippingFee, setShippingFee] = useState(0)
 	const [deliveryTime, setDeliveryTime] = useState(null)
 	const [warehouseAddr, setWarehouseAddr] = useState(null)
@@ -55,8 +58,9 @@ const OrderBill = ({ cart, setCart }) => {
 
 	// get cart => fill order line items
 	useEffect(() => {
-		if (!cart?.lines) {
+		if (!cart?.lines || cart.lines.length === 0) {
 			setTotalPrice(0)
+			setShippingFee(0)
 			return
 		}
 
@@ -120,7 +124,7 @@ const OrderBill = ({ cart, setCart }) => {
 				</tbody>
 			</table>
 
-			{discount.discountId && (
+			{discount && (
 				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-blue-400 p-2 rounded-xl'>
 					Quý khách được áp dụng mã:{" "}
 					<span className='font-bold'>
@@ -149,12 +153,15 @@ const OrderBill = ({ cart, setCart }) => {
 				<div className='text-right'>
 					{convertTo000D(totalPrice)}
 				</div>
-				{discount.discountId && (
+				{discount && (
 					<>
 						<div className=''>Giảm:</div>
 						<div className='text-red-500 text-right'>
 							{convertTo000D(
-								calcDiscount(totalPrice, discount.discountAmount)
+								calcDiscount(
+									totalPrice,
+									discount ? discount.discountAmount : 0
+								)
 							)}
 						</div>
 					</>
@@ -172,7 +179,7 @@ const OrderBill = ({ cart, setCart }) => {
 					{convertTo000D(
 						calcPayment(
 							totalPrice,
-							discount.discountAmount,
+							discount ? discount.discountAmount : 0,
 							shippingFee
 						)
 					)}
@@ -184,18 +191,18 @@ const OrderBill = ({ cart, setCart }) => {
 			<CustomerDataForm
 				cart={cart}
 				setCart={setCart}
+				setCustomerAddr={setCustomerAddr}
 				totalPrice={totalPrice}
 				totalDiscount={calcDiscount(
 					totalPrice,
-					discount.discountAmount
+					discount ? discount.discountAmount : 0
 				)}
-				shippingFee={shippingFee}
 				totalPayment={calcPayment(
 					totalPrice,
-					discount.discountAmount,
+					discount ? discount.discountAmount : 0,
 					shippingFee
 				)}
-				setCustomerAddr={setCustomerAddr}
+				shippingFee={shippingFee}
 			/>
 		</div>
 	)

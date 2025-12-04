@@ -7,6 +7,7 @@ import { roundTo1K } from "@/utils/until"
 export const calcDiscount = (totalPrice, dealPercent) => {
 	return Math.ceil(totalPrice * (dealPercent / 100))
 }
+
 export const calcPayment = (
 	totalPrice,
 	dealPercent,

@@ -15,11 +15,11 @@ import AddressDataForm, {
 const CustomerDataForm = ({
 	cart,
 	setCart,
+	setCustomerAddr,
 	totalPrice,
 	totalDiscount,
-	shippingFee,
 	totalPayment,
-	setCustomerAddr,
+	shippingFee,
 }) => {
 	const { user } = UserAuth()
 	const router = useRouter()
@@ -90,8 +90,8 @@ const CustomerDataForm = ({
 				...data,
 				allPrice: totalPrice,
 				allDiscount: totalDiscount,
-				total: totalPayment,
 				shippingFee: shippingFee,
+				total: totalPayment,
 			})
 		)
 
