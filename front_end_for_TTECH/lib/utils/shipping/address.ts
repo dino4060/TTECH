@@ -9,8 +9,9 @@ type TWard = {
 	id: number
 	name: string
 	ghnWardCode: string
-	districtName: string
+	ghnWardName: string
 	ghnDistrictID: number
+	ghnDistrictName: string
 }
 
 const BA_DINH_WARDS: TWard[] = [
@@ -19,98 +20,112 @@ const BA_DINH_WARDS: TWard[] = [
 		ghnWardCode: "1A0114",
 		ghnDistrictID: 1484,
 		name: "Phường Vĩnh Phúc",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Vĩnh Phúc",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 102113,
 		ghnWardCode: "1A0113",
 		ghnDistrictID: 1484,
 		name: "Phường Trúc Bạch",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Trúc Bạch",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020112,
 		ghnWardCode: "1A0112",
 		ghnDistrictID: 1484,
 		name: "Phường Thành Công",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Thành Công",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020111,
 		ghnWardCode: "1A0111",
 		ghnDistrictID: 1484,
 		name: "Phường Quán Thánh",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Quán Thánh",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020110,
 		ghnWardCode: "1A0110",
 		ghnDistrictID: 1484,
 		name: "Phường Phúc Xá",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Phúc Xá",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020109,
 		ghnWardCode: "1A0109",
 		ghnDistrictID: 1484,
 		name: "Phường Nguyễn Trung Trực",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Nguyễn Trung Trực",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020108,
 		ghnWardCode: "1A0108",
 		ghnDistrictID: 1484,
 		name: "Phường Ngọc Khánh",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Ngọc Khánh",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020107,
 		ghnWardCode: "1A0107",
 		ghnDistrictID: 1484,
 		name: "Phường Ngọc Hà",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Ngọc Hà",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020106,
 		ghnWardCode: "1A0106",
 		ghnDistrictID: 1484,
 		name: "Phường Liễu Giai",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Liễu Giai",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020105,
 		ghnWardCode: "1A0105",
 		ghnDistrictID: 1484,
 		name: "Phường Kim Mã",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Kim Mã",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020104,
 		ghnWardCode: "1A0104",
 		ghnDistrictID: 1484,
 		name: "Phường Giảng Võ",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Giảng Võ",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020103,
 		ghnWardCode: "1A0103",
 		ghnDistrictID: 1484,
 		name: "Phường Đội Cấn",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Đội Cấn",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020102,
 		ghnWardCode: "1A0102",
 		ghnDistrictID: 1484,
 		name: "Phường Điện Biên",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Điện Biên",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 	{
 		id: 1020102,
 		ghnWardCode: "1A0101",
 		ghnDistrictID: 1484,
 		name: "Phường Cống Vị",
-		districtName: "Quận Ba Đình",
+		ghnWardName: "Phường Cống Vị",
+		ghnDistrictName: "Quận Ba Đình",
 	},
 ]
 
@@ -120,84 +135,96 @@ const THU_DUC_WARDS: TWard[] = [
 		id: 90768,
 		ghnWardCode: "90768",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường An Khánh",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Bình Trưng",
 		id: 90766,
 		ghnWardCode: "90766",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Bình Trưng Đông",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Cát Lái",
 		id: 90747,
 		ghnWardCode: "90747",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Cát Lái",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Hiệp Bình",
 		id: 90741,
 		ghnWardCode: "90741",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Hiệp Bình Chánh",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Tam Bình",
 		id: 90736,
 		ghnWardCode: "90736",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Tam Bình",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Thủ Đức",
 		id: 90745,
 		ghnWardCode: "90745",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Linh Chiểu",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Linh Xuân",
 		id: 90737,
 		ghnWardCode: "90737",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Linh Xuân",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Tăng Nhơn Phú",
 		id: 90754,
 		ghnWardCode: "90754",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Tăng Nhơn Phú A",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Phước Long",
 		id: 90762,
 		ghnWardCode: "90762",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Phước Long A",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Long Bình",
 		id: 90751,
 		ghnWardCode: "90751",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Long Bình",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Long Phước",
 		id: 90760,
 		ghnWardCode: "90760",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Long Phước",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 	{
 		name: "Phường Long Trường",
 		id: 90761,
 		ghnWardCode: "90761",
 		ghnDistrictID: 3695,
-		districtName: "Thành Phố Thủ Đức",
+		ghnWardName: "Phường Long Trường",
+		ghnDistrictName: "Thành Phố Thủ Đức",
 	},
 ]
 
@@ -207,49 +234,56 @@ const BA_TRI_WARDS: TWard[] = [
 		ghnWardCode: "560721",
 		ghnDistrictID: 1888,
 		name: "Xã Tân Thủy",
-		districtName: "Huyện Ba Tri",
+		ghnWardName: "Xã Tân Thủy",
+		ghnDistrictName: "Huyện Ba Tri",
 	},
 	{
 		id: 560710,
 		ghnWardCode: "560710",
 		ghnDistrictID: 1888,
 		name: "Xã Bảo Thạnh",
-		districtName: "Huyện Ba Tri",
+		ghnWardName: "Xã Bảo Thạnh",
+		ghnDistrictName: "Huyện Ba Tri",
 	},
 	{
 		id: 560701,
 		ghnWardCode: "560701",
 		ghnDistrictID: 1888,
 		name: "Xã Ba Tri",
-		districtName: "Huyện Ba Tri",
+		ghnWardName: "Thị trấn Ba Tri",
+		ghnDistrictName: "Huyện Ba Tri",
 	},
 	{
 		id: 560722,
 		ghnWardCode: "560722",
 		ghnDistrictID: 1888,
 		name: "Xã Tân Xuân",
-		districtName: "Huyện Ba Tri",
+		ghnWardName: "Xã Tân Xuân",
+		ghnDistrictName: "Huyện Ba Tri",
 	},
 	{
 		id: 560712,
 		ghnWardCode: "560712",
 		ghnDistrictID: 1888,
-		name: "Xã Mỹ Chánh",
-		districtName: "Huyện Ba Tri",
+		name: "Xã Mỹ Chánh Hòa",
+		ghnWardName: "Xã Mỹ Chánh",
+		ghnDistrictName: "Huyện Ba Tri",
 	},
 	{
 		id: 560707,
 		ghnWardCode: "560707",
 		ghnDistrictID: 1888,
 		name: "Xã An Ngãi Trung",
-		districtName: "Huyện Ba Tri",
+		ghnWardName: "Xã An Ngãi Trung",
+		ghnDistrictName: "Huyện Ba Tri",
 	},
 	{
 		id: 560707,
 		ghnWardCode: "560704",
 		ghnDistrictID: 1888,
 		name: "Xã An Hiệp",
-		districtName: "Huyện Ba Tri",
+		ghnWardName: "Xã An Hiệp",
+		ghnDistrictName: "Huyện Ba Tri",
 	},
 ]
 
@@ -361,7 +395,7 @@ type TGhnAddress = {
 
 export const findFullAddress = (
 	address: TAddress,
-	addressName = "địa chỉ"
+	addressName = "người dùng"
 ): TFullAddress => {
 	const { userName, phone, provinceId, wardId, street } =
 		address
@@ -371,7 +405,7 @@ export const findFullAddress = (
 	)
 
 	if (!province) {
-		alert(`Không tìm thấy thông tin tỉnh/tp ${addressName}`)
+		console.error(`Không tìm thấy tỉnh/tp ${addressName}`)
 		return null
 	}
 
@@ -380,7 +414,7 @@ export const findFullAddress = (
 	)
 
 	if (!ward) {
-		alert(`Không tìm thấy thông tin phường/xã ${addressName}`)
+		console.error(`Không tìm thấy phường/xã ${addressName}`)
 		return null
 	}
 

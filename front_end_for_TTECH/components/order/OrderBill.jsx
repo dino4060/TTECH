@@ -34,18 +34,13 @@ const OrderBill = ({ cart, setCart }) => {
 	// check
 	useEffect(() => {
 		if (hasCreatedParcelRef.current) return
+		hasCreatedParcelRef.current = true
 
-		if (warehouseAddr && customerAddr) {
-			hasCreatedParcelRef.current = true
-
-			createGhnParcel({
-				warehouseAddr,
-				customerAddr,
-				order: null,
-				setParcel,
-			})
-		}
-	}, [warehouseAddr, customerAddr])
+		createGhnParcel({
+			order: null,
+			setParcel,
+		})
+	}, [])
 
 	// init => get the warehouse address
 	useEffect(() => {

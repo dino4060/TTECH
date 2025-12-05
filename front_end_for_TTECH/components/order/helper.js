@@ -2,6 +2,7 @@ import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
 import { addressApi } from "@/lib/api/address.api"
 import { orderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"
+import { checkKV } from "@/lib/utils/check"
 import { findGhnAddress } from "@/lib/utils/shipping/address"
 import { roundTo1K } from "@/utils/until"
 
@@ -137,12 +138,10 @@ export const fetchCalcGhnShippingFee = async (
 }
 
 export const createGhnParcel = async ({
-	warehouseAddr,
-	customerAddr,
 	order,
 	setParcel,
 }) => {
-	const orderId = 30
+	const orderId = 31
 	const apiRes = await clientFetch(orderApi.get(orderId))
 
 	if (!apiRes.success) {
@@ -151,12 +150,11 @@ export const createGhnParcel = async ({
 	}
 
 	const ghnRes = await ghnApiRt.createParcel({
-		fromAddress: warehouseAddr,
-		toAddress: customerAddr,
 		order: apiRes.data,
 	})
 
 	if (ghnRes.code === 200) {
+		checkKV("setParcel", ghnRes.data)
 		setParcel(ghnRes.data)
 	} else {
 		alert("Lỗi tạo bưu kiện: " + ghnRes.message)

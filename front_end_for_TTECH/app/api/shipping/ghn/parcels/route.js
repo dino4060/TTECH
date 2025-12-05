@@ -12,18 +12,50 @@ import { NextResponse } from "next/server"
 
 export async function POST(request) {
 	try {
-		const {
-			fromAddress: fromAddr,
-			toAddress: toAddr,
-			order,
-		} = await request.json()
+		const { order } = await request.json()
+
+		console.log("order: ", order)
 
 		// Prepare fields
-		const fromFullAddr = findFullAddress(fromAddr, "kho hàng")
-		if (!fromFullAddr) return
+		const fromFullAddr = findFullAddress(
+			{
+				userName: order.fromUserName,
+				phone: order.fromPhone,
+				provinceId: order.fromProvinceId,
+				wardId: order.fromWardId,
+				street: order.fromStreet,
+			},
+			"người gửi"
+		)
+		if (!fromFullAddr) {
+			return NextResponse.json(
+				{
+					code: 400,
+					message: "Địa chỉ người gửi không hợp lệ",
+				},
+				{ status: 400 }
+			)
+		}
 
-		const toFullAddr = findFullAddress(toAddr, "giao hàng")
-		if (!toFullAddr) return
+		const toFullAddr = findFullAddress(
+			{
+				userName: order.toUserName,
+				phone: order.toPhone,
+				provinceId: order.toProvinceId,
+				wardId: order.toWardId,
+				street: order.toStreet,
+			},
+			"người nhận"
+		)
+		if (!toFullAddr) {
+			return NextResponse.json(
+				{
+					code: 400,
+					message: "Địa chỉ người nhận không hợp lệ",
+				},
+				{ status: 400 }
+			)
+		}
 
 		let length = 0
 		let width = 0
@@ -55,21 +87,14 @@ export async function POST(request) {
 		// Prepare GHN Request Body
 		const requestBody = {
 			payment_type_id: 2,
-			note: "Cho khách xem hàng",
-			required_note: GHN_REQUIRED_NOTE_ENUM.CHO_THU_HANG,
+			note: "Không cho khách xem hàng",
+			required_note: GHN_REQUIRED_NOTE_ENUM.KHONG_CHO_XEM_HANG,
 			from_name: fromFullAddr.userName,
 			from_phone: fromFullAddr.phone,
 			from_address: fromFullAddr.street,
-
-			from_address:
-				"72 Thành Thái, Phường 14, Quận 10, Hồ Chí Minh, Vietnam",
-			from_ward_name: "Phường 14",
-			from_district_name: "Quận 10",
-			from_province_name: "HCM",
-			// from_ward_name: fromFullAddr.ward.name,
-			// from_district_name: fromFullAddr.ward.districtName,
-			// from_province_name: fromFullAddr.province.name,
-
+			from_ward_name: fromFullAddr.ward.ghnWardName,
+			from_district_name: fromFullAddr.ward.ghnDistrictName,
+			from_province_name: fromFullAddr.province.name,
 			return_phone: null,
 			return_address: null,
 			return_district_id: null,
@@ -77,17 +102,11 @@ export async function POST(request) {
 			client_order_code: null,
 			to_name: toFullAddr.userName,
 			to_phone: toFullAddr.phone,
-
-			to_address:
-				"73 Thành Thái, Phường 14, Quận 10, Hồ Chí Minh, Vietnam",
-			to_ward_code: "20308",
-			to_district_id: 1444,
-			// to_address: toFullAddr.street,
-			// to_ward_code: toFullAddr.ward.ghnWardCode,
-			// to_district_id: toFullAddr.ward.ghnDistrictID,
-
+			to_address: toFullAddr.street,
+			to_ward_code: toFullAddr.ward.ghnWardCode,
+			to_district_id: toFullAddr.ward.ghnDistrictID,
 			cod_amount: order.total,
-			content: "TTECH",
+			content: "TTECH PRODUCT SHOPPING",
 			weight,
 			length,
 			width,
@@ -124,8 +143,8 @@ export async function POST(request) {
 		const {
 			code,
 			data,
-			code_message_value,
-			message_display,
+			code_message_value = "Lỗi GHN đang được khắc phục",
+			message_display = "Thành công tạo bưu kiện GHN",
 		} = response
 
 		if (code === 200) {
@@ -143,13 +162,12 @@ export async function POST(request) {
 		} else {
 			return Response.json({
 				code,
-				message:
-					code_message_value || "Lỗi GHN đang được khắc phục",
+				message: code_message_value,
 				data: null,
 			})
 		}
 	} catch (error) {
-		console.error("GHN Parcel Creation API Error:", error)
+		console.error("GHN Parcel Creation API/R Error:", error)
 		return NextResponse.json(
 			{
 				code: 500,
