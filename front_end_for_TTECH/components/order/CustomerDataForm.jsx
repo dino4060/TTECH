@@ -1,5 +1,5 @@
 "use client"
-import { paymentApiRt } from "@/app/api/payment/momo/payment.api-route"
+import { momoApiRt } from "@/app/api/payment/momo/momo.api-route"
 import { UserAuth } from "@/context/AuthContext"
 import { orderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"
@@ -12,6 +12,8 @@ import AddressDataForm, {
 	FormFieldList,
 } from "./AddressDataForm"
 import { createGhnParcel } from "./helper"
+import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
+import { checkKV } from "@/lib/utils/check"
 
 const CustomerDataForm = ({
 	cart,
@@ -75,17 +77,17 @@ const CustomerDataForm = ({
 	}
 
 	// check
-	const [parcel, setParcel] = useState(null)
-	const hasParcelRef = useRef(false)
-	useEffect(() => {
-		if (hasParcelRef.current) return
+	// const [parcel, setParcel] = useState(null)
+	// const hasParcelRef = useRef(false)
+	// useEffect(() => {
+	// 	if (hasParcelRef.current) return
 
-		hasParcelRef.current = true
-		createGhnParcel({
-			order: null,
-			setParcel,
-		})
-	}, [])
+	// 	hasParcelRef.current = true
+	// 	createGhnParcel({
+	// 		order: null,
+	// 		setParcel,
+	// 	})
+	// }, [])
 
 	const onSubmitOrder = async () => {
 		if (!cart.lines.length) return
@@ -104,6 +106,7 @@ const CustomerDataForm = ({
 		if (!isValid) return
 
 		setLoading(true)
+		// create an order
 		const body = {
 			allPrice: totalPrice,
 			allDiscount: totalDiscount,
@@ -125,35 +128,70 @@ const CustomerDataForm = ({
 			fromWardId: warehouseAddr.wardId,
 			fromStreet: warehouseAddr.street,
 		}
-		const api = await clientFetch(orderApi.checkout(body))
+		const orderRes = await clientFetch(
+			orderApi.checkout(body)
+		)
 
-		if (api.success) {
-			setCart({ ...cart, lines: [] })
-
-			const order = api.data
-			if (order.paymentType === "COD") {
-				setLoading(false)
-				router.push("/checkout/success")
-			}
-			if (order.paymentType === "BANK") {
-				const momoRes =
-					await paymentApiRt.momoApiRt.createPayUrl({
-						amount: order.total,
-						orderId: order.id,
-						returnUrl: "http://localhost:3000/checkout/success",
-					})
-
-				setLoading(false)
-				if (momoRes.resultCode === 0) {
-					router.push(momoRes.payUrl)
-				} else {
-					console.error("MoMo Client Error:", momoRes)
-					alert("Có lỗi xảy ra: " + momoRes.message)
-				}
-			}
-		} else {
+		if (orderRes.success !== true) {
 			setLoading(false)
-			alert("Thanh toán thất bại: " + api.error)
+			alert("Lỗi tạo đơn hàng: " + orderRes.error)
+			return
+		}
+
+		const newOrder = orderRes.data
+
+		// Clean the cart
+		setCart({ ...cart, lines: [] })
+
+		// Create a GHN parcel
+		const ghnRes = await ghnApiRt.createParcel({
+			order: newOrder,
+		})
+
+		if (ghnRes.code !== 200) {
+			setLoading(false)
+			alert("Lỗi tạo bưu kiện: " + ghnRes.message)
+			return
+		}
+
+		checkKV("setParcel", ghnRes.data)
+
+		// Link the parcel to the order
+		const editOrderRes = await clientFetch(
+			orderApi.update({
+				id: newOrder.id,
+				parcelCode: ghnRes.data.parcelCode,
+			})
+		)
+
+		if (editOrderRes.success !== true) {
+			setLoading(false)
+			alert("Lỗi liên kết bưu kiện: " + editOrderRes.error)
+			return
+		}
+
+		// Pay via COD
+		if (newOrder.paymentType === "COD") {
+			setLoading(false)
+			router.push("/checkout/success")
+		}
+
+		// Pay via MOMO banking
+		if (newOrder.paymentType === "BANK") {
+			const momoRes = await momoApiRt.createPayUrl({
+				amount: newOrder.total * 1000,
+				orderId: newOrder.id,
+				returnUrl: "http://localhost:3000/checkout/success",
+			})
+
+			if (momoRes.resultCode !== 0) {
+				setLoading(false)
+				alert("Lỗi thanh toán: " + momoRes.message)
+				return
+			}
+
+			setLoading(false)
+			router.push(momoRes.payUrl)
 		}
 	}
 

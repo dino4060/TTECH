@@ -142,21 +142,33 @@ export const createGhnParcel = async ({
 	setParcel,
 }) => {
 	const orderId = 34
-	const apiRes = await clientFetch(orderApi.get(orderId))
+	const orderRes = await clientFetch(orderApi.get(orderId))
 
-	if (!apiRes.success) {
-		alert("Lỗi lấy đơn hàng: " + apiRes.error)
+	if (orderRes.success !== true) {
+		alert("Lỗi lấy đơn hàng: " + orderRes.error)
 		return
 	}
 
 	const ghnRes = await ghnApiRt.createParcel({
-		order: apiRes.data,
+		order: orderRes.data,
 	})
 
-	if (ghnRes.code === 200) {
-		checkKV("setParcel", ghnRes.data)
-		setParcel(ghnRes.data)
-	} else {
+	if (ghnRes.code !== 200) {
 		alert("Lỗi tạo bưu kiện: " + ghnRes.message)
+		return
+	}
+
+	checkKV("setParcel", ghnRes.data)
+	setParcel(ghnRes.data)
+
+	const editOrder = await clientFetch(
+		orderApi.update({
+			parcelCode: ghnRes.data.parcelCode,
+		})
+	)
+
+	if (editOrder.success !== true) {
+		alert("Lỗi liên kết bưu kiện: " + ghnRes.error)
+		return
 	}
 }

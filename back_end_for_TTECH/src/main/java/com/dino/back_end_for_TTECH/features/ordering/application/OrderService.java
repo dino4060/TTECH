@@ -113,6 +113,9 @@ public class OrderService {
         if (body.getStatus() != null) {
             editOrder.setStatus(body.getStatus());
         }
+        if (body.getParcelCode() != null) {
+            editOrder.setParcelCode(body.getParcelCode());
+        }
 
         var order = this.orderRepository.save(editOrder);
         return this.orderMapper.toData(order);

@@ -44,12 +44,6 @@ public class Order extends BaseEntity implements BaseStatus<Status> {
     String note;
     String paymentType;
 
-    String customerName;
-    String customerPhone;
-    int provinceId;
-    int wardId;
-    String street;
-
     String toUserName;
     String toPhone;
     Integer toProvinceId;
@@ -62,8 +56,9 @@ public class Order extends BaseEntity implements BaseStatus<Status> {
     Integer fromWardId;
     String fromStreet;
 
-    Instant orderTime;
     String status;
+    Instant orderTime;
+    String parcelCode;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

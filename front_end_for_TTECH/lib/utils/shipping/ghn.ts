@@ -28,7 +28,7 @@ export const GHN_HEAVY_SERVICE = {
 	ecom_extra_cost_id: 0,
 }
 
-export const GHN_INSURANCE = 5000000
+export const GHN_INSURANCE = 2000000
 
 export const GHN_COD_FAILED = 0
 

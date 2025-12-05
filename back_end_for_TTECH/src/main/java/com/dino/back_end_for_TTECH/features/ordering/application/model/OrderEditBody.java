@@ -8,5 +8,9 @@ public class OrderEditBody {
     @NotNull(message = "Order ID is required")
     long id;
 
+    // update after new banking
     String status;
+
+    // update after new parcel
+    String parcelCode;
 }
