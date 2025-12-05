@@ -6,16 +6,20 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import { isValidPhoneNumber } from "@/utils/until"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import CircleLoader from "../uncategory/CircleLoader"
 import AddressDataForm, {
 	FormFieldList,
 } from "./AddressDataForm"
+import { createGhnParcel } from "./helper"
 
 const CustomerDataForm = ({
 	cart,
 	setCart,
+	customerAddr,
 	setCustomerAddr,
+	warehouseAddr,
+	setWarehouseAddr,
 	totalPrice,
 	totalDiscount,
 	totalPayment,
@@ -70,8 +74,23 @@ const CustomerDataForm = ({
 		}))
 	}
 
+	// check
+	const [parcel, setParcel] = useState(null)
+	const hasParcelRef = useRef(false)
+	useEffect(() => {
+		if (hasParcelRef.current) return
+
+		hasParcelRef.current = true
+		createGhnParcel({
+			order: null,
+			setParcel,
+		})
+	}, [])
+
 	const onSubmitOrder = async () => {
 		if (!cart.lines.length) return
+
+		if (!customerAddr || !warehouseAddr) return
 
 		let isValid = true
 		const FF = [...Fields, ...FormFieldList]
@@ -85,20 +104,33 @@ const CustomerDataForm = ({
 		if (!isValid) return
 
 		setLoading(true)
-		const res = await clientFetch(
-			orderApi.checkout({
-				...data,
-				allPrice: totalPrice,
-				allDiscount: totalDiscount,
-				shippingFee: shippingFee,
-				total: totalPayment,
-			})
-		)
+		const body = {
+			allPrice: totalPrice,
+			allDiscount: totalDiscount,
+			shippingFee: shippingFee,
+			total: totalPayment,
 
-		if (res.success) {
+			paymentType: data.paymentType,
+			note: data.note,
+
+			toUserName: customerAddr.userName,
+			toPhone: customerAddr.phone,
+			toProvinceId: customerAddr.provinceId,
+			toWardId: customerAddr.wardId,
+			toStreet: customerAddr.street,
+
+			fromUserName: warehouseAddr.userName,
+			fromPhone: warehouseAddr.phone,
+			fromProvinceId: warehouseAddr.provinceId,
+			fromWardId: warehouseAddr.wardId,
+			fromStreet: warehouseAddr.street,
+		}
+		const api = await clientFetch(orderApi.checkout(body))
+
+		if (api.success) {
 			setCart({ ...cart, lines: [] })
 
-			const order = res.data
+			const order = api.data
 			if (order.paymentType === "COD") {
 				setLoading(false)
 				router.push("/checkout/success")
@@ -121,7 +153,7 @@ const CustomerDataForm = ({
 			}
 		} else {
 			setLoading(false)
-			alert("Thanh toán thất bại: " + res.error)
+			alert("Thanh toán thất bại: " + api.error)
 		}
 	}
 

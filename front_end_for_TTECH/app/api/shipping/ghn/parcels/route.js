@@ -1,3 +1,4 @@
+import { toGMT7 } from "@/lib/utils/number"
 import { findFullAddress } from "@/lib/utils/shipping/address"
 import {
 	GHN_INSURANCE,
@@ -8,6 +9,7 @@ import {
 	GHN_V2_PUBLIC_API,
 } from "@/lib/utils/shipping/ghn"
 import { SMARTPHONE_SIZE } from "@/lib/utils/shipping/product-size"
+import { roundTo1K } from "@/utils/until"
 import { NextResponse } from "next/server"
 
 export async function POST(request) {
@@ -89,23 +91,27 @@ export async function POST(request) {
 			payment_type_id: 2,
 			note: "Không cho khách xem hàng",
 			required_note: GHN_REQUIRED_NOTE_ENUM.KHONG_CHO_XEM_HANG,
+
 			from_name: fromFullAddr.userName,
 			from_phone: fromFullAddr.phone,
 			from_address: fromFullAddr.street,
 			from_ward_name: fromFullAddr.ward.ghnWardName,
 			from_district_name: fromFullAddr.ward.ghnDistrictName,
 			from_province_name: fromFullAddr.province.name,
+
 			return_phone: null,
 			return_address: null,
 			return_district_id: null,
 			return_ward_code: null,
 			client_order_code: null,
+
 			to_name: toFullAddr.userName,
 			to_phone: toFullAddr.phone,
 			to_address: toFullAddr.street,
 			to_ward_code: toFullAddr.ward.ghnWardCode,
 			to_district_id: toFullAddr.ward.ghnDistrictID,
-			cod_amount: order.total,
+
+			cod_amount: order.total * 1000,
 			content: "TTECH PRODUCT SHOPPING",
 			weight,
 			length,
@@ -155,8 +161,8 @@ export async function POST(request) {
 					parcelCode: data.order_code,
 					sortCode: data.sort_code,
 					transType: data.trans_type,
-					shippingFee: data.total_fee,
-					expectedDeliveryTime: data.expected_delivery_time,
+					shippingFee: roundTo1K(data.total_fee),
+					leadingTime: toGMT7(data.expected_delivery_time),
 				},
 			})
 		} else {

@@ -128,3 +128,20 @@ export const convertDate = (date: string) => {
 	const formattedDate = `${day}/${month}/${year}`
 	return formattedDate
 }
+
+// Format to GMT+7 (Vietnam timezone)
+export const toGMT7 = (timeString: string) => {
+	const time = new Date(timeString)
+
+	const GMT7: any = {
+		timeZone: "Asia/Ho_Chi_Minh",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+	}
+
+	return time.toLocaleString("en-US", GMT7)
+}

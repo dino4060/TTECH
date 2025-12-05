@@ -1,11 +1,10 @@
 "use client"
 import { convertTo000D, convertTokVND } from "@/utils/until"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import CustomerDataForm from "./CustomerDataForm"
 import {
 	calcDiscount,
 	calcPayment,
-	createGhnParcel,
 	fetchCalcGhnShippingFee,
 	fetchEstimateGhnLeadtime,
 	fetchGetWarehouseAddress,
@@ -28,19 +27,6 @@ const OrderBill = ({ cart, setCart }) => {
 	const [deliveryTime, setDeliveryTime] = useState(null)
 	const [warehouseAddr, setWarehouseAddr] = useState(null)
 	const [customerAddr, setCustomerAddr] = useState(null)
-	const [parcel, setParcel] = useState(null)
-	const hasCreatedParcelRef = useRef(false)
-
-	// check
-	useEffect(() => {
-		if (hasCreatedParcelRef.current) return
-		hasCreatedParcelRef.current = true
-
-		createGhnParcel({
-			order: null,
-			setParcel,
-		})
-	}, [])
 
 	// init => get the warehouse address
 	useEffect(() => {
@@ -206,7 +192,10 @@ const OrderBill = ({ cart, setCart }) => {
 			<CustomerDataForm
 				cart={cart}
 				setCart={setCart}
+				customerAddr={customerAddr}
 				setCustomerAddr={setCustomerAddr}
+				warehouseAddr={warehouseAddr}
+				setWarehouseAddr={setWarehouseAddr}
 				totalPrice={totalPrice}
 				totalDiscount={calcDiscount(
 					totalPrice,

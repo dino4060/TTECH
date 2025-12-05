@@ -30,12 +30,12 @@ const errorExample4 = {
 }
 
 const order = {
-	id: 31,
-	allPrice: 46591,
+	id: 34,
+	allPrice: 18790,
 	allDiscount: 0,
 	shippingFee: 46,
-	total: 46637,
-	note: "Giao sau 5 PM",
+	total: 18836,
+	note: "",
 	paymentType: "COD",
 	toUserName: "NGUYỄN TRUNG NHÂN",
 	toPhone: "0869018606",
@@ -47,7 +47,7 @@ const order = {
 	fromProvinceId: 202,
 	fromWardId: 90745,
 	fromStreet: "Số 1 Võ Văn Ngân",
-	orderTime: "2025-12-04T05:41:00.202192Z",
+	orderTime: "2025-12-05T08:12:47.271320Z",
 	status: "PENDING",
 	lines: [
 		{
@@ -55,12 +55,6 @@ const order = {
 			quantity: 1,
 			mainPrice: 18790,
 			sidePrice: 0,
-		},
-		{
-			product: [Object],
-			quantity: 1,
-			mainPrice: 27801,
-			sidePrice: 30890,
 		},
 	],
 }
@@ -85,12 +79,12 @@ const GhnParcelCreationBody = {
 	to_address: "Ngã 3 Mỹ Thạnh",
 	to_ward_code: "560707",
 	to_district_id: 1888,
-	cod_amount: 46637,
+	cod_amount: 18836000,
 	content: "TTECH PRODUCT SHOPPING",
-	weight: 400,
+	weight: 200,
 	length: 18,
 	width: 9,
-	height: 6,
+	height: 3,
 	pick_station_id: null,
 	deliver_station_id: null,
 	insurance_value: 5000000,
@@ -110,17 +104,6 @@ const GhnParcelCreationBody = {
 			weight: 200,
 			category: null,
 		},
-		{
-			code: "1103",
-			name: "iPhone Air 256GB | Xanh Da Trời",
-			price: undefined,
-			quantity: 1,
-			length: 18,
-			width: 9,
-			height: 3,
-			weight: 200,
-			category: null,
-		},
 	],
 }
 
@@ -128,7 +111,7 @@ const GhnParcelCreationResponse = {
 	code: 200,
 	code_message_value: "",
 	data: {
-		order_code: "LK3Q8Y",
+		order_code: "LK3U4A",
 		sort_code: "000-D-00-00",
 		trans_type: "truck",
 		ward_encode: "",
@@ -154,23 +137,17 @@ const GhnParcelCreationResponse = {
 		},
 		total_fee: 45500,
 		expected_delivery_time: "2025-12-06T16:59:59Z",
-		double_check_deliver: 0,
-		pick_remote_areas_fee: 0,
-		deliver_remote_areas_fee: 0,
-		pick_remote_areas_fee_return: 0,
-		deliver_remote_areas_fee_return: 0,
-		cod_failed_fee: 0,
 		operation_partner: "",
 	},
 	message: "Success",
 	message_display:
-		"Tạo đơn hàng thành công. Mã đơn hàng: LK3Q8Y",
+		"Tạo đơn hàng thành công. Mã đơn hàng: LK3U4A",
 }
 
 const Parcel = {
-	parcelCode: "LK3Q8Y",
+	parcelCode: "LK3U4A",
 	sortCode: "000-D-00-00",
 	transType: "truck",
-	shippingFee: 45500,
-	expectedDeliveryTime: "2025-12-06T16:59:59Z",
+	shippingFee: 46,
+	leadingTime: "12/06/2025, 11:59:59 PM",
 }

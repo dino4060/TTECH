@@ -141,7 +141,7 @@ export const createGhnParcel = async ({
 	order,
 	setParcel,
 }) => {
-	const orderId = 31
+	const orderId = 34
 	const apiRes = await clientFetch(orderApi.get(orderId))
 
 	if (!apiRes.success) {

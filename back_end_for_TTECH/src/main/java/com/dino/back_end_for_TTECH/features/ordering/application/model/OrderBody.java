@@ -12,12 +12,6 @@ public class OrderBody {
         String note = "";
         String paymentType = "COD";
 
-        String customerName;
-        String customerPhone;
-        int provinceId;
-        int wardId;
-        String street;
-
         String toUserName;
         String toPhone;
         Integer toProvinceId;
