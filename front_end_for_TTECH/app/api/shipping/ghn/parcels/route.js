@@ -59,6 +59,9 @@ export async function POST(request) {
 			)
 		}
 
+		const cod_amount =
+			order.paymentType === "COD" ? order.total * 1000 : 0
+
 		let length = 0
 		let width = 0
 		let height = 0
@@ -111,7 +114,7 @@ export async function POST(request) {
 			to_ward_code: toFullAddr.ward.ghnWardCode,
 			to_district_id: toFullAddr.ward.ghnDistrictID,
 
-			cod_amount: order.total * 1000,
+			cod_amount,
 			content: "TTECH PRODUCT SHOPPING",
 			weight,
 			length,

@@ -1,19 +1,23 @@
 "use client"
-import { UserAuth } from "@/context/AuthContext"
 import { orderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"
-import { convertToVND } from "@/utils/until"
+import { convertTo000D } from "@/utils/until"
 import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import {
 	CiBoxes,
-	CiCircleChevDown,
-	CiCircleChevLeft,
+	CiCircleRemove,
+	CiCreditCard1,
+	CiCreditCard2,
+	CiFileOff,
 	CiMaximize1,
 	CiMinimize1,
 } from "react-icons/ci"
 
-import { IoCopyOutline } from "react-icons/io5"
+import {
+	IoCloseOutline,
+	IoCopyOutline,
+} from "react-icons/io5"
 
 const UserOrder = () => {
 	const [showDetail, setShowDetail] = useState({})
@@ -58,7 +62,7 @@ const UserOrder = () => {
 		},
 	])
 
-	const onClick = (orderId) => {
+	const onOpenOrCloseDetail = (orderId) => {
 		const newShowDetail = { ...showDetail }
 
 		if (newShowDetail[orderId]) {
@@ -91,123 +95,209 @@ const UserOrder = () => {
 
 			<ul className='flex flex-col gap-4'>
 				<div className='flex gap-2'>
-					<h1 className='flex-1 text-center text-white/60 p-2 rounded-2xl bg-blue-400'>
+					<h1 className='flex-1 text-center bg-blue-500 text-white/90 p-2 rounded-2xl'>
 						Mã đơn hàng
 					</h1>
-					<h1 className='flex-1 text-center text-white/60 p-2 rounded-2xl bg-blue-400'>
+					<h1 className='flex-1 text-center bg-blue-500 text-white/90 p-2 rounded-2xl'>
 						Thời gian đặt hàng
 					</h1>
-					<h1 className='flex-1 text-center text-white/60 p-2 rounded-2xl bg-blue-400'>
+					<h1 className='flex-1 text-center bg-blue-500 text-white/90 p-2 rounded-2xl'>
 						Tổng cộng
 					</h1>
-
-					<h1 className='flex-1 text-center text-white/60 p-2 rounded-2xl bg-blue-400'>
-						Chi tiết
+					<h1 className='flex-1 text-center bg-blue-500 text-white/90 p-2 rounded-2xl'>
+						Phương thức thanh toán
+					</h1>
+					<h1 className='flex-1 text-center bg-blue-500 text-white/90 p-2 rounded-2xl'>
+						Trạng thái
+					</h1>
+					<h1 className='flex-1 text-center bg-blue-500 text-white/90 p-2 rounded-2xl'>
+						Quản lý
 					</h1>
 				</div>
-				<div className=''>
-					{orderList?.map(({ id, orderTime, total, lines }) => (
-						<div key={id}>
-							<motion.div
-								variants={variant}
-								initial='initial'
-								animate={showDetail[id] ? "active" : "initial"}
-								transition={{ type: "spring", delay: 0.1 }}
-								className='flex gap-1 xl:gap-2 p-4 rounded-2xl mb-6'
-							>
-								<motion.h1
-									whileTap={{ color: "red" }}
-									onClick={() => copy(id)}
-									className='flex-1 shrink-0 flex items-center justify-center gap-2'
+				<div>
+					{orderList?.map(
+						(
+							{ id, orderTime, total, paymentType, status, lines },
+							i
+						) => (
+							<div key={i}>
+								<motion.div
+									variants={variant}
+									initial='initial'
+									animate={showDetail[id] ? "active" : "initial"}
+									transition={{ type: "spring", delay: 0.1 }}
+									className='flex gap-1 xl:gap-2 p-4 rounded-2xl mb-6'
 								>
-									{id}
-									<IoCopyOutline size={15} />
-								</motion.h1>
-								<h1 className='flex-1 shrink-0 flex items-center justify-center'>
-									{convertDate(orderTime)}
-								</h1>
-								<h1 className='flex-1 shrink-0 flex items-center justify-center'>
-									{convertToVND(total || 0)}
-								</h1>
-								<motion.h1
-									onClick={() => onClick(id)}
-									className='flex-1 shrink-0 flex items-center justify-center'
-								>
-									<AnimatePresence>
-										{!showDetail[id] ? (
-											<motion.div
-												initial={{ opacity: 0 }}
-												whileInView={{ opacity: 1 }}
-												exit={{ opacity: 0 }}
-											>
-												<CiMaximize1 size={20} />
-											</motion.div>
-										) : (
-											<motion.div
-												initial={{ opacity: 0 }}
-												whileInView={{ opacity: 1 }}
-												exit={{ opacity: 0 }}
-											>
-												<CiMinimize1 size={20} />
-											</motion.div>
-										)}
-									</AnimatePresence>
-								</motion.h1>
-							</motion.div>
-							<AnimatePresence>
-								{showDetail[id] && (
-									<motion.div
-										initial={{ scaleY: 0.1, opacity: 0 }}
-										whileInView={{ scaleY: 1, opacity: 1 }}
-										exit={{ scaleY: 0.1, opacity: 0 }}
-										className='flex flex-col gap-3 mt-2 origin-top'
+									<motion.h1
+										whileTap={{ color: "red" }}
+										onClick={() => copy(id)}
+										className='flex-1 shrink-0 flex items-center justify-center gap-2'
 									>
-										<div className='flex gap-2'>
-											<div className='flex-1 text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
-												Ảnh
-											</div>
-											<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
-												Tên sản phẩm
-											</div>
-											<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
-												{" "}
-												Giá
-											</div>
-											<div className='flex-[2] text-center bg-blue-500 text-white/90 py-2 rounded-3xl'>
-												Số lượng
-											</div>
-										</div>
+										{id}
+										<IoCopyOutline size={15} />
+									</motion.h1>
+									<h1 className='flex-1 shrink-0 flex items-center justify-center'>
+										{convertDate(orderTime)}
+									</h1>
+									<h1 className='flex-1 shrink-0 flex items-center justify-center'>
+										{convertTo000D(total || 0)}
+									</h1>
+									<h1 className='flex-1 shrink-0 flex items-center justify-center'>
+										{paymentType}
+									</h1>
+									<h1 className='flex-1 shrink-0 flex items-center justify-center'>
+										{status}
+									</h1>
+									<motion.h1 className='flex-1 shrink-0 flex items-center justify-center gap-5'>
+										<AnimatePresence>
+											{!showDetail[id] ? (
+												<motion.div
+													initial={{ opacity: 0 }}
+													whileInView={{ opacity: 1 }}
+													whileHover={{ color: "rgb(239, 68, 68)" }}
+													exit={{ opacity: 0 }}
+													onClick={() => onOpenOrCloseDetail(id)}
+												>
+													<CiMaximize1 size={20} />
+												</motion.div>
+											) : (
+												<motion.div
+													initial={{ opacity: 0 }}
+													whileInView={{ opacity: 1 }}
+													whileHover={{ color: "rgb(239, 68, 68)" }}
+													exit={{ opacity: 0 }}
+													onClick={() => onOpenOrCloseDetail(id)}
+												>
+													<CiMinimize1 size={20} />
+												</motion.div>
+											)}
 
-										{lines?.map(
-											(
-												{ product, quantity, mainPrice, sidePrice },
-												j
-											) => (
-												<div key={j} className='flex pt-6 pb-4'>
-													<div className='flex-1 text-center rounded-3xl'>
-														<img
-															src={product.thumb}
-															className='h-[70px] m-auto w-[70px] object-contain rounded-3xl'
-														/>
-													</div>
-													<div className='flex-[2] flex items-center text-center justify-center'>
-														{product.name}
-													</div>
-													<div className='flex-[2] flex items-center text-center justify-center'>
-														{" "}
-														{convertToVND(mainPrice || 0)}{" "}
-													</div>
-													<div className='flex-[2] flex items-center text-center justify-center'>
-														{quantity}{" "}
-													</div>
+											{status === "UNPAID" && (
+												<motion.div
+													initial={{ opacity: 0 }}
+													whileInView={{ opacity: 1 }}
+													whileHover={{ color: "rgb(239, 68, 68)" }}
+													exit={{ opacity: 0 }}
+												>
+													<CiCreditCard2 size={20} />
+												</motion.div>
+											)}
+
+											{["PENDING", "UNPAID"].includes(status) && (
+												<motion.div
+													initial={{ opacity: 0 }}
+													whileInView={{ opacity: 1 }}
+													whileHover={{ color: "rgb(239, 68, 68)" }}
+													exit={{ opacity: 0 }}
+												>
+													<CiCircleRemove size={20} />
+												</motion.div>
+											)}
+										</AnimatePresence>
+									</motion.h1>
+								</motion.div>
+								<AnimatePresence>
+									{showDetail[id] && (
+										<motion.div
+											initial={{ scaleY: 0.1, opacity: 0 }}
+											whileInView={{ scaleY: 1, opacity: 1 }}
+											exit={{ scaleY: 0.1, opacity: 0 }}
+											className='flex flex-col gap-6 mt-2 mx-12 origin-top'
+										>
+											<div className='pl-0 text-[1.7rem] font-semibold'>
+												Danh sách sản phẩm
+											</div>
+											<div className='flex gap-2'>
+												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													Ảnh sản phẩm
 												</div>
-											)
-										)}
-									</motion.div>
-								)}
-							</AnimatePresence>
-						</div>
-					))}
+												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													Tên sản phẩm
+												</div>
+												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													{" "}
+													Giá
+												</div>
+												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													Số lượng
+												</div>
+											</div>
+
+											{lines?.map(
+												(
+													{ product, quantity, mainPrice, sidePrice },
+													j
+												) => (
+													<div key={j} className='flex pb-6'>
+														<div className='flex-1 text-center rounded-3xl'>
+															<img
+																src={product.thumb}
+																className='h-[70px] m-auto w-[70px] object-contain rounded-3xl'
+															/>
+														</div>
+														<div className='flex-[2] flex items-center text-center justify-center px-3'>
+															{product.name}
+														</div>
+														<div className='flex-[2] flex items-center text-center justify-center'>
+															{convertTo000D(mainPrice || 0)}{" "}
+														</div>
+														<div className='flex-[2] flex items-center text-center justify-center'>
+															{quantity}{" "}
+														</div>
+													</div>
+												)
+											)}
+
+											<div className='pl-0 text-[1.7rem] font-semibold'>
+												Lộ trình vận chuyển
+											</div>
+
+											<div className='flex gap-2'>
+												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													Ảnh sản phẩm
+												</div>
+												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													Tên sản phẩm
+												</div>
+												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													{" "}
+													Giá
+												</div>
+												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													Số lượng
+												</div>
+											</div>
+
+											{lines?.map(
+												(
+													{ product, quantity, mainPrice, sidePrice },
+													j
+												) => (
+													<div key={j} className='flex pb-6'>
+														<div className='flex-1 text-center rounded-3xl'>
+															<img
+																src={product.thumb}
+																className='h-[60px] m-auto w-[60px] object-contain rounded-3xl'
+															/>
+														</div>
+														<div className='flex-[2] flex items-center text-center justify-center px-3'>
+															{product.name}
+														</div>
+														<div className='flex-[2] flex items-center text-center justify-center'>
+															{convertTo000D(mainPrice || 0)}{" "}
+														</div>
+														<div className='flex-[2] flex items-center text-center justify-center'>
+															{quantity}{" "}
+														</div>
+													</div>
+												)
+											)}
+										</motion.div>
+									)}
+								</AnimatePresence>
+							</div>
+						)
+					)}
 				</div>
 			</ul>
 		</div>

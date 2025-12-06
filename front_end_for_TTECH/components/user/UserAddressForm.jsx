@@ -40,6 +40,7 @@ const UserAddressForm = ({
 
 				return (
 					<ReactComponent
+						key={FF.key}
 						formField={FF}
 						formData={formData}
 						formError={formError}

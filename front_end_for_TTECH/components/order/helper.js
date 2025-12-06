@@ -136,39 +136,3 @@ export const fetchCalcGhnShippingFee = async (
 		alert("Lỗi tính phí vận chuyển: " + ghnRes.error)
 	}
 }
-
-export const createGhnParcel = async ({
-	order,
-	setParcel,
-}) => {
-	const orderId = 34
-	const orderRes = await clientFetch(orderApi.get(orderId))
-
-	if (orderRes.success !== true) {
-		alert("Lỗi lấy đơn hàng: " + orderRes.error)
-		return
-	}
-
-	const ghnRes = await ghnApiRt.createParcel({
-		order: orderRes.data,
-	})
-
-	if (ghnRes.code !== 200) {
-		alert("Lỗi tạo bưu kiện: " + ghnRes.message)
-		return
-	}
-
-	checkKV("setParcel", ghnRes.data)
-	setParcel(ghnRes.data)
-
-	const editOrder = await clientFetch(
-		orderApi.update({
-			parcelCode: ghnRes.data.parcelCode,
-		})
-	)
-
-	if (editOrder.success !== true) {
-		alert("Lỗi liên kết bưu kiện: " + ghnRes.error)
-		return
-	}
-}

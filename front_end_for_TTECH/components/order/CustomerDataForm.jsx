@@ -154,8 +154,6 @@ const CustomerDataForm = ({
 			return
 		}
 
-		checkKV("setParcel", ghnRes.data)
-
 		// Link the parcel to the order
 		const editOrderRes = await clientFetch(
 			orderApi.update({
@@ -228,6 +226,7 @@ const CustomerDataForm = ({
 					const ReactComponent = Input[field.tag]
 					return (
 						<ReactComponent
+							key={field.key}
 							field={field}
 							data={data}
 							error={error}
@@ -352,7 +351,10 @@ const Input = {
 				<h1 className='text-xl'>{field.name}</h1>
 				{field.options.map((option) => {
 					return (
-						<div className='flex items-center gap-4'>
+						<div
+							key={option.key}
+							className='flex items-center gap-4'
+						>
 							<input
 								type='radio'
 								name={field.key}

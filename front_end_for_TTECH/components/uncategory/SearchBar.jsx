@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react"
 import { CiMinimize1, CiSearch } from "react-icons/ci"
 import useDebounce from "../../customHook/useDeboune"
+import { checkV } from "@/lib/utils/check"
 
 const SearchBar = () => {
 	const [showSearchPage, setShowSearchPage] = useState(false)
@@ -25,6 +26,7 @@ const SearchBar = () => {
 	const debouncedValue = useDebounce(keywords, 500)
 
 	const getProductBySearchParam = async () => {
+		checkV("handle products: getProductBySearchParam")
 		const result = await handleProduct.getProduct({
 			searchKey: debouncedValue,
 		})
@@ -49,9 +51,10 @@ const SearchBar = () => {
 		}
 	}
 
-	useEffect(() => {
-		getProductBySearchParam()
-	}, [debouncedValue])
+	// TODO fix always run get products, get categories when go to the next page
+	// useEffect(() => {
+	// 	getProductBySearchParam()
+	// }, [debouncedValue])
 
 	useEffect(() => {
 		const handleKeyPress = (event) => {
