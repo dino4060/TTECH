@@ -1,7 +1,8 @@
-import { SMARTPHONE_SIZE } from "./product-size"
-
 export const GHN_V2_PUBLIC_API =
 	"https://dev-online-gateway.ghn.vn/shiip/public-api/v2"
+
+export const GHN_DEV_BE =
+	"https://dev-online-gateway.ghn.vn"
 
 export const GHN_SHOP_ID = 198235
 

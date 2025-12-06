@@ -29,8 +29,9 @@ public class OrderData {
     Integer fromWardId;
     String fromStreet;
 
-    Instant orderTime;
     String status;
+    Instant orderTime;
+    String parcelCode;
 
     List<OrderLineData> lines;
 }

@@ -1,4 +1,18 @@
 export const ghnApiRt = {
+	trackParcel: async (parcelCode) => {
+		const response = await fetch(
+			`/api/shipping/ghn/parcels/${parcelCode}/tracking`,
+			{
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		)
+		const data = await response.json()
+		return data
+	},
+
 	createParcel: async (body) => {
 		const response = await fetch(
 			"/api/shipping/ghn/parcels",

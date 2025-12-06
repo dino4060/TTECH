@@ -10,17 +10,28 @@ import {
 	CiCreditCard1,
 	CiCreditCard2,
 	CiFileOff,
+	CiLocationArrow1,
+	CiLocationOn,
 	CiMaximize1,
 	CiMinimize1,
+	CiRedo,
 } from "react-icons/ci"
 
 import {
 	IoCloseOutline,
 	IoCopyOutline,
 } from "react-icons/io5"
+import {
+	mapTrackingLog,
+	trackGhnParcel,
+	translateAddress,
+} from "./helper"
+import { toGMT7 } from "@/lib/utils/number"
 
 const UserOrder = () => {
 	const [showDetail, setShowDetail] = useState({})
+	const [showTracking, setShowTracking] = useState({})
+	const [loadTracking, setLoadTracking] = useState({})
 	const [orderList, setOrderList] = useState([
 		{
 			orderInfo: {
@@ -62,7 +73,7 @@ const UserOrder = () => {
 		},
 	])
 
-	const onOpenOrCloseDetail = (orderId) => {
+	const onToggleDetail = (orderId) => {
 		const newShowDetail = { ...showDetail }
 
 		if (newShowDetail[orderId]) {
@@ -72,6 +83,39 @@ const UserOrder = () => {
 		}
 
 		setShowDetail(newShowDetail)
+	}
+
+	const onToggleTracking = async (parcelCode) => {
+		const newShowTracking = { ...showTracking }
+
+		if (newShowTracking[parcelCode]?.show) {
+			newShowTracking[parcelCode] = {
+				...newShowTracking[parcelCode],
+				show: false,
+			}
+		} else if (showTracking[parcelCode]?.tracking) {
+			newShowTracking[parcelCode] = {
+				...newShowTracking[parcelCode],
+				show: true,
+			}
+		} else {
+			const newLoadTracking = { ...loadTracking }
+
+			newLoadTracking[parcelCode] = true
+			setLoadTracking(newLoadTracking)
+
+			const ghnData = await trackGhnParcel({ parcelCode })
+
+			newLoadTracking[parcelCode] = false
+			setLoadTracking(newLoadTracking)
+
+			newShowTracking[parcelCode] = {
+				trackingLogs: ghnData.trackingLogs,
+				show: true,
+			}
+		}
+
+		setShowTracking(newShowTracking)
 	}
 
 	const getALlOrder = async () => {
@@ -117,14 +161,26 @@ const UserOrder = () => {
 				<div>
 					{orderList?.map(
 						(
-							{ id, orderTime, total, paymentType, status, lines },
+							{
+								id,
+								orderTime,
+								total,
+								paymentType,
+								status,
+								lines,
+								parcelCode,
+							},
 							i
 						) => (
 							<div key={i}>
 								<motion.div
 									variants={variant}
 									initial='initial'
-									animate={showDetail[id] ? "active" : "initial"}
+									animate={
+										showDetail[id] || showTracking[parcelCode]?.show
+											? "active"
+											: "initial"
+									}
 									transition={{ type: "spring", delay: 0.1 }}
 									className='flex gap-1 xl:gap-2 p-4 rounded-2xl mb-6'
 								>
@@ -150,28 +206,6 @@ const UserOrder = () => {
 									</h1>
 									<motion.h1 className='flex-1 shrink-0 flex items-center justify-center gap-5'>
 										<AnimatePresence>
-											{!showDetail[id] ? (
-												<motion.div
-													initial={{ opacity: 0 }}
-													whileInView={{ opacity: 1 }}
-													whileHover={{ color: "rgb(239, 68, 68)" }}
-													exit={{ opacity: 0 }}
-													onClick={() => onOpenOrCloseDetail(id)}
-												>
-													<CiMaximize1 size={20} />
-												</motion.div>
-											) : (
-												<motion.div
-													initial={{ opacity: 0 }}
-													whileInView={{ opacity: 1 }}
-													whileHover={{ color: "rgb(239, 68, 68)" }}
-													exit={{ opacity: 0 }}
-													onClick={() => onOpenOrCloseDetail(id)}
-												>
-													<CiMinimize1 size={20} />
-												</motion.div>
-											)}
-
 											{status === "UNPAID" && (
 												<motion.div
 													initial={{ opacity: 0 }}
@@ -182,6 +216,51 @@ const UserOrder = () => {
 													<CiCreditCard2 size={20} />
 												</motion.div>
 											)}
+
+											{!showDetail[id] ? (
+												<motion.div
+													initial={{ opacity: 0 }}
+													whileInView={{ opacity: 1 }}
+													whileHover={{ color: "rgb(239, 68, 68)" }}
+													exit={{ opacity: 0 }}
+													onClick={() => onToggleDetail(id)}
+												>
+													<CiMaximize1 size={20} />
+												</motion.div>
+											) : (
+												<motion.div
+													initial={{ opacity: 0 }}
+													whileInView={{ opacity: 1 }}
+													whileHover={{ color: "rgb(239, 68, 68)" }}
+													exit={{ opacity: 0 }}
+													onClick={() => onToggleDetail(id)}
+												>
+													<CiMinimize1 size={20} />
+												</motion.div>
+											)}
+
+											<motion.div
+												initial={{ opacity: 0 }}
+												whileInView={{ opacity: 1 }}
+												whileHover={{ color: "rgb(239, 68, 68)" }}
+												exit={{ opacity: 0 }}
+												onClick={() => onToggleTracking(parcelCode)}
+											>
+												{loadTracking[parcelCode] ? (
+													<motion.span
+														animate={{ rotate: 360 }}
+														transition={{
+															loop: Infinity,
+															ease: "linear",
+															duration: 1,
+														}}
+													>
+														<CiRedo size={20} />
+													</motion.span>
+												) : (
+													<CiLocationArrow1 size={20} />
+												)}
+											</motion.div>
 
 											{["PENDING", "UNPAID"].includes(status) && (
 												<motion.div
@@ -204,9 +283,9 @@ const UserOrder = () => {
 											exit={{ scaleY: 0.1, opacity: 0 }}
 											className='flex flex-col gap-6 mt-2 mx-12 origin-top'
 										>
-											<div className='pl-0 text-[1.7rem] font-semibold'>
+											{/* <div className='pl-0 text-[1.7rem] font-semibold'>
 												Danh sách sản phẩm
-											</div>
+											</div> */}
 											<div className='flex gap-2'>
 												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
 													Ảnh sản phẩm
@@ -215,7 +294,6 @@ const UserOrder = () => {
 													Tên sản phẩm
 												</div>
 												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
-													{" "}
 													Giá
 												</div>
 												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
@@ -239,56 +317,57 @@ const UserOrder = () => {
 															{product.name}
 														</div>
 														<div className='flex-[2] flex items-center text-center justify-center'>
-															{convertTo000D(mainPrice || 0)}{" "}
+															{convertTo000D(mainPrice || 0)}
 														</div>
 														<div className='flex-[2] flex items-center text-center justify-center'>
-															{quantity}{" "}
+															{quantity}
 														</div>
 													</div>
 												)
 											)}
+										</motion.div>
+									)}
 
-											<div className='pl-0 text-[1.7rem] font-semibold'>
-												Lộ trình vận chuyển
-											</div>
-
+									{showTracking[parcelCode]?.show && (
+										<motion.div
+											initial={{ scaleY: 0.1, opacity: 0 }}
+											whileInView={{ scaleY: 1, opacity: 1 }}
+											exit={{ scaleY: 0.1, opacity: 0 }}
+											className='flex flex-col gap-6 mt-2 mx-12 origin-top'
+										>
+											{/* <div className='pl-0 text-[1.7rem] font-semibold'>
+												Danh sách sản phẩm
+											</div> */}
 											<div className='flex gap-2'>
 												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
-													Ảnh sản phẩm
+													Thời gian
 												</div>
-												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
-													Tên sản phẩm
+												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													Trạng thái bưu kiện
 												</div>
-												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
-													{" "}
-													Giá
+												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													Vị trí
 												</div>
-												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
-													Số lượng
-												</div>
+												{/* <div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+													Người thực thi
+												</div> */}
 											</div>
 
-											{lines?.map(
-												(
-													{ product, quantity, mainPrice, sidePrice },
-													j
-												) => (
-													<div key={j} className='flex pb-6'>
-														<div className='flex-1 text-center rounded-3xl'>
-															<img
-																src={product.thumb}
-																className='h-[60px] m-auto w-[60px] object-contain rounded-3xl'
-															/>
+											{showTracking[parcelCode].trackingLogs?.map(
+												(log, k) => (
+													<div key={k} className='flex pb-6'>
+														<div className='flex-1 flex items-center text-center justify-center px-3'>
+															{toGMT7(log.actionAt)}
 														</div>
-														<div className='flex-[2] flex items-center text-center justify-center px-3'>
-															{product.name}
+														<div className='flex-1 flex items-center text-center justify-center px-3'>
+															{mapTrackingLog(log.status)}
 														</div>
-														<div className='flex-[2] flex items-center text-center justify-center'>
-															{convertTo000D(mainPrice || 0)}{" "}
+														<div className='flex-1 flex items-center text-center justify-center px-3'>
+															{translateAddress(log.location.address)}
 														</div>
-														<div className='flex-[2] flex items-center text-center justify-center'>
-															{quantity}{" "}
-														</div>
+														{/* <div className='flex-1 flex items-center text-center justify-center px-3'>
+															{log.executor.name}
+														</div> */}
 													</div>
 												)
 											)}
