@@ -17,16 +17,18 @@ import { toGMT7 } from "@/lib/utils/number"
 import { IoCopyOutline } from "react-icons/io5"
 import CircleLoader from "../uncategory/CircleLoader"
 import {
+	cancelOrder,
 	mapOrderStatus,
 	mapParcelStatus,
 	trackGhnParcel,
 	translateAddress,
-} from "./helper"
+} from "./order.service"
 
 const UserOrder = () => {
 	const [showDetail, setShowDetail] = useState({})
 	const [showTracking, setShowTracking] = useState({})
 	const [loadTracking, setLoadTracking] = useState({})
+	const [showCanceling, setShowCanceling] = useState({})
 	const [orderList, setOrderList] = useState([
 		{
 			orderInfo: {
@@ -99,7 +101,7 @@ const UserOrder = () => {
 			newLoadTracking[parcelCode] = true
 			setLoadTracking(newLoadTracking)
 
-			const ghnData = await trackGhnParcel({ parcelCode })
+			const ghnData = await trackGhnParcel(parcelCode)
 
 			newLoadTracking[parcelCode] = false
 			setLoadTracking(newLoadTracking)
@@ -111,6 +113,18 @@ const UserOrder = () => {
 		}
 
 		setShowTracking(newShowTracking)
+	}
+
+	const onToggleCanceling = (orderId) => {
+		const newShowCanceling = { ...showCanceling }
+
+		if (newShowCanceling[orderId]) {
+			newShowCanceling[orderId] = false
+		} else {
+			newShowCanceling[orderId] = true
+		}
+
+		setShowCanceling(newShowCanceling)
 	}
 
 	const getALlOrder = async () => {
@@ -172,7 +186,9 @@ const UserOrder = () => {
 									variants={variant}
 									initial='initial'
 									animate={
-										showDetail[id] || showTracking[parcelCode]?.show
+										showDetail[id] ||
+										showTracking[parcelCode]?.show ||
+										showCanceling[id]
 											? "active"
 											: "initial"
 									}
@@ -250,6 +266,7 @@ const UserOrder = () => {
 													whileInView={{ opacity: 1 }}
 													whileHover={{ color: "rgb(239, 68, 68)" }}
 													exit={{ opacity: 0 }}
+													onClick={() => onToggleCanceling(id)}
 												>
 													<CiCircleRemove size={20} />
 												</motion.div>
@@ -263,7 +280,7 @@ const UserOrder = () => {
 											initial={{ scaleY: 0.1, opacity: 0 }}
 											whileInView={{ scaleY: 1, opacity: 1 }}
 											exit={{ scaleY: 0.1, opacity: 0 }}
-											className='flex flex-col gap-6 mt-2 mx-12 mb-6 origin-top'
+											className='flex flex-col gap-6 mt-2 mx-52 mb-6 origin-top'
 										>
 											<div className='flex gap-2'>
 												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
@@ -272,10 +289,10 @@ const UserOrder = () => {
 												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
 													Tên sản phẩm
 												</div>
-												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+												<div className='flex-[1] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
 													Giá
 												</div>
-												<div className='flex-[2] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
+												<div className='flex-[1] text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
 													Số lượng
 												</div>
 											</div>
@@ -292,10 +309,10 @@ const UserOrder = () => {
 														<div className='flex-[2] flex items-center text-center justify-center px-3'>
 															{product.name}
 														</div>
-														<div className='flex-[2] flex items-center text-center justify-center'>
+														<div className='flex-[1] flex items-center text-center justify-center'>
 															{convertTo000D(mainPrice || 0)}
 														</div>
-														<div className='flex-[2] flex items-center text-center justify-center'>
+														<div className='flex-[1] flex items-center text-center justify-center'>
 															{quantity}
 														</div>
 													</div>
@@ -305,7 +322,7 @@ const UserOrder = () => {
 									)}
 
 									{loadTracking[parcelCode] && (
-										<div className='flex justify-center items-center mt-2 mx-12 mb-6 origin-top'>
+										<div className='flex justify-center items-center mt-2 mx-52 mb-6 origin-top'>
 											<CircleLoader />
 										</div>
 									)}
@@ -315,7 +332,7 @@ const UserOrder = () => {
 											initial={{ scaleY: 0.1, opacity: 0 }}
 											whileInView={{ scaleY: 1, opacity: 1 }}
 											exit={{ scaleY: 0.1, opacity: 0 }}
-											className='flex flex-col gap-6 mt-2 mx-12 mb-6 origin-top'
+											className='flex flex-col gap-6 mt-2 mx-52 mb-6 origin-top'
 										>
 											<div className='flex gap-2'>
 												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
@@ -344,6 +361,29 @@ const UserOrder = () => {
 													</div>
 												)
 											)}
+										</motion.div>
+									)}
+
+									{showCanceling[id] && (
+										<motion.div
+											initial={{ scaleY: 0.1, opacity: 0 }}
+											whileInView={{ scaleY: 1, opacity: 1 }}
+											exit={{ scaleY: 0.1, opacity: 0 }}
+											className='flex justify-end items-center gap-3 mt-2 mx-52 mb-6 origin-top'
+										>
+											<motion.button
+												className='w-[300px] h-[30px] px-5 text-[1.4rem] font-[400] leading-6
+                        text-white/60 bg-red-400 rounded-3xl hover:text-white hover:bg-red-500'
+												whileHover={{ scale: 1.1 }}
+												onClick={() =>
+													cancelOrder({
+														orderId: id,
+														parcelCode,
+													})
+												}
+											>
+												Xác nhận hủy
+											</motion.button>
 										</motion.div>
 									)}
 								</AnimatePresence>

@@ -9,7 +9,7 @@ import {
 	fetchEstimateGhnLeadtime,
 	fetchGetWarehouseAddress,
 	formatDateTimeRange,
-} from "./helper"
+} from "./order.service"
 
 const OrderBill = ({ cart, setCart }) => {
 	const [totalPrice, setTotalPrice] = useState(0)

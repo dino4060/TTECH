@@ -24,6 +24,11 @@ export const orderApi = {
 		method: HttpMethod.PATCH,
 		body,
 	}),
+
+	cancel: (id: number): TApi<{}[]> => ({
+		route: `${RESOURCES.ORDERS.PRIVATE}/${id}`,
+		method: HttpMethod.DELETE,
+	}),
 }
 
 export const adminOrderApi = {

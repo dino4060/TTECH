@@ -11,7 +11,7 @@ import CircleLoader from "../uncategory/CircleLoader"
 import AddressDataForm, {
 	FormFieldList,
 } from "./AddressDataForm"
-import { createGhnParcel } from "./helper"
+import { createGhnParcel } from "./order.service"
 import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
 import { checkKV } from "@/lib/utils/check"
 

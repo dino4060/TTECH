@@ -1,6 +1,31 @@
 import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
+import { orderApi } from "@/lib/api/order.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 
-export const trackGhnParcel = async ({ parcelCode }) => {
+export const cancelOrder = async ({
+	orderId,
+	parcelCode,
+}) => {
+	const ghnRes = await ghnApiRt.cancelParcel(parcelCode)
+
+	if (ghnRes.success === false) {
+		alert(`Lỗi hủy bưu kiện: ${ghnRes.error}`)
+		return false
+	}
+
+	const apiRes = await clientFetch(
+		orderApi.update({ id: orderId, status: "CANCELED" })
+	)
+
+	if (apiRes.success === false) {
+		alert(`Lỗi hủy đơn hàng: ${apiRes.error}`)
+		return false
+	}
+
+	return true
+}
+
+export const trackGhnParcel = async (parcelCode) => {
 	console.log("parcelCode", parcelCode)
 
 	const ghnRes = await ghnApiRt.trackParcel(parcelCode)
@@ -44,6 +69,7 @@ export const translateAddress = (address) => {
 
 export const mapOrderStatus = (status) => {
 	if (status === "PENDING") return "Đang xử lý"
+	if (status === "CANCELED") return "Đã hủy"
 
 	return "Không xác định trạng thái"
 }
