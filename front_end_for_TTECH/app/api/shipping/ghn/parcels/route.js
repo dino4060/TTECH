@@ -69,7 +69,7 @@ export async function POST(request) {
 		const items = []
 
 		for (const ol of order.lines) {
-			const { product, quantity } = ol
+			const { product, mainPrice, quantity } = ol
 
 			weight += SMARTPHONE_SIZE.weight_gram * quantity
 			height += SMARTPHONE_SIZE.height_cm * quantity
@@ -79,7 +79,7 @@ export async function POST(request) {
 			items.push({
 				code: String(product.id),
 				name: product.name,
-				price: product.mainPrice,
+				price: mainPrice,
 				quantity: quantity,
 				length: SMARTPHONE_SIZE.length_cm,
 				width: SMARTPHONE_SIZE.width_cm,
@@ -91,7 +91,7 @@ export async function POST(request) {
 
 		// Prepare GHN Request Body
 		const requestBody = {
-			payment_type_id: 2,
+			payment_type_id: 1,
 			note: "Không cho khách xem hàng",
 			required_note: GHN_REQUIRED_NOTE_ENUM.KHONG_CHO_XEM_HANG,
 
@@ -126,7 +126,7 @@ export async function POST(request) {
 			service_id: GHN_LIGHT_SERVICE.service_id,
 			service_type_id: GHN_LIGHT_SERVICE.service_type_id,
 			coupon: null,
-			pick_shift: [2],
+			pick_shift: null, // [2],
 			items,
 		}
 

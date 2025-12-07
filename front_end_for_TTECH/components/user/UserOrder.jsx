@@ -7,26 +7,21 @@ import { useEffect, useState } from "react"
 import {
 	CiBoxes,
 	CiCircleRemove,
-	CiCreditCard1,
 	CiCreditCard2,
-	CiFileOff,
 	CiLocationArrow1,
-	CiLocationOn,
 	CiMaximize1,
 	CiMinimize1,
-	CiRedo,
 } from "react-icons/ci"
 
+import { toGMT7 } from "@/lib/utils/number"
+import { IoCopyOutline } from "react-icons/io5"
+import CircleLoader from "../uncategory/CircleLoader"
 import {
-	IoCloseOutline,
-	IoCopyOutline,
-} from "react-icons/io5"
-import {
-	mapTrackingLog,
+	mapOrderStatus,
+	mapParcelStatus,
 	trackGhnParcel,
 	translateAddress,
 } from "./helper"
-import { toGMT7 } from "@/lib/utils/number"
 
 const UserOrder = () => {
 	const [showDetail, setShowDetail] = useState({})
@@ -202,7 +197,7 @@ const UserOrder = () => {
 										{paymentType}
 									</h1>
 									<h1 className='flex-1 shrink-0 flex items-center justify-center'>
-										{status}
+										{mapOrderStatus(status)}
 									</h1>
 									<motion.h1 className='flex-1 shrink-0 flex items-center justify-center gap-5'>
 										<AnimatePresence>
@@ -246,20 +241,7 @@ const UserOrder = () => {
 												exit={{ opacity: 0 }}
 												onClick={() => onToggleTracking(parcelCode)}
 											>
-												{loadTracking[parcelCode] ? (
-													<motion.span
-														animate={{ rotate: 360 }}
-														transition={{
-															loop: Infinity,
-															ease: "linear",
-															duration: 1,
-														}}
-													>
-														<CiRedo size={20} />
-													</motion.span>
-												) : (
-													<CiLocationArrow1 size={20} />
-												)}
+												<CiLocationArrow1 size={20} />
 											</motion.div>
 
 											{["PENDING", "UNPAID"].includes(status) && (
@@ -281,11 +263,8 @@ const UserOrder = () => {
 											initial={{ scaleY: 0.1, opacity: 0 }}
 											whileInView={{ scaleY: 1, opacity: 1 }}
 											exit={{ scaleY: 0.1, opacity: 0 }}
-											className='flex flex-col gap-6 mt-2 mx-12 origin-top'
+											className='flex flex-col gap-6 mt-2 mx-12 mb-6 origin-top'
 										>
-											{/* <div className='pl-0 text-[1.7rem] font-semibold'>
-												Danh sách sản phẩm
-											</div> */}
 											<div className='flex gap-2'>
 												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
 													Ảnh sản phẩm
@@ -302,15 +281,12 @@ const UserOrder = () => {
 											</div>
 
 											{lines?.map(
-												(
-													{ product, quantity, mainPrice, sidePrice },
-													j
-												) => (
-													<div key={j} className='flex pb-6'>
+												({ product, quantity, mainPrice }, j) => (
+													<div key={j} className='flex'>
 														<div className='flex-1 text-center rounded-3xl'>
 															<img
 																src={product.thumb}
-																className='h-[70px] m-auto w-[70px] object-contain rounded-3xl'
+																className='h-[60px] w-[60px] m-auto object-contain rounded-3xl'
 															/>
 														</div>
 														<div className='flex-[2] flex items-center text-center justify-center px-3'>
@@ -328,46 +304,43 @@ const UserOrder = () => {
 										</motion.div>
 									)}
 
+									{loadTracking[parcelCode] && (
+										<div className='flex justify-center items-center mt-2 mx-12 mb-6 origin-top'>
+											<CircleLoader />
+										</div>
+									)}
+
 									{showTracking[parcelCode]?.show && (
 										<motion.div
 											initial={{ scaleY: 0.1, opacity: 0 }}
 											whileInView={{ scaleY: 1, opacity: 1 }}
 											exit={{ scaleY: 0.1, opacity: 0 }}
-											className='flex flex-col gap-6 mt-2 mx-12 origin-top'
+											className='flex flex-col gap-6 mt-2 mx-12 mb-6 origin-top'
 										>
-											{/* <div className='pl-0 text-[1.7rem] font-semibold'>
-												Danh sách sản phẩm
-											</div> */}
 											<div className='flex gap-2'>
 												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
-													Thời gian
+													Thời gian giao vận
 												</div>
 												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
-													Trạng thái bưu kiện
+													Trạng thái kiện hàng
 												</div>
 												<div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
 													Vị trí
 												</div>
-												{/* <div className='flex-1 text-center text-white/60 bg-blue-400 py-2 rounded-3xl'>
-													Người thực thi
-												</div> */}
 											</div>
 
 											{showTracking[parcelCode].trackingLogs?.map(
 												(log, k) => (
-													<div key={k} className='flex pb-6'>
+													<div key={k} className='flex'>
 														<div className='flex-1 flex items-center text-center justify-center px-3'>
 															{toGMT7(log.actionAt)}
 														</div>
 														<div className='flex-1 flex items-center text-center justify-center px-3'>
-															{mapTrackingLog(log.status)}
+															{mapParcelStatus(log.status)}
 														</div>
 														<div className='flex-1 flex items-center text-center justify-center px-3'>
 															{translateAddress(log.location.address)}
 														</div>
-														{/* <div className='flex-1 flex items-center text-center justify-center px-3'>
-															{log.executor.name}
-														</div> */}
 													</div>
 												)
 											)}

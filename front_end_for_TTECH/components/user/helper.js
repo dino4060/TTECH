@@ -13,8 +13,8 @@ export const trackGhnParcel = async ({ parcelCode }) => {
 	return ghnRes.data
 }
 
-export const mapTrackingLog = (ghnLog) => {
-	if (ghnLog === "ready_to_pick")
+export const mapParcelStatus = (status) => {
+	if (status === "ready_to_pick")
 		return "Cửa hàng đang đóng gói bưu kiện"
 
 	return "Không xác định trạng thái"
@@ -22,10 +22,28 @@ export const mapTrackingLog = (ghnLog) => {
 
 export const translateAddress = (address) => {
 	const prefixToRemove = "xxxx "
+	const suffixesToFix = ["Hồ Chí Minh", "Hà Nội", "Bến Tre"]
 
-	if (address.startsWith(prefixToRemove)) {
-		return address.slice(prefixToRemove.length)
+	let newAddr = address
+
+	if (newAddr.startsWith(prefixToRemove)) {
+		newAddr = newAddr.slice(prefixToRemove.length)
 	}
 
-	return address
+	for (const suffix of suffixesToFix) {
+		const pattern = new RegExp(`([^])\\s+(${suffix})$`)
+
+		if (pattern.test(newAddr)) {
+			newAddr = newAddr.replace(pattern, "$1, $2")
+			break
+		}
+	}
+
+	return newAddr
+}
+
+export const mapOrderStatus = (status) => {
+	if (status === "PENDING") return "Đang xử lý"
+
+	return "Không xác định trạng thái"
 }
