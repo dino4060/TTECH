@@ -38,13 +38,6 @@ export const trackGhnParcel = async (parcelCode) => {
 	return ghnRes.data
 }
 
-export const mapParcelStatus = (status) => {
-	if (status === "ready_to_pick")
-		return "Cửa hàng đang đóng gói bưu kiện"
-
-	return "Không xác định trạng thái"
-}
-
 export const translateAddress = (address) => {
 	const prefixToRemove = "xxxx "
 	const suffixesToFix = ["Hồ Chí Minh", "Hà Nội", "Bến Tre"]
@@ -65,6 +58,15 @@ export const translateAddress = (address) => {
 	}
 
 	return newAddr
+}
+
+export const mapParcelStatus = (status) => {
+	if (status === "ready_to_pick")
+		return "Cửa hàng đang đóng gói bưu kiện"
+
+	if (status === "cancel") return "Bạn đã hủy bưu kiện"
+
+	return "Không xác định trạng thái"
 }
 
 export const mapOrderStatus = (status) => {

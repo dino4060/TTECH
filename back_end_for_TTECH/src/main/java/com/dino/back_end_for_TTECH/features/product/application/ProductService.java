@@ -11,7 +11,7 @@ import com.dino.back_end_for_TTECH.features.product.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
 import com.dino.back_end_for_TTECH.features.promotion.domain.SaleUnit;
 import com.dino.back_end_for_TTECH.shared.application.exception.BadRequestE;
-import com.dino.back_end_for_TTECH.shared.application.exception.ModelNotFound;
+import com.dino.back_end_for_TTECH.shared.application.exception.ModelNotFoundE;
 import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
 import lombok.AllArgsConstructor;
@@ -50,7 +50,7 @@ public class ProductService {
 
     public Product get(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new ModelNotFound("Product"));
+                .orElseThrow(() -> new ModelNotFoundE("Product"));
     }
 
     private void linkParents(Product product) {

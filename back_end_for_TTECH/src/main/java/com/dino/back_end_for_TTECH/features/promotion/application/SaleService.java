@@ -9,7 +9,7 @@ import com.dino.back_end_for_TTECH.features.promotion.application.model.SaleData
 import com.dino.back_end_for_TTECH.features.promotion.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.promotion.domain.repository.CampaignRepository;
 import com.dino.back_end_for_TTECH.features.promotion.domain.repository.SaleRepository;
-import com.dino.back_end_for_TTECH.shared.application.exception.ModelNotFound;
+import com.dino.back_end_for_TTECH.shared.application.exception.ModelNotFoundE;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -38,7 +38,7 @@ public class SaleService {
     public SaleData get(long id) {
         var sale = this.saleRepo
                 .findById(id)
-                .orElseThrow(() -> new ModelNotFound("Sale"));
+                .orElseThrow(() -> new ModelNotFoundE("Sale"));
 
         return this.saleMapper.toData(sale);
     }
@@ -51,7 +51,7 @@ public class SaleService {
             u.setSale(sale);
             u.setProduct(productRepo
                     .findById(u.getProduct().getId())
-                    .orElseThrow(() -> new ModelNotFound("Product")));
+                    .orElseThrow(() -> new ModelNotFoundE("Product")));
         });
 
         var newSale = this.saleRepo.save(sale);
@@ -69,7 +69,7 @@ public class SaleService {
     public SaleData update(long id, SaleBody body) {
         var sale = this.saleRepo
                 .findById(id)
-                .orElseThrow(() -> new ModelNotFound("Sale"));
+                .orElseThrow(() -> new ModelNotFoundE("Sale"));
         this.saleMapper.toModel(body, sale);
 
         var prevStatus = sale.getStatus();
@@ -96,7 +96,7 @@ public class SaleService {
     public void remove(long id) {
         var sale = this.saleRepo
                 .findById(id)
-                .orElseThrow(() -> new ModelNotFound("Sale"));
+                .orElseThrow(() -> new ModelNotFoundE("Sale"));
 
         var ongoingSale = sale.hasStatus(Status.ONGOING);
         List<Product> cancelProducts = sale.getUnits().stream()

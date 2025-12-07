@@ -39,18 +39,22 @@ export async function GET(request, { params }) {
 					ShopId: GHN_SHOP_ID,
 				},
 				body: JSON.stringify(ghnBody),
+				cache: "no-store",
 			}
 		)
 
 		const ghnResponse = await rawResponse.json()
 		console.log("GHN Tracking Logs Response:", ghnResponse)
 
+		// Send response to Next Client
 		const {
 			code,
 			data,
 			code_message_value = "Lỗi của GHN đang được khắc phục",
 			message_display = "Thành công lấy lịch sử vận chuyển của GHN",
 		} = ghnResponse
+
+		console.log(">>>>>> tracking_logs: ", data.tracking_logs)
 
 		if (code !== 200) {
 			return Response.json(
@@ -62,7 +66,6 @@ export async function GET(request, { params }) {
 			)
 		}
 
-		// Send response to Next Client
 		const trackingLogs = data.tracking_logs.map((log) => ({
 			orderCode: log.order_code,
 			status: log.status,

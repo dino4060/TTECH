@@ -12,7 +12,6 @@ import {
 	CiMaximize1,
 	CiMinimize1,
 } from "react-icons/ci"
-
 import { toGMT7 } from "@/lib/utils/number"
 import { IoCopyOutline } from "react-icons/io5"
 import CircleLoader from "../uncategory/CircleLoader"
@@ -29,6 +28,7 @@ const UserOrder = () => {
 	const [showTracking, setShowTracking] = useState({})
 	const [loadTracking, setLoadTracking] = useState({})
 	const [showCanceling, setShowCanceling] = useState({})
+	const [loadCanceling, setLoadCanceling] = useState({})
 	const [orderList, setOrderList] = useState([
 		{
 			orderInfo: {
@@ -69,6 +69,19 @@ const UserOrder = () => {
 			],
 		},
 	])
+
+	const onCancelOrder = async ({ orderId, parcelCode }) => {
+		const newOne = { ...loadCanceling }
+
+		newOne[orderId] = true
+		setLoadCanceling(newOne)
+
+		await cancelOrder({ orderId, parcelCode })
+		// to remove icon delete
+
+		newOne[orderId] = false
+		setLoadCanceling(newOne)
+	}
 
 	const onToggleDetail = (orderId) => {
 		const newShowDetail = { ...showDetail }
@@ -376,14 +389,33 @@ const UserOrder = () => {
                         text-white/60 bg-red-400 rounded-3xl hover:text-white hover:bg-red-500'
 												whileHover={{ scale: 1.1 }}
 												onClick={() =>
-													cancelOrder({
+													onCancelOrder({
 														orderId: id,
 														parcelCode,
 													})
 												}
+												disabled={loadCanceling[id]}
 											>
-												Xác nhận hủy
+												{loadCanceling[id] ? "..." : "Xác nhận hủy"}
 											</motion.button>
+											{/* {loadCanceling[id] ? (
+												<CircleLoader type='red' />
+											) : (
+												<motion.button
+													className='w-[300px] h-[30px] px-5 text-[1.4rem] font-[400] leading-6
+                        text-white/60 bg-red-400 rounded-3xl hover:text-white hover:bg-red-500'
+													whileHover={{ scale: 1.1 }}
+													onClick={() =>
+														onCancelOrder({
+															orderId: id,
+															parcelCode,
+														})
+													}
+													disabled={loadCanceling[id]}
+												>
+													{loadCanceling[id] ? "..." : "Xác nhận hủy"}
+												</motion.button>
+											)} */}
 										</motion.div>
 									)}
 								</AnimatePresence>
