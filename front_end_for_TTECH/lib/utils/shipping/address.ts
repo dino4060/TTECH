@@ -397,6 +397,8 @@ export const findFullAddress = (
 	address: TAddress,
 	addressName = "người dùng"
 ): TFullAddress => {
+	console.log("address", addressName, address)
+
 	const { userName, phone, provinceId, wardId, street } =
 		address
 

@@ -1,6 +1,6 @@
 "use client"
-import { orderApi } from "@/lib/api/order.api"
-import { clientFetch } from "@/lib/http/fetch.client"
+import { copy } from "@/lib/utils"
+import { convertDate, toGMT7 } from "@/lib/utils/number"
 import { convertTo000D } from "@/utils/until"
 import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState } from "react"
@@ -12,15 +12,17 @@ import {
 	CiMaximize1,
 	CiMinimize1,
 } from "react-icons/ci"
-import { toGMT7 } from "@/lib/utils/number"
 import { IoCopyOutline } from "react-icons/io5"
 import CircleLoader from "../uncategory/CircleLoader"
 import {
+	allowCancelOrder,
+	allowPayOrder,
 	cancelOrder,
+	listOrders,
 	mapOrderStatus,
 	mapParcelStatus,
 	trackGhnParcel,
-	translateAddress,
+	translateTrackingAddr,
 } from "./order.service"
 
 const UserOrder = () => {
@@ -69,18 +71,23 @@ const UserOrder = () => {
 			],
 		},
 	])
+	const [asyncOrderList, setAsyncOrderList] = useState(false)
 
 	const onCancelOrder = async ({ orderId, parcelCode }) => {
-		const newOne = { ...loadCanceling }
+		const startLoad = { ...loadCanceling }
+		startLoad[orderId] = true
+		setLoadCanceling(startLoad)
 
-		newOne[orderId] = true
-		setLoadCanceling(newOne)
+		await cancelOrder({
+			orderId,
+			parcelCode,
+			onToggleCanceling,
+			setAsyncOrderList,
+		})
 
-		await cancelOrder({ orderId, parcelCode })
-		// to remove icon delete
-
-		newOne[orderId] = false
-		setLoadCanceling(newOne)
+		const endLoad = { ...loadCanceling }
+		endLoad[orderId] = false
+		setLoadCanceling(endLoad)
 	}
 
 	const onToggleDetail = (orderId) => {
@@ -103,21 +110,23 @@ const UserOrder = () => {
 				...newShowTracking[parcelCode],
 				show: false,
 			}
-		} else if (showTracking[parcelCode]?.tracking) {
-			newShowTracking[parcelCode] = {
-				...newShowTracking[parcelCode],
-				show: true,
-			}
-		} else {
-			const newLoadTracking = { ...loadTracking }
-
-			newLoadTracking[parcelCode] = true
-			setLoadTracking(newLoadTracking)
+		}
+		// else if (showTracking[parcelCode]?.trackingLogs) {
+		// 	newShowTracking[parcelCode] = {
+		// 		...newShowTracking[parcelCode],
+		// 		show: true,
+		// 	}
+		// }
+		else {
+			const startLoad = { ...loadTracking }
+			startLoad[parcelCode] = true
+			setLoadTracking(startLoad)
 
 			const ghnData = await trackGhnParcel(parcelCode)
 
-			newLoadTracking[parcelCode] = false
-			setLoadTracking(newLoadTracking)
+			const endLoad = { ...loadTracking }
+			endLoad[parcelCode] = false
+			setLoadTracking(endLoad)
 
 			newShowTracking[parcelCode] = {
 				trackingLogs: ghnData.trackingLogs,
@@ -140,18 +149,9 @@ const UserOrder = () => {
 		setShowCanceling(newShowCanceling)
 	}
 
-	const getALlOrder = async () => {
-		const { data } = await clientFetch(orderApi.list())
-		setOrderList(data.items)
-	}
-
-	function copy(text) {
-		navigator.clipboard.writeText(text)
-	}
-
 	useEffect(() => {
-		getALlOrder()
-	}, [])
+		listOrders(setOrderList)
+	}, [asyncOrderList])
 
 	return (
 		<div className='container mx-auto text-2xl px-4 pt-4 pb-[500px]'>
@@ -196,7 +196,10 @@ const UserOrder = () => {
 						) => (
 							<div key={i}>
 								<motion.div
-									variants={variant}
+									variants={{
+										initial: { backgroundColor: "white" },
+										active: { backgroundColor: "#bfdbfe" },
+									}}
 									initial='initial'
 									animate={
 										showDetail[id] ||
@@ -230,7 +233,7 @@ const UserOrder = () => {
 									</h1>
 									<motion.h1 className='flex-1 shrink-0 flex items-center justify-center gap-5'>
 										<AnimatePresence>
-											{status === "UNPAID" && (
+											{allowPayOrder(status) && (
 												<motion.div
 													initial={{ opacity: 0 }}
 													whileInView={{ opacity: 1 }}
@@ -273,7 +276,7 @@ const UserOrder = () => {
 												<CiLocationArrow1 size={20} />
 											</motion.div>
 
-											{["PENDING", "UNPAID"].includes(status) && (
+											{allowCancelOrder(status) && (
 												<motion.div
 													initial={{ opacity: 0 }}
 													whileInView={{ opacity: 1 }}
@@ -369,7 +372,7 @@ const UserOrder = () => {
 															{mapParcelStatus(log.status)}
 														</div>
 														<div className='flex-1 flex items-center text-center justify-center px-3'>
-															{translateAddress(log.location.address)}
+															{translateTrackingAddr(log.location.address)}
 														</div>
 													</div>
 												)
@@ -385,8 +388,9 @@ const UserOrder = () => {
 											className='flex justify-end items-center gap-3 mt-2 mx-52 mb-6 origin-top'
 										>
 											<motion.button
-												className='w-[300px] h-[30px] px-5 text-[1.4rem] font-[400] leading-6
-                        text-white/60 bg-red-400 rounded-3xl hover:text-white hover:bg-red-500'
+												className='w-[300px] h-[30px] px-5 text-[1.4rem] font-[400] leading-6 rounded-3xl
+                        flex justify-center items-center
+                        text-white/60 bg-red-400 hover:text-white hover:bg-red-500 disabled:bg-red-400/40'
 												whileHover={{ scale: 1.1 }}
 												onClick={() =>
 													onCancelOrder({
@@ -396,26 +400,12 @@ const UserOrder = () => {
 												}
 												disabled={loadCanceling[id]}
 											>
-												{loadCanceling[id] ? "..." : "Xác nhận hủy"}
+												{loadCanceling[id] ? (
+													<CircleLoader type='red' />
+												) : (
+													"Xác nhận hủy"
+												)}
 											</motion.button>
-											{/* {loadCanceling[id] ? (
-												<CircleLoader type='red' />
-											) : (
-												<motion.button
-													className='w-[300px] h-[30px] px-5 text-[1.4rem] font-[400] leading-6
-                        text-white/60 bg-red-400 rounded-3xl hover:text-white hover:bg-red-500'
-													whileHover={{ scale: 1.1 }}
-													onClick={() =>
-														onCancelOrder({
-															orderId: id,
-															parcelCode,
-														})
-													}
-													disabled={loadCanceling[id]}
-												>
-													{loadCanceling[id] ? "..." : "Xác nhận hủy"}
-												</motion.button>
-											)} */}
 										</motion.div>
 									)}
 								</AnimatePresence>
@@ -429,20 +419,3 @@ const UserOrder = () => {
 }
 
 export default UserOrder
-
-const variant = {
-	initial: { backgroundColor: "white" },
-	active: { backgroundColor: "#bfdbfe" },
-}
-
-export const convertDate = (date) => {
-	const datePortion = date?.slice(0, 10)
-	if (!datePortion) return ""
-	const [year, month, day] = datePortion?.split("-")
-	const formattedDate = `${day}/${month}/${year}`
-	return formattedDate
-}
-
-export function copy(text) {
-	navigator.clipboard.writeText(text)
-}

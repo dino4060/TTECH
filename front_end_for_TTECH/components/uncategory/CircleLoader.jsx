@@ -21,12 +21,19 @@ const circleStyle = {
 	left: 0,
 }
 
-const redStyle = {
+const redContainerStyle = {
+	position: "relative",
+	width: "2rem",
+	height: "2rem",
+	boxSizing: "border-box",
+}
+
+const redCircleStyle = {
 	display: "block",
-	width: "3rem",
-	height: "3rem",
-	border: "0.5rem solid #e9e9e9",
-	borderTop: "0.5rem solid #e74c3c",
+	width: "2rem",
+	height: "2rem",
+	border: "0.4rem solid #e9e9e9",
+	borderTop: "0.4rem solid #3498db", // #e74c3c",
 	borderRadius: "50%",
 	position: "absolute",
 	boxSizing: "border-box",
@@ -43,12 +50,11 @@ const spinTransition = {
 export default function CircleLoader({ type = "blue" }) {
 	if (type === "red")
 		return (
-			<div style={containerStyle}>
+			<div style={redContainerStyle}>
 				<motion.span
-					style={redStyle}
+					style={redCircleStyle}
 					animate={{ rotate: 360 }}
 					transition={spinTransition}
-					className='bg-blue-500'
 				/>
 			</div>
 		)

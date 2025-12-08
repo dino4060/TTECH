@@ -76,19 +76,6 @@ const CustomerDataForm = ({
 		}))
 	}
 
-	// check
-	// const [parcel, setParcel] = useState(null)
-	// const hasParcelRef = useRef(false)
-	// useEffect(() => {
-	// 	if (hasParcelRef.current) return
-
-	// 	hasParcelRef.current = true
-	// 	createGhnParcel({
-	// 		order: null,
-	// 		setParcel,
-	// 	})
-	// }, [])
-
 	const onSubmitOrder = async () => {
 		if (!cart.lines.length) return
 
@@ -206,8 +193,8 @@ const CustomerDataForm = ({
 			setCustomerAddr({
 				userName,
 				phone,
-				provinceId,
-				wardId,
+				provinceId: parseInt(provinceId),
+				wardId: parseInt(wardId),
 				street,
 			})
 	}, [data])

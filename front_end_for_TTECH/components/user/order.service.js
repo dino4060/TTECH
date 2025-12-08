@@ -2,15 +2,21 @@ import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
 import { orderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 
+export const listOrders = async (setOrderList) => {
+	const { data } = await clientFetch(orderApi.list())
+	setOrderList(data.items)
+}
+
 export const cancelOrder = async ({
 	orderId,
 	parcelCode,
+	onToggleCanceling,
+	setAsyncOrderList,
 }) => {
 	const ghnRes = await ghnApiRt.cancelParcel(parcelCode)
 
 	if (ghnRes.success === false) {
 		alert(`Lỗi hủy bưu kiện: ${ghnRes.error}`)
-		return false
 	}
 
 	const apiRes = await clientFetch(
@@ -19,10 +25,10 @@ export const cancelOrder = async ({
 
 	if (apiRes.success === false) {
 		alert(`Lỗi hủy đơn hàng: ${apiRes.error}`)
-		return false
 	}
 
-	return true
+	onToggleCanceling(orderId)
+	setAsyncOrderList((prev) => !prev)
 }
 
 export const trackGhnParcel = async (parcelCode) => {
@@ -38,7 +44,7 @@ export const trackGhnParcel = async (parcelCode) => {
 	return ghnRes.data
 }
 
-export const translateAddress = (address) => {
+export const translateTrackingAddr = (address) => {
 	const prefixToRemove = "xxxx "
 	const suffixesToFix = ["Hồ Chí Minh", "Hà Nội", "Bến Tre"]
 
@@ -74,4 +80,12 @@ export const mapOrderStatus = (status) => {
 	if (status === "CANCELED") return "Đã hủy"
 
 	return "Không xác định trạng thái"
+}
+
+export const allowCancelOrder = (orderStatus) => {
+	return ["PENDING", "UNPAID"].includes(orderStatus)
+}
+
+export const allowPayOrder = (orderStatus) => {
+	return orderStatus === "UNPAID"
 }
