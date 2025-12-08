@@ -77,6 +77,7 @@ export const mapParcelStatus = (status) => {
 
 export const mapOrderStatus = (status) => {
 	if (status === "PENDING") return "Đang xử lý"
+	if (status === "UNPAID") return "Chưa thanh toán"
 	if (status === "CANCELED") return "Đã hủy"
 
 	return "Không xác định trạng thái"

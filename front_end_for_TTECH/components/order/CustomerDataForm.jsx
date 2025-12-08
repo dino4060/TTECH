@@ -1,19 +1,18 @@
 "use client"
 import { momoApiRt } from "@/app/api/payment/momo/momo.api-route"
+import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
 import { UserAuth } from "@/context/AuthContext"
 import { orderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"
+import { checkKV, checkV } from "@/lib/utils/check"
 import { isValidPhoneNumber } from "@/utils/until"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import CircleLoader from "../uncategory/CircleLoader"
 import AddressDataForm, {
 	FormFieldList,
 } from "./AddressDataForm"
-import { createGhnParcel } from "./order.service"
-import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
-import { checkKV } from "@/lib/utils/check"
 
 const CustomerDataForm = ({
 	cart,
@@ -27,8 +26,8 @@ const CustomerDataForm = ({
 	totalPayment,
 	shippingFee,
 }) => {
-	const { user } = UserAuth()
 	const router = useRouter()
+	const { user } = UserAuth()
 	const [loading, setLoading] = useState(false)
 	const [data, setData] = useState({
 		customerName: user?.name,
@@ -47,6 +46,38 @@ const CustomerDataForm = ({
 		wardId: "",
 		street: "",
 	})
+	const [allowCOD, setAllowCOD] = useState(true)
+	const [sharedError, setSharedError] = useState('')
+
+	// change totalPayment => logic allowCOD
+	useEffect(() => {
+		if (totalPayment && totalPayment >= 50000) {
+			setAllowCOD(false)
+			setData((prev) => ({ ...prev, paymentType: "BANK" }))
+		} else {
+			setAllowCOD(true)
+		}
+	}, [totalPayment])
+
+	// change formData => logic customerAddr
+	useEffect(() => {
+		const {
+			customerName: userName,
+			customerPhone: phone,
+			provinceId,
+			wardId,
+			street,
+		} = data
+
+		if (userName && phone && provinceId && wardId && street)
+			setCustomerAddr({
+				userName,
+				phone,
+				provinceId: parseInt(provinceId),
+				wardId: parseInt(wardId),
+				street,
+			})
+	}, [data])
 
 	const onChangeValue = (e, f) => {
 		const value = e.target.value
@@ -180,25 +211,6 @@ const CustomerDataForm = ({
 		}
 	}
 
-	// change formData => set customerAddr
-	useEffect(() => {
-		const {
-			customerName: userName,
-			customerPhone: phone,
-			provinceId,
-			wardId,
-			street,
-		} = data
-		if (userName && phone && provinceId && wardId && street)
-			setCustomerAddr({
-				userName,
-				phone,
-				provinceId: parseInt(provinceId),
-				wardId: parseInt(wardId),
-				street,
-			})
-	}, [data])
-
 	return (
 		<div className='w-full'>
 			<h1 className='text-center text-4xl font-[700] mt-8'>
@@ -218,6 +230,7 @@ const CustomerDataForm = ({
 							data={data}
 							error={error}
 							onChangeValue={onChangeValue}
+							allowCOD={allowCOD}
 						/>
 					)
 				})}
@@ -332,7 +345,13 @@ const Input = {
 		)
 	},
 
-	ratio: ({ field, data, error, onChangeValue }) => {
+	ratio: ({
+		field,
+		data,
+		error,
+		onChangeValue,
+		allowCOD,
+	}) => {
 		return (
 			<div key={field.key} className='flex flex-col'>
 				<h1 className='text-xl'>{field.name}</h1>
@@ -344,15 +363,15 @@ const Input = {
 						>
 							<input
 								type='radio'
-								name={field.key}
 								value={option.key}
 								id={option.key}
 								checked={option.key === data.paymentType}
 								onChange={(e) => {
 									onChangeValue(e, field)
 								}}
+								disabled={option.key === "COD" ? !allowCOD : false}
 							/>
-							<label htmlFor={option.key} className='text-2xl'>
+							<label className='text-2xl' htmlFor={option.key}>
 								{option.name}
 							</label>
 						</div>

@@ -1,6 +1,8 @@
 "use client"
-import { handleUser } from "@/app/api/handleUser"
 import { UserAuth } from "@/context/AuthContext"
+import { userApi } from "@/lib/api/user.api"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { checkV } from "@/lib/utils/check"
 import { motion } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
 import {
@@ -9,10 +11,7 @@ import {
 } from "../../utils/until"
 import CircleLoader from "../uncategory/CircleLoader"
 import Notification from "../uncategory/Notification"
-import { clientFetch } from "@/lib/http/fetch.client"
-import { userApi } from "@/lib/api/user.api"
 import UserAddressForm from "./UserAddressForm"
-import { checkKV, checkV } from "@/lib/utils/check"
 
 const UserDataForm = () => {
 	const buttonRef = useRef()
