@@ -1,5 +1,5 @@
 "use client"
-import useDebounce from "@/customHook/useDeboune"
+import useDebounce from "@/hooks/useDebounce"
 import { adminOrderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { AnimatePresence, motion } from "framer-motion"

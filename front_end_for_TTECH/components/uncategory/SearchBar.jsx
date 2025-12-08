@@ -9,7 +9,7 @@ import {
 } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CiMinimize1, CiSearch } from "react-icons/ci"
-import useDebounce from "../../customHook/useDeboune"
+import useDebounce from "../../hooks/useDebounce"
 import { checkV } from "@/lib/utils/check"
 
 const SearchBar = () => {

@@ -1,17 +1,6 @@
 "use client"
-
-import { BASE_URL } from "@/constants/constant"
-import https from "https"
+import { axiosCore } from "@/app/api/axiosClient"
 import { CiSearch } from "react-icons/ci"
-const { default: axios } = require("axios")
-
-const agent = new https.Agent({
-	rejectUnauthorized: false,
-})
-export const axs = axios.create({
-	baseURL: BASE_URL,
-	httpsAgent: agent,
-})
 
 const OrderFeatures = ({ setSearchOrderId }) => {
 	const searchOrderChange = (e) => {
@@ -20,9 +9,12 @@ const OrderFeatures = ({ setSearchOrderId }) => {
 
 	const handleDownloadExcelFile = async () => {
 		try {
-			const result = await axs.get("/Order/GetExcelFileData", {
-				responseType: "arraybuffer",
-			}) // Specify responseType as "arraybuffer"
+			const result = await axiosCore.get(
+				"/Order/GetExcelFileData",
+				{
+					responseType: "arraybuffer",
+				}
+			) // Specify responseType as "arraybuffer"
 
 			const blob = new Blob([result.data], {
 				type:

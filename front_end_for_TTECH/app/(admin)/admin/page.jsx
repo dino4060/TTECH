@@ -1,5 +1,4 @@
 "use client"
-
 import AdminCampaignManagement from "@/components/admin/AdminCampaignManagement"
 import AdminCategoryManagement from "@/components/admin/AdminCategoryManagement"
 import AdminCustomerManagement from "@/components/admin/AdminCustomerManagement"
@@ -17,14 +16,14 @@ import AdminProductManagement from "../../../components/admin/AdminProductManage
 
 const Page = () => {
 	const [route, setRoute] = useState("dashboard")
-	const { user, setUser } = UserAuth()
 	const router = useRouter()
-	useEffect(() => {
-		const user = JSON.parse(localStorage.getItem("user"))
+	const { user } = UserAuth()
 
-		// if (user.role !== "1") return router.push("/")
-		if (user?.userId) setUser(user)
-	}, [setUser])
+	useEffect(() => {
+		if (!user.roles || !user.roles.includes("ADMIN")) {
+			return router.push("/")
+		}
+	}, [user])
 
 	return (
 		<div className='container mx-auto'>

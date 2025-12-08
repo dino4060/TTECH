@@ -140,6 +140,7 @@ const ColorMap = {
 	PENDING: "#8b5cf6",
 	PREPARING: "#8b5cf6",
 	UNPAID: "#ef4444",
+	SHIPPING: "#06b6d4",
 	TRANSIT: "#06b6d4",
 	DELIVERING: "#06b6d4",
 	COMPLETED: "#16a34a",

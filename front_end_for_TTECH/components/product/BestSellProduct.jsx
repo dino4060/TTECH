@@ -1,5 +1,5 @@
 import { handleAdmin } from "@/app/api/handleAdmin"
-import useDebounce from "@/customHook/useDeboune"
+import useDebounce from "@/hooks/useDebounce"
 import { useEffect, useState } from "react"
 import { CiShoppingBasket } from "react-icons/ci"
 

@@ -1,10 +1,17 @@
 const { default: axios } = require("axios")
-import { BASE_URL } from "@/constants/constant"
 import https from "https"
+
+export const BASE_URL = "https://localhost:7067/api"
 
 const agent = new https.Agent({
 	rejectUnauthorized: false,
 })
+
+export const axiosCore = axios.create({
+	baseURL: BASE_URL,
+	httpsAgent: agent,
+})
+
 export const axiosClient = axios.create({
 	baseURL: BASE_URL,
 	httpsAgent: agent,
