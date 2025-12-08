@@ -46,16 +46,16 @@ const CustomerDataForm = ({
 		wardId: "",
 		street: "",
 	})
-	const [allowCOD, setAllowCOD] = useState(true)
-	const [sharedError, setSharedError] = useState('')
+	const [sharedFeedback, setSharedFeedback] = useState("")
 
 	// change totalPayment => logic allowCOD
 	useEffect(() => {
 		if (totalPayment && totalPayment >= 50000) {
-			setAllowCOD(false)
-			setData((prev) => ({ ...prev, paymentType: "BANK" }))
+			setSharedFeedback(
+				"Không thể thanh toán cho đơn hàng trị giá từ 50 triệu đồng"
+			)
 		} else {
-			setAllowCOD(true)
+			setSharedFeedback("")
 		}
 	}, [totalPayment])
 
@@ -111,6 +111,8 @@ const CustomerDataForm = ({
 		if (!cart.lines.length) return
 
 		if (!customerAddr || !warehouseAddr) return
+
+		if (sharedFeedback) return
 
 		let isValid = true
 		const FF = [...Fields, ...FormFieldList]
@@ -213,14 +215,14 @@ const CustomerDataForm = ({
 
 	return (
 		<div className='w-full'>
-			<h1 className='text-center text-4xl font-[700] mt-8'>
-				Thông tin khách hàng
-			</h1>
-
 			<form
 				onSubmit={(e) => e.preventDefault()}
-				className='flex flex-col gap-5 mt-4'
+				className='flex flex-col gap-5 mt-8'
 			>
+				<h1 className='text-center text-4xl font-[700]'>
+					Thông tin khách hàng
+				</h1>
+
 				{Fields.map((field) => {
 					const ReactComponent = Input[field.tag]
 					return (
@@ -230,7 +232,6 @@ const CustomerDataForm = ({
 							data={data}
 							error={error}
 							onChangeValue={onChangeValue}
-							allowCOD={allowCOD}
 						/>
 					)
 				})}
@@ -241,14 +242,20 @@ const CustomerDataForm = ({
 					onChangeValue={onChangeValue}
 				/>
 
-				<button
-					onClick={onSubmitOrder}
-					className='
-            w-full mt-4 bg-blue-500 rounded-full text-white py-3 text-2xl  font-bold
+				<div>
+					<h2 className='text-red-500 text-left text-xl mb-1'>
+						{sharedFeedback}
+					</h2>
+
+					<button
+						onClick={onSubmitOrder}
+						className='
+            w-full  bg-blue-500 rounded-full text-white py-3 text-2xl  font-bold
             flex items-center justify-center'
-				>
-					{loading ? <CircleLoader /> : "Hoàn tất"}
-				</button>
+					>
+						{loading ? <CircleLoader /> : "Hoàn tất"}
+					</button>
+				</div>
 			</form>
 		</div>
 	)
@@ -345,13 +352,7 @@ const Input = {
 		)
 	},
 
-	ratio: ({
-		field,
-		data,
-		error,
-		onChangeValue,
-		allowCOD,
-	}) => {
+	ratio: ({ field, data, error, onChangeValue }) => {
 		return (
 			<div key={field.key} className='flex flex-col'>
 				<h1 className='text-xl'>{field.name}</h1>
@@ -369,7 +370,6 @@ const Input = {
 								onChange={(e) => {
 									onChangeValue(e, field)
 								}}
-								disabled={option.key === "COD" ? !allowCOD : false}
 							/>
 							<label className='text-2xl' htmlFor={option.key}>
 								{option.name}
