@@ -1,5 +1,4 @@
 "use client"
-
 import { db } from "@/firebaseConfig"
 import {
 	addDoc,
@@ -40,43 +39,41 @@ const CustomerMessage = () => {
 	const [messageList, setMessageList] = useState([])
 
 	useEffect(() => {
-		const queryMessages = query(
-			messagesRef,
-			where("roomId", "==", currentRoomClick),
-			orderBy("createdAt")
-		)
-
-		const unsubscribe = onSnapshot(
-			queryMessages,
-			(snapshot) => {
-				let messages = []
-				snapshot.forEach((doc) => {
-					messages.push({ ...doc.data(), id: doc.id })
-				})
-				setNewMessage("")
-				setMessageList(messages)
-			}
-		)
-
-		return () => {
-			unsubscribe()
-		}
+		// const queryMessages = query(
+		// 	messagesRef,
+		// 	where("roomId", "==", currentRoomClick),
+		// 	orderBy("createdAt")
+		// )
+		// const unsubscribe = onSnapshot(
+		// 	queryMessages,
+		// 	(snapshot) => {
+		// 		let messages = []
+		// 		snapshot.forEach((doc) => {
+		// 			messages.push({ ...doc.data(), id: doc.id })
+		// 		})
+		// 		setNewMessage("")
+		// 		setMessageList(messages)
+		// 	}
+		// )
+		// return () => {
+		// 	unsubscribe()
+		// }
 	}, [currentRoomClick])
 
 	const handleSubmit = async (e) => {
-		if (newMessage === "") return
+		// if (newMessage === "") return
 
-		await addDoc(messagesRef, {
-			text: newMessage,
-			userId: ADMIN_ID,
-			roomId: currentRoomClick,
-			createdAt: serverTimestamp(),
-		})
+		// await addDoc(messagesRef, {
+		// 	text: newMessage,
+		// 	userId: ADMIN_ID,
+		// 	roomId: currentRoomClick,
+		// 	createdAt: serverTimestamp(),
+		// })
 
-		setNewMessage("")
+		// setNewMessage("")
 	}
 	useEffect(() => {
-		handleRoom()
+		// handleRoom()
 	}, [messagesRef])
 
 	return (
