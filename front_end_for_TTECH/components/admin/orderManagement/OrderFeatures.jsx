@@ -2,7 +2,6 @@
 
 import { BASE_URL } from "@/constants/constant"
 import https from "https"
-import { useState } from "react"
 import { CiSearch } from "react-icons/ci"
 const { default: axios } = require("axios")
 
@@ -14,13 +13,9 @@ export const axs = axios.create({
 	httpsAgent: agent,
 })
 
-const OrderFeatures = ({
-	searchOrder,
-	setSearchOrder,
-	handleSearch,
-}) => {
+const OrderFeatures = ({ setSearchOrderId }) => {
 	const searchOrderChange = (e) => {
-		setSearchOrder(e.target.value)
+		setSearchOrderId(e.target.value)
 	}
 
 	const handleDownloadExcelFile = async () => {
@@ -54,13 +49,13 @@ const OrderFeatures = ({
 	}
 
 	return (
-		<div className='flex mb-2 text-xl justify-between  text-white font-[600] gap-5'>
-			<button
+		<div className='flex justify-end gap-5 text-xl text-white font-[600] mb-2'>
+			{/* <button
 				onClick={handleDownloadExcelFile}
 				className='bg-blue-500 px-4 py-2 rounded-lg'
 			>
 				Xuất Excel
-			</button>
+			</button> */}
 			<div className='border border-black/20  bg-white rounded-2xl px-2 flex items-center'>
 				<CiSearch size={18} color='black' />
 				<input

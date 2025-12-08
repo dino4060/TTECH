@@ -1,7 +1,7 @@
-import { handleDetailOrder } from "@/app/api/handleDetailOrder"
-import { handleOrder } from "@/app/api/handleOrder"
 import Notification from "@/components/uncategory/Notification"
-import { convertTokVND } from "@/utils/until"
+import { adminOrderApi } from "@/lib/api/order.api"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { convertTo000D } from "@/utils/until"
 import { useEffect, useState } from "react"
 import { CiMinimize1 } from "react-icons/ci"
 
@@ -14,8 +14,18 @@ const DetailOrder = ({
 		state: currentOrderClick?.status,
 	})
 	const [notifications, setNotifications] = useState(false)
-
 	const [orderDetailList, setOrderDetailList] = useState([])
+
+	useEffect(() => {
+		getOrderDetailByOrderId()
+	}, [])
+
+	const getOrderDetailByOrderId = async () => {
+		// const orderId = currentOrderClick.id
+		// const result =
+		// 	await handleDetailOrder.getOrderDetailByOrderId(orderId)
+		setOrderDetailList(currentOrderClick.lines)
+	}
 
 	const handleValueChange = (e) => {
 		const { id, value } = e.target
@@ -24,21 +34,13 @@ const DetailOrder = ({
 		}
 	}
 
-	const getOrderDetailByOrderId = async () => {
-		// const orderId = currentOrderClick.id
-		// const result =
-		// 	await handleDetailOrder.getOrderDetailByOrderId(orderId)
-		setOrderDetailList(currentOrderClick.orderLines)
-	}
-
-	useEffect(() => {
-		getOrderDetailByOrderId()
-	}, [])
-
 	const handleSubmit = async () => {
-		const order_id = currentOrderClick.id
-		const state = data.state
-		await handleOrder.updateStateOrder(order_id, state)
+		await clientFetch(
+			adminOrderApi.update({
+				id: currentOrderClick.id,
+				status: data.state,
+			})
+		)
 		setCurrentOrderClick({})
 		setTrigger((pre) => !pre)
 	}
@@ -68,7 +70,7 @@ const DetailOrder = ({
 				</div>
 			</div>
 			<div className='flex mt-5 h-[500px]'>
-				<form
+				{/* <form
 					onSubmit={(e) => e.preventDefault()}
 					className='grow-[2] shrink-0 text-2xl'
 				>
@@ -93,9 +95,9 @@ const DetailOrder = ({
 					>
 						Xác nhận
 					</button>
-				</form>
+				</form> */}
 				<div className='grow-[5] text-2xl shrink-0 flex flex-wrap'>
-					{orderDetailList.map((x) => (
+					{orderDetailList?.map((x) => (
 						<div
 							className='flex flex-col items-center gap-4'
 							key={x.product.id}
@@ -110,7 +112,7 @@ const DetailOrder = ({
 								{x.product.name.slice(0, 20)}...
 							</h1>
 							<h1 className='w-[150px] overflow-ellipsis whitespace-nowrap text-center'>
-								{convertTokVND(x.mainPrice)}
+								{convertTo000D(x.mainPrice)}
 							</h1>
 							<h2 className='px-2 text-white bg-blue-500 font-bold'>
 								{x.quantity}

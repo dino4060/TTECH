@@ -1,21 +1,14 @@
 "use client"
-
-import { handleOrder } from "@/app/api/handleOrder"
-import { useEffect, useState } from "react"
-import OrderRenderList from "./orderManagement/OrderRenderList"
+import useDebounce from "@/customHook/useDeboune"
+import { adminOrderApi } from "@/lib/api/order.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 import { AnimatePresence, motion } from "framer-motion"
+import { useEffect, useState } from "react"
 import DetailOrder from "./orderManagement/DetailOrder"
 import OrderFeatures from "./orderManagement/OrderFeatures"
-import useDebounce from "@/customHook/useDeboune"
-import { clientFetch } from "@/lib/http/fetch.client"
-import {
-	adminOrderApi,
-	orderApi,
-} from "@/lib/api/order.api"
+import OrderRenderList from "./orderManagement/OrderRenderList"
 
 const AdminOrderManagement = () => {
-	const [searchOrder, setSearchOrder] = useState("")
-
 	const [orderList, setOrderList] = useState([
 		{
 			customerInfor: {
@@ -51,36 +44,41 @@ const AdminOrderManagement = () => {
 			},
 		},
 	])
-
-	const orderSearchId = useDebounce(searchOrder, 500)
+	const [searchOrderId, setSearchOrderId] = useState("")
+	const searchOrderIdDeb = useDebounce(searchOrderId, 500)
+	const [trigger, setTrigger] = useState(false)
 
 	useEffect(() => {
-		handleSearch()
-	}, [orderSearchId])
+		getAllOrder()
+	}, [trigger])
 
-	const [trigger, setTrigger] = useState(false)
+	useEffect(() => {
+		searchOrder()
+	}, [searchOrderIdDeb])
 
 	const getAllOrder = async () => {
 		const { success, data, error } = await clientFetch(
 			adminOrderApi.list()
 		)
-		if (success) setOrderList(data.items)
-		if (!success) alert("Lỗi " + error)
+
+		if (!success) alert("Lỗi lấy tất cả đơn hàng: " + error)
+
+		setOrderList(data.items)
 	}
 
-	const handleSearch = async () => {
-		let query = orderSearchId ? { id: orderSearchId } : {}
+	const searchOrder = async () => {
+		let query = searchOrderIdDeb
+			? { id: searchOrderIdDeb }
+			: {}
 
 		const { success, data, error } = await clientFetch(
 			adminOrderApi.list(query)
 		)
-		if (success) setOrderList(data.items)
-		if (!success) alert("Lỗi " + error)
-	}
 
-	useEffect(() => {
-		getAllOrder()
-	}, [trigger])
+		if (!success) alert("Lỗi tìm kiếm đơn hàng: " + error)
+
+		setOrderList(data.items)
+	}
 
 	const [currentOrderClick, setCurrentOrderClick] = useState(
 		{}
@@ -90,29 +88,23 @@ const AdminOrderManagement = () => {
 
 	return (
 		<div className='mx-auto mt-10 container'>
-			<OrderFeatures
-				searchOrder={searchOrder}
-				setSearchOrder={setSearchOrder}
-				handleSearch={handleSearch}
-			/>
+			<OrderFeatures setSearchOrderId={setSearchOrderId} />
 
 			<OrderRenderList
 				orderList={orderList}
-				setOrderList={setOrderList}
-				currentOrderClick={currentOrderClick}
 				setCurrentOrderClick={setCurrentOrderClick}
 			/>
 
 			<AnimatePresence>
 				{currentOrderClick?.id && (
 					<motion.div
+						className='fixed inset-0 bg-white origin-top'
 						initial={{ opacity: 0, height: 0 }}
 						whileInView={{
 							opacity: 1,
 							height: "auto",
 						}}
 						exit={{ opacity: 0, height: 0 }}
-						className='fixed inset-0 bg-white origin-top'
 					>
 						<DetailOrder
 							currentOrderClick={currentOrderClick}
