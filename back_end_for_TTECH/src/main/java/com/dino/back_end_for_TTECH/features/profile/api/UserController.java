@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.features.profile.api;
 
-import com.dino.back_end_for_TTECH.features.identity.application.model.CurrentUserRes;
+import com.dino.back_end_for_TTECH.features.profile.application.model.UserData;
 import com.dino.back_end_for_TTECH.features.profile.application.UserService;
 import com.dino.back_end_for_TTECH.features.profile.application.model.UserBody;
 import com.dino.back_end_for_TTECH.shared.api.annotation.AuthUser;
@@ -24,7 +24,7 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping
-    public ResponseEntity<CurrentUserRes> edit(
+    public ResponseEntity<UserData> edit(
             @Valid @RequestBody UserBody body,
             @AuthUser CurrentUser currentUser
     ) {

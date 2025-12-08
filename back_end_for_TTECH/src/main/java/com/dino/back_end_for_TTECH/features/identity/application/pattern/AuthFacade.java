@@ -1,6 +1,5 @@
 package com.dino.back_end_for_TTECH.features.identity.application.pattern;
 
-import com.dino.back_end_for_TTECH.features.identity.application.mapper.IAuthMapper;
 import com.dino.back_end_for_TTECH.features.identity.application.model.AuthRes;
 import com.dino.back_end_for_TTECH.features.identity.application.model.TokenPair;
 import com.dino.back_end_for_TTECH.features.identity.application.provider.IIdentityCookieProvider;
@@ -8,9 +7,10 @@ import com.dino.back_end_for_TTECH.features.identity.application.provider.IIdent
 import com.dino.back_end_for_TTECH.features.identity.application.provider.IIdentitySecurityProvider;
 import com.dino.back_end_for_TTECH.features.identity.application.service.ITokenService;
 import com.dino.back_end_for_TTECH.features.identity.domain.Token;
-import com.dino.back_end_for_TTECH.features.identity.domain.model.Role;
+import com.dino.back_end_for_TTECH.features.profile.application.mapper.UserMapper;
 import com.dino.back_end_for_TTECH.features.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.profile.domain.model.Role;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,8 @@ public class AuthFacade {
 
     private final IUserService userService;
 
-    private final IAuthMapper authMapper;
+
+    private final UserMapper userMapper;
 
     private final IIdentitySecurityProvider securityProvider;
 
@@ -112,7 +113,7 @@ public class AuthFacade {
         return AuthRes.builder()
                 .isAuthenticated(true)
                 .accessToken(tokenPair.accessToken())
-                .currentUser(this.authMapper.toCurrentUserRes(user))
+                .currentUser(this.userMapper.toData(user))
                 .build();
     }
 

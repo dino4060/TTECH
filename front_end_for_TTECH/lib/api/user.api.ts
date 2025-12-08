@@ -12,3 +12,12 @@ export const userApi = {
 		body,
 	}),
 }
+
+export const adminUserApi = {
+	customerApi: {
+		list: (): TApi<TCurrentUser> => ({
+			route: `${RESOURCES.USERS.PRIVATE_ADMIN}/customers`,
+			method: HttpMethod.GET,
+		}),
+	},
+}

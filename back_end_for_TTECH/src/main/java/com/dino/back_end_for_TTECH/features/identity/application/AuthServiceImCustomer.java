@@ -6,7 +6,7 @@ import com.dino.back_end_for_TTECH.features.identity.application.pattern.AuthFac
 import com.dino.back_end_for_TTECH.features.identity.application.pattern.AuthTemplate;
 import com.dino.back_end_for_TTECH.features.identity.application.service.IAuthServiceForCustomer;
 import com.dino.back_end_for_TTECH.features.identity.application.service.ITokenService;
-import com.dino.back_end_for_TTECH.features.identity.domain.model.Role;
+import com.dino.back_end_for_TTECH.features.profile.domain.model.Role;
 import com.dino.back_end_for_TTECH.features.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.features.profile.domain;
 
-import com.dino.back_end_for_TTECH.features.identity.domain.model.Role;
-import com.dino.back_end_for_TTECH.features.identity.domain.model.UserStatus;
+import com.dino.back_end_for_TTECH.features.profile.domain.model.Role;
+import com.dino.back_end_for_TTECH.features.profile.domain.model.UserStatus;
 import com.dino.back_end_for_TTECH.features.ordering.domain.Order;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;

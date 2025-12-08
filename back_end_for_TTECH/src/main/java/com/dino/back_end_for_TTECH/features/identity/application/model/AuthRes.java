@@ -1,5 +1,6 @@
 package com.dino.back_end_for_TTECH.features.identity.application.model;
 
+import com.dino.back_end_for_TTECH.features.profile.application.model.UserData;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AccessLevel;
@@ -21,5 +22,5 @@ public class AuthRes {
 
     String accessToken;
 
-    CurrentUserRes currentUser;
+    UserData currentUser;
 }

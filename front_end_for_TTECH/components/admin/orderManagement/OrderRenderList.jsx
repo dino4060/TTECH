@@ -1,9 +1,10 @@
 "use client"
 import { copy } from "@/lib/utils"
 import { convertDate } from "@/lib/utils/number"
-import { convertTo000D, convertTokVND } from "@/utils/until"
+import { convertTokVND } from "@/utils/until"
 import { motion } from "framer-motion"
 import { IoCopyOutline } from "react-icons/io5"
+
 const OrderRenderList = ({
 	orderList,
 	setCurrentOrderClick,
@@ -13,8 +14,8 @@ const OrderRenderList = ({
 	}
 	return (
 		<table className='w-full border-spacing-1 border-separate table-auto text-xl bg-white relative'>
-			<thead class=' text-black uppercase sticky top-2'>
-				<tr className=''>
+			<thead className=' text-black uppercase sticky top-2'>
+				<tr>
 					<th className='px-4 py-2 border border-b-4 rounded-md border-blue-500 bg-white flex-1 shrink-0 text-center'>
 						Mã đơn hàng
 					</th>
@@ -53,6 +54,7 @@ const OrderRenderList = ({
 			<tbody>
 				{orderList.map((o) => (
 					<motion.tr
+						key={o.id}
 						onClick={() => onClickOrder(o)}
 						initial={{
 							backgroundColor: "#f8fafc",
@@ -63,7 +65,6 @@ const OrderRenderList = ({
 							padding: "10px 0px",
 						}}
 						transition={{ type: "spring" }}
-						key={o.id}
 						className='cursor-pointer'
 					>
 						<motion.th

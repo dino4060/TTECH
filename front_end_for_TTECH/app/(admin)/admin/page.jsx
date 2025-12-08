@@ -1,10 +1,10 @@
 "use client"
 import AdminCampaignManagement from "@/components/admin/AdminCampaignManagement"
 import AdminCategoryManagement from "@/components/admin/AdminCategoryManagement"
-import AdminCustomerManagement from "@/components/admin/AdminCustomerManagement"
+import AdminCustomers from "@/components/admin/customers/AdminCustomers"
 import AdminProfileManagement from "@/components/admin/AdminProfileManagement"
 import AdminSupplierManagement from "@/components/admin/AdminSupplierManagement"
-import CustomerMessage from "@/components/admin/customerManagement/CustomerMessage"
+import CustomerMessage from "@/components/admin/customers/CustomerMessage"
 import { UserAuth } from "@/context/AuthContext"
 import { AnimatePresence } from "framer-motion"
 import { useRouter } from "next/navigation"
@@ -33,7 +33,7 @@ const Page = () => {
 				{route === "dashboard" && <AdminDashboard />}
 				{route === "product" && <AdminProductManagement />}
 				{route === "order" && <AdminOrderManagement />}
-				{route === "customer" && <AdminCustomerManagement />}
+				{route === "customer" && <AdminCustomers />}
 				{route === "message" && <CustomerMessage />}
 				{route === "marketing" && <AdminCampaignManagement />}
 				{route === "supplier" && <AdminSupplierManagement />}

@@ -74,7 +74,7 @@ export const normalizeResponse = async <T>(response: Response) => {
 export const normalizeError = <T>(error: any) => {
   console.error(`>>> normalizeError: ${error.message || 'Lỗi không xác định'}`);
 
-  return createAppError<T>('Thật tiết! Đã có lỗi xảy ra');
+  return createAppError<T>('Lỗi phần mềm xin đang được khắc phục. Vui lòng thử lại');
 }
 
 // NOTE: URL

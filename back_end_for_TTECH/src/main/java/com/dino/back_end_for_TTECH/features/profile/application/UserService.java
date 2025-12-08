@@ -1,14 +1,15 @@
 package com.dino.back_end_for_TTECH.features.profile.application;
 
-import com.dino.back_end_for_TTECH.features.identity.application.model.CurrentUserRes;
 import com.dino.back_end_for_TTECH.features.profile.application.mapper.UserMapper;
 import com.dino.back_end_for_TTECH.features.profile.application.model.UserBody;
+import com.dino.back_end_for_TTECH.features.profile.application.model.UserData;
+import com.dino.back_end_for_TTECH.features.profile.application.model.UserQuery;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.features.profile.domain.repository.UserRepository;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
-import com.dino.back_end_for_TTECH.shared.application.exception.BadRequestE;
 import com.dino.back_end_for_TTECH.shared.application.exception.DuplicationE;
 import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundE;
+import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,9 +22,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-
-    public CurrentUserRes edit(UserBody body, CurrentUser currentUser) {
-        User user =  this.userRepository
+    public UserData edit(UserBody body, CurrentUser currentUser) {
+        User user = this.userRepository
                 .findById(currentUser.id())
                 .orElseThrow(() -> new NotFoundE("User not found"));
 
@@ -49,6 +49,18 @@ public class UserService {
 
         this.userMapper.toModel(body, user);
         User editUser = userRepository.save(user);
-        return this.userMapper.toCurrentUserRes(editUser);
+        return this.userMapper.toData(editUser);
+    }
+
+    public PageData<UserData> listCustomers(UserQuery query) {
+        var page = this.userRepository.findAll(
+                this.userMapper.toQueryable(query),
+                this.userMapper.toPageable(query)
+        );
+
+        return this.userMapper.toPageData(
+                page,
+                (User user) -> this.userMapper.toData(user)
+        );
     }
 }

@@ -11,6 +11,7 @@ import OrderRenderList from "./orderManagement/OrderRenderList"
 const AdminOrderManagement = () => {
 	const [orderList, setOrderList] = useState([
 		{
+			id: "EX1",
 			customerInfor: {
 				user_id: "001",
 				name: "Cao Hoài Sang",

@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.features.shipping;
 
-import com.dino.back_end_for_TTECH.features.identity.domain.model.Role;
+import com.dino.back_end_for_TTECH.features.profile.domain.model.Role;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.features.profile.domain.repository.UserRepository;
 import com.dino.back_end_for_TTECH.features.profile.domain.specification.UserSpec;

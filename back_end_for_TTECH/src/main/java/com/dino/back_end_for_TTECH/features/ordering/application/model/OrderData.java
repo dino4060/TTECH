@@ -1,11 +1,14 @@
 package com.dino.back_end_for_TTECH.features.ordering.application.model;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
 import java.util.List;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderData {
     int id;
 

@@ -26,7 +26,7 @@ public interface PageMapper {
     default <M, D> PageData<D> toPageData(Page<M> page, Function<M, D> toDataFunc) {
         var totalPages = page.getTotalPages();
         var totalItems = (int) page.getTotalElements();
-        var no = page.getNumber();
+        var no = page.getNumber() + 1;
         var size = page.getSize();
         List<D> items = toDataFunc == null
                 ? new ArrayList<>()
