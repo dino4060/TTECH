@@ -51,7 +51,10 @@ const SeriesRenderList = ({
 						}
 						transition={{ type: "spring" }}
 						onClick={() => {
-							setCurrentSeries(s)
+							setCurrentSeries({
+								...s,
+								categoryId: s.category?.id || "",
+							})
 							setMode("edit")
 						}}
 					>

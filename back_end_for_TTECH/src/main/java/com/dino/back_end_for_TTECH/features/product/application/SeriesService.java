@@ -3,6 +3,7 @@ package com.dino.back_end_for_TTECH.features.product.application;
 import com.dino.back_end_for_TTECH.features.product.application.mapper.SeriesMapper;
 import com.dino.back_end_for_TTECH.features.product.application.model.SeriesBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.SeriesData;
+import com.dino.back_end_for_TTECH.features.product.domain.Category;
 import com.dino.back_end_for_TTECH.features.product.domain.Series;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.SeriesRepository;
 import com.dino.back_end_for_TTECH.shared.application.constant.CacheKey;
@@ -26,6 +27,7 @@ public class SeriesService {
 
     private final SeriesRepository seriesRepo;
     private final SeriesMapper seriesMapper;
+    private final CategoryService categoryService;
 
     public Series get(Long id) {
         return seriesRepo
@@ -62,7 +64,9 @@ public class SeriesService {
     @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
     public SeriesData edit(long id, SeriesBody body) {
         Series one = get(id);
-        seriesMapper.toSeries(body, one);
+        one.setName(body.name());
+        one.setPosition(body.position());
+        one.setCategory( this.categoryService.get(body.category().id()));
         // this.validate(one);
         Series newOne = seriesRepo.save(one);
         return seriesMapper.toSeriesData(newOne);

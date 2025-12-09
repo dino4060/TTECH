@@ -5,16 +5,22 @@ import { useEffect, useState } from "react"
 import SeriesFrom from "./SeriesForm"
 import SeriesRenderList from "./SeriesRenderList"
 
+export const EmptyCurrentSeries = {
+	id: "",
+	name: "",
+	position: "",
+	categoryId: "",
+	// category: {
+	// 	id: "",
+	// },
+}
 const AdminSeries = () => {
 	const [seriesList, setSeriesList] = useState([])
 	const [mode, setMode] = useState("add")
 	const [asyncList, setAsyncList] = useState(false)
-	const [currentSeries, setCurrentSeries] = useState({
-		id: "",
-		name: "",
-		position: "",
-		categoryId: "",
-	})
+	const [currentSeries, setCurrentSeries] = useState(
+		EmptyCurrentSeries
+	)
 
 	const getData = async () => {
 		const apiRes = await clientFetch(adminSeriesApi.list())

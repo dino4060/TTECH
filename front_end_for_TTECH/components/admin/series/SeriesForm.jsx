@@ -6,6 +6,7 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import { normalizePositiveNumber } from "@/lib/utils/normalizer"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
+import { EmptyCurrentSeries } from "./AdminSeries"
 
 const SeriesFrom = ({
 	currentSeries,
@@ -108,12 +109,7 @@ const SeriesFrom = ({
 			categoryId: "",
 			shared: "",
 		})
-		setCurrentSeries({
-			id: "",
-			name: "",
-			position: "",
-			categoryId: "",
-		})
+		setCurrentSeries(EmptyCurrentSeries)
 		setNotificationMes({
 			text: `Đã ${
 				mode === "add" ? "thêm mới" : "cập nhật"
@@ -121,6 +117,7 @@ const SeriesFrom = ({
 			style: "success",
 		})
 		setNotifications(true)
+		setMode("add")
 		setAsyncList((prev) => !prev)
 	}
 
@@ -142,12 +139,7 @@ const SeriesFrom = ({
 				style: "success",
 			})
 			setNotifications(true)
-			setCurrentSeries({
-				id: "",
-				name: "",
-				position: "",
-				categoryId: "",
-			})
+			setCurrentSeries(EmptyCurrentSeries)
 			setMode("add")
 			setAsyncList((prev) => !prev)
 		}
@@ -171,10 +163,7 @@ const SeriesFrom = ({
 					whileHover={{ scale: 1.1 }}
 					onClick={() => {
 						setMode("add")
-						setCurrentSeries({
-							id: "",
-							name: "",
-						})
+						setCurrentSeries(EmptyCurrentSeries)
 					}}
 					className='px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold border-blue-500 border-b-blue-500 bg-white flex-1 shrink-0 text-center'
 				>
@@ -228,7 +217,7 @@ const SeriesFrom = ({
 							position: normalizePositiveNumber(e.target.value),
 						}))
 					}}
-					value={currentSeries.position}
+					value={currentSeries.position || ""}
 					className='outline-none border border-black/50 p-4 rounded-2xl w-full text-2xl font-[500]'
 					placeholder='Nhập vị trí series'
 				/>
