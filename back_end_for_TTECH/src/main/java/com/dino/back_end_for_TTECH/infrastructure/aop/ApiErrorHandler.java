@@ -1,6 +1,8 @@
 package com.dino.back_end_for_TTECH.infrastructure.aop;
 
 import com.dino.back_end_for_TTECH.shared.application.exception.BadRequestE;
+import com.dino.back_end_for_TTECH.shared.application.exception.DuplicationE;
+import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundE;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -21,7 +23,7 @@ import java.util.Optional;
 @Slf4j
 public class ApiErrorHandler {
     /**
-     * Handle app exception in the service tier
+     * Handle custom exception
      */
     @ExceptionHandler(value = BadRequestE.class)
     ResponseEntity<ApiResponse<Object>> handleException(BadRequestE e) {
@@ -34,6 +36,32 @@ public class ApiErrorHandler {
                         .error(e.getReason())
                         .build());
     }
+
+    @ExceptionHandler(value = NotFoundE.class)
+    ResponseEntity<ApiResponse<Object>> handleException(NotFoundE e) {
+        return ResponseEntity
+                .status(e.getStatusCode())
+                .body(ApiResponse.builder()
+                        .success(false)
+                        .status(e.getStatusCode().value())
+                        .code(e.getStatusCode().value())
+                        .error(e.getReason())
+                        .build());
+    }
+
+
+    @ExceptionHandler(value = DuplicationE.class)
+    ResponseEntity<ApiResponse<Object>> handleException(DuplicationE e) {
+        return ResponseEntity
+                .status(e.getStatusCode())
+                .body(ApiResponse.builder()
+                        .success(false)
+                        .status(e.getStatusCode().value())
+                        .code(e.getStatusCode().value())
+                        .error(e.getReason())
+                        .build());
+    }
+
 
 
     /**

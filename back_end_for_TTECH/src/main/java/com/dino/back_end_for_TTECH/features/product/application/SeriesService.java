@@ -7,9 +7,9 @@ import com.dino.back_end_for_TTECH.features.product.domain.Series;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.SeriesRepository;
 import com.dino.back_end_for_TTECH.shared.application.constant.CacheKey;
 import com.dino.back_end_for_TTECH.shared.application.constant.CacheValue;
+import com.dino.back_end_for_TTECH.shared.application.exception.DuplicationE;
+import com.dino.back_end_for_TTECH.shared.application.exception.NotFoundE;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
-import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
-import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -24,76 +24,53 @@ import java.util.List;
 @Slf4j
 public class SeriesService {
 
-    private final SeriesRepository supplierRepository;
-    private final SeriesMapper supplierMapper;
-
-    // HELPERS //
+    private final SeriesRepository seriesRepo;
+    private final SeriesMapper seriesMapper;
 
     public Series get(Long id) {
-        return supplierRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.SUPPLIER__NOT_FOUND));
+        return seriesRepo
+                .findById(id)
+                .orElseThrow(() -> new NotFoundE("Không tìm thấy series"));
     }
 
-    private Series saveSupplier(Series supplier) {
-        try {
-            return supplierRepository.save(supplier);
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.SUPPLIER__SAVE_FAILED);
-        }
+    private void validate(Series supplier) {
+        List<Series> list = this.seriesRepo.findByName(supplier.getName());
+
+        boolean isNonDupName = AppCheck.isEmpty(list) ||
+                AppCheck.isEqual(list.getFirst().getId(), supplier.getId());
+
+        if (!isNonDupName) throw new DuplicationE("Tên series bị trùng lập");
     }
-
-    private void removeSupplier(long id) {
-        try {
-            supplierRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.SUPPLIER__NOT_REMOVED);
-        }
-    }
-
-    private void validateSupplier(Series supplier) {
-        List<Series> suppliers = this.supplierRepository.findByName(supplier.getName());
-
-        boolean conditionOfName =
-                AppCheck.isEmpty(suppliers) ||
-                        AppCheck.isEqual(suppliers.getFirst().getId(), supplier.getId());
-
-        if (!conditionOfName) throw new AppException(ErrorCode.SUPPLIER__NAME_DUPLICATED);
-    }
-
-    // READ //
 
     @Cacheable(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
     public List<SeriesData> list() {
-        var suppliers = this.supplierRepository.findAll();
+        var suppliers = this.seriesRepo.findAll();
 
         return suppliers.stream()
-                .map(supplierMapper::toSeriesData)
-                .sorted(Comparator.comparing(SeriesData::name))
-                .toList();
-    }
-
-    // WRITE //
-
-    @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
-    public SeriesData createSupplier(SeriesBody body) {
-        Series supplier = supplierMapper.toSeries(body);
-        this.validateSupplier(supplier);
-        Series saved = saveSupplier(supplier);
-        return supplierMapper.toSeriesData(saved);
+                .map(s -> seriesMapper.toSeriesData(s))
+                .sorted(Comparator.comparing(s -> s.name())).toList();
     }
 
     @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
-    public SeriesData updateSupplier(long id, SeriesBody body) {
-        Series supplier = get(id);
-        supplierMapper.toSeries(body, supplier);
-        this.validateSupplier(supplier);
-        Series saved = saveSupplier(supplier);
-        return supplierMapper.toSeriesData(saved);
+    public SeriesData add(SeriesBody body) {
+        Series one = seriesMapper.toSeries(body);
+        // this.validate(one);
+        Series newOne = seriesRepo.save(one);
+        return seriesMapper.toSeriesData(newOne);
     }
 
     @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
-    public void deleteSupplier(long id) {
-        Series supplier = get(id);
-        this.removeSupplier(supplier.getId());
+    public SeriesData edit(long id, SeriesBody body) {
+        Series one = get(id);
+        seriesMapper.toSeries(body, one);
+        // this.validate(one);
+        Series newOne = seriesRepo.save(one);
+        return seriesMapper.toSeriesData(newOne);
+    }
+
+    @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
+    public void remove(long id) {
+        Series one = get(id);
+        seriesRepo.deleteById(one.getId());
     }
 }

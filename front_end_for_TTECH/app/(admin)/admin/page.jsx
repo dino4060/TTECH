@@ -3,7 +3,7 @@ import AdminCampaignManagement from "@/components/admin/AdminCampaignManagement"
 import AdminCategoryManagement from "@/components/admin/AdminCategoryManagement"
 import AdminCustomers from "@/components/admin/customers/AdminCustomers"
 import AdminProfileManagement from "@/components/admin/AdminProfileManagement"
-import AdminSupplierManagement from "@/components/admin/AdminSupplierManagement"
+import AdminSeries from "@/components/admin/series/AdminSeries"
 import CustomerMessage from "@/components/admin/customers/CustomerMessage"
 import { UserAuth } from "@/context/AuthContext"
 import { AnimatePresence } from "framer-motion"
@@ -36,7 +36,7 @@ const Page = () => {
 				{route === "customer" && <AdminCustomers />}
 				{route === "message" && <CustomerMessage />}
 				{route === "marketing" && <AdminCampaignManagement />}
-				{route === "supplier" && <AdminSupplierManagement />}
+				{route === "series" && <AdminSeries />}
 				{route === "category" && <AdminCategoryManagement />}
 				{route === "profile" && <AdminProfileManagement />}
 			</AnimatePresence>

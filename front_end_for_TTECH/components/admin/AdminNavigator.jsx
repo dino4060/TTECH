@@ -10,7 +10,7 @@ export const adminRouteNavigator = [
 	"customer",
 	"message",
 	"marketing",
-	"supplier",
+	"series",
 	"category",
 	"profile",
 ]

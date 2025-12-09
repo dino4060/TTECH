@@ -17,22 +17,18 @@ import java.util.List;
 @AllArgsConstructor
 public class AdminSeriesController {
 
-    private final SeriesService supplierService;
-
-    // READ //
+    private final SeriesService service;
 
     @GetMapping("/list")
     public ResponseEntity<List<SeriesData>> list() {
-        return ResponseEntity.ok().body(this.supplierService.list());
+        return ResponseEntity.ok().body(this.service.list());
     }
-
-    // WRITE //
 
     @PostMapping
     public ResponseEntity<SeriesData> create(
             @RequestBody SeriesBody body
     ) {
-        return ResponseEntity.ok().body(this.supplierService.createSupplier(body));
+        return ResponseEntity.ok().body(this.service.add(body));
     }
 
     @PutMapping("/{id}")
@@ -40,14 +36,14 @@ public class AdminSeriesController {
             @PathVariable long id,
             @RequestBody SeriesBody body
     ) {
-        return ResponseEntity.ok().body(this.supplierService.updateSupplier(id, body));
+        return ResponseEntity.ok().body(this.service.edit(id, body));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
-        this.supplierService.deleteSupplier(id);
+        this.service.remove(id);
         return ResponseEntity.ok().build();
     }
 

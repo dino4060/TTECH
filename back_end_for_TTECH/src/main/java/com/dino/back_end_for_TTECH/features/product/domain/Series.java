@@ -25,7 +25,8 @@ import java.util.List;
 public class Series extends BaseEntity {
 
     @Id
-    @SequenceGenerator(name = "suppliers_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "series_seq")
+    @SequenceGenerator(name = "series_seq", allocationSize = 1)
     @Column(name = "series_id")
     Long id;
 
@@ -33,6 +34,10 @@ public class Series extends BaseEntity {
     String name;
 
     Integer position;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
@@ -43,7 +48,4 @@ public class Series extends BaseEntity {
 
     @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
     List<Product> products;
-
-    @ManyToMany(mappedBy = "series", fetch = FetchType.LAZY)
-    List<Category> categories;
 }
