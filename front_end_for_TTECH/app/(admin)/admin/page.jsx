@@ -1,5 +1,5 @@
 "use client"
-import AdminCampaignManagement from "@/components/admin/AdminCampaignManagement"
+import CampaignManagement from "@/components/admin/campaignManagement/CampaignManagement"
 import CategoryManagement from "@/components/admin/categories/CategoryManagement"
 import CustomerManagement from "@/components/admin/customers/CustomerManagenent"
 import AdminProfileManagement from "@/components/admin/AdminProfileManagement"
@@ -12,7 +12,7 @@ import { useEffect, useState } from "react"
 import AdminDashboard from "../../../components/admin/AdminDashboard"
 import AdminNavigator from "../../../components/admin/AdminNavigator"
 import OrderManagement from "../../../components/admin/orders/OrderManagement"
-import AdminProductManagement from "../../../components/admin/AdminProductManagement"
+import ProductManagement from "../../../components/admin/products/ProductManagement"
 
 const Page = () => {
 	const [route, setRoute] = useState("dashboard")
@@ -31,11 +31,11 @@ const Page = () => {
 
 			<AnimatePresence>
 				{route === "dashboard" && <AdminDashboard />}
-				{route === "product" && <AdminProductManagement />}
+				{route === "product" && <ProductManagement />}
 				{route === "order" && <OrderManagement />}
 				{route === "customer" && <CustomerManagement />}
 				{route === "message" && <CustomerMessage />}
-				{route === "marketing" && <AdminCampaignManagement />}
+				{route === "marketing" && <CampaignManagement />}
 				{route === "series" && <SeriesManagement />}
 				{route === "category" && <CategoryManagement />}
 				{route === "profile" && <AdminProfileManagement />}

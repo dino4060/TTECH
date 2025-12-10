@@ -1,9 +1,9 @@
 "use client"
 import { useState } from "react"
-import CampaignAction from "./campaignManagement/CampaignAction"
-import CampaignList from "./campaignManagement/CampaignList"
+import CampaignAction from "./CampaignAction"
+import CampaignList from "./CampaignList"
 
-const AdminCampaignManagement = () => {
+const CampaignManagement = () => {
 	const [isAsyncList, setAsyncList] = useState(false)
 	const [currentCamp, setCurrentCamp] = useState({})
 
@@ -27,4 +27,4 @@ const AdminCampaignManagement = () => {
 	)
 }
 
-export default AdminCampaignManagement
+export default CampaignManagement

@@ -5,11 +5,11 @@ import { adminProductApi } from "@/lib/api/product.api"
 import { adminSeriesApi } from "@/lib/api/series.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { useEffect, useState } from "react"
-import ProductAction from "./productManagement/ProductAction"
-import ProductManagementForm from "./productManagement/ProductManagementForm"
-import ProductRenderList from "./productManagement/ProductRenderList"
+import ProductAction from "./ProductAction"
+import ProductManagementForm from "./ProductManagementForm"
+import ProductRenderList from "./ProductRenderList"
 
-const AdminProductManagement = () => {
+const ProductManagement = () => {
 	const [currentProductChoose, setCurrentProductChoose] =
 		useState({})
 	const [filter, setFilter] = useState({
@@ -84,4 +84,4 @@ const AdminProductManagement = () => {
 	)
 }
 
-export default AdminProductManagement
+export default ProductManagement

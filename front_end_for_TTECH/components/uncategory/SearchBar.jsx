@@ -9,11 +9,35 @@ import { productApi } from "@/lib/api/product.api"
 
 const SearchBar = () => {
 	const [showSearchPage, setShowSearchPage] = useState(false)
-	const [searchProducts, setSearchProducts] = useState([])
+	const [shortProducts, setShortProducts] = useState([])
 	const [keywords, setKeywords] = useState("")
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const keywordsDeb = useDebounce(keywords, 500)
+
+	useEffect(() => {
+		const params = new URLSearchParams(
+			searchParams.toString()
+		)
+		setKeywords(params.get("keywords"))
+	}, [searchParams])
+
+	useEffect(() => {
+		const searchShortProducts = async () => {
+			const apiRes = await clientFetch(
+				productApi.list({
+					keywords: keywordsDeb,
+				})
+			)
+			if (apiRes.success === false) {
+				alert(`Lỗi lấy danh sách sản phẩm: ${apiRes.error}`)
+				return
+			}
+			setShortProducts(apiRes.data.items)
+		}
+
+		searchShortProducts()
+	}, [keywordsDeb])
 
 	const onPressEnterKey = (e) => {
 		const navigateSearchPage = (keywords) => {
@@ -29,23 +53,6 @@ const SearchBar = () => {
 			setShowSearchPage(false)
 		}
 	}
-
-	useEffect(() => {
-		const searchProducts = async () => {
-			const apiRes = await clientFetch(
-				productApi.list({
-					keywords: keywordsDeb,
-				})
-			)
-			if (apiRes.success === false) {
-				alert(`Lỗi lấy danh sách sản phẩm: ${apiRes.error}`)
-				return
-			}
-			setSearchProducts(apiRes.data.items)
-		}
-
-		searchProducts()
-	}, [keywordsDeb])
 
 	useEffect(() => {
 		const handleKeyPress = (event) => {
@@ -110,7 +117,7 @@ const SearchBar = () => {
 								</div>
 
 								<div className='w-full mt-10flex flex-col justify-start items-start'>
-									{searchProducts?.slice(0, 6)?.map((x, i) => (
+									{shortProducts?.slice(0, 6)?.map((x, i) => (
 										<motion.h1
 											key={i}
 											className='text-black text-[2rem] font-[700] cursor-pointer'
