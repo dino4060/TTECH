@@ -14,7 +14,7 @@ export const EmptyCurrentSeries = {
 	// 	id: "",
 	// },
 }
-const AdminSeries = () => {
+const SeriesManagement = () => {
 	const [seriesList, setSeriesList] = useState([])
 	const [mode, setMode] = useState("add")
 	const [asyncList, setAsyncList] = useState(false)
@@ -57,4 +57,4 @@ const AdminSeries = () => {
 	)
 }
 
-export default AdminSeries
+export default SeriesManagement

@@ -1,9 +1,9 @@
 "use client"
 import AdminCampaignManagement from "@/components/admin/AdminCampaignManagement"
-import AdminCategoryManagement from "@/components/admin/AdminCategoryManagement"
+import CategoryManagement from "@/components/admin/category/CategoryManagement"
 import AdminCustomers from "@/components/admin/customers/AdminCustomers"
 import AdminProfileManagement from "@/components/admin/AdminProfileManagement"
-import AdminSeries from "@/components/admin/series/AdminSeries"
+import SeriesManagement from "@/components/admin/series/SeriesManagement"
 import CustomerMessage from "@/components/admin/customers/CustomerMessage"
 import { UserAuth } from "@/context/AuthContext"
 import { AnimatePresence } from "framer-motion"
@@ -36,8 +36,8 @@ const Page = () => {
 				{route === "customer" && <AdminCustomers />}
 				{route === "message" && <CustomerMessage />}
 				{route === "marketing" && <AdminCampaignManagement />}
-				{route === "series" && <AdminSeries />}
-				{route === "category" && <AdminCategoryManagement />}
+				{route === "series" && <SeriesManagement />}
+				{route === "category" && <CategoryManagement />}
 				{route === "profile" && <AdminProfileManagement />}
 			</AnimatePresence>
 		</div>

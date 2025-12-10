@@ -6,7 +6,7 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import { normalizePositiveNumber } from "@/lib/utils/normalizer"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
-import { EmptyCurrentSeries } from "./AdminSeries"
+import { EmptyCurrentSeries } from "./SeriesManagement"
 
 const SeriesFrom = ({
 	currentSeries,
