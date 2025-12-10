@@ -1,43 +1,63 @@
 "use client"
-
 import { UserAuth } from "@/context/AuthContext"
 import { categoryApi } from "@/lib/api/category.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { motion } from "framer-motion"
 import Image from "next/image"
-import {
-	usePathname,
-	useRouter,
-	useSearchParams,
-} from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CiUser } from "react-icons/ci"
 import Cart from "../cart/Cart"
 import CategoryPhone from "./CategoryPhone"
 import SearchBar from "./SearchBar"
+import { useSearch } from "@/context/SearchContext"
+
 const Header = () => {
-	const [category, setCategory] = useState([])
-	const { user } = UserAuth()
 	const router = useRouter()
 	const searchParams = useSearchParams()
+	const { user } = UserAuth()
+	const [categories, setCategories] = useState([])
+	// const {
+	// 	criteria,
+	// 	setKeyword,
+	// 	setCategory,
+	// 	resetCriteria,
+	// } = useSearch()
+
+	const [currentCateId, setCurrentCateId] = useState("")
+
+	useEffect(() => {
+		const listCategories = async () => {
+			const apiRes = await clientFetch(categoryApi.list())
+
+			if (apiRes.success === false) {
+				alert(`Lỗi lấy ngành hàng cho Header: ${apiRes.error}`)
+			}
+
+			setCategories(apiRes.data)
+		}
+
+		listCategories()
+	}, [])
+
+	useEffect(() => {
+		const params = new URLSearchParams(
+			searchParams.toString()
+		)
+
+		setCurrentCateId(Number(params.get("category")) || "")
+	}, [searchParams])
 
 	const onClickCategory = (category) => {
 		const params = new URLSearchParams(
 			searchParams.toString()
 		)
+		// setCategory(category.id)
 		params.set("category", category.id)
 		router.push(`products/?${params.toString()}`)
 	}
 
-	const getAllCategory = async () => {
-		const { success, data } = await clientFetch(
-			categoryApi.list()
-		)
-		if (success) setCategory(data)
-		else console.error("Header: Failed to fetch categories")
-	}
-
-	const handleOnClick = () => {
+	const onClickAccount = () => {
 		if (user?.id) {
 			router.push("/account")
 			return
@@ -45,14 +65,9 @@ const Header = () => {
 		router.push("/login")
 	}
 
-	const handleOnClickLogo = () => {
-		const nextRoute = "/" // user.roles.includes("ADMIN") ? "/admin" : "/";
-		router.push(nextRoute)
+	const onClickLogo = () => {
+		router.push("/")
 	}
-
-	useEffect(() => {
-		getAllCategory()
-	}, [])
 
 	return (
 		<div className='fixed top-0 z-30 inset-x-0 px-10 h-[50px] bg-white/20 backdrop-blur-md'>
@@ -61,7 +76,8 @@ const Header = () => {
 					<div className='lg:hidden p-2'>
 						<CategoryPhone />
 					</div>
-					<div onClick={handleOnClickLogo} className='shrink-0'>
+
+					<div onClick={onClickLogo} className='shrink-0'>
 						<Image
 							alt=''
 							src={"/images/1x/Asset1.png"}
@@ -72,19 +88,39 @@ const Header = () => {
 
 					<ul className='hidden md:flex overflow-x-scroll flex-nowrap noneScrollBar my-2'>
 						<motion.li
-							whileHover={{ color: "red" }}
+							whileHover={{ color: "rgb(239, 68, 68)" }}
+							animate={{
+								color:
+									currentCateId === ""
+										? "rgb(239, 68, 68)"
+										: "rgb(0, 0, 0, 0.8)",
+							}}
 							onClick={() => router.push("/products")}
 							className='text-[1.3rem] font-[300] capitalize mx-2 text-black/80 cursor-pointer whitespace-nowrap	'
 						>
 							All
 						</motion.li>
 
-						{category?.map((category, index) => (
+						{categories?.map((category, i) => (
 							<motion.li
-								whileHover={{ color: "red" }}
-								key={index}
+								key={i}
+								className='text-[1.3rem] font-[300] capitalize mx-2 text-black/80 cursor-pointer whitespace-nowrap'
+								whileHover={{ color: "rgb(239, 68, 68)" }} // whileHover={{ color: "red" }}
+								animate={{
+									color:
+										currentCateId === category.id // isActive
+											? "rgb(239, 68, 68)"
+											: "rgb(0, 0, 0, 0.8)",
+									// criteria.category === category.id // isActive
+									// 	? "rgb(239, 68, 68)"
+									// 	: "rgb(0, 0, 0, 0.8)",
+								}}
+								// style={{
+								// 	color:
+								// 		criteria.category === category.id &&
+								// 		"rgb(239, 68, 68)",
+								// }}
 								onClick={() => onClickCategory(category)}
-								className='text-[1.3rem] font-[300] capitalize mx-2 text-black/80 cursor-pointer whitespace-nowrap	'
 							>
 								{category.name}
 							</motion.li>
@@ -100,7 +136,7 @@ const Header = () => {
 					</motion.div>
 
 					<motion.div
-						onClick={handleOnClick}
+						onClick={onClickAccount}
 						whileHover={{ color: "#dc2626" }}
 						className='md:block cursor-pointer'
 					>

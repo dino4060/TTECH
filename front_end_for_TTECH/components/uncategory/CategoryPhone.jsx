@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { useState } from "react"
 import { CiMenuBurger, CiMinimize1 } from "react-icons/ci"
 import ProductListCategoryOnPhone from "../product/ProductListCategoryOnPhone"
+
 const CategoryPhone = () => {
 	const [showCategory, setShowCategory] = useState(false)
 

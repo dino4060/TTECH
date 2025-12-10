@@ -2,24 +2,26 @@ import Header from "../components/uncategory/Header"
 import Navigator from "../components/uncategory/Navigator"
 import MainContent from "../components/uncategory/MainContent"
 import Footer from "@/components/uncategory/Footer"
+import { Fragment } from "react"
 
 export default function Home() {
-  return (
-    <>
-      <div className='h-[70px]'></div>
+	return (
+		<Fragment>
+			<div className='h-[70px]'></div>
 
-      <div>
-        <Header />
-      </div>
-      <div>
-        <Navigator />
-      </div>
+			<div>
+				<Header />
+			</div>
 
-      <MainContent />
+			<div>
+				<Navigator />
+			</div>
 
-      <div>
-        <Footer />
-      </div>
-    </>
-  )
+			<MainContent />
+
+			<div>
+				<Footer />
+			</div>
+		</Fragment>
+	)
 }

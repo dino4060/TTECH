@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { AuthContextProvider } from "../context/AuthContext"
 import "./globals.css"
 import { IdProvider } from "@/context/IdContext"
+import { SearchProvider } from "@/context/SearchContext"
 
 https.globalAgent.options.rejectUnauthorized = false
 
@@ -21,11 +22,13 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang='en' suppressHydrationWarning={true}>
 			<IdProvider>
-				<CartContextProvider>
-					<AuthContextProvider>
-						<body className={inter.className}>{children}</body>
-					</AuthContextProvider>
-				</CartContextProvider>
+				<SearchProvider>
+					<CartContextProvider>
+						<AuthContextProvider>
+							<body className={inter.className}>{children}</body>
+						</AuthContextProvider>
+					</CartContextProvider>
+				</SearchProvider>
 			</IdProvider>
 		</html>
 	)
