@@ -25,7 +25,7 @@ export const productListAbs = [
 
 		imageHref: "/images/product_images/headphone-review.png",
 		styleForImage: undefined,
-		categoryId: "COMP001",
+		categoryId: 6, // "COMP001",
 	},
 
 	{
@@ -37,7 +37,7 @@ export const productListAbs = [
 			scale: 1.2,
 			marginTop: "50px",
 		},
-		categoryId: "AUDIO003",
+		categoryId: 3, // "AUDIO003",
 	},
 
 	{
@@ -51,7 +51,7 @@ export const productListAbs = [
 			marginTop: "80px",
 		},
 
-		categoryId: "GAME004",
+		categoryId: 1, // "GAME004",
 	},
 
 	{
@@ -65,6 +65,6 @@ export const productListAbs = [
 			marginTop: "40px",
 		},
 
-		categoryId: "MOBIL002",
+		categoryId: 10, // "MOBIL002",
 	},
 ]

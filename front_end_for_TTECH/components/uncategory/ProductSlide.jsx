@@ -1,8 +1,8 @@
 "use client"
-
-import { handleCart } from "@/app/api/handleCart"
-import { handleProduct } from "@/app/api/handleProduct"
 import { UserAuth } from "@/context/AuthContext"
+import { cartApi } from "@/lib/api/cart.api"
+import { productApi } from "@/lib/api/product.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -11,9 +11,21 @@ import {
 	GoChevronLeft,
 	GoChevronRight,
 } from "react-icons/go"
-import { smoothScrollHorizotal } from "../../utils/until"
+import {
+	convertTo000D,
+	smoothScrollHorizotal,
+} from "../../utils/until"
 import CircleLoader from "./CircleLoader"
 import Notification from "./Notification"
+
+const DefaultList = [
+	{ id: 1 },
+	{ id: 2 },
+	{ id: 3 },
+	{ id: 4 },
+	{ id: 5 },
+	{ id: 6 },
+]
 
 const ProductSlide = ({
 	title,
@@ -22,39 +34,44 @@ const ProductSlide = ({
 	categoryId,
 }) => {
 	const router = useRouter()
-	const [list, setList] = useState([1, 2, 3, 4, 5, 6])
-	const { user, setUser, token } = UserAuth()
+	const [productList, setProductList] = useState(DefaultList)
+
 	const [notifications, setNotifications] = useState(false)
 	const [loading, setLoading] = useState(true)
-
-	const getProduct = async () => {
-		const result = await handleProduct.getProduct({
-			categoryId: categoryId,
-			pageNumber: 1,
-			pageSize: 999,
-		})
-		const { products, ...rest } = result
-		console.log(products)
-		setList(products)
-		setLoading(false)
-	}
-
-	useEffect(() => {
-		getProduct()
-	}, [])
+	const { token } = UserAuth()
 
 	const containerRef = useRef()
 	const itemRef = useRef()
 	const bannerRef = useRef()
 
-	const handleBuyClick = async (product_id) => {
-		const data = {
-			product_id: product_id,
-			quantity: 1,
+	useEffect(() => {
+		const listProducts = async () => {
+			const apiRes = await clientFetch(
+				productApi.list({
+					category: categoryId,
+					page: 1,
+					size: 100,
+				})
+			)
+
+			if (apiRes.success === false) {
+				alert(`Lỗi lấy danh sách sản phẩm: ${apiRes.error}`)
+				return
+			}
+			setProductList(apiRes.data.items)
+			setLoading(false)
 		}
 
-		await handleCart.AddToCart(data, token)
+		listProducts() // khi chạy hàm này => fill data => lỗi TypeError: Cannot read properties of null (reading 'offsetWidth') const itemWidth = itemRef.current.offsetWidth * 1.5
+	}, [])
 
+	const handleBuyClick = async (productId) => {
+		const apiRes = await clientFetch(
+			cartApi.addLine({ productId: productId, quantity: 1 })
+		)
+		if (apiRes.success === false) {
+			return
+		}
 		setNotifications(true)
 	}
 
@@ -63,6 +80,8 @@ const ProductSlide = ({
 	}
 
 	const handleNextClick = () => {
+		if (!itemRef.current || !containerRef.current) return
+
 		const itemWidth = itemRef.current.offsetWidth * 1.5
 		const scrollLeft = containerRef.current.scrollLeft
 		const targetScrollLeft = scrollLeft + itemWidth
@@ -75,6 +94,8 @@ const ProductSlide = ({
 	}
 
 	const handlePreClick = () => {
+		if (!itemRef.current || !containerRef.current) return
+
 		const itemWidth = itemRef.current.offsetWidth
 		const scrollLeft = containerRef.current.scrollLeft
 		const targetScrollLeft = scrollLeft - itemWidth
@@ -109,7 +130,7 @@ const ProductSlide = ({
 					></div>
 					<div
 						onClick={() => {
-							router.push("/products?categoryId=" + categoryId)
+							router.push("/products?category=" + categoryId)
 						}}
 						className='text-blue-500 text-[1.1rem] flex
              items-center underline z-[29] underline-offset-2 mb-4 cursor-pointer'
@@ -136,7 +157,7 @@ const ProductSlide = ({
 			<div className='relative'>
 				<div
 					onClick={handlePreClick}
-					className=' absolute top-1/2 -translate-y-1/2 
+					className=' absolute top-1/2 -translate-y-1/2
           hidden md:inline-flex -translate-x-1/2  text-5xl
            bg-black/10 backdrop-blur-lg z-20  items-center
             justify-center p-3 rounded-full'
@@ -145,25 +166,25 @@ const ProductSlide = ({
 				</div>
 			</div>
 
-			{list.length !== 0 && (
+			{productList.length !== 0 && (
 				<motion.div
 					ref={containerRef}
 					className='hidden flex-1 gap-6 md:flex
           md:overflow-scroll scroll-smooth relative'
 				>
-					{list?.map((x, i) => (
+					{productList?.map((x, i) => (
 						<div
 							ref={itemRef}
 							key={i}
 							className={`w-[40%] lg:w-1/3 h-full
-              flex flex-col items-center justify-center bg-white shrink-0 rounded-[26px] `}
+              flex flex-col items-center justify-center bg-white shrink-0 rounded-[26px]`}
 						>
 							<div className='w-[200px] h-[200px] mt-8 mb-4 rounded-[32px] flex items-center justify-center'>
 								{loading ? (
 									<CircleLoader />
 								) : (
 									<img
-										src={x?.images?.[0]}
+										src={x.thumb}
 										style={{
 											objectFit: "cover",
 											borderRadius: "32px",
@@ -178,22 +199,21 @@ const ProductSlide = ({
 								className='flex flex-col gap-2
               items-center text-[1.3rem] mt-[auto] flex-1'
 							>
-								<div className='font-[600] text-[2.2rem] max-w-[85%] overflow-hidden whitespace-nowrap overflow-ellipsis'>
-									{x?.namePr || "Loading..."}
+								<div className='font-[600] text-[2.2rem] w-[200px] text-center overflow-hidden whitespace-nowrap overflow-ellipsis'>
+									{x.name || "Loading..."}
 								</div>
 
 								<div className='font-[300]'>
 									Từ{" "}
 									<span className='font-[500]'>
-										{x?.price?.toLocaleString("it-IT", {
-											style: "currency",
-											currency: "VND",
-										}) || "Loading..."}
+										{x.price?.mainPrice
+											? convertTo000D(x.price?.mainPrice)
+											: "Loading..."}
 									</span>
 								</div>
 								<div
 									onClick={() => {
-										handleBuyClick(x?.productId)
+										handleBuyClick(x.id)
 									}}
 									className='px-[11px] cursor-pointer
                  py-2 bg-blue-500 rounded-full text-white'
@@ -203,7 +223,7 @@ const ProductSlide = ({
 								<div
 									href=''
 									onClick={() => {
-										router.push("/products/" + x?.productId)
+										router.push("/products/" + x.id)
 									}}
 									className='text-blue-500 flex items-center gap-1 pb-4 mt-4 cursor-pointer'
 								>
@@ -219,7 +239,7 @@ const ProductSlide = ({
 				onClick={handleNextClick}
 				className='absolute text-5xl hidden md:flex
          -translate-x-5  top-1/2 right-0 -translate-y-1/2
-          bg-black/10 backdrop-blur-lg z-20  items-center 
+          bg-black/10 backdrop-blur-lg z-20  items-center
           justify-center p-3 rounded-full'
 			>
 				<GoChevronRight size={25} />

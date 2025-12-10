@@ -4,55 +4,56 @@ import { categoryApi } from "@/lib/api/category.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { motion } from "framer-motion"
 import Image from "next/image"
-import { useRouter, useSearchParams } from "next/navigation"
+import {
+	usePathname,
+	useRouter,
+	useSearchParams,
+} from "next/navigation"
 import { useEffect, useState } from "react"
 import { CiUser } from "react-icons/ci"
 import Cart from "../cart/Cart"
 import CategoryPhone from "./CategoryPhone"
 import SearchBar from "./SearchBar"
-import { useSearch } from "@/context/SearchContext"
+import { checkKV } from "@/lib/utils/check"
 
 const Header = () => {
 	const router = useRouter()
 	const searchParams = useSearchParams()
+	const pathname = usePathname()
 	const { user } = UserAuth()
-	const [categories, setCategories] = useState([])
-	// const {
-	// 	criteria,
-	// 	setKeyword,
-	// 	setCategory,
-	// 	resetCriteria,
-	// } = useSearch()
-
-	const [currentCateId, setCurrentCateId] = useState("")
+	const [categoryList, setCategoryList] = useState([])
+	const [onCategoryId, setOnCategoryId] = useState("")
 
 	useEffect(() => {
 		const listCategories = async () => {
 			const apiRes = await clientFetch(categoryApi.list())
-
 			if (apiRes.success === false) {
 				alert(`Lỗi lấy ngành hàng cho Header: ${apiRes.error}`)
 			}
-
-			setCategories(apiRes.data)
+			setCategoryList(apiRes.data)
 		}
 
 		listCategories()
 	}, [])
 
 	useEffect(() => {
+		if (pathname === "/products") {
+			setOnCategoryId("all")
+		}
+
 		const params = new URLSearchParams(
 			searchParams.toString()
 		)
 
-		setCurrentCateId(Number(params.get("category")) || "")
-	}, [searchParams])
+		if (Number(params.get("category"))) {
+			setOnCategoryId(Number(params.get("category")))
+		}
+	}, [searchParams, pathname])
 
 	const onClickCategory = (category) => {
 		const params = new URLSearchParams(
 			searchParams.toString()
 		)
-		// setCategory(category.id)
 		params.set("category", category.id)
 		router.push(`products/?${params.toString()}`)
 	}
@@ -91,7 +92,7 @@ const Header = () => {
 							whileHover={{ color: "rgb(239, 68, 68)" }}
 							animate={{
 								color:
-									currentCateId === ""
+									onCategoryId === "all"
 										? "rgb(239, 68, 68)"
 										: "rgb(0, 0, 0, 0.8)",
 							}}
@@ -101,25 +102,17 @@ const Header = () => {
 							All
 						</motion.li>
 
-						{categories?.map((category, i) => (
+						{categoryList?.map((category, i) => (
 							<motion.li
 								key={i}
 								className='text-[1.3rem] font-[300] capitalize mx-2 text-black/80 cursor-pointer whitespace-nowrap'
-								whileHover={{ color: "rgb(239, 68, 68)" }} // whileHover={{ color: "red" }}
+								whileHover={{ color: "rgb(239, 68, 68)" }}
 								animate={{
 									color:
-										currentCateId === category.id // isActive
+										onCategoryId === category.id
 											? "rgb(239, 68, 68)"
 											: "rgb(0, 0, 0, 0.8)",
-									// criteria.category === category.id // isActive
-									// 	? "rgb(239, 68, 68)"
-									// 	: "rgb(0, 0, 0, 0.8)",
 								}}
-								// style={{
-								// 	color:
-								// 		criteria.category === category.id &&
-								// 		"rgb(239, 68, 68)",
-								// }}
 								onClick={() => onClickCategory(category)}
 							>
 								{category.name}
@@ -131,7 +124,7 @@ const Header = () => {
 						<SearchBar />
 					</motion.div>
 
-					<motion.div className=' p-2 '>
+					<motion.div className='p-2 '>
 						<Cart />
 					</motion.div>
 

@@ -2,6 +2,7 @@ package com.dino.back_end_for_TTECH.features.product.api;
 
 import com.dino.back_end_for_TTECH.features.product.application.ProductService;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductQuery;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,13 +20,10 @@ public class ProductController {
 
     ProductService productService;
 
-    // READ //
-
     @GetMapping
     public ResponseEntity<?> list(
             @ModelAttribute ProductQuery query
     ) {
         return ResponseEntity.ok(this.productService.list(query));
     }
-
 }

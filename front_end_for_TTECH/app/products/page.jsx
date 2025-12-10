@@ -34,18 +34,19 @@ export default function Page({ searchParams }) {
 	// }, [filter])
 
 	useEffect(() => {
-		const getProduct = async () => {
-			const { success, data } = await clientFetch(
-				productApi.list(filter)
-			)
-			success &&
-				(setTotalPages(data?.totalPages),
-				setCurrentPage(data?.page),
-				setProductList(data?.items),
-				setLoading(false))
+		const listProducts = async () => {
+			const apiRes = await clientFetch(productApi.list(filter))
+			if (apiRes.success === false) {
+				alert(`Lỗi lấy danh sách sản phẩm: ${apiRes.error}`)
+				return
+			}
+			setTotalPages(apiRes.data?.totalPages)
+			setCurrentPage(apiRes.data?.page)
+			setProductList(apiRes.data?.items)
+			setLoading(false)
 		}
 
-		getProduct()
+		listProducts()
 	}, [filter])
 
 	return (
