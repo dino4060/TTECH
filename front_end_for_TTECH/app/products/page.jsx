@@ -3,11 +3,13 @@ import FilterProduct from "@/components/product/FilterProduct"
 import ProductItem from "@/components/product/ProductItem"
 import PaginationControls from "@/components/uncategory/PaginationControls"
 import { productApi } from "@/lib/api/product.api"
+import { seriesApi } from "@/lib/api/series.api"
 import { clientFetch } from "@/lib/http/fetch.client"
+import { checkKV } from "@/lib/utils/check"
 import { useEffect, useState } from "react"
 
 export default function Page({ searchParams }) {
-	const [filter, setFilter] = useState(searchParams) // { keywords, category, supplier, prices }
+	const [filter, setFilter] = useState(searchParams) // { keywords, category, series, prices }
 	const [loading, setLoading] = useState(true)
 	const [totalPages, setTotalPages] = useState(1)
 	const [currentPage, setCurrentPage] = useState(
@@ -16,6 +18,7 @@ export default function Page({ searchParams }) {
 	const [productList, setProductList] = useState([
 		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
 	])
+	const [seriesList, setSeriesList] = useState([{ id: 1 }])
 
 	useEffect(() => {
 		let { category, keywords } = searchParams
@@ -34,26 +37,37 @@ export default function Page({ searchParams }) {
 	// }, [filter])
 
 	useEffect(() => {
+		checkKV("filter", filter)
 		const listProducts = async () => {
 			const apiRes = await clientFetch(productApi.list(filter))
 			if (apiRes.success === false) {
 				alert(`Lỗi lấy danh sách sản phẩm: ${apiRes.error}`)
 				return
 			}
+			setProductList(apiRes.data?.items)
 			setTotalPages(apiRes.data?.totalPages)
 			setCurrentPage(apiRes.data?.page)
-			setProductList(apiRes.data?.items)
 			setLoading(false)
 		}
-
 		listProducts()
+
+		const listSeries = async () => {
+			const apiRes = await clientFetch(seriesApi.list(filter))
+			if (apiRes.success === false) {
+				alert(`Lỗi lấy danh sách series: ${apiRes.error}`)
+				return
+			}
+			setSeriesList(apiRes.data)
+		}
+		listSeries()
 	}, [filter])
 
 	return (
 		<div className='mt-20' suppressHydrationWarning={true}>
 			<FilterProduct
-				onFilterChange={setFilter}
 				filter={filter}
+				setFilter={setFilter}
+				seriesList={seriesList}
 			/>
 
 			<div className='flex justify-center'>

@@ -1,55 +1,37 @@
 "use client"
-
-import { AnimatePresence } from "framer-motion"
+import { checkKV } from "@/lib/utils/check"
+import { convertTokVND } from "@/utils/until"
+import { AnimatePresence, motion } from "framer-motion"
+import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
 import { CiFilter, CiPercent } from "react-icons/ci"
-import { convertTokVND, convertToVND } from "@/utils/until"
-import { useRouter, useSearchParams } from "next/navigation"
 
 const FilterProduct = ({
-	onFilterChange,
 	filter,
-	suppliers = [
-		{
-			id: 1,
-			name: "Apple",
-		},
-		{
-			id: 2,
-			name: "Samsung",
-		},
-		{
-			id: 3,
-			name: "JBL",
-		},
-	],
+	setFilter,
+	seriesList,
 }) => {
 	const searchParams = useSearchParams()
 	const [show, setShow] = useState(false)
-
-	const [priceRange, setPriceRange] = useState({
-		minPrice: 0,
-		maxPrice: 999_999_999,
-	})
-
 	const [error, setError] = useState({})
 	const [prices, setPrices] = useState([0, 0])
-	const [supplier, setSupplier] = useState({})
+	const [series, setSeries] = useState({})
 
 	useEffect(() => {
-		const handleKeyDown = (e) => {
-			if (e.key === "Escape") {
-				setShow(false)
-			}
+		const onPressCloseKey = (e) => {
+			if (e.key in ["Escape", "Enter"]) setShow(false)
 		}
-
-		window.addEventListener("keydown", handleKeyDown)
-
+		window.addEventListener("keydown", onPressCloseKey)
 		return () => {
-			window.removeEventListener("keydown", handleKeyDown)
+			window.removeEventListener("keydown", onPressCloseKey)
 		}
 	}, [])
+
+	useEffect(() => {
+		if (show === false) {
+			setFilter({ ...filter, series: series.id })
+		}
+	}, [show])
 
 	const onPriceRangeChange = (e) => {
 		const { value, id } = e.target
@@ -93,7 +75,7 @@ const FilterProduct = ({
 	}
 
 	const handlePriceRangeClick = (e) => {
-		onFilterChange((pre) => ({ ...pre, prices }))
+		setFilter((pre) => ({ ...pre, prices }))
 		setShow(false)
 	}
 
@@ -164,7 +146,7 @@ const FilterProduct = ({
 															const category_id =
 																searchParams.get("categoryId")
 
-															onFilterChange(() => {
+															setFilter(() => {
 																if (x.id == 1) {
 																	return category_id
 																		? {
@@ -262,7 +244,7 @@ const FilterProduct = ({
 															const category_id =
 																searchParams.get("categoryId")
 
-															onFilterChange(() => {
+															setFilter(() => {
 																if (x.id == 1) {
 																	return category_id
 																		? {
@@ -291,43 +273,37 @@ const FilterProduct = ({
 
 								<div className='col-span-4 mt-36'>
 									<h1 className='text-5xl font-bold'>
-										Nhà cung cấp
+										Series sản phẩm
 									</h1>
 									<div className='mt-5'>
 										<div className='mt-5 flex flex-wrap max-w-[400px] gap-x-4 gap-y-2'>
-											{suppliers.map((sup, idx) => {
-												const isSelected =
-													supplier &&
-													"id" in supplier &&
-													supplier.id === sup.id
+											{seriesList.map((s, i) => (
+												<div key={s.id}>
+													<motion.span
+														onClick={() => {
+															checkKV("setSeries", s)
+															setSeries(s)
+														}}
+														className={`cursor-pointer text-2xl transition-colors`}
+														style={{ userSelect: "none" }}
+														whileHover={{ color: "rgb(239, 68, 68)" }}
+														animate={{
+															color:
+																series.id === s.id
+																	? "rgb(239, 68, 68)"
+																	: "",
+														}}
+													>
+														{s.name}
+													</motion.span>
 
-												return (
-													<div key={sup.id}>
-														<span
-															onClick={() => {
-																if (isSelected) setSupplier({})
-																else setSupplier(sup)
-															}}
-															className={`cursor-pointer text-2xl
-                                ${
-																																	isSelected
-																																		? "text-green-500"
-																																		: ""
-																																} 
-                                hover:text-green-400 transition-colors`}
-															style={{ userSelect: "none" }}
-														>
-															{sup.name}
+													{i < seriesList.length - 1 && (
+														<span className='mx-2 text-gray-400 select-none'>
+															/
 														</span>
-
-														{idx < suppliers.length - 1 && (
-															<span className='mx-2 text-gray-400 select-none'>
-																/
-															</span>
-														)}
-													</div>
-												)
-											})}
+													)}
+												</div>
+											))}
 										</div>
 									</div>
 								</div>
@@ -342,9 +318,7 @@ const FilterProduct = ({
 							</div>
 						</div>
 						<div
-							onClick={() => {
-								setShow(false)
-							}}
+							onClick={() => setShow(false)}
 							className='bg-white/20  backdrop-blur-md absolute inset-0'
 						></div>
 					</motion.div>

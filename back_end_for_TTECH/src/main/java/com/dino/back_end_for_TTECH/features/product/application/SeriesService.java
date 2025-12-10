@@ -3,7 +3,7 @@ package com.dino.back_end_for_TTECH.features.product.application;
 import com.dino.back_end_for_TTECH.features.product.application.mapper.SeriesMapper;
 import com.dino.back_end_for_TTECH.features.product.application.model.SeriesBody;
 import com.dino.back_end_for_TTECH.features.product.application.model.SeriesData;
-import com.dino.back_end_for_TTECH.features.product.domain.Category;
+import com.dino.back_end_for_TTECH.features.product.application.model.SeriesQuery;
 import com.dino.back_end_for_TTECH.features.product.domain.Series;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.SeriesRepository;
 import com.dino.back_end_for_TTECH.shared.application.constant.CacheKey;
@@ -46,9 +46,20 @@ public class SeriesService {
 
     @Cacheable(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
     public List<SeriesData> list() {
-        var suppliers = this.seriesRepo.findAll();
+        var suppliers = this.seriesRepo
+                .findAll();
 
         return suppliers.stream()
+                .map(s -> seriesMapper.toSeriesData(s))
+                .sorted(Comparator.comparing(s -> s.name())).toList();
+    }
+
+    public List<SeriesData> list(SeriesQuery query) {
+        var seriesList = query.getCategory() == null
+                ? this.seriesRepo.findAll()
+                : this.seriesRepo.findByCategoryId(query.getCategory());
+
+        return seriesList.stream()
                 .map(s -> seriesMapper.toSeriesData(s))
                 .sorted(Comparator.comparing(s -> s.name())).toList();
     }
@@ -66,7 +77,7 @@ public class SeriesService {
         Series one = get(id);
         one.setName(body.name());
         one.setPosition(body.position());
-        one.setCategory( this.categoryService.get(body.category().id()));
+        one.setCategory(this.categoryService.get(body.category().id()));
         // this.validate(one);
         Series newOne = seriesRepo.save(one);
         return seriesMapper.toSeriesData(newOne);
