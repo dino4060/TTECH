@@ -4,7 +4,7 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import { useEffect, useState } from "react"
 import CustomerRenderList from "./CustomerRenderList"
 
-const AdminCustomers = () => {
+const CustomerManagement = () => {
 	const [customerList, setCustomerList] = useState([
 		{
 			id: "bdf9bc14-719c-481a-8da1-5d0b8446b2e0",
@@ -41,4 +41,4 @@ const AdminCustomers = () => {
 	)
 }
 
-export default AdminCustomers
+export default CustomerManagement

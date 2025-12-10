@@ -4,11 +4,11 @@ import { adminOrderApi } from "@/lib/api/order.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState } from "react"
-import DetailOrder from "./orderManagement/DetailOrder"
-import OrderFeatures from "./orderManagement/OrderFeatures"
-import OrderRenderList from "./orderManagement/OrderRenderList"
+import DetailOrder from "./DetailOrder"
+import OrderFeatures from "./OrderFeatures"
+import OrderRenderList from "./OrderRenderList"
 
-const AdminOrderManagement = () => {
+const OrderManagement = () => {
 	const [orderList, setOrderList] = useState([
 		{
 			id: "EX1",
@@ -119,4 +119,4 @@ const AdminOrderManagement = () => {
 	)
 }
 
-export default AdminOrderManagement
+export default OrderManagement
