@@ -1,9 +1,5 @@
 "use client"
-
-import { handleProduct } from "@/app/api/handleProduct"
-import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import useDebounce from "@/hooks/useDebounce"
 
 const ProductRenderList = ({
 	currentProductChoose,

@@ -17,10 +17,6 @@ const ProductManagementForm = ({
 	setCategory,
 	series,
 	setSeries,
-	allImageOfProduct,
-	setAllImageOfProduct,
-	triggerImage,
-	setTriggerImage,
 }) => {
 	// OKE
 	const [data, setData] = useState({
@@ -216,19 +212,10 @@ const ProductManagementForm = ({
 		// setImageListDisplay((prev) => [...prev, { url: imageUrl.secure_url, name: imageUrl.original_filename }]);
 	}
 
-	const handleRemoveImage = (
-		index,
-		fromInitialImages = false
-	) => {
-		if (fromInitialImages) {
-			setAllImageOfProduct((prev) =>
-				prev.filter((_, i) => i !== index)
-			)
-		} else {
-			setImageListDisplay((prev) =>
-				prev.filter((_, i) => i !== index)
-			)
-		}
+	const handleRemoveImage = (index) => {
+		setImageListDisplay((prev) =>
+			prev.filter((_, i) => i !== index)
+		)
 	}
 
 	// OKE

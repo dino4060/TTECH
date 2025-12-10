@@ -1,10 +1,10 @@
 "use client"
-import {
-	GoogleAuthProvider,
-	onAuthStateChanged,
-	signInWithPopup,
-	signOut,
-} from "firebase/auth"
+// import {
+// 	GoogleAuthProvider,
+// 	onAuthStateChanged,
+// 	signInWithPopup,
+// 	signOut,
+// } from "firebase/auth"
 import { useRouter } from "next/navigation"
 import {
 	createContext,
@@ -12,9 +12,7 @@ import {
 	useEffect,
 	useState,
 } from "react"
-import { auth } from "../firebaseConfig"
-import { handleUser } from "@/app/api/handleUser"
-import { handleAuth } from "@/app/api/handleAuth"
+// import { auth } from "../firebaseConfig"
 import {
 	TTECH_TOKEN,
 	TTECH_USER,
@@ -26,58 +24,7 @@ export const AuthContextProvider = ({ children }) => {
 	const [user, setUser] = useState({})
 	const [token, setToken] = useState("")
 	const [triggerLogin, setTriggerLogin] = useState(false)
-
 	const router = useRouter()
-
-	const handleUserWhenLogInByGoogle = async (
-		currentUser
-	) => {
-		//call API check user is exit (search by uid) on database
-		const isExit = await handleUser.getUserById(
-			currentUser?.uid
-		)
-
-		if (isExit?.user_id) {
-			// if exit => login this user on database
-			const login_form = {
-				phone: isExit.phone,
-				password: isExit.email,
-			}
-			const res_login = await handleAuth.login(login_form)
-
-			if (res_login?.token) {
-				const { user, token } = res_login
-				setToken(token)
-				setUser(user)
-				router.push("/")
-			}
-		} else {
-			// if not exit => register user (add to USER table on database)
-			const user_format = {
-				userId: currentUser.uid,
-				name: currentUser.displayName,
-				email: currentUser.email,
-				phone: (Math.random() * 10)
-					.toString()
-					.split(".")[1]
-					.split("")
-					.slice(0, 10)
-					.join(""),
-				password: currentUser.email,
-				role: "USER",
-			}
-
-			const res_register = await handleAuth.register(
-				user_format
-			)
-
-			if (res_register?.token) {
-				setUser(res_register.user)
-				setToken(res_register.token)
-				router.push("/")
-			}
-		}
-	}
 
 	const logout = () => {
 		//clear user and token
@@ -105,17 +52,67 @@ export const AuthContextProvider = ({ children }) => {
 		router.push("/admin/login")
 	}
 
-	const googleSignIn = () => {
-		const provider = new GoogleAuthProvider()
-		signInWithPopup(auth, provider).then((result) => {
-			const { user } = result
-			handleUserWhenLogInByGoogle(user)
-		})
-	}
+	// const handleUserWhenLogInByGoogle = async (
+	// 	currentUser
+	// ) => {
+	// 	//call API check user is exit (search by uid) on database
+	// 	const isExit = await handleUser.getUserById(
+	// 		currentUser?.uid
+	// 	)
 
-	const logOutGoogle = () => {
-		signOut(auth)
-	}
+	// 	if (isExit?.user_id) {
+	// 		// if exit => login this user on database
+	// 		const login_form = {
+	// 			phone: isExit.phone,
+	// 			password: isExit.email,
+	// 		}
+	// 		const res_login = await handleAuth.login(login_form)
+
+	// 		if (res_login?.token) {
+	// 			const { user, token } = res_login
+	// 			setToken(token)
+	// 			setUser(user)
+	// 			router.push("/")
+	// 		}
+	// 	} else {
+	// 		// if not exit => register user (add to USER table on database)
+	// 		const user_format = {
+	// 			userId: currentUser.uid,
+	// 			name: currentUser.displayName,
+	// 			email: currentUser.email,
+	// 			phone: (Math.random() * 10)
+	// 				.toString()
+	// 				.split(".")[1]
+	// 				.split("")
+	// 				.slice(0, 10)
+	// 				.join(""),
+	// 			password: currentUser.email,
+	// 			role: "USER",
+	// 		}
+
+	// 		const res_register = await handleAuth.register(
+	// 			user_format
+	// 		)
+
+	// 		if (res_register?.token) {
+	// 			setUser(res_register.user)
+	// 			setToken(res_register.token)
+	// 			router.push("/")
+	// 		}
+	// 	}
+	// }
+
+	// const googleSignIn = () => {
+	// 	const provider = new GoogleAuthProvider()
+	// 	signInWithPopup(auth, provider).then((result) => {
+	// 		const { user } = result
+	// 		handleUserWhenLogInByGoogle(user)
+	// 	})
+	// }
+
+	// const logOutGoogle = () => {
+	// 	signOut(auth)
+	// }
 
 	useEffect(() => {
 		try {
@@ -147,8 +144,8 @@ export const AuthContextProvider = ({ children }) => {
 				setToken,
 				logout,
 				logoutAdmin,
-				googleSignIn,
-				logOutGoogle,
+				// googleSignIn,
+				// logOutGoogle,
 			}}
 		>
 			{children}

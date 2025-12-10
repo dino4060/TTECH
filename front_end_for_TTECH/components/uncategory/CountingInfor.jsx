@@ -1,4 +1,4 @@
-import { handleAdmin } from "@/app/api/handleAdmin"
+import { handleAdmin } from "@/app/api/axios/handleAdmin"
 import { useEffect, useState } from "react"
 import { CiShoppingBasket, CiUser } from "react-icons/ci"
 
@@ -12,13 +12,13 @@ const CountingInfor = () => {
 		try {
 			let user = await handleAdmin.GetTotalCustomer()
 			let order = await handleAdmin.GetTotalOrder()
-			user = user.data === 0 ? user.data : user	
+			user = user.data === 0 ? user.data : user
 			order = order.data === 0 ? order.data : order
 
 			setInfor({
 				user,
 				order,
-			})		
+			})
 		} catch (error) {}
 	}
 	useEffect(() => {

@@ -1,11 +1,12 @@
 "use client"
 
+import { authApi } from "@/lib/api/auth.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 import { AnimatePresence, motion } from "framer-motion"
 import { useState } from "react"
 import { CiMinimize1 } from "react-icons/ci"
-import Notification from "../uncategory/Notification"
-import { handleUser } from "@/app/api/handleUser"
 import CircleLoader from "../uncategory/CircleLoader"
+import Notification from "../uncategory/Notification"
 
 const ForgetPassword = () => {
 	const [show, setShow] = useState(false)
@@ -14,10 +15,19 @@ const ForgetPassword = () => {
 	const [loading, setLoading] = useState(false)
 
 	const handleSubmit = async () => {
-		setLoading(true)
-		const result = await handleUser.forgetPassword(data)
+		alert("Tính năng đang phát triển")
+		return
 
+		setLoading(true)
+		const apiRes = await clientFetch(
+			authApi.forgetPassword(data)
+		)
 		setLoading(false)
+
+		if (apiRes.success === false) {
+			alert(`Lỗi lấy sản phẩm: ${apiRes.data}`)
+			return
+		}
 		setNotifications(true)
 	}
 

@@ -21,9 +21,6 @@ const DetailOrder = ({
 	}, [])
 
 	const getOrderDetailByOrderId = async () => {
-		// const orderId = currentOrderClick.id
-		// const result =
-		// 	await handleDetailOrder.getOrderDetailByOrderId(orderId)
 		setOrderDetailList(currentOrderClick.lines)
 	}
 

@@ -1,185 +1,195 @@
-"use client";
-import { authApi } from "@/lib/api/auth.api";
-import { clientFetch } from "@/lib/http/fetch.client";
-import { isValidPhoneNumber } from "@/utils/until";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { UserAuth } from "../../context/AuthContext";
-import CircleLoader from "../uncategory/CircleLoader";
-import ForgetPassword from "./ForgetPassword";
-import PopupRegister from "./PopupRegister";
-import { getEnv } from "@/lib/utils/env";
+"use client"
+import { authApi } from "@/lib/api/auth.api"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { getEnv } from "@/lib/utils/env"
+import { isValidPhoneNumber } from "@/utils/until"
+import { motion } from "framer-motion"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { FcGoogle } from "react-icons/fc"
+import { UserAuth } from "../../context/AuthContext"
+import CircleLoader from "../uncategory/CircleLoader"
+import ForgetPassword from "./ForgetPassword"
+import PopupRegister from "./PopupRegister"
 
 const LoginForm = () => {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [verifyInput, setVerifyInput] = useState({
-    phone: "",
-    password: "",
-  });
-  const [data, setData] = useState({
-    phone: "",
-    password: "",
-  });
-  const [attempts, setAttempts] = useState(0);
-  const [cooldown, setCooldown] = useState(false);
+	const router = useRouter()
+	const [loading, setLoading] = useState(false)
+	const [verifyInput, setVerifyInput] = useState({
+		phone: "",
+		password: "",
+	})
+	const [data, setData] = useState({
+		phone: "",
+		password: "",
+	})
+	const [attempts, setAttempts] = useState(0)
+	const [cooldown, setCooldown] = useState(false)
 
-  const { googleSignIn, setUser, setToken } = UserAuth();
+	const { setUser, setToken } = UserAuth()
 
-  const onAuthGoogle = () => {
-    const CLIENT_ID = getEnv.GOOGLE_CLIENT_ID;
-    const CALLBACK_URL = getEnv.GOOGLE_REDIRECT_URI;
-    const AUTH_URL = getEnv.GOOGLE_AUTH_URI;
+	const onAuthGoogle = () => {
+		const CLIENT_ID = getEnv.GOOGLE_CLIENT_ID
+		const CALLBACK_URL = getEnv.GOOGLE_REDIRECT_URI
+		const AUTH_URL = getEnv.GOOGLE_AUTH_URI
 
-    const TARGET_URL = `${AUTH_URL
-      }?redirect_uri=${encodeURIComponent(CALLBACK_URL)
-      }&response_type=code&client_id=${CLIENT_ID
-      }&scope=openid%20email%20profile`;
+		const TARGET_URL = `${AUTH_URL}?redirect_uri=${encodeURIComponent(
+			CALLBACK_URL
+		)}&response_type=code&client_id=${CLIENT_ID}&scope=openid%20email%20profile`
 
-    window.location.href = TARGET_URL;
-  };
+		window.location.href = TARGET_URL
+	}
 
+	useEffect(() => {
+		let timer
+		if (cooldown) {
+			timer = setTimeout(() => {
+				setCooldown(false)
+				setAttempts(0) // Reset attempts after cooldown
+			}, 60000) // 1 minute cooldown
+		}
+		return () => clearTimeout(timer)
+	}, [cooldown])
 
-  useEffect(() => {
-    let timer;
-    if (cooldown) {
-      timer = setTimeout(() => {
-        setCooldown(false);
-        setAttempts(0); // Reset attempts after cooldown
-      }, 60000); // 1 minute cooldown
-    }
-    return () => clearTimeout(timer);
-  }, [cooldown]);
+	const verify = (id, value) => {
+		let errorMessage = ""
+		if (!value.trim()) {
+			errorMessage = `Vui lòng nhập ${
+				id === "phone" ? "số điện thoại" : "password"
+			}`
+		} else if (id === "phone" && !isValidPhoneNumber(value)) {
+			errorMessage = "Số điện thoại nên gồm 10 chữ số"
+		}
 
-  const verify = (id, value) => {
-    let errorMessage = "";
-    if (!value.trim()) {
-      errorMessage = `Vui lòng nhập ${id === "phone" ? "số điện thoại" : "password"
-        }`;
-    } else if (id === "phone" && !isValidPhoneNumber(value)) {
-      errorMessage = "Số điện thoại nên gồm 10 chữ số";
-    }
+		setVerifyInput((prev) => ({
+			...prev,
+			[id]: errorMessage,
+		}))
 
-    setVerifyInput((prev) => ({
-      ...prev,
-      [id]: errorMessage,
-    }));
+		return errorMessage === ""
+	}
 
-    return errorMessage === "";
-  };
+	const handleInputChange = (e) => {
+		const { value, id } = e.target
+		verify(id, value)
+		setData((prev) => ({ ...prev, [id]: value }))
+	}
 
-  const handleInputChange = (e) => {
-    const { value, id } = e.target;
-    verify(id, value);
-    setData((prev) => ({ ...prev, [id]: value }));
-  };
+	const handleLogin = async () => {
+		if (cooldown) return
 
-  const handleLogin = async () => {
-    if (cooldown) return;
+		const isValid =
+			verify("phone", data.phone) &&
+			verify("password", data.password)
+		if (!isValid) return
 
-    const isValid =
-      verify("phone", data.phone) &&
-      verify("password", data.password);
-    if (!isValid) return;
+		setLoading(true)
+		const {
+			success,
+			data: result,
+			error,
+		} = await clientFetch(authApi.loginPhone(data))
 
-    setLoading(true);
-    const { success, data: result, error } = await clientFetch(authApi.loginPhone(data));
+		if (success && result.isAuthenticated) {
+			setUser(result.currentUser)
+			setToken(result.accessToken)
+			router.push("/")
+		} else {
+			setVerifyInput((prev) => ({
+				...prev,
+				password: error || "Incorrect login information",
+			}))
+			setAttempts((prev) => prev + 1)
+			attempts + 1 >= 3 && setCooldown(true)
+		}
 
-    if (success && result.isAuthenticated) {
-      setUser(result.currentUser);
-      setToken(result.accessToken);
-      router.push("/");
-    } else {
-      setVerifyInput((prev) => ({
-        ...prev,
-        password: error || "Incorrect login information",
-      }));
-      setAttempts((prev) => prev + 1);
-      (attempts + 1 >= 3) && setCooldown(true);
-    }
+		setLoading(false)
+	}
 
-    setLoading(false);
-  };
+	return (
+		<div className='p-[30px] md:w-[500px] mx-auto'>
+			<div
+				className='flex gap-4 justify-center'
+				onClick={() => router.push("/")}
+			>
+				<h1 className='text-[3rem] pt-[10px] font-[700] capitalize tracking-wide'>
+					Login Account
+				</h1>
+				<div className='relative w-[120px]'>
+					<Image
+						src={"/images/1x/Asset1.png"}
+						fill
+						alt='logo'
+						style={{ objectFit: "contain" }}
+					/>
+				</div>
+			</div>
 
-  return (
-    <div className='p-[30px] md:w-[500px] mx-auto'>
-      <div
-        className='flex gap-4 justify-center'
-        onClick={() => router.push("/")}
-      >
-        <h1 className='text-[3rem] pt-[10px] font-[700] capitalize tracking-wide'>
-          Login Account
-        </h1>
-        <div className='relative w-[120px]'>
-          <Image
-            src={"/images/1x/Asset1.png"}
-            fill
-            alt='logo'
-            style={{ objectFit: "contain" }}
-          />
-        </div>
-      </div>
+			<div className='flex flex-col mt-2 gap-2'>
+				{["phone", "password"].map((x, i) => (
+					<div key={i}>
+						<motion.input
+							required
+							type={x === "password" ? "password" : "text"}
+							id={x}
+							whileFocus={{
+								scale: 1.05,
+								borderColor: "#3b82f6",
+							}}
+							value={data[x]}
+							onChange={handleInputChange}
+							placeholder={
+								x === "phone" ? "Phone Number" : "Password"
+							}
+							className='w-full border-b-2 outline-none text-[2.5rem] font-[600] px-2'
+						/>
+						<h3 className='text-red-500 text-xl mt-2'>
+							{verifyInput[x]}
+						</h3>
+					</div>
+				))}
 
-      <div className='flex flex-col mt-2 gap-2'>
-        {["phone", "password"].map((x, i) => (
-          <div key={i}>
-            <motion.input
-              required
-              type={x === "password" ? "password" : "text"}
-              id={x}
-              whileFocus={{
-                scale: 1.05,
-                borderColor: "#3b82f6",
-              }}
-              value={data[x]}
-              onChange={handleInputChange}
-              placeholder={x === "phone" ? "Phone Number" : "Password"}
-              className='w-full border-b-2 outline-none text-[2.5rem] font-[600] px-2'
-            />
-            <h3 className='text-red-500 text-xl mt-2'>
-              {verifyInput[x]}
-            </h3>
-          </div>
-        ))}
+				<ForgetPassword />
 
-        <ForgetPassword />
+				<motion.button
+					onClick={handleLogin}
+					disabled={cooldown}
+					initial={{
+						backgroundColor: "#60a5fa",
+						color: "white",
+					}}
+					whileHover={{ backgroundColor: "#2563eb" }}
+					transition={{ type: "spring" }}
+					className={`w-full flex items-center justify-center uppercase font-[600] mt-2 p-3 rounded-3xl text-[1.8rem] ${
+						cooldown ? "bg-gray-400 cursor-not-allowed" : ""
+					}`}
+				>
+					{loading ? (
+						<CircleLoader />
+					) : cooldown ? (
+						"Please wait 1 minute"
+					) : (
+						"Login"
+					)}
+				</motion.button>
+			</div>
+			<PopupRegister />
+			<div className='uppercase text-center text-[1.4em] font-[700] my-6'>
+				or
+			</div>
 
-        <motion.button
-          onClick={handleLogin}
-          disabled={cooldown}
-          initial={{
-            backgroundColor: "#60a5fa",
-            color: "white",
-          }}
-          whileHover={{ backgroundColor: "#2563eb" }}
-          transition={{ type: "spring" }}
-          className={`w-full flex items-center justify-center uppercase font-[600] mt-2 p-3 rounded-3xl text-[1.8rem] ${cooldown ? "bg-gray-400 cursor-not-allowed" : ""
-            }`}
-        >
-          {loading ? <CircleLoader /> : cooldown ? "Please wait 1 minute" : "Login"}
-        </motion.button>
-      </div>
-      <PopupRegister />
-      <div className='uppercase text-center text-[1.4em] font-[700] my-6'>
-        or
-      </div>
+			<button
+				className='w-full bg-slate-400 text-[1.8rem] relative p-2 rounded-3xl flex justify-center items-center text-white'
+				onClick={() => onAuthGoogle()}
+			>
+				<div className='bg-white rounded-[16px] p-2 w-[28px] h-[28px] flex items-center justify-center absolute left-2'>
+					<FcGoogle size={22} />
+				</div>
+				<h1>Login with Google</h1>
+			</button>
+		</div>
+	)
+}
 
-      <button
-        className='w-full bg-slate-400 text-[1.8rem] relative p-2 rounded-3xl flex justify-center items-center text-white'
-        onClick={() => {
-          onAuthGoogle(); // googleSignIn();
-        }}
-      >
-        <div className='bg-white rounded-[16px] p-2 w-[28px] h-[28px] flex items-center justify-center absolute left-2'>
-          <FcGoogle size={22} />
-        </div>
-        <h1>Login with Google</h1>
-      </button>
-    </div>
-  );
-};
-
-export default LoginForm;
+export default LoginForm

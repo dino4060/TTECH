@@ -29,6 +29,7 @@ const Header = () => {
 			const apiRes = await clientFetch(categoryApi.list())
 			if (apiRes.success === false) {
 				alert(`Lỗi lấy ngành hàng cho Header: ${apiRes.error}`)
+				return
 			}
 			setCategoryList(apiRes.data)
 		}

@@ -1,5 +1,5 @@
 "use client"
-import { axiosCore } from "@/app/api/axiosClient"
+import { axiosCore } from "@/app/api/axios/axiosClient"
 import { CiSearch } from "react-icons/ci"
 
 const OrderFeatures = ({ setSearchOrderId }) => {

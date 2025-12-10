@@ -1,8 +1,8 @@
-import { handleCategory } from "@/app/api/handleCategory"
-import caterogyDataExample from "../../data"
-import { useEffect, useState } from "react"
+import { categoryApi } from "@/lib/api/category.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 const ProductListCategoryOnPhone = ({
 	setShowCategory,
@@ -10,13 +10,17 @@ const ProductListCategoryOnPhone = ({
 	const [categoryList, setCategoryList] = useState([])
 	const router = useRouter()
 
-	const getAllCategories = async () => {
-		const result = await handleCategory.getAllCategories()
-		setCategoryList(result || caterogyDataExample)
-	}
-
 	useEffect(() => {
-		getAllCategories()
+		const listCategories = async () => {
+			const apiRes = await clientFetch(categoryApi.list())
+			if (apiRes.success === false) {
+				alert(`Lỗi lấy ngành hàng cho Header: ${apiRes.error}`)
+				return
+			}
+			setCategoryList(apiRes.data)
+		}
+
+		listCategories()
 	}, [])
 
 	return (

@@ -1,10 +1,9 @@
 "use client"
-
-import { handleCart } from "@/app/api/handleCart"
-import { handleProduct } from "@/app/api/handleProduct"
 import CircleLoader from "@/components/uncategory/CircleLoader"
 import Notification from "@/components/uncategory/Notification"
 import { UserAuth } from "@/context/AuthContext"
+import { productApi } from "@/lib/api/product.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 import { convertToVND, getCurrentDate } from "@/utils/until"
 import { AnimatePresence } from "framer-motion"
 import { useRouter } from "next/navigation"
@@ -20,15 +19,8 @@ export default function Page({ params }) {
 	const [imageList, setImageList] = useState([])
 	const [loading, setLoading] = useState(true)
 	const [notifications, setNotifications] = useState(false)
-	const product_id = params.id
-	const {
-		user,
-		setUser,
-		googleSignIn,
-		logOutGoogle,
-		setToken,
-		token,
-	} = UserAuth()
+	const productId = params.id
+	const { user } = UserAuth()
 
 	const router = useRouter()
 	const [result, setResult] = useState({
@@ -60,38 +52,34 @@ export default function Page({ params }) {
 	})
 
 	const handleOnClick = async () => {
-		const data = {
-			product_id: product_id,
-			quantity: 1,
+		if (!user?.id) router.push("/login")
+
+		const apiRes = await clientFetch(
+			cartApi.addLine({ productId, quantity: 1 })
+		)
+		if (apiRes.success === false) {
+			alert(`Lỗi thêm vào giỏ hàng: ${apiRes.error}`)
+			return
 		}
-
-		if (!token || !user?.userId) router.push("/login")
-
-		const result = await handleCart.AddToCart(data, token)
-
 		setNotifications(true)
 	}
 
-	const callAPI = async () => {
-		try {
-			const result = await handleProduct.getProductById(
-				params.id
-			)
-
-			const images = await handleProduct.getAllImageOfProduct(
-				params.id
-			)
-			// const
-			setImageList(images)
-
-			setResult(result)
-			setLoading(false)
-		} catch (error) {}
-	}
-
 	useEffect(() => {
-		callAPI()
-	}, [])
+		const getProduct = async () => {
+			const apiRes = await clientFetch(
+				productApi.get(Number(params.id))
+			)
+			if (apiRes.success === false) {
+				alert(`Lỗi lấy sản phẩm: ${apiRes.error}`)
+			}
+
+			setResult(apiRes.data)
+			setImageList([apiRes.data.thumb, ...apiRes.data.photos])
+			setLoading(false)
+		}
+
+		getProduct()
+	}, [params])
 
 	return (
 		<div className='container mx-auto pb-[100px] mt-28'>

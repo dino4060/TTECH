@@ -49,7 +49,8 @@ public class ProductService {
     // DOMAIN //
 
     public Product get(Long id) {
-        return productRepository.findById(id)
+        return productRepository
+                .findById(id)
                 .orElseThrow(() -> new ModelNotFoundE("Product"));
     }
 

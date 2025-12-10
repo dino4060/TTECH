@@ -1,5 +1,5 @@
 "use client"
-import { handleAdmin } from "@/app/api/handleAdmin"
+import { handleAdmin } from "@/app/api/axios/handleAdmin"
 import { faker } from "@faker-js/faker"
 import {
 	BarElement,

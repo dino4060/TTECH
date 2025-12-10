@@ -1,4 +1,4 @@
-import { handleAdmin } from "@/app/api/handleAdmin"
+import { handleAdmin } from "@/app/api/axios/handleAdmin"
 import useDebounce from "@/hooks/useDebounce"
 import { useEffect, useState } from "react"
 import { CiShoppingBasket } from "react-icons/ci"

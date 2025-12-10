@@ -1,12 +1,11 @@
 "use client"
-import { AnimatePresence, motion } from "framer-motion"
+import Notification from "@/components/uncategory/Notification"
+import { adminProductApi } from "@/lib/api/product.api"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { motion } from "framer-motion"
 import { useState } from "react"
 import { CiSearch } from "react-icons/ci"
 import AddProduct from "./AddProduct"
-import { handleProduct } from "@/app/api/handleProduct"
-import Notification from "@/components/uncategory/Notification"
-import { clientFetch } from "@/lib/http/fetch.client"
-import { adminProductApi } from "@/lib/api/product.api"
 
 const ProductAction = ({
 	filter,

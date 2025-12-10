@@ -1,60 +1,51 @@
 "use client"
-
-import { handleProduct } from "@/app/api/handleProduct"
 import { AnimatePresence, motion } from "framer-motion"
-import {
-	usePathname,
-	useRouter,
-	useSearchParams,
-} from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CiMinimize1, CiSearch } from "react-icons/ci"
 import useDebounce from "../../hooks/useDebounce"
-import { checkV } from "@/lib/utils/check"
+import { clientFetch } from "@/lib/http/fetch.client"
+import { productApi } from "@/lib/api/product.api"
 
 const SearchBar = () => {
 	const [showSearchPage, setShowSearchPage] = useState(false)
+	const [searchProducts, setSearchProducts] = useState([])
 	const [keywords, setKeywords] = useState("")
-
 	const router = useRouter()
 	const searchParams = useSearchParams()
+	const keywordsDeb = useDebounce(keywords, 500)
 
-	const [filteredProducts, setFilteredProducts] = useState(
-		[]
-	)
-
-	const debouncedValue = useDebounce(keywords, 500)
-
-	const getProductBySearchParam = async () => {
-		checkV("handle products: getProductBySearchParam")
-		const result = await handleProduct.getProduct({
-			searchKey: debouncedValue,
-		})
-
-		if (result && Array.isArray(result.products)) {
-			setFilteredProducts(result.products || [])
+	const onPressEnterKey = (e) => {
+		const navigateSearchPage = (keywords) => {
+			const params = new URLSearchParams(
+				searchParams.toString()
+			)
+			params.set("keywords", keywords)
+			router.push(`products/?${params.toString()}`)
 		}
-	}
 
-	const onSearchKeywords = (keywords) => {
-		const params = new URLSearchParams(
-			searchParams.toString()
-		)
-		params.set("keywords", keywords)
-		router.push(`products/?${params.toString()}`)
-	}
-
-	const onPressKeyEnter = (e) => {
 		if (e.key === "Enter") {
-			onSearchKeywords(keywords)
+			navigateSearchPage(keywords)
 			setShowSearchPage(false)
 		}
 	}
 
-	// TODO fix always run get products, get categories when go to the next page
-	// useEffect(() => {
-	// 	getProductBySearchParam()
-	// }, [debouncedValue])
+	useEffect(() => {
+		const searchProducts = async () => {
+			const apiRes = await clientFetch(
+				productApi.list({
+					keywords: keywordsDeb,
+				})
+			)
+			if (apiRes.success === false) {
+				alert(`Lỗi lấy danh sách sản phẩm: ${apiRes.error}`)
+				return
+			}
+			setSearchProducts(apiRes.data.items)
+		}
+
+		searchProducts()
+	}, [keywordsDeb])
 
 	useEffect(() => {
 		const handleKeyPress = (event) => {
@@ -101,7 +92,7 @@ const SearchBar = () => {
 											autoFocus
 											placeholder='Tìm Kiếm'
 											value={keywords}
-											onKeyPress={onPressKeyEnter}
+											onKeyPress={onPressEnterKey}
 											onChange={(e) => {
 												setKeywords(e.target.value)
 											}}
@@ -119,17 +110,17 @@ const SearchBar = () => {
 								</div>
 
 								<div className='w-full mt-10flex flex-col justify-start items-start'>
-									{filteredProducts?.slice(0, 6)?.map((x, i) => (
+									{searchProducts?.slice(0, 6)?.map((x, i) => (
 										<motion.h1
-											onClick={() => {
-												router.push("/products/" + x?.productId)
-												setShowSearchPage(false)
-											}}
-											whileHover={{ color: "#dc2626" }}
 											key={i}
 											className='text-black text-[2rem] font-[700] cursor-pointer'
+											whileHover={{ color: "#dc2626" }}
+											onClick={() => {
+												router.push("/products/" + x?.id)
+												setShowSearchPage(false)
+											}}
 										>
-											{x?.namePr}
+											{x?.name}
 										</motion.h1>
 									))}
 								</div>
