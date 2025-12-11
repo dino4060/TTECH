@@ -14,7 +14,6 @@ import { CiUser } from "react-icons/ci"
 import Cart from "../cart/Cart"
 import CategoryPhone from "./CategoryPhone"
 import SearchBar from "./SearchBar"
-import { checkKV } from "@/lib/utils/check"
 
 const Header = () => {
 	const router = useRouter()

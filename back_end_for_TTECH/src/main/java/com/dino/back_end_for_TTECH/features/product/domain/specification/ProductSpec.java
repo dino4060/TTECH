@@ -3,6 +3,7 @@ package com.dino.back_end_for_TTECH.features.product.domain.specification;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductHomeQuery;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductQuery;
 import com.dino.back_end_for_TTECH.features.product.domain.Product;
+import jakarta.persistence.criteria.Path;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -38,14 +39,16 @@ public class ProductSpec {
     public static Specification<Product> fromMinPrice(Integer minPrice) {
         return (root, query, builder) -> {
             if (minPrice == null) return null;
-            return builder.greaterThanOrEqualTo(root.join("allPrice").get("mainPrice"), minPrice);
+            Path<Integer> mainPricePath = root.join("price").get("mainPrice");
+            return builder.greaterThanOrEqualTo(mainPricePath, minPrice);
         };
     }
 
     public static Specification<Product> toMaxPrice(Integer maxPrice) {
         return (root, query, builder) -> {
             if (maxPrice == null) return null;
-            return builder.lessThanOrEqualTo(root.join("allPrice").get("mainPrice"), maxPrice);
+            Path<Integer> mainPricePath = root.join("price").get("mainPrice");
+            return builder.lessThanOrEqualTo(mainPricePath, maxPrice);
         };
     }
 

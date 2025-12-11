@@ -1,5 +1,5 @@
 "use client"
-import { convertTokVND } from "@/utils/until"
+import { convertTo000D } from "@/utils/until"
 import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { CiFilter, CiPercent } from "react-icons/ci"
@@ -8,6 +8,7 @@ const FilterProduct = ({
 	filter,
 	setFilter,
 	seriesList,
+	asyncSeries,
 }) => {
 	const [show, setShow] = useState(false)
 	const [error, setError] = useState({})
@@ -34,15 +35,19 @@ const FilterProduct = ({
 				...filter,
 				series: currSeriesId,
 				statistics: currProductStt,
+				prices: currPriceRange,
 				direction: currPriceDirt,
 				sort: currPriceDirt ? "price.mainPrice" : null,
 			})
 		}
 	}, [show])
 
+	useEffect(() => {
+		setCurrSeriesId(null)
+	}, [asyncSeries])
+
 	const onPriceRangeChange = (e) => {
 		const { value, id } = e.target
-		console.log(value, id)
 
 		if (
 			id === "minPrice" &&
@@ -51,7 +56,7 @@ const FilterProduct = ({
 		) {
 			setError((prev) => ({
 				...prev,
-				minPrice: "Giá nhỏ nhất nên nhỏ hơn giới hạn trên",
+				minPrice: "Giá từ nên nhỏ hơn giá đến",
 			}))
 		} else {
 			setError((prev) => ({
@@ -67,7 +72,7 @@ const FilterProduct = ({
 		) {
 			setError((prev) => ({
 				...prev,
-				maxPrice: "Giá lớn nhất nên lớn hơn giới hạn dưới",
+				maxPrice: "Giá đến nên lớn hơn giá từ",
 			}))
 		} else {
 			setError((prev) => ({
@@ -87,17 +92,6 @@ const FilterProduct = ({
 				currPriceRange[0],
 				Number.parseInt(value) || 0,
 			])
-
-		// setError((prev) => ({
-		// 	...prev,
-		// 	minPrice: "",
-		// 	maxPrice: "",
-		// }))
-	}
-
-	const handlePriceRangeClick = (e) => {
-		setFilter((pre) => ({ ...pre, prices: currPriceRange }))
-		setShow(false)
 	}
 
 	return (
@@ -151,6 +145,7 @@ const FilterProduct = ({
 					>
 						<div className='absolute top-0 bottom-40 inset-x-0 bg-white z-40'>
 							<div className='grid grid-cols-10 mt-36'>
+								{/* Price Sort */}
 								<div className='col-span-6 text-center'>
 									<h1 className='text-5xl font-bold'>
 										{PriceSort.name}
@@ -180,62 +175,45 @@ const FilterProduct = ({
 									</div>
 								</div>
 
+								{/* Price Range */}
 								<div className='col-span-4'>
-									<h1 className='text-5xl font-bold'>Khoảng giá</h1>
-									<form
-										className='flex flex-col items-start mt-5 gap-0.5'
-										onSubmit={(e) => e.preventDefault()}
-									>
-										{[
-											{
-												name: "Từ",
-												key: "minPrice",
-												placeholder: "Giá nhỏ nhất", // convertToVND(0),
-											},
-											{
-												name: "Đến",
-												key: "maxPrice",
-												placeholder: "Giá lớn nhất", // convertToVND(9999999),
-											},
-										].map((x, i) => (
+									<h1 className='text-5xl font-bold'>
+										{PriceRange.name}
+									</h1>
+									<div className='mt-5'>
+										{PriceRange.list.map((p, i) => (
 											<div
-												key={x.key}
+												key={p.id}
 												className='flex items-center text-2xl gap-2'
 											>
-												<label htmlFor={x.key} className='min-w-[40px]'>
-													{x.name}
+												<label htmlFor={p.id} className='min-w-[40px]'>
+													{p.name}
 												</label>
 												<input
-													onChange={(e) => onPriceRangeChange(e)}
+													id={p.id}
+													placeholder={p.placeholder}
 													value={currPriceRange[i]}
-													id={x.key}
-													placeholder={x.placeholder}
+													onChange={(e) => onPriceRangeChange(e)}
 												/>
 												<h1
 													className={`text-black/40 font-[400] hidden md:block text-xl ${
-														error[x.key] ? "text-red-500" : ""
+														error[p.id] ? "text-red-500" : ""
 													}`}
 												>
 													{currPriceRange[i] <= 0
 														? "Không giới hạn"
-														: error[x.key]
-														? error[x.key]
-														: convertTokVND(
+														: error[p.id]
+														? error[p.id]
+														: convertTo000D(
 																Number.parseInt(currPriceRange[i])
 														  )}
 												</h1>
 											</div>
 										))}
-
-										<button
-											onClick={handlePriceRangeClick}
-											className='px-4 text-white text-2xl mt-4 bg-blue-500 rounded-full  py-1 '
-										>
-											Xác nhận
-										</button>
-									</form>
+									</div>
 								</div>
 
+								{/* Product Statistic */}
 								<div className='col-span-6 text-center mt-36'>
 									<h1 className='text-5xl font-bold'>
 										{ProductSort.name}
@@ -265,6 +243,7 @@ const FilterProduct = ({
 									</div>
 								</div>
 
+								{/* Product Series */}
 								<div className='col-span-4 mt-36'>
 									<h1 className='text-5xl font-bold'>
 										Series sản phẩm
@@ -340,6 +319,23 @@ const PriceSort = {
 		{
 			id: "DESC",
 			name: "Từ cao đến thấp",
+		},
+	],
+}
+
+const PriceRange = {
+	id: 1,
+	name: "Khoảng giá",
+	list: [
+		{
+			id: "minPrice",
+			name: "Từ",
+			placeholder: "Giá nhỏ nhất",
+		},
+		{
+			id: "maxPrice",
+			name: "Đến",
+			placeholder: "Giá lớn nhất",
 		},
 	],
 }

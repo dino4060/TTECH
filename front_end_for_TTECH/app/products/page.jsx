@@ -1,5 +1,5 @@
 "use client"
-import FilterProduct from "@/components/product/FilterProduct"
+import FilterProduct from "@/components/product/ProductFilter"
 import ProductItem from "@/components/product/ProductItem"
 import PaginationControls from "@/components/uncategory/PaginationControls"
 import { productApi } from "@/lib/api/product.api"
@@ -17,15 +17,7 @@ export default function Page({ searchParams }) {
 	const [currentPage, setCurrentPage] = useState(1)
 	const [productList, setProductList] = useState(List12)
 	const [seriesList, setSeriesList] = useState(List12)
-
-	useEffect(() => {
-		let { category, keywords } = searchParams
-
-		category = category || undefined
-		keywords = keywords || undefined
-
-		setFilter({ ...filter, category, keywords })
-	}, [searchParams.category, searchParams.keywords])
+	const [asyncSeries, setAsyncSeries] = useState(false)
 
 	useEffect(() => {
 		const listProducts = async () => {
@@ -56,12 +48,23 @@ export default function Page({ searchParams }) {
 		listSeries()
 	}, [filter])
 
+	useEffect(() => {
+		setAsyncSeries((prev) => !prev)
+		setFilter({
+			...filter,
+			series: null,
+			category: searchParams.category || null,
+			keywords: searchParams.keywords || null,
+		})
+	}, [searchParams])
+
 	return (
 		<div className='mt-20' suppressHydrationWarning={true}>
 			<FilterProduct
 				filter={filter}
 				setFilter={setFilter}
 				seriesList={seriesList}
+				asyncSeries={asyncSeries}
 			/>
 
 			<div className='flex justify-center'>
