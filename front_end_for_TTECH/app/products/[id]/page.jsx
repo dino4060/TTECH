@@ -8,7 +8,7 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import {
 	convertPercent,
 	convertTo000D,
-} from "@/utils/until"
+} from "@/lib/utils/number2"
 import { AnimatePresence } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { Fragment, useEffect, useState } from "react"
@@ -108,8 +108,8 @@ export default function Page({ params }) {
 								className='flex items-center justify-center cursor-pointer relative'
 								initial={{ width: 200, height: 200 }}
 								animate={{
-									width: zoomPhotoIndex === index ? 400 : 200,
-									height: zoomPhotoIndex === index ? 400 : 200,
+									width: zoomPhotoIndex === index ? 450 : 200,
+									height: zoomPhotoIndex === index ? 450 : 200,
 									zIndex: zoomPhotoIndex === index ? 10 : 1,
 								}}
 								transition={{

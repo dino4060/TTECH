@@ -14,7 +14,7 @@ import {
 import {
 	convertTo000D,
 	smoothScrollHorizotal,
-} from "../../utils/until"
+} from "../../lib/utils/number2"
 import CircleLoader from "./CircleLoader"
 import Notification from "./Notification"
 

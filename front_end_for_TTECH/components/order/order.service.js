@@ -2,7 +2,7 @@ import { ghnApiRt } from "@/app/api/shipping/ghn/ghn.api-route"
 import { addressApi } from "@/lib/api/address.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { findGhnAddress } from "@/lib/utils/shipping/address"
-import { roundTo1K } from "@/utils/until"
+import { roundTo1K } from "@/lib/utils/number2"
 
 export const calcDiscount = (totalPrice, dealPercent) => {
 	return Math.ceil(totalPrice * (dealPercent / 100))

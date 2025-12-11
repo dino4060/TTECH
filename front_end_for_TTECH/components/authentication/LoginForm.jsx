@@ -2,7 +2,7 @@
 import { authApi } from "@/lib/api/auth.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { getEnv } from "@/lib/utils/env"
-import { isValidPhoneNumber } from "@/utils/until"
+import { isValidPhoneNumber } from "@/lib/utils/number2"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { useRouter } from "next/navigation"

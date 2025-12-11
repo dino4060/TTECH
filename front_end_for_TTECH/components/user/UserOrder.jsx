@@ -1,7 +1,7 @@
 "use client"
 import { copy } from "@/lib/utils"
 import { convertDate, toGMT7 } from "@/lib/utils/number"
-import { convertTo000D } from "@/utils/until"
+import { convertTo000D } from "@/lib/utils/number2"
 import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import {

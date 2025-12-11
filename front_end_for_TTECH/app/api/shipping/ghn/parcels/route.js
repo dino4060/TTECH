@@ -9,7 +9,7 @@ import {
 	GHN_V2_PUBLIC_API,
 } from "@/lib/utils/shipping/ghn"
 import { SMARTPHONE_SIZE } from "@/lib/utils/shipping/product-size"
-import { roundTo1K } from "@/utils/until"
+import { roundTo1K } from "@/lib/utils/number2"
 import { NextResponse } from "next/server"
 
 export async function POST(request) {

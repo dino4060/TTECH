@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react"
 import {
 	isValidEmail,
 	isValidPhoneNumber,
-} from "../../utils/until"
+} from "../../lib/utils/number2"
 import CircleLoader from "../uncategory/CircleLoader"
 import Notification from "../uncategory/Notification"
 import UserAddressForm from "./UserAddressForm"

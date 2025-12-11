@@ -10,7 +10,7 @@ import useDebounce from "../../hooks/useDebounce"
 import {
 	isValidEmail,
 	isValidPhoneNumber,
-} from "../../utils/until"
+} from "../../lib/utils/number2"
 import CircleLoader from "../uncategory/CircleLoader"
 
 // Password validation function

@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
 import { CiBellOn } from "react-icons/ci"
 
-const AdminInformation = () => {
+const AdminNotification = () => {
 	const [showList, setShowList] = useState(false)
 	const listRef = useRef(null)
 
@@ -49,7 +49,7 @@ const AdminInformation = () => {
 					className='relative flex items-center bg-gradient-to-bl from-pink-400 to-pink-700 rounded-2xl p-2 text-white'
 				>
 					<div className='text-black text-center absolute top-0 left-0 w-6 -translate-x-1 -translate-y-1 h-6 bg-white/20 backdrop-blur-md  rounded-xl'>
-						{informationList.length}
+						{NotificationList.length}
 					</div>
 					<motion.div
 						whileHover={{ rotate: [0, 30, 0, -30, 0] }}
@@ -62,7 +62,7 @@ const AdminInformation = () => {
 				</div>
 			</div>
 
-			{/* Information List */}
+			{/* Notification List */}
 			<AnimatePresence>
 				{showList && (
 					<motion.div
@@ -84,7 +84,7 @@ const AdminInformation = () => {
 							></div>
 						</div>
 						<motion.ul className='text-[1.5rem] flex flex-col divide-y '>
-							{informationList.map((x, i) => (
+							{NotificationList.map((x, i) => (
 								<li
 									className='flex gap-4 align-top justify-start py-2'
 									key={i}
@@ -101,11 +101,11 @@ const AdminInformation = () => {
 	)
 }
 
-export default AdminInformation
+export default AdminNotification
 
-const informationList = [
-	"Sang vừa đặt một sản phẩm ",
-	"Công vừa đặt máy run công suất lớn",
-	"Kiệt vừa cúp học",
-	"Toàn vừa rủ Công chơi cầu trượt",
+const NotificationList = [
+	"Lân vừa đặt một sản phẩm ",
+	"Thắng vừa đặt máy run công suất lớn",
+	"Chiến vừa cúp học",
+	"Nguyên vừa rủ Thắng chơi cầu trượt",
 ]

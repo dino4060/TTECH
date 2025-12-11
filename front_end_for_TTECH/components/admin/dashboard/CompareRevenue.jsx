@@ -8,10 +8,11 @@ import {
 } from "react-icons/bi"
 import { CiCreditCard1 } from "react-icons/ci"
 import {
+	convertTo000D,
 	convertToVND,
 	getCurrentMonth,
 	getPreCurrentMonth,
-} from "../../../utils/until"
+} from "../../../lib/utils/number2"
 
 const CompareRevenue = () => {
 	const [revenue, setRevenue] = useState({
@@ -52,18 +53,22 @@ const CompareRevenue = () => {
 						</h1>
 						<div className='flex items-end gap-3'>
 							<div className='font-bold text-[2rem] tracking-more-wider'>
-								{convertToVND(revenue?.thisMonthRevenue)}
+								{convertTo000D(680125000)}
+								{/* {convertToVND(revenue?.thisMonthRevenue)} */}
 							</div>
 							<div>
-								{revenue?.percentDifference > 1 ? (
+								{/* {revenue?.percentDifference > 1 ? ( */}
+								{20 > 1 ? (
 									<div className='flex items-center text-[1.2rem]  gap-1 '>
 										<BiLineChart size={15} color='green' />{" "}
-										{revenue?.percentDifference} %
+										{/* {revenue?.percentDifference} */}
+										20%
 									</div>
 								) : (
 									<div className='flex items-center text-[1.2rem]  gap-1 '>
 										<BiLineChartDown size={15} color='red' />{" "}
-										{revenue?.percentDifference} %
+										{/* {revenue?.percentDifference} */}
+										20%
 									</div>
 								)}
 							</div>
@@ -76,7 +81,8 @@ const CompareRevenue = () => {
 							{getPreCurrentMonth()}
 						</h1>
 						<div className='font-bold text-[2rem] tracking-more-wider'>
-							{convertToVND(revenue?.lastMonthRevenue)}
+							{convertTo000D(92450000)}
+							{/* {convertToVND(revenue?.lastMonthRevenue)} */}
 						</div>
 					</div>
 				</div>
