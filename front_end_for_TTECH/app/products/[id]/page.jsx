@@ -72,7 +72,7 @@ export default function Page({ params }) {
 			<div className='mx-auto w-4/5'>
 				<div className='text-[1.9rem] font-[600] capitalize'>
 					<span
-						className='cursor-pointer'
+						className='cursor-pointer text-black/80 hover:text-black'
 						onClick={() =>
 							router.push(
 								"/products?category=" + product.category?.id
@@ -83,7 +83,7 @@ export default function Page({ params }) {
 						/
 					</span>
 					<span
-						className='cursor-pointer'
+						className='cursor-pointer text-black/80 hover:text-black'
 						onClick={() =>
 							router.push(
 								"/products?category=" +
