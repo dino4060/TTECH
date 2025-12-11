@@ -102,16 +102,16 @@ public class ProductService {
 
     // READ //
 
-    public PageData<ProductFull> list(ProductQuery query) {
+    public PageData<ProductFullData> list(ProductQuery query) {
         var page = this.productRepository.findAll(
                 this.mapper.toQueryable(query),
                 this.mapper.toPageable(query));
 
         return this.mapper.toPageData(
-                page, (Product p) -> this.mapper.toProductFull(p));
+                page, (Product p) -> this.mapper.toProductFullData(p));
     }
 
-    public PageData<ProductFull> list(ProductHomeQuery query) {
+    public PageData<ProductFullData> list(ProductHomeQuery query) {
         var page = this.productRepository.findAll(
                 this.mapper.toQueryable(query),
                 this.mapper.toPageable(query));
@@ -139,7 +139,7 @@ public class ProductService {
         }
 
         return this.mapper.toPageData(
-                page, (Product p) -> this.mapper.toProductFull(p));
+                page, (Product p) -> this.mapper.toProductFullData(p));
     }
 
     // WRITE //

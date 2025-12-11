@@ -32,7 +32,7 @@ public class ProductController {
             @PathVariable Long id
     ) {
         var model = this.productService.get(id);
-        var data = this.mapper.toProductData(model);
+        var data = this.mapper.toProductFullData(model);
         return ResponseEntity.ok(data);
     }
 }

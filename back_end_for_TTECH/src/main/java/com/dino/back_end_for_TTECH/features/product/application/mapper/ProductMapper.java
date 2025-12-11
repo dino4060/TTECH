@@ -42,7 +42,7 @@ public interface ProductMapper extends PageMapper {
 
     ProductData toProductData(Product product);
 
-    ProductFull toProductFull(Product product);
+    ProductFullData toProductFullData(Product product);
 
     Product toProduct(ProductBody body);
 
