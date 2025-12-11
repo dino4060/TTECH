@@ -2,7 +2,7 @@ import { handleAdmin } from "@/app/api/axios/handleAdmin"
 import { useEffect, useState } from "react"
 import { CiShoppingBasket, CiUser } from "react-icons/ci"
 
-const CountingInfor = () => {
+const CountingInfo = () => {
 	const [infor, setInfor] = useState({
 		user: 0,
 		order: 0,
@@ -56,4 +56,4 @@ const CountingInfor = () => {
 	)
 }
 
-export default CountingInfor
+export default CountingInfo

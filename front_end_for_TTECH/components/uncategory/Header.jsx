@@ -21,7 +21,7 @@ const Header = () => {
 	const pathname = usePathname()
 	const { user } = UserAuth()
 	const [categoryList, setCategoryList] = useState([])
-	const [onCategoryId, setOnCategoryId] = useState("")
+	const [currCategoryId, setCurrCategoryId] = useState("")
 
 	useEffect(() => {
 		const listCategories = async () => {
@@ -37,17 +37,22 @@ const Header = () => {
 	}, [])
 
 	useEffect(() => {
-		if (pathname === "/products") {
-			setOnCategoryId("all")
+		if (pathname !== "/products") {
+			setCurrCategoryId("")
+			return
 		}
+
+		setCurrCategoryId("all")
 
 		const params = new URLSearchParams(
 			searchParams.toString()
 		)
 
-		if (Number(params.get("category"))) {
-			setOnCategoryId(Number(params.get("category")))
+		if (!Number(params.get("category"))) {
+			return
 		}
+
+		setCurrCategoryId(Number(params.get("category")))
 	}, [searchParams, pathname])
 
 	const onClickCategory = (category) => {
@@ -92,7 +97,7 @@ const Header = () => {
 							whileHover={{ color: "rgb(239, 68, 68)" }}
 							animate={{
 								color:
-									onCategoryId === "all"
+									currCategoryId === "all"
 										? "rgb(239, 68, 68)"
 										: "rgb(0, 0, 0, 0.8)",
 							}}
@@ -109,7 +114,7 @@ const Header = () => {
 								whileHover={{ color: "rgb(239, 68, 68)" }}
 								animate={{
 									color:
-										onCategoryId === category.id
+										currCategoryId === category.id
 											? "rgb(239, 68, 68)"
 											: "rgb(0, 0, 0, 0.8)",
 								}}

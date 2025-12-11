@@ -1,10 +1,9 @@
 "use client"
-import { CiShoppingBasket, CiUser } from "react-icons/ci"
-import BestSellProduct from "../product/BestSellProduct"
+import BestSellProduct from "@/components/product/BestSellProduct"
+import CountingInfo from "@/components/uncategory/CountingInfo"
 import AdminRevenueChart from "./AdminRevenueChart"
 import AdminVisitorChart from "./AdminVisitorChart"
 import CompareRevenue from "./CompareRevenue"
-import CountingInfor from "../uncategory/CountingInfor"
 
 const AdminDashboard = () => {
 	return (
@@ -14,7 +13,7 @@ const AdminDashboard = () => {
 					<div className='rounded-2xl'>
 						<CompareRevenue />
 					</div>
-					<CountingInfor />
+					<CountingInfo />
 				</div>
 
 				<div className='bg-white border border-black/20 w-[60%] flex flex-col  shadow-sm p-10 rounded-3xl'>
