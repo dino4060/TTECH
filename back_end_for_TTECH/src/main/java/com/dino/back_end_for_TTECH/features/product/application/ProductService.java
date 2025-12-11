@@ -1,10 +1,7 @@
 package com.dino.back_end_for_TTECH.features.product.application;
 
 import com.dino.back_end_for_TTECH.features.product.application.mapper.ProductMapper;
-import com.dino.back_end_for_TTECH.features.product.application.model.ProductBody;
-import com.dino.back_end_for_TTECH.features.product.application.model.ProductData;
-import com.dino.back_end_for_TTECH.features.product.application.model.ProductFull;
-import com.dino.back_end_for_TTECH.features.product.application.model.ProductQuery;
+import com.dino.back_end_for_TTECH.features.product.application.model.*;
 import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.features.product.domain.Stock;
 import com.dino.back_end_for_TTECH.features.product.domain.model.Status;
@@ -16,6 +13,7 @@ import com.dino.back_end_for_TTECH.shared.application.model.PageData;
 import com.dino.back_end_for_TTECH.shared.application.utils.AppCheck;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,6 +106,37 @@ public class ProductService {
         var page = this.productRepository.findAll(
                 this.mapper.toQueryable(query),
                 this.mapper.toPageable(query));
+
+        return this.mapper.toPageData(
+                page, (Product p) -> this.mapper.toProductFull(p));
+    }
+
+    public PageData<ProductFull> list(ProductHomeQuery query) {
+        var page = this.productRepository.findAll(
+                this.mapper.toQueryable(query),
+                this.mapper.toPageable(query));
+
+        // ✅ Nếu sort theo price.mainPrice, cần sort lại trong stream
+        if ("price.mainPrice".equals(query.getSort())) {
+            var sortedList = page.getContent().stream()
+                    .sorted((p1, p2) -> {
+                        int price1 = p1.getPrice().getMainPrice();
+                        int price2 = p2.getPrice().getMainPrice();
+
+                        return "ASC".equals(query.getDirection())
+                                ? Integer.compare(price1, price2)
+                                : Integer.compare(price2, price1);
+                    })
+                    .toList();
+
+            var sortedPage = new PageImpl<>(
+                    sortedList,
+                    page.getPageable(),
+                    page.getTotalElements()
+            );
+
+            page = sortedPage;
+        }
 
         return this.mapper.toPageData(
                 page, (Product p) -> this.mapper.toProductFull(p));

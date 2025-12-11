@@ -1,12 +1,13 @@
 package com.dino.back_end_for_TTECH.features.product.domain.specification;
 
+import com.dino.back_end_for_TTECH.features.product.application.model.ProductHomeQuery;
 import com.dino.back_end_for_TTECH.features.product.application.model.ProductQuery;
 import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
-public class ProductSpecification {
+public class ProductSpec {
 
     public static Specification<Product> likeFullText(String text) {
         return (root, query, builder) -> {
@@ -58,8 +59,15 @@ public class ProductSpecification {
                 .and(toMaxPrice(maxPrice));
     }
 
+    public static Specification<Product> fromQuery(ProductQuery query) {
+        return Specification
+                .where(likeFullText(query.getKeywords()))
+                .and(hasSeriesId(query.getSeries()))
+                .and(hasCategoryId(query.getCategory()))
+                .and(inPriceRange(query.getPrices()));
+    }
 
-    public static Specification<Product> build(ProductQuery query) {
+    public static Specification<Product> fromQuery(ProductHomeQuery query) {
         return Specification
                 .where(likeFullText(query.getKeywords()))
                 .and(hasSeriesId(query.getSeries()))

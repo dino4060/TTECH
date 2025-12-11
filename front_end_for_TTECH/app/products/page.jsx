@@ -5,20 +5,18 @@ import PaginationControls from "@/components/uncategory/PaginationControls"
 import { productApi } from "@/lib/api/product.api"
 import { seriesApi } from "@/lib/api/series.api"
 import { clientFetch } from "@/lib/http/fetch.client"
-import { checkKV } from "@/lib/utils/check"
 import { useEffect, useState } from "react"
 
+/**
+ * @param {searchParams} { keywords, category, series, prices }
+ */
 export default function Page({ searchParams }) {
-	const [filter, setFilter] = useState(searchParams) // { keywords, category, series, prices }
+	const [filter, setFilter] = useState(searchParams)
 	const [loading, setLoading] = useState(true)
 	const [totalPages, setTotalPages] = useState(1)
-	const [currentPage, setCurrentPage] = useState(
-		searchParams.pageNumber
-	)
-	const [productList, setProductList] = useState([
-		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-	])
-	const [seriesList, setSeriesList] = useState([{ id: 1 }])
+	const [currentPage, setCurrentPage] = useState(1)
+	const [productList, setProductList] = useState(List12)
+	const [seriesList, setSeriesList] = useState(List12)
 
 	useEffect(() => {
 		let { category, keywords } = searchParams
@@ -29,17 +27,11 @@ export default function Page({ searchParams }) {
 		setFilter({ ...filter, category, keywords })
 	}, [searchParams.category, searchParams.keywords])
 
-	// useEffect(() => {
-	//   const queryString = Object.entries(filter)
-	//     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-	//     .join("&")
-	//   router.push("/products?" + queryString, undefined, { shallow: true, })
-	// }, [filter])
-
 	useEffect(() => {
-		checkKV("filter", filter)
 		const listProducts = async () => {
-			const apiRes = await clientFetch(productApi.list(filter))
+			const apiRes = await clientFetch(
+				productApi.list({ ...filter, size: 12 })
+			)
 			if (apiRes.success === false) {
 				alert(`Lỗi lấy danh sách sản phẩm: ${apiRes.error}`)
 				return
@@ -52,7 +44,9 @@ export default function Page({ searchParams }) {
 		listProducts()
 
 		const listSeries = async () => {
-			const apiRes = await clientFetch(seriesApi.list(filter))
+			const apiRes = await clientFetch(
+				seriesApi.list({ category: filter.category })
+			)
 			if (apiRes.success === false) {
 				alert(`Lỗi lấy danh sách series: ${apiRes.error}`)
 				return
@@ -103,3 +97,18 @@ export default function Page({ searchParams }) {
 		</div>
 	)
 }
+
+const List12 = [
+	{ id: 1 },
+	{ id: 2 },
+	{ id: 3 },
+	{ id: 4 },
+	{ id: 5 },
+	{ id: 6 },
+	{ id: 7 },
+	{ id: 8 },
+	{ id: 9 },
+	{ id: 10 },
+	{ id: 11 },
+	{ id: 12 },
+]

@@ -14,9 +14,9 @@ public class PageQuery {
     @Min(value = 1, message = "Minimum size is 1")
     private int size = 10;
 
-    @Pattern(regexp = "id", message = "Sort must be id")
+    @Pattern(regexp = "id|price.mainPrice", message = "Sort must be id, price.mainPrice")
     private String sort = "id";
 
-    @Pattern(regexp = "ASC|DESC", message = "Direction should be ASC or DESC")
+    @Pattern(regexp = "ASC|DESC", message = "Direction should be ASC, DESC")
     private String direction = "DESC";
 }

@@ -62,7 +62,24 @@ public class ApiErrorHandler {
                         .build());
     }
 
+    /**
+     * Handle exception in the validation tier
+     */
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    ResponseEntity<ApiResponse<Object>> handleException(MethodArgumentNotValidException exception) {
+        String message = exception.getFieldError() != null
+                ? exception.getFieldError().getDefaultMessage()
+                : "Dữ liệu không hợp lệ";
 
+        return ResponseEntity
+                .status(exception.getStatusCode())
+                .body(ApiResponse.builder()
+                        .success(false)
+                        .status(exception.getStatusCode().value())
+                        .code(exception.getStatusCode().value())
+                        .error(message)
+                        .build());
+    }
 
     /**
      * Handle app exception in the service tier
@@ -101,30 +118,28 @@ public class ApiErrorHandler {
     /**
      * Handle exception in the validation tier
      */
-
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    ResponseEntity<ApiResponse<Object>> handleException(MethodArgumentNotValidException exception) {
-        String key = Optional.ofNullable(exception.getFieldError())
-                .map(FieldError::getDefaultMessage)
-                .orElse(ErrorCode.SYSTEM__VALIDATION_UNSUPPORTED.name());
-
-        ErrorCode error = ErrorCode.safeValueOf(key)
-                .orElse(ErrorCode.SYSTEM__VALIDATION_UNSUPPORTED);
-
-        return ResponseEntity
-                .status(error.getStatus())
-                .body(ApiResponse.builder()
-                        .success(false)
-                        .status(error.getStatus().value())
-                        .code(error.getCode())
-                        .error(error.getMessage())
-                        .build());
-    }
+//    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+//    ResponseEntity<ApiResponse<Object>> handleException(MethodArgumentNotValidException exception) {
+//        String key = Optional.ofNullable(exception.getFieldError())
+//                .map(FieldError::getDefaultMessage)
+//                .orElse(ErrorCode.SYSTEM__VALIDATION_UNSUPPORTED.name());
+//
+//        ErrorCode error = ErrorCode.safeValueOf(key)
+//                .orElse(ErrorCode.SYSTEM__VALIDATION_UNSUPPORTED);
+//
+//        return ResponseEntity
+//                .status(error.getStatus())
+//                .body(ApiResponse.builder()
+//                        .success(false)
+//                        .status(error.getStatus().value())
+//                        .code(error.getCode())
+//                        .error(error.getMessage())
+//                        .build());
+//    }
 
     /**
      * Handle exception in the spring security tier
      */
-
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<ApiResponse<Object>> handleException(AccessDeniedException exception) {
         ErrorCode error = ErrorCode.SECURITY__UNAUTHORIZED;

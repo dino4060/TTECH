@@ -1,7 +1,5 @@
 package com.dino.back_end_for_TTECH.features.product.domain;
 
-import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
-import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,6 +33,10 @@ public class Stock extends BaseEntity {
     int sold;
 
     int total;
+
+    Integer views;
+
+    Integer carts;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false, updatable = false)

@@ -12,9 +12,13 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductQuery extends PageQuery {
+public class ProductHomeQuery extends PageQuery {
     String keywords;
     Long category;
     Long series;
     List<Integer> prices;
+
+    @Pattern(regexp = "trendy|bestseller|favorite|discount|new",
+            message = "Statistics should be trendy, bestseller, favorite, discount, new")
+    String statistics = "new";
 }

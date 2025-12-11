@@ -1,8 +1,6 @@
 "use client"
-import { checkKV } from "@/lib/utils/check"
 import { convertTokVND } from "@/utils/until"
 import { AnimatePresence, motion } from "framer-motion"
-import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CiFilter, CiPercent } from "react-icons/ci"
 
@@ -11,15 +9,18 @@ const FilterProduct = ({
 	setFilter,
 	seriesList,
 }) => {
-	const searchParams = useSearchParams()
 	const [show, setShow] = useState(false)
 	const [error, setError] = useState({})
-	const [prices, setPrices] = useState([0, 0])
-	const [series, setSeries] = useState({})
+	const [currSeriesId, setCurrSeriesId] = useState(null)
+	const [currProductStt, setCurrProductStt] = useState(null)
+	const [currPriceDirt, setCurrPriceDirt] = useState(null)
+	const [currPriceRange, setCurrPriceRange] = useState([
+		0, 0,
+	])
 
 	useEffect(() => {
 		const onPressCloseKey = (e) => {
-			if (e.key in ["Escape", "Enter"]) setShow(false)
+			if (["Escape", "Enter"].includes(e.key)) setShow(false)
 		}
 		window.addEventListener("keydown", onPressCloseKey)
 		return () => {
@@ -29,7 +30,13 @@ const FilterProduct = ({
 
 	useEffect(() => {
 		if (show === false) {
-			setFilter({ ...filter, series: series.id })
+			setFilter({
+				...filter,
+				series: currSeriesId,
+				statistics: currProductStt,
+				direction: currPriceDirt,
+				sort: currPriceDirt ? "price.mainPrice" : null,
+			})
 		}
 	}, [show])
 
@@ -37,7 +44,11 @@ const FilterProduct = ({
 		const { value, id } = e.target
 		console.log(value, id)
 
-		if (id === "minPrice" && prices[1] && value > prices[1]) {
+		if (
+			id === "minPrice" &&
+			currPriceRange[1] &&
+			value > currPriceRange[1]
+		) {
 			setError((prev) => ({
 				...prev,
 				minPrice: "Giá nhỏ nhất nên nhỏ hơn giới hạn trên",
@@ -49,7 +60,11 @@ const FilterProduct = ({
 			}))
 		}
 
-		if (id === "maxPrice" && prices[0] && value < prices[0]) {
+		if (
+			id === "maxPrice" &&
+			currPriceRange[0] &&
+			value < currPriceRange[0]
+		) {
 			setError((prev) => ({
 				...prev,
 				maxPrice: "Giá lớn nhất nên lớn hơn giới hạn dưới",
@@ -62,10 +77,16 @@ const FilterProduct = ({
 		}
 
 		if (id === "minPrice")
-			setPrices([Number.parseInt(value) || 0, prices[1]])
+			setCurrPriceRange([
+				Number.parseInt(value) || 0,
+				currPriceRange[1],
+			])
 
 		if (id === "maxPrice")
-			setPrices([prices[0], Number.parseInt(value) || 0])
+			setCurrPriceRange([
+				currPriceRange[0],
+				Number.parseInt(value) || 0,
+			])
 
 		// setError((prev) => ({
 		// 	...prev,
@@ -75,7 +96,7 @@ const FilterProduct = ({
 	}
 
 	const handlePriceRangeClick = (e) => {
-		setFilter((pre) => ({ ...pre, prices }))
+		setFilter((pre) => ({ ...pre, prices: currPriceRange }))
 		setShow(false)
 	}
 
@@ -83,9 +104,7 @@ const FilterProduct = ({
 		<div>
 			<div className='flex gap-5 mt-24 mb-10 items-center justify-center'>
 				<div
-					onClick={() => {
-						setShow(true)
-					}}
+					onClick={() => setShow(true)}
 					className='flex cursor-pointer gap-2 items-center justify-center mx-[20px]'
 				>
 					<CiFilter
@@ -132,46 +151,34 @@ const FilterProduct = ({
 					>
 						<div className='absolute top-0 bottom-40 inset-x-0 bg-white z-40'>
 							<div className='grid grid-cols-10 mt-36'>
-								{PriceSortOptions.map((x, i) => (
-									<div key={i} className='col-span-6 text-center'>
-										<h1 className='text-5xl font-bold'>{x.name}</h1>
-										<div className='mt-5'>
-											{x.filter.map((y, j) => (
-												<div key={j}>
-													<motion.div
-														variants={variant}
-														initial='init'
-														whileTap='tap'
-														onClick={() => {
-															const category_id =
-																searchParams.get("categoryId")
-
-															setFilter(() => {
-																if (x.id == 1) {
-																	return category_id
-																		? {
-																				...filter,
-																				SortBy: "price",
-																				IsDescending: y.type === "Desc",
-																				categoryId: category_id,
-																		  }
-																		: {
-																				...filter,
-																				SortBy: "price",
-																				IsDescending: y.type === "Desc",
-																		  }
-																}
-															})
-														}}
-														className='text-2xl cursor-pointer'
-													>
-														{y.name}
-													</motion.div>
-												</div>
-											))}
-										</div>
+								<div className='col-span-6 text-center'>
+									<h1 className='text-5xl font-bold'>
+										{PriceSort.name}
+									</h1>
+									<div className='mt-5'>
+										{PriceSort.list.map((p) => (
+											<div key={p.id}>
+												<motion.div
+													className='text-2xl cursor-pointer transition-colors'
+													whileHover={{ color: "rgb(239, 68, 68)" }}
+													animate={{
+														color:
+															currPriceDirt === p.id
+																? "rgb(239, 68, 68)"
+																: "",
+													}}
+													onClick={() =>
+														setCurrPriceDirt(
+															currPriceDirt === p.id ? null : p.id
+														)
+													}
+												>
+													{p.name}
+												</motion.div>
+											</div>
+										))}
 									</div>
-								))}
+								</div>
 
 								<div className='col-span-4'>
 									<h1 className='text-5xl font-bold'>Khoảng giá</h1>
@@ -200,7 +207,7 @@ const FilterProduct = ({
 												</label>
 												<input
 													onChange={(e) => onPriceRangeChange(e)}
-													value={prices[i]}
+													value={currPriceRange[i]}
 													id={x.key}
 													placeholder={x.placeholder}
 												/>
@@ -209,11 +216,13 @@ const FilterProduct = ({
 														error[x.key] ? "text-red-500" : ""
 													}`}
 												>
-													{prices[i] <= 0
+													{currPriceRange[i] <= 0
 														? "Không giới hạn"
 														: error[x.key]
 														? error[x.key]
-														: convertTokVND(Number.parseInt(prices[i]))}
+														: convertTokVND(
+																Number.parseInt(currPriceRange[i])
+														  )}
 												</h1>
 											</div>
 										))}
@@ -227,49 +236,34 @@ const FilterProduct = ({
 									</form>
 								</div>
 
-								{GroupQueryOptions.map((x, i) => (
-									<div
-										key={i}
-										className='col-span-6 text-center mt-36'
-									>
-										<h1 className='text-5xl font-bold'>{x.name}</h1>
-										<div className='mt-5'>
-											{x.filter.map((y, j) => (
-												<div key={j}>
-													<motion.div
-														variants={variant}
-														initial='init'
-														whileTap='tap'
-														onClick={() => {
-															const category_id =
-																searchParams.get("categoryId")
-
-															setFilter(() => {
-																if (x.id == 1) {
-																	return category_id
-																		? {
-																				...filter,
-																				SortBy: "price",
-																				IsDescending: y.type === "Desc",
-																				categoryId: category_id,
-																		  }
-																		: {
-																				...filter,
-																				SortBy: "price",
-																				IsDescending: y.type === "Desc",
-																		  }
-																}
-															})
-														}}
-														className='text-2xl cursor-pointer'
-													>
-														{y.name}
-													</motion.div>
-												</div>
-											))}
-										</div>
+								<div className='col-span-6 text-center mt-36'>
+									<h1 className='text-5xl font-bold'>
+										{ProductSort.name}
+									</h1>
+									<div className='mt-5'>
+										{ProductSort.list.map((p) => (
+											<div key={p.id}>
+												<motion.div
+													className='text-2xl cursor-pointer transition-colors'
+													whileHover={{ color: "rgb(239, 68, 68)" }}
+													animate={{
+														color:
+															currProductStt === p.id
+																? "rgb(239, 68, 68)"
+																: "",
+													}}
+													onClick={() =>
+														setCurrProductStt(
+															currProductStt === p.id ? null : p.id
+														)
+													}
+												>
+													{p.name}
+												</motion.div>
+											</div>
+										))}
 									</div>
-								))}
+								</div>
 
 								<div className='col-span-4 mt-36'>
 									<h1 className='text-5xl font-bold'>
@@ -280,19 +274,20 @@ const FilterProduct = ({
 											{seriesList.map((s, i) => (
 												<div key={s.id}>
 													<motion.span
-														onClick={() => {
-															checkKV("setSeries", s)
-															setSeries(s)
-														}}
-														className={`cursor-pointer text-2xl transition-colors`}
+														className='cursor-pointer text-2xl transition-colors'
 														style={{ userSelect: "none" }}
 														whileHover={{ color: "rgb(239, 68, 68)" }}
 														animate={{
 															color:
-																series.id === s.id
+																currSeriesId === s.id
 																	? "rgb(239, 68, 68)"
 																	: "",
 														}}
+														onClick={() =>
+															setCurrSeriesId(
+																currSeriesId === s.id ? null : s.id
+															)
+														}
 													>
 														{s.name}
 													</motion.span>
@@ -309,11 +304,15 @@ const FilterProduct = ({
 								</div>
 
 								<div className='absolute hidden sm:block bottom-10 left-1/2 z-40 text-2xl -translate-x-1/2'>
-									Pres{" "}
+									Press{" "}
+									<span className='bg-blue-500 px-2 py-1 text-white rounded-2xl'>
+										ENTER
+									</span>
+									{" / "}
 									<span className='bg-blue-500 px-2 py-1 text-white rounded-2xl'>
 										ESC
 									</span>{" "}
-									to quit
+									to apply
 								</div>
 							</div>
 						</div>
@@ -330,59 +329,45 @@ const FilterProduct = ({
 
 export default FilterProduct
 
-const PriceSortOptions = [
-	{
-		id: 1,
-		name: "Hướng giá",
-		filter: [
-			{
-				id: 1,
-				name: "Từ thấp đến cao",
-				type: "Asc",
-			},
-			{
-				id: 2,
-				name: "Từ cao đến thấp",
-				type: "Desc",
-			},
-		],
-	},
-]
+const PriceSort = {
+	id: 1,
+	name: "Hướng giá",
+	list: [
+		{
+			id: "ASC",
+			name: "Từ thấp đến cao",
+		},
+		{
+			id: "DESC",
+			name: "Từ cao đến thấp",
+		},
+	],
+}
 
-const GroupQueryOptions = [
-	{
-		id: 1,
-		name: "Sản phẩm",
-		filter: [
-			{
-				id: 2,
-				name: "Đang xu hướng",
-				type: "trendy",
-			},
-			{
-				id: 3,
-				name: "Bán chạy",
-				type: "bestseller",
-			},
-			{
-				id: 1,
-				name: "Mới về",
-				type: "new",
-			},
-			{
-				id: 4,
-				name: "Đặt trước ngay hôm nay",
-				type: "preorder",
-			},
-		],
-	},
-]
+const ProductSort = {
+	id: 2,
+	name: "Tính sản phẩm",
+	list: [
+		{
+			id: "trendy",
+			name: "Đang xu hướng",
+		},
+		{
+			id: "bestseller",
+			name: "Bán chạy",
+		},
 
-const variant = {
-	init: {
-		opacity: 1,
-	},
-	tap: {
-		color: "red",
-	},
+		{
+			id: "discount",
+			name: "Giá rẻ nhất",
+		},
+		{
+			id: "favorite",
+			name: "Nhiều yêu thích",
+		},
+		{
+			id: "new",
+			name: "Hàng mới về",
+		},
+	],
 }
