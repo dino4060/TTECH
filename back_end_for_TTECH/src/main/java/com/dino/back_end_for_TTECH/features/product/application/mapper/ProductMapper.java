@@ -21,6 +21,7 @@ public interface ProductMapper extends PageMapper {
             "trendy", new Sort.Order(Sort.Direction.DESC, "stock.views"),
             "favorite", new Sort.Order(Sort.Direction.DESC, "stock.carts"),
             "bestseller", new Sort.Order(Sort.Direction.DESC, "stock.sold"),
+            "flop", new Sort.Order(Sort.Direction.ASC, "stock.sold"),
             "discount", new Sort.Order(Sort.Direction.DESC, "price.dealPercent"),
             "new", new Sort.Order(Sort.Direction.DESC, "createdAt")
     );

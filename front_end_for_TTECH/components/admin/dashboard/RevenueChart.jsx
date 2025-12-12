@@ -54,15 +54,15 @@ const AdminRevenueChart = () => {
 				<div className='text-[1.5rem] font-[700] flex gap-2 items-center'>
 					<CiWavePulse1 size={25} /> <h1>Revenue Chart</h1>
 				</div>
+
 				<div>
 					<select
 						id='countries'
 						className='bg-white border text-[1.1rem] text-black rounded-lg block w-full p-2.5
-            focus:outline-none focus:border-none'
+            focus:outline-none focus:border-2'
 						onChange={(e) => setChartType(e.target.value)}
 					>
 						<option
-							className='focus:border-none focus:outline-none'
 							value='YEAR'
 							selected={"YEAR" === chartType}
 							disabled
@@ -70,23 +70,19 @@ const AdminRevenueChart = () => {
 							This year
 						</option>
 						<option
-							className='focus:border-none focus:outline-none'
 							value='MONTH'
 							selected={"MONTH" === chartType}
 							disabled
 						>
 							This month
 						</option>
-						<option
-							className='focus:border-none focus:outline-none'
-							value='WEEK'
-							selected={"WEEK" === chartType}
-						>
+						<option value='WEEK' selected={"WEEK" === chartType}>
 							This week
 						</option>
 					</select>
 				</div>
 			</div>
+
 			<Line
 				options={{
 					responsive: true,

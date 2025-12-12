@@ -13,13 +13,13 @@ import { Radar } from "react-chartjs-2"
 import { CiWavePulse1 } from "react-icons/ci"
 import { faker } from "@faker-js/faker"
 
-const AdminVisitorChart = () => {
+const VisitorChart = () => {
 	return (
-		<div className='h-[630px] box-content bg-white rounded-2xl p-10 border border-black/20'>
+		<div className='flex-1 h-[630px] box-content bg-white rounded-2xl p-10 border border-black/20'>
 			<div className='flex flex-col w-full'>
 				<div className='text-[1.5rem] font-bold flex items-center gap-2'>
 					<CiWavePulse1 size={25} />
-					<div>Lượng khách thăm quan / mua hàng</div>
+					<div>Lượng khách tham quan / mua hàng</div>
 				</div>
 			</div>
 
@@ -41,7 +41,7 @@ const AdminVisitorChart = () => {
 	)
 }
 
-export default AdminVisitorChart
+export default VisitorChart
 
 ChartJS.register(
 	RadialLinearScale,

@@ -2,7 +2,7 @@
 import ProductStats from "@/components/admin/dashboard/ProductStats"
 import SalesFigure from "@/components/admin/dashboard/SalesFigure"
 import AdminRevenueChart from "./RevenueChart"
-import AdminVisitorChart from "./VisitorChart"
+import VisitorChart from "./VisitorChart"
 import RevenueFigure from "./RevenueFigure"
 
 const AdminDashboard = () => {
@@ -19,7 +19,7 @@ const AdminDashboard = () => {
 				</div>
 			</div>
 			<div className='flex gap-4 mt-4'>
-				<AdminVisitorChart />
+				<VisitorChart />
 				<ProductStats />
 			</div>
 		</div>

@@ -18,7 +18,7 @@ public class ProductHomeQuery extends PageQuery {
     Long series;
     List<Integer> prices;
 
-    @Pattern(regexp = "trendy|bestseller|favorite|discount|new",
-            message = "Statistics should be trendy, bestseller, favorite, discount, new")
+    @Pattern(regexp = "trendy|bestseller|favorite|discount|new|flop",
+            message = "Statistics should be trendy, bestseller, favorite, discount, new, flop")
     String statistics = "new";
 }
