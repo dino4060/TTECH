@@ -30,15 +30,6 @@ public class DashboardService {
     OrderRepository orderRepo;
     UserRepository userRepo;
 
-    private static final List<String> DayList = Arrays.asList(
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday");
-
     private static final Set<String> CompletedOrderStatusSet = new HashSet<>(Arrays.asList(
             OrderStatus.COMPLETED.name(),
             OrderStatus.UNPAID.name(),

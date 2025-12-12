@@ -1,5 +1,4 @@
 "use client"
-
 import { authApi } from "@/lib/api/auth.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { AnimatePresence, motion } from "framer-motion"

@@ -17,7 +17,7 @@ import java.util.Map;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ProductMapper extends PageMapper {
 
-    Map<String, Sort.Order> sortMap = Map.of(
+    Map<String, Sort.Order> SortMap = Map.of(
             "trendy", new Sort.Order(Sort.Direction.DESC, "stock.views"),
             "favorite", new Sort.Order(Sort.Direction.DESC, "stock.carts"),
             "bestseller", new Sort.Order(Sort.Direction.DESC, "stock.sold"),
@@ -29,7 +29,7 @@ public interface ProductMapper extends PageMapper {
     default Pageable toPageable(ProductHomeQuery query) {
         var pageNumber = query.getPage() - 1;
         var sizeNumber = query.getSize();
-        var sort = Sort.by(sortMap.get(query.getStatistics()));
+        var sort = Sort.by(SortMap.get(query.getStatistics()));
         return PageRequest.of(pageNumber, sizeNumber, sort);
     }
 

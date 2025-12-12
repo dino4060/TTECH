@@ -1,20 +1,13 @@
 "use client"
-import { adminAuthApi, authApi } from "@/lib/api/auth.api"
+import { adminAuthApi } from "@/lib/api/auth.api"
 import { clientFetch } from "@/lib/http/fetch.client"
-import {
-	isValidPhoneNumber,
-	isValidUsername,
-} from "@/lib/utils/number2"
+import { isValidUsername } from "@/lib/utils/number2"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { FcGoogle } from "react-icons/fc"
 import { UserAuth } from "../../context/AuthContext"
 import CircleLoader from "../uncategory/CircleLoader"
-import ForgetPassword from "./ForgetPassword"
-import PopupRegister from "./PopupRegister"
-import { getEnv } from "@/lib/utils/env"
 
 const AdminLoginForm = () => {
 	const router = useRouter()
