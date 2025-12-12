@@ -12,4 +12,9 @@ export const adminDashboardApi = {
 		method: HttpMethod.GET,
 		query,
 	}),
+	calcRevenueByWeek: (query = {}): TApi<{}[]> => ({
+		route: `${RESOURCES.DASHBOARD.PRIVATE_ADMIN}/revenue/weeks`,
+		method: HttpMethod.GET,
+		query,
+	}),
 }

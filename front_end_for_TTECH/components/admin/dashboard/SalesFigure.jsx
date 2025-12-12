@@ -1,3 +1,4 @@
+"use client"
 import { adminDashboardApi } from "@/lib/api/dashboard.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { useEffect, useState } from "react"

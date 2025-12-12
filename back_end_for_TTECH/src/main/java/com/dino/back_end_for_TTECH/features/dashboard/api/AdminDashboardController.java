@@ -28,4 +28,10 @@ public class AdminDashboardController {
         var data = this.dashboardService.calcSales();
         return ResponseEntity.ok(data);
     }
+
+    @GetMapping("/revenue/weeks")
+    public ResponseEntity<?> calcRevenueByWeek() {
+        var data = this.dashboardService.calcRevenueByWeek();
+        return ResponseEntity.ok(data);
+    }
 }

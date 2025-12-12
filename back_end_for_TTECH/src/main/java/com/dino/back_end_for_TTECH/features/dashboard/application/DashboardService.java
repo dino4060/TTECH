@@ -1,12 +1,11 @@
 package com.dino.back_end_for_TTECH.features.dashboard.application;
 
+import com.dino.back_end_for_TTECH.features.dashboard.application.model.RevenueByDayData;
 import com.dino.back_end_for_TTECH.features.dashboard.application.model.RevenueData;
 import com.dino.back_end_for_TTECH.features.dashboard.application.model.SalesData;
 import com.dino.back_end_for_TTECH.features.ordering.domain.Order;
 import com.dino.back_end_for_TTECH.features.ordering.domain.model.OrderStatus;
 import com.dino.back_end_for_TTECH.features.ordering.domain.repository.OrderRepository;
-import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
-import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.features.profile.domain.model.Role;
 import com.dino.back_end_for_TTECH.features.profile.domain.repository.UserRepository;
 import lombok.AccessLevel;
@@ -16,8 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.format.TextStyle;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +28,23 @@ import java.time.ZoneId;
 public class DashboardService {
 
     OrderRepository orderRepo;
-    ProductRepository productRepo;
     UserRepository userRepo;
+
+    private static final List<String> DayList = Arrays.asList(
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday");
+
+    private static final Set<String> CompletedOrderStatusSet = new HashSet<>(Arrays.asList(
+            OrderStatus.COMPLETED.name(),
+            OrderStatus.UNPAID.name(),
+            OrderStatus.PENDING.name(),
+            OrderStatus.CANCELED.name()
+    ));
 
     public RevenueData calcRevenue() {
         RevenueData data = new RevenueData();
@@ -105,14 +122,59 @@ public class DashboardService {
         return data;
     }
 
+    public RevenueByDayData calcRevenueByDay(Instant startDay, Instant endDay) {
+        RevenueByDayData dayData = new RevenueByDayData();
+
+        try {
+            ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
+            String dayName = startDay
+                    .atZone(zoneId)
+                    .getDayOfWeek()
+                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+
+            long dayRevenue = orderRepo
+                    .calcRevenueByDay(startDay, endDay, CompletedOrderStatusSet);
+
+            dayData.setId(dayName);
+            dayData.setRevenue(dayRevenue);
+
+        } catch (Exception e) {
+            log.error("Error calculating revenue by day", e);
+            dayData.setId("Unknown");
+            dayData.setRevenue(0);
+        }
+
+        return dayData;
+    }
+
+    public List<RevenueByDayData> calcRevenueByWeek() {
+        List<RevenueByDayData> weekData = new ArrayList<>();
+
+        try {
+            ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
+            LocalDate today = LocalDate.now(zoneId);
+
+            for (int i = 6; i >= 0; i--) {
+                LocalDate targetDate = today.minusDays(i);
+
+                Instant startOfDay = targetDate.atStartOfDay(zoneId).toInstant();
+                Instant endOfDay = targetDate.atTime(23, 59, 59).atZone(zoneId).toInstant();
+
+                RevenueByDayData dayData = this.calcRevenueByDay(startOfDay, endOfDay);
+                weekData.add(dayData);
+            }
+        } catch (Exception e) {
+            log.error("Error calculating revenue by this week", e);
+        }
+
+        return weekData;
+    }
+
     private boolean isCompletedOrder(Order order) {
         if (order == null || order.getStatus() == null)
             return false;
 
-        return order.hasStatus(OrderStatus.COMPLETED)
-                || order.hasStatus(OrderStatus.UNPAID)
-                || order.hasStatus(OrderStatus.PENDING)
-                || order.hasStatus(OrderStatus.CANCELED);
+        return CompletedOrderStatusSet.contains(order.getStatus());
     }
 
     private boolean isInTimePeriod(Order order, Instant from, Instant to) {
