@@ -71,11 +71,17 @@ const ProductStats = () => {
 				</div>
 			</div>
 
-			<div className='h-[500px] overflow-y-scroll'>
+			<div className='h-[520px] overflow-y-scroll'>
 				{list.map((p) => (
 					<div key={p.id} className='flex gap-4 '>
 						<div className='flex-1 p-2 flex text-2xl items-center justify-center'>
-							<img width={70} height={70} alt='' src={p.thumb} />
+							<img
+								className='rounded-2xl'
+								width={70}
+								height={70}
+								alt='Ảnh sản phẩm'
+								src={p.thumb}
+							/>
 						</div>
 						<div className='flex-1 p-2 flex text-2xl items-center justify-center text-center'>
 							{p.name}

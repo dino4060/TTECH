@@ -57,7 +57,6 @@ const AdminRevenueChart = () => {
 
 				<div>
 					<select
-						id='countries'
 						className='bg-white border text-[1.1rem] text-black rounded-lg block w-full p-2.5
             focus:outline-none focus:border-2'
 						onChange={(e) => setChartType(e.target.value)}
