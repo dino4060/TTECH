@@ -41,7 +41,6 @@ public class OrderService {
             order.setStatus(Status.PENDING);
         if (order.getPaymentType().equals(PaymentType.BANK.name()))
             order.setStatus(Status.UNPAID);
-
     }
 
     public AppPage<OrderData> list(OrderQuery query, Pageable pageable) {

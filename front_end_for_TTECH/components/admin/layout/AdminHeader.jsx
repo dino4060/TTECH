@@ -29,16 +29,16 @@ const AdminHeader = ({ route, onRouteChange }) => {
 				<ul className=' flex capitalize text-[1.4rem] gap-5 items-center'>
 					{AdminRouteList.map((r) => (
 						<li
-							key={r.route}
+							key={r.id}
 							className='cursor-pointer'
 							style={{
-								color: r.route === route ? "#db2777" : "black",
+								color: r.id === route ? "#db2777" : "black",
 							}}
 							onClick={() => {
-								onRouteChange(r.route)
+								onRouteChange(r.id)
 							}}
 						>
-							{r.route}
+							{r.id}
 						</li>
 					))}
 				</ul>
@@ -55,39 +55,39 @@ export default AdminHeader
 
 export const AdminRouteList = [
 	{
-		route: "dashboard",
+		id: "dashboard",
 		component: AdminDashboard,
 	},
 	{
-		route: "product",
+		id: "product",
 		component: ProductManagement,
 	},
 	{
-		route: "order",
+		id: "order",
 		component: OrderManagement,
 	},
 	{
-		route: "customer",
+		id: "customer",
 		component: CustomerManagement,
 	},
 	{
-		route: "message",
+		id: "message",
 		component: CustomerMessage,
 	},
 	{
-		route: "marketing",
+		id: "marketing",
 		component: CampaignManagement,
 	},
 	{
-		route: "series",
+		id: "series",
 		component: SeriesManagement,
 	},
 	{
-		route: "category",
+		id: "category",
 		component: CategoryManagement,
 	},
 	{
-		route: "profile",
+		id: "profile",
 		component: AccountManagement,
 	},
 ]

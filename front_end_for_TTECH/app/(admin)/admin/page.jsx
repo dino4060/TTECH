@@ -24,8 +24,7 @@ const Page = () => {
 
 			<AnimatePresence>
 				{AdminRouteList.map(
-					(r) =>
-						r.route === route && <r.component key={r.route} />
+					(r) => r.id === route && <r.component key={r.id} />
 				)}
 			</AnimatePresence>
 		</div>

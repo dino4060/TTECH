@@ -3,26 +3,26 @@ import { useEffect, useState } from "react"
 import { CiShoppingBasket, CiUser } from "react-icons/ci"
 
 const CountingInfo = () => {
-	const [infor, setInfor] = useState({
+	const [info, setInfo] = useState({
 		user: 0,
 		order: 0,
 	})
 
-	const getTotalInfor = async () => {
+	const getTotalInfo = async () => {
 		try {
 			let user = await handleAdmin.GetTotalCustomer()
 			let order = await handleAdmin.GetTotalOrder()
 			user = user.data === 0 ? user.data : user
 			order = order.data === 0 ? order.data : order
 
-			setInfor({
+			setInfo({
 				user,
 				order,
 			})
 		} catch (error) {}
 	}
 	useEffect(() => {
-		getTotalInfor()
+		getTotalInfo()
 	}, [])
 	return (
 		<div className='flex flex-1 gap-4 '>
@@ -35,7 +35,7 @@ const CountingInfo = () => {
 						Tổng người dùng
 					</div>
 					<div className='font-[700] text-[2.5rem]'>
-						{infor?.user}
+						{info?.user}
 					</div>
 				</div>
 			</div>
@@ -48,7 +48,7 @@ const CountingInfo = () => {
 						Tổng đơn hàng
 					</div>
 					<div className='font-[700] text-[2.5rem]'>
-						{infor?.order}
+						{info?.order}
 					</div>
 				</div>
 			</div>

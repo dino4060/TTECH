@@ -135,7 +135,11 @@ export const convertTokVND = (number, hasUnit = true) => {
 
 export const convertTo000D = (number, hasUnit = true) => {
 	const unit = hasUnit ? "đ" : ""
-	return `${number.toLocaleString("vi-VN")}.000${unit}`
+	if (!number) {
+		return `${number.toLocaleString("vi-VN")}${unit}`
+	} else {
+		return `${number.toLocaleString("vi-VN")}.000${unit}`
+	}
 }
 
 export const roundTo1K = (amount) => {
@@ -178,7 +182,7 @@ export function getCurrentMonth() {
 	return thang
 }
 
-export function getPreCurrentMonth() {
+export function getLastMonth() {
 	// Tạo một đối tượng Date
 	var ngayHienTai = new Date()
 
