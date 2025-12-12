@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OverviewData {
+public class RevenueData {
     long thisMonthRevenue;
     long lastMonthRevenue;
     int percentDifference;

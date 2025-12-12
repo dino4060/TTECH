@@ -17,9 +17,15 @@ public class AdminDashboardController {
 
     DashboardService dashboardService;
 
-    @GetMapping
-    public ResponseEntity<?> list() {
-        var data = this.dashboardService.overview();
+    @GetMapping("/revenue")
+    public ResponseEntity<?> revenue() {
+        var data = this.dashboardService.calcRevenue();
+        return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/sales")
+    public ResponseEntity<?> sales() {
+        var data = this.dashboardService.calcSales();
         return ResponseEntity.ok(data);
     }
 }

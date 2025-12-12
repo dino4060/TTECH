@@ -8,7 +8,7 @@ import com.dino.back_end_for_TTECH.features.ordering.application.model.OrderQuer
 import com.dino.back_end_for_TTECH.features.ordering.domain.Order;
 import com.dino.back_end_for_TTECH.features.ordering.domain.OrderLine;
 import com.dino.back_end_for_TTECH.features.ordering.domain.model.PaymentType;
-import com.dino.back_end_for_TTECH.features.ordering.domain.model.Status;
+import com.dino.back_end_for_TTECH.features.ordering.domain.model.OrderStatus;
 import com.dino.back_end_for_TTECH.features.ordering.domain.repository.OrderRepository;
 import com.dino.back_end_for_TTECH.features.ordering.domain.specification.OrderSpecification;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
@@ -38,9 +38,9 @@ public class OrderService {
 
     private void genStatus(Order order) {
         if (order.getPaymentType().equals(PaymentType.COD.name()))
-            order.setStatus(Status.PENDING);
+            order.setStatus(OrderStatus.PENDING);
         if (order.getPaymentType().equals(PaymentType.BANK.name()))
-            order.setStatus(Status.UNPAID);
+            order.setStatus(OrderStatus.UNPAID);
     }
 
     public AppPage<OrderData> list(OrderQuery query, Pageable pageable) {

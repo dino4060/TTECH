@@ -1,7 +1,7 @@
 package com.dino.back_end_for_TTECH.features.ordering.domain.repository;
 
 import com.dino.back_end_for_TTECH.features.ordering.domain.Order;
-import com.dino.back_end_for_TTECH.features.ordering.domain.model.Status;
+import com.dino.back_end_for_TTECH.features.ordering.domain.model.OrderStatus;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
 
     List<Order> findByIdIn(@NonNull List<Long> ids);
 
-    List<Order> findByStatus(@NonNull Status status);
+    List<Order> findByStatus(@NonNull OrderStatus status);
 
     void deleteAllByIdInBatch(@NonNull Iterable<Long> ids);
 

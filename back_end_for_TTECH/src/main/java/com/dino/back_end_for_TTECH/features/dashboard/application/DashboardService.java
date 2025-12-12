@@ -1,10 +1,13 @@
 package com.dino.back_end_for_TTECH.features.dashboard.application;
 
-import com.dino.back_end_for_TTECH.features.dashboard.application.model.OverviewData;
+import com.dino.back_end_for_TTECH.features.dashboard.application.model.RevenueData;
+import com.dino.back_end_for_TTECH.features.dashboard.application.model.SalesData;
 import com.dino.back_end_for_TTECH.features.ordering.domain.Order;
-import com.dino.back_end_for_TTECH.features.ordering.domain.model.Status;
+import com.dino.back_end_for_TTECH.features.ordering.domain.model.OrderStatus;
 import com.dino.back_end_for_TTECH.features.ordering.domain.repository.OrderRepository;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.ProductRepository;
+import com.dino.back_end_for_TTECH.features.profile.domain.User;
+import com.dino.back_end_for_TTECH.features.profile.domain.model.Role;
 import com.dino.back_end_for_TTECH.features.profile.domain.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +29,8 @@ public class DashboardService {
     ProductRepository productRepo;
     UserRepository userRepo;
 
-    public OverviewData overview() {
-        OverviewData data = new OverviewData();
+    public RevenueData calcRevenue() {
+        RevenueData data = new RevenueData();
 
         try {
             ZoneId zoneId = ZoneId.systemDefault();
@@ -53,14 +56,14 @@ public class DashboardService {
             long thisMonthRevenue = orderRepo.findAll().stream()
                     .filter(order -> order.getOrderTime() != null)
                     .filter(order -> isInTimePeriod(order, thisMonthStart, thisMonthEnd))
-                    .filter(order -> isCompletedStatus(order))
+                    .filter(order -> isCompletedOrder(order))
                     .mapToLong(order -> order.getTotal())
                     .sum();
 
             long lastMonthRevenue = orderRepo.findAll().stream()
                     .filter(order -> order.getOrderTime() != null)
                     .filter(order -> isInTimePeriod(order, lastMonthStart, lastMonthEnd))
-                    .filter(order -> isCompletedStatus(order))
+                    .filter(order -> isCompletedOrder(order))
                     .mapToLong(order -> order.getTotal())
                     .sum();
 
@@ -71,17 +74,45 @@ public class DashboardService {
             data.setPercentDifference(percentDifference);
 
         } catch (Exception e) {
-            log.error("Error calculating dashboard overview", e);
+            log.error(">>> Error calculating revenue", e);
         }
 
         return data;
     }
 
-    private boolean isCompletedStatus(Order order) {
+    public SalesData calcSales() {
+        SalesData data = new SalesData();
+
+        try {
+            long totalUsers = userRepo.findAll().stream()
+                    .filter(user -> user.getRoles() != null)
+                    .filter(user -> user.getRoles().contains(Role.CUSTOMER))
+                    .count(); // userRepo.count();
+
+            long totalOrders = orderRepo.findAll().stream()
+                    .filter(order -> order.getStatus() != null)
+                    .filter(order -> isCompletedOrder(order))
+                    .count(); // orderRepo.count();
+
+
+            data.setUsers((int) totalUsers);
+            data.setOrders((int) totalOrders);
+
+        } catch (Exception e) {
+            log.error(">>> Error calculating sales", e);
+        }
+
+        return data;
+    }
+
+    private boolean isCompletedOrder(Order order) {
         if (order == null || order.getStatus() == null)
             return false;
 
-        return !order.hasStatus(Status.CANCELED);
+        return order.hasStatus(OrderStatus.COMPLETED)
+                || order.hasStatus(OrderStatus.UNPAID)
+                || order.hasStatus(OrderStatus.PENDING)
+                || order.hasStatus(OrderStatus.CANCELED);
     }
 
     private boolean isInTimePeriod(Order order, Instant from, Instant to) {

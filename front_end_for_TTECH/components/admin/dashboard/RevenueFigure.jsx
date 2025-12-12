@@ -20,14 +20,13 @@ const RevenueFigure = () => {
 	useEffect(() => {
 		const calcRevenue = async () => {
 			const apiRes = await clientFetch(
-				adminDashboardApi.overview()
+				adminDashboardApi.calcRevenue()
 			)
 			if (apiRes.success === false) {
 				alert(`Lỗi tính số liệu doanh thu: ${apiRes.error}`)
 			}
 			setRevenue(apiRes.data)
 		}
-
 		calcRevenue()
 	}, [])
 

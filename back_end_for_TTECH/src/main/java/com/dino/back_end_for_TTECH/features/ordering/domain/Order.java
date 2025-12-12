@@ -1,6 +1,6 @@
 package com.dino.back_end_for_TTECH.features.ordering.domain;
 
-import com.dino.back_end_for_TTECH.features.ordering.domain.model.Status;
+import com.dino.back_end_for_TTECH.features.ordering.domain.model.OrderStatus;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseStatus;
@@ -28,7 +28,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Order extends BaseEntity implements BaseStatus<Status> {
+public class Order extends BaseEntity implements BaseStatus<OrderStatus> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orders_seq")

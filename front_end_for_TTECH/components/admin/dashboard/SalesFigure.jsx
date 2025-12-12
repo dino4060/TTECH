@@ -1,28 +1,22 @@
-import { handleAdmin } from "@/app/api/axios/handleAdmin"
+import { adminDashboardApi } from "@/lib/api/dashboard.api"
+import { clientFetch } from "@/lib/http/fetch.client"
 import { useEffect, useState } from "react"
 import { CiShoppingBasket, CiUser } from "react-icons/ci"
 
-const CountingInfo = () => {
-	const [info, setInfo] = useState({
-		user: 0,
-		order: 0,
-	})
+const SalesFigure = () => {
+	const [sales, setSales] = useState(DefaultSales)
 
-	const getTotalInfo = async () => {
-		try {
-			let user = await handleAdmin.GetTotalCustomer()
-			let order = await handleAdmin.GetTotalOrder()
-			user = user.data === 0 ? user.data : user
-			order = order.data === 0 ? order.data : order
-
-			setInfo({
-				user,
-				order,
-			})
-		} catch (error) {}
-	}
 	useEffect(() => {
-		getTotalInfo()
+		const calcSales = async () => {
+			const apiRes = await clientFetch(
+				adminDashboardApi.calcSales()
+			)
+			if (apiRes.success === false) {
+				alert(`Lỗi tính số liệu doanh thu: ${apiRes.error}`)
+			}
+			setSales(apiRes.data)
+		}
+		calcSales()
 	}, [])
 	return (
 		<div className='flex flex-1 gap-4 '>
@@ -35,7 +29,7 @@ const CountingInfo = () => {
 						Tổng người dùng
 					</div>
 					<div className='font-[700] text-[2.5rem]'>
-						{info?.user}
+						{sales?.users}
 					</div>
 				</div>
 			</div>
@@ -48,7 +42,7 @@ const CountingInfo = () => {
 						Tổng đơn hàng
 					</div>
 					<div className='font-[700] text-[2.5rem]'>
-						{info?.order}
+						{sales?.orders}
 					</div>
 				</div>
 			</div>
@@ -56,4 +50,9 @@ const CountingInfo = () => {
 	)
 }
 
-export default CountingInfo
+export default SalesFigure
+
+const DefaultSales = {
+	users: 0,
+	orders: 0,
+}
