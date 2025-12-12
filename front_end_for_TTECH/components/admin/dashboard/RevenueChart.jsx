@@ -118,6 +118,19 @@ ChartJS.register(
 	PointElement
 )
 
+export const DefaultWeekData = {
+	labels: getCurrWeekLabels(),
+	datasets: [
+		{
+			backgroundColor: "#93c5fd",
+			label: "Doanh thu theo tuần",
+			data: getCurrWeekLabels().map(() =>
+				faker.number.int({ min: 10, max: 1000 })
+			),
+		},
+	],
+}
+
 function getCurrWeekLabels() {
 	const WeekLabels = [
 		"Monday",
@@ -132,17 +145,4 @@ function getCurrWeekLabels() {
 	const todayIndex = today.getDay()
 	if (todayIndex === 0) return WeekLabels
 	return WeekLabels.slice(0, todayIndex)
-}
-
-export const DefaultWeekData = {
-	labels: getCurrWeekLabels(),
-	datasets: [
-		{
-			backgroundColor: "#93c5fd",
-			label: "Doanh thu theo tuần",
-			data: getCurrWeekLabels().map(() =>
-				faker.number.int({ min: 10, max: 1000 })
-			),
-		},
-	],
 }

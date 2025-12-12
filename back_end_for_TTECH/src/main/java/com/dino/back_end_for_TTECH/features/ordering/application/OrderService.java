@@ -58,13 +58,12 @@ public class OrderService {
                 .findById(orderId)
                 .orElseThrow(() -> new NotFoundE("Order not found"));
 
-
         return  this.orderMapper.toData(order);
     }
 
     public PageData<OrderData> list(OrderQuery query, CurrentUser user) {
         var page = this.orderRepository
-                .findAllByBuyer(user.toUser(), this.orderMapper.toPageable(query));
+                .findAllByUser(user.toUser(), this.orderMapper.toPageable(query));
 
         return this.orderMapper.toPageData(
                 page, (Order o) -> this.orderMapper.toData(o));

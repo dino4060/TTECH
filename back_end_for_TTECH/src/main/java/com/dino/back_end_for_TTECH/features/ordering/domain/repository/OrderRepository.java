@@ -8,19 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.lang.NonNull;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Set;
 
 public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
 
-    void deleteAllByIdInBatch(@NonNull Iterable<Long> ids);
-
-    void deleteAllInBatch(@NonNull Iterable<Order> orders);
-
-    Page<Order> findAllByBuyer(User buyer, Pageable pageable);
+    Page<Order> findAllByUser(User user, Pageable pageable);
 
     @Query("SELECT COALESCE(SUM(o.total), 0) FROM Order o " +
             "WHERE o.orderTime >= :startTime " +
