@@ -63,7 +63,7 @@ public class OrderService {
 
     public PageData<OrderData> list(OrderQuery query, CurrentUser user) {
         var page = this.orderRepository
-                .findAllByUser(user.toUser(), this.orderMapper.toPageable(query));
+                .findAllByBuyer(user.toUser(), this.orderMapper.toPageable(query));
 
         return this.orderMapper.toPageData(
                 page, (Order o) -> this.orderMapper.toData(o));

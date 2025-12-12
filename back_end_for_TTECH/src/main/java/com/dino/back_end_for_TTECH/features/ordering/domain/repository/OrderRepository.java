@@ -14,7 +14,7 @@ import java.util.Set;
 
 public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
 
-    Page<Order> findAllByUser(User user, Pageable pageable);
+    Page<Order> findAllByBuyer(User buyer, Pageable pageable);
 
     @Query("SELECT COALESCE(SUM(o.total), 0) FROM Order o " +
             "WHERE o.orderTime >= :startTime " +
