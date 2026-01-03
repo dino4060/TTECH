@@ -24,7 +24,12 @@ export default function Page() {
 	useEffect(() => {
 		const listProducts = async () => {
 			const apiRes = await clientFetch(
-				productApi.list({ ...filter, size: 12 })
+				productApi.list({
+					...filter,
+					size: 12,
+					category: searchParams.category || null,
+					keywords: searchParams.keywords || null,
+				})
 			)
 			if (apiRes.success === false) {
 				alert(`Lỗi lấy danh sách sản phẩm: ${apiRes.error}`)
@@ -39,7 +44,9 @@ export default function Page() {
 
 		const listSeries = async () => {
 			const apiRes = await clientFetch(
-				seriesApi.list({ category: filter.category })
+				seriesApi.list({
+					category: searchParams.category || null,
+				})
 			)
 			if (apiRes.success === false) {
 				alert(`Lỗi lấy danh sách series: ${apiRes.error}`)
@@ -48,17 +55,9 @@ export default function Page() {
 			setSeriesList(apiRes.data)
 		}
 		listSeries()
-	}, [filter])
 
-	useEffect(() => {
 		setAsyncSeries((prev) => !prev)
-		setFilter({
-			...filter,
-			series: null,
-			category: searchParams.category || null,
-			keywords: searchParams.keywords || null,
-		})
-	}, [searchParams])
+	}, [filter, searchParams])
 
 	return (
 		<div className='mt-20' suppressHydrationWarning={true}>
@@ -89,7 +88,7 @@ export default function Page() {
 				totalPages={totalPages}
 				currentPage={currentPage}
 				onPageChange={(pageNumber) => {
-					const categoryId = searchParams.categoryId
+					const categoryId = searchParams.category
 
 					if (categoryId) {
 						setFilter({ ...filter, pageNumber, categoryId })

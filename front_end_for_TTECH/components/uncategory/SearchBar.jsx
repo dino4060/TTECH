@@ -1,25 +1,33 @@
 "use client"
 import { AnimatePresence, motion } from "framer-motion"
-import { useRouter, useSearchParams } from "next/navigation"
+import {
+	usePathname,
+	useRouter,
+	useSearchParams,
+} from "next/navigation"
 import { useEffect, useState } from "react"
 import { CiMinimize1, CiSearch } from "react-icons/ci"
 import useDebounce from "../../hooks/useDebounce"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { productApi } from "@/lib/api/product.api"
+import { useSearch } from "@/context/SearchContext"
 
 const SearchBar = () => {
+	const router = useRouter()
+	const pathname = usePathname()
 	const [showSearchPage, setShowSearchPage] = useState(false)
 	const [shortProducts, setShortProducts] = useState([])
 	const [keywords, setKeywords] = useState("")
-	const router = useRouter()
-	const searchParams = useSearchParams()
 	const keywordsDeb = useDebounce(keywords, 500)
+	const {
+		param: searchParams,
+		setKeywords: setSearchKeywords,
+	} = useSearch()
 
 	useEffect(() => {
-		const params = new URLSearchParams(
-			searchParams.toString()
-		)
-		setKeywords(params.get("keywords"))
+		if (keywords !== searchParams.keywords) {
+			setKeywords(searchParams.keywords)
+		}
 	}, [searchParams])
 
 	useEffect(() => {
@@ -40,17 +48,15 @@ const SearchBar = () => {
 	}, [keywordsDeb])
 
 	const onPressEnterKey = (e) => {
-		const navigateSearchPage = (keywords) => {
-			const params = new URLSearchParams(
-				searchParams.toString()
-			)
-			params.set("keywords", keywords)
-			router.push(`products/?${params.toString()}`)
-		}
-
 		if (e.key === "Enter") {
-			navigateSearchPage(keywords)
+			console.log("setSearchKeywords(keywords)", keywords)
+
+			setSearchKeywords(keywords)
 			setShowSearchPage(false)
+
+			if (pathname !== "/products") {
+				router.push("/products")
+			}
 		}
 	}
 
