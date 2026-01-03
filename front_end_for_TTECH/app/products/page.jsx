@@ -2,6 +2,7 @@
 import FilterProduct from "@/components/product/ProductFilter"
 import ProductItem from "@/components/product/ProductItem"
 import PaginationControls from "@/components/uncategory/PaginationControls"
+import { useSearch } from "@/context/SearchContext"
 import { productApi } from "@/lib/api/product.api"
 import { seriesApi } from "@/lib/api/series.api"
 import { clientFetch } from "@/lib/http/fetch.client"
@@ -10,14 +11,15 @@ import { useEffect, useState } from "react"
 /**
  * @param {searchParams} { keywords, category, series, prices }
  */
-export default function Page({ searchParams }) {
-	const [filter, setFilter] = useState(searchParams)
+export default function Page() {
+	const [filter, setFilter] = useState({})
 	const [loading, setLoading] = useState(true)
 	const [totalPages, setTotalPages] = useState(1)
 	const [currentPage, setCurrentPage] = useState(1)
 	const [productList, setProductList] = useState(List12)
 	const [seriesList, setSeriesList] = useState(List12)
 	const [asyncSeries, setAsyncSeries] = useState(false)
+	const { param: searchParams } = useSearch()
 
 	useEffect(() => {
 		const listProducts = async () => {

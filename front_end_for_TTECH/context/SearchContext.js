@@ -7,44 +7,43 @@ import React, {
 	useCallback,
 } from "react"
 
-const initialCriteria = {
-	keyword: "",
+const initialParam = {
+	keywords: "",
 	category: 0,
 }
 
 const SearchContext = createContext(undefined)
 
 export function SearchProvider({ children }) {
-	const [criteria, setCriteriaState] =
-		useState(initialCriteria)
+	const [param, setParam] = useState(initialParam)
 
-	const setKeyword = useCallback((keyword) => {
-		setCriteriaState((prev) => ({ ...prev, keyword }))
+	const setKeywords = useCallback((keywords) => {
+		setParam((prev) => ({ ...prev, keywords }))
 	}, [])
 
 	const setCategory = useCallback((category) => {
-		setCriteriaState((prev) => ({
+		setParam((prev) => ({
 			...prev,
 			category: Number(category),
 		}))
 	}, [])
 
-	const setCriteria = useCallback((newCriteria) => {
-		setCriteriaState(newCriteria)
+	const setNewParam = useCallback((newParam) => {
+		setParam(newParam)
 	}, [])
 
-	const resetCriteria = useCallback(() => {
-		setCriteriaState(initialCriteria)
+	const resetParam = useCallback(() => {
+		setParam(initialParam)
 	}, [])
 
 	return (
 		<SearchContext.Provider
 			value={{
-				criteria,
-				setKeyword,
+				param,
+				setKeywords,
 				setCategory,
-				setCriteria,
-				resetCriteria,
+				setNewParam,
+				resetParam,
 			}}
 		>
 			{children}

@@ -22,9 +22,7 @@ public class CorsConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfig = new CorsConfiguration();
     corsConfig.setAllowedOrigins(
-        Arrays.asList(
-            "http://localhost:3000",
-            "https://ttech-studio.vercel.app"));
+        Arrays.asList("http://localhost:3000", "https://ttech-studio.vercel.app"));
 
     corsConfig.setAllowedMethods(
         Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));

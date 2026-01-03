@@ -1,14 +1,11 @@
 "use client"
 import { UserAuth } from "@/context/AuthContext"
+import { useSearch } from "@/context/SearchContext"
 import { categoryApi } from "@/lib/api/category.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { motion } from "framer-motion"
 import Image from "next/image"
-import {
-	usePathname,
-	useRouter,
-	useSearchParams,
-} from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CiUser } from "react-icons/ci"
 import Cart from "../cart/Cart"
@@ -17,9 +14,9 @@ import SearchBar from "./SearchBar"
 
 const Header = () => {
 	const router = useRouter()
-	const searchParams = useSearchParams()
 	const pathname = usePathname()
 	const { user } = UserAuth()
+	const { param: searchParams, setCategory } = useSearch()
 	const [categoryList, setCategoryList] = useState([])
 	const [currCategoryId, setCurrCategoryId] = useState("")
 
@@ -44,23 +41,19 @@ const Header = () => {
 
 		setCurrCategoryId("all")
 
-		const params = new URLSearchParams(
-			searchParams.toString()
-		)
-
-		if (!Number(params.get("category"))) {
+		if (!searchParams.category) {
 			return
 		}
 
-		setCurrCategoryId(Number(params.get("category")))
+		setCurrCategoryId(searchParams.category)
 	}, [searchParams, pathname])
 
-	const onClickCategory = (category) => {
-		const params = new URLSearchParams(
-			searchParams.toString()
-		)
-		params.set("category", category.id)
-		router.push(`products/?${params.toString()}`)
+	const onClickCategoryId = (categoryId) => {
+		setCategory(categoryId)
+
+		if (pathname !== "/products") {
+			router.push("/products")
+		}
 	}
 
 	const onClickAccount = () => {
@@ -101,7 +94,7 @@ const Header = () => {
 										? "rgb(239, 68, 68)"
 										: "rgb(0, 0, 0, 0.8)",
 							}}
-							onClick={() => router.push("/products")}
+							onClick={() => onClickCategoryId("all")}
 							className='text-[1.3rem] font-[300] capitalize mx-2 text-black/80 cursor-pointer whitespace-nowrap	'
 						>
 							All
@@ -118,7 +111,7 @@ const Header = () => {
 											? "rgb(239, 68, 68)"
 											: "rgb(0, 0, 0, 0.8)",
 								}}
-								onClick={() => onClickCategory(category)}
+								onClick={() => onClickCategoryId(category.id)}
 							>
 								{category.name}
 							</motion.li>
