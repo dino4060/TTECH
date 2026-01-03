@@ -55,7 +55,7 @@ const ProductStats = () => {
 					className='w-full py-2 px-4 text-2xl border border-blue-500/50 rounded-3xl '
 					placeholder='Nhập vào `top` sản phẩm'
 					value={size}
-					onChange={(e) => setSize(e.target.value)}
+					onChange={(e) => setSize(e.target.value || 1)}
 				/>
 			</form>
 

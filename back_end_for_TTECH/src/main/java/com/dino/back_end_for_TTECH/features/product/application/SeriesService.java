@@ -35,13 +35,15 @@ public class SeriesService {
                 .orElseThrow(() -> new NotFoundE("Không tìm thấy series"));
     }
 
+    @SuppressWarnings("unused")
     private void validate(Series supplier) {
         List<Series> list = this.seriesRepo.findByName(supplier.getName());
 
         boolean isNonDupName = AppCheck.isEmpty(list) ||
                 AppCheck.isEqual(list.getFirst().getId(), supplier.getId());
 
-        if (!isNonDupName) throw new DuplicationE("Tên series bị trùng lập");
+        if (!isNonDupName)
+            throw new DuplicationE("Tên series bị trùng lập");
     }
 
     @Cacheable(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)

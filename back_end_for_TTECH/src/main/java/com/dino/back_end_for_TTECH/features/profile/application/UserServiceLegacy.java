@@ -1,18 +1,19 @@
 package com.dino.back_end_for_TTECH.features.profile.application;
 
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.dino.back_end_for_TTECH.features.identity.application.provider.IIdentitySecurityProvider;
-import com.dino.back_end_for_TTECH.features.profile.application.mapper.UserMapper;
 import com.dino.back_end_for_TTECH.features.profile.application.service.IUserService;
 import com.dino.back_end_for_TTECH.features.profile.domain.User;
 import com.dino.back_end_for_TTECH.features.profile.domain.repository.UserRepository;
 import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,6 @@ import java.util.Optional;
 public class UserServiceLegacy implements IUserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final IIdentitySecurityProvider securityProvider;
 
     // READ //

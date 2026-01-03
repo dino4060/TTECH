@@ -28,7 +28,6 @@ public class SaleService {
     CampaignService campService;
     CampaignRepository campaignRepo;
 
-
     SaleRepository saleRepo;
     SaleMapper saleMapper;
 
@@ -72,22 +71,22 @@ public class SaleService {
                 .orElseThrow(() -> new ModelNotFoundE("Sale"));
         this.saleMapper.toModel(body, sale);
 
-        var prevStatus = sale.getStatus();
+        // var prevStatus = sale.getStatus();
         this.campService.genStatus(sale);
 
         var editModel = this.saleRepo.save(sale);
 
-//        var editStatus = sale.getStatus();
-//        if (!prevStatus.equals(editStatus) && editModel.hasStatus(Status.ONGOING)) {
-//            editModel.getUnits().forEach(u -> {
-//                this.productService.applySaleUnit(u);
-//            });
-//        }
-//        if (!prevStatus.equals(editStatus) && editModel.hasStatus(Status.ENDED)) {
-//            editModel.getUnits().forEach(u -> {
-//                this.productService.cancelSaleUnit(u);
-//            });
-//        }
+        // var editStatus = sale.getStatus();
+        // if (!prevStatus.equals(editStatus) && editModel.hasStatus(Status.ONGOING)) {
+        // editModel.getUnits().forEach(u -> {
+        // this.productService.applySaleUnit(u);
+        // });
+        // }
+        // if (!prevStatus.equals(editStatus) && editModel.hasStatus(Status.ENDED)) {
+        // editModel.getUnits().forEach(u -> {
+        // this.productService.cancelSaleUnit(u);
+        // });
+        // }
 
         return this.saleMapper.toData(editModel);
     }

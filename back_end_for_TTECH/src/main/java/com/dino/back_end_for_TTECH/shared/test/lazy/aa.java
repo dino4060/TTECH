@@ -1,6 +1,5 @@
 package com.dino.back_end_for_TTECH.shared.test.lazy;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;

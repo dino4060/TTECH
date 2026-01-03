@@ -9,12 +9,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class XOrderService {
 
+    @SuppressWarnings("unused")
     private final IOrderEventPublisher orderEventPublisher;
 
     public String place() {
+        @SuppressWarnings("unused")
         var event = new PlacedOrderEvent(1L, 2L, 12.2004);
 
-//        this.orderEventPublisher.send(event);
+        // this.orderEventPublisher.send(event);
 
         return "📤 Place order successfully";
     }

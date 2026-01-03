@@ -43,7 +43,7 @@ public class LockFacade {
         var retryTimes = Collections.nCopies(10, 1);
         var sleepTime = Duration.ofMillis(50);
 
-        for (var ignore : retryTimes) {
+        for (@SuppressWarnings("unused") var ignore : retryTimes) {
             Boolean lockAcquired = this.createLock(key);
 
             if (Boolean.TRUE.equals(lockAcquired)) {

@@ -1,15 +1,16 @@
 "use client"
 
-import {
-	addDoc,
-	collection,
-	onSnapshot,
-	or,
-	orderBy,
-	query,
-	serverTimestamp,
-	where,
-} from "firebase/firestore"
+// import {
+// 	addDoc,
+// 	collection,
+// 	onSnapshot,
+// 	or,
+// 	orderBy,
+// 	query,
+// 	serverTimestamp,
+// 	where,
+// } from "firebase/firestore"
+// import { db } from "../../firebaseConfig"
 import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import {
@@ -20,7 +21,6 @@ import {
 } from "react"
 import { BiMessageSquare } from "react-icons/bi"
 import { CiMinimize1, CiPaperplane } from "react-icons/ci"
-import { db } from "../../firebaseConfig"
 import { UserAuth } from "@/context/AuthContext"
 
 const RealTimeMessage = () => {
@@ -28,35 +28,33 @@ const RealTimeMessage = () => {
 	const [showBox, setShowBox] = useState(false)
 	const [newMessage, setNewMessage] = useState("")
 	const [messageList, setMessageList] = useState([])
-	const messagesRef = collection(db, "messages")
+	// const messagesRef = collection(db, "messages")
 	const messagesEndRef = useRef(null)
 	const ref = useRef(null)
 	const containerRef = useRef()
 
 	useEffect(() => {
-		if (user?.user_id) {
-			const queryMessages = query(
-				messagesRef,
-				where("roomId", "==", user?.user_id),
-				orderBy("createdAt")
-			)
-
-			const unsubscribe = onSnapshot(
-				queryMessages,
-				(snapshot) => {
-					let messages = []
-					snapshot.forEach((doc) => {
-						messages.push({ ...doc.data(), id: doc.id })
-					})
-					setNewMessage("")
-					setMessageList(messages)
-				}
-			)
-
-			return () => {
-				unsubscribe()
-			}
-		}
+		// if (user?.user_id) {
+		// 	const queryMessages = query(
+		// 		messagesRef,
+		// 		where("roomId", "==", user?.user_id),
+		// 		orderBy("createdAt")
+		// 	)
+		// 	const unsubscribe = onSnapshot(
+		// 		queryMessages,
+		// 		(snapshot) => {
+		// 			let messages = []
+		// 			snapshot.forEach((doc) => {
+		// 				messages.push({ ...doc.data(), id: doc.id })
+		// 			})
+		// 			setNewMessage("")
+		// 			setMessageList(messages)
+		// 		}
+		// 	)
+		// 	return () => {
+		// 		unsubscribe()
+		// 	}
+		// }
 	}, [])
 
 	useLayoutEffect(() => {
@@ -68,12 +66,12 @@ const RealTimeMessage = () => {
 	const handleSubmit = async (e) => {
 		if (newMessage === "") return
 
-		await addDoc(messagesRef, {
-			text: newMessage,
-			userId: user.user_id,
-			roomId: user.user_id,
-			createdAt: serverTimestamp(),
-		})
+		// await addDoc(messagesRef, {
+		// 	text: newMessage,
+		// 	userId: user.user_id,
+		// 	roomId: user.user_id,
+		// 	createdAt: serverTimestamp(),
+		// })
 
 		containerRef.current.scrollTop = 99_999_999
 		setNewMessage("")

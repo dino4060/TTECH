@@ -1,13 +1,13 @@
 package com.dino.back_end_for_TTECH.features.product.application.model;
 
+import java.util.List;
+
 import com.dino.back_end_for_TTECH.shared.application.model.PageQuery;
-import jakarta.validation.constraints.Pattern;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

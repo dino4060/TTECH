@@ -1,3 +1,4 @@
+
 package com.dino.back_end_for_TTECH.infrastructure.schedule.config;
 
 import org.springframework.context.annotation.Configuration;

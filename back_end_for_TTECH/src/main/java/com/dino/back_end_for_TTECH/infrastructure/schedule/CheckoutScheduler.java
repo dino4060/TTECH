@@ -17,6 +17,7 @@ public class CheckoutScheduler {
 
     // ICheckoutService checkoutService;
 
+    @SuppressWarnings("unused")
     final Duration DRAFT_ORDER_TTL = Duration.ofMinutes(10);
 
     @Scheduled(fixedRate = 10 * 1000 * 60)

@@ -1,15 +1,15 @@
 "use client"
-import { db } from "@/firebaseConfig"
-import {
-	addDoc,
-	collection,
-	getDocs,
-	onSnapshot,
-	orderBy,
-	query,
-	serverTimestamp,
-	where,
-} from "firebase/firestore"
+// import { db } from "@/firebaseConfig"
+// import {
+// 	addDoc,
+// 	collection,
+// 	getDocs,
+// 	onSnapshot,
+// 	orderBy,
+// 	query,
+// 	serverTimestamp,
+// 	where,
+// } from "firebase/firestore"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { CiChat2 } from "react-icons/ci"
@@ -19,21 +19,19 @@ const ADMIN_ID = "day_la_admin_934857lkghjo834kjasg34958hrg"
 const CustomerMessage = () => {
 	const [room, setRoom] = useState([])
 	const [newMessage, setNewMessage] = useState("")
-	const messagesRef = collection(db, "messages")
+	// const messagesRef = collection(db, "messages")
 
 	const [currentRoomClick, setCurrentRoomClick] =
 		useState("")
 
 	const handleRoom = async () => {
-		const rooms = []
-		const queryMessages = query(messagesRef)
-
-		const allMessage = await getDocs(queryMessages)
-
-		allMessage.forEach((doc) => {
-			rooms.push(doc.data().roomId)
-		})
-		setRoom([...new Set(rooms)])
+		// const rooms = []
+		// const queryMessages = query(messagesRef)
+		// const allMessage = await getDocs(queryMessages)
+		// allMessage.forEach((doc) => {
+		// 	rooms.push(doc.data().roomId)
+		// })
+		// setRoom([...new Set(rooms)])
 	}
 
 	const [messageList, setMessageList] = useState([])
@@ -62,14 +60,12 @@ const CustomerMessage = () => {
 
 	const handleSubmit = async (e) => {
 		// if (newMessage === "") return
-
 		// await addDoc(messagesRef, {
 		// 	text: newMessage,
 		// 	userId: ADMIN_ID,
 		// 	roomId: currentRoomClick,
 		// 	createdAt: serverTimestamp(),
 		// })
-
 		// setNewMessage("")
 	}
 	useEffect(() => {

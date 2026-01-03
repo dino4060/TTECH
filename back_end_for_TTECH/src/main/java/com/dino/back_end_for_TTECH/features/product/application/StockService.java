@@ -1,19 +1,19 @@
 package com.dino.back_end_for_TTECH.features.product.application;
 
-import com.dino.back_end_for_TTECH.features.product.application.model.ProductBody;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dino.back_end_for_TTECH.features.product.application.model.StockBody;
 import com.dino.back_end_for_TTECH.features.product.application.provider.StockLockProvider;
-import com.dino.back_end_for_TTECH.features.product.domain.Product;
 import com.dino.back_end_for_TTECH.features.product.domain.Stock;
 import com.dino.back_end_for_TTECH.features.product.domain.repository.StockRepository;
 import com.dino.back_end_for_TTECH.shared.domain.exception.AppException;
 import com.dino.back_end_for_TTECH.shared.domain.exception.ErrorCode;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -30,13 +30,14 @@ public class StockService {
         model.setAvailable(body.restock());
         model.setSold(0);
 
-//        this.stockRepository.save(model);
+        // this.stockRepository.save(model);
     }
 
     @Transactional
     public void restock(StockBody body, Stock model) {
         var restock = body.restock();
-        if (restock == 0) return;
+        if (restock == 0)
+            return;
 
         model.setTotal(model.getTotal() + restock);
         model.setAvailable(model.getAvailable() + restock);

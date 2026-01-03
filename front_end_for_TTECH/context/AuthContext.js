@@ -5,6 +5,7 @@
 // 	signInWithPopup,
 // 	signOut,
 // } from "firebase/auth"
+// import { auth } from "../firebaseConfig"
 import { useRouter } from "next/navigation"
 import {
 	createContext,
@@ -12,7 +13,6 @@ import {
 	useEffect,
 	useState,
 } from "react"
-// import { auth } from "../firebaseConfig"
 import {
 	TTECH_TOKEN,
 	TTECH_USER,

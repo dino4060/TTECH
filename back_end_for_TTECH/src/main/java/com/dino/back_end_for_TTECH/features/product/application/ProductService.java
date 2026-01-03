@@ -43,7 +43,6 @@ public class ProductService {
 
     private final ProductMapper mapper;
 
-
     // DOMAIN //
 
     public Product get(Long id) {
@@ -86,19 +85,21 @@ public class ProductService {
         Status status = null;
 
         boolean isInit = AppCheck.isBlank(product.getStatus());
-        if (isInit) status = Status.LIVE;
+        if (isInit)
+            status = Status.LIVE;
 
         boolean isOutstock = stock.getAvailable() <= 0;
-        if (isOutstock) status = Status.OUTSTOCK;
+        if (isOutstock)
+            status = Status.OUTSTOCK;
 
-        boolean isRestock = stock.getAvailable() > 0 && (
-                product.hasStatus(null) || product.hasStatus(Status.OUTSTOCK));
-        if (isRestock) status = Status.LIVE;
+        boolean isRestock = stock.getAvailable() > 0 && (product.hasStatus(null) || product.hasStatus(Status.OUTSTOCK));
+        if (isRestock)
+            status = Status.LIVE;
 
         boolean isSet = status != null;
-        if (isSet) product.setStatus(status);
+        if (isSet)
+            product.setStatus(status);
     }
-
 
     // READ //
 
@@ -132,8 +133,7 @@ public class ProductService {
             var sortedPage = new PageImpl<>(
                     sortedList,
                     page.getPageable(),
-                    page.getTotalElements()
-            );
+                    page.getTotalElements());
 
             page = sortedPage;
         }
@@ -205,7 +205,8 @@ public class ProductService {
 
     @Transactional
     public void cancelSaleUnit(SaleUnit unit) {
-        if (!unit.isOn()) return;
+        if (!unit.isOn())
+            return;
 
         Product product = unit.getProduct();
 
@@ -214,19 +215,19 @@ public class ProductService {
                 .filter(u -> !u.getId().equals(unit.getId()))
                 // sale is in ONGOING
                 .filter(u -> u.getSale().hasStatus(ONGOING))
-                //  limit is unlimited or available
+                // limit is unlimited or available
                 .filter(u -> (u.getTotalLimit() == 0) || ((u.getTotalLimit() - u.getUsedCount()) > 0))
                 // Get newest
                 .max(Comparator.comparing(SaleUnit::getCreatedAt))
                 .orElse(null);
 
-
         // apply next sale unit or revert to original price
-        if (nextUnit != null){
+        if (nextUnit != null) {
+            @SuppressWarnings("unused")
             var sale = nextUnit.getSale();
             applySaleUnit(nextUnit);
-        }
-        else this.revertRetailPrice(product);
+        } else
+            this.revertRetailPrice(product);
     }
 
     @Transactional
@@ -236,18 +237,18 @@ public class ProductService {
         SaleUnit nextUnit = product.getSaleUnits().stream()
                 // sale is in ONGOING
                 .filter(u -> u.getSale().hasStatus(ONGOING))
-                //  limit is unlimited or available
+                // limit is unlimited or available
                 .filter(u -> (u.getTotalLimit() == 0) || ((u.getTotalLimit() - u.getUsedCount()) > 0))
                 // Get newest
                 .max(Comparator.comparing(SaleUnit::getCreatedAt))
                 .orElse(null);
 
-
         // apply next sale unit or revert to original price
-        if (nextUnit != null){
+        if (nextUnit != null) {
+            @SuppressWarnings("unused")
             var sale = nextUnit.getSale();
             applySaleUnit(nextUnit);
-        }
-        else this.revertRetailPrice(product);
+        } else
+            this.revertRetailPrice(product);
     }
 }
