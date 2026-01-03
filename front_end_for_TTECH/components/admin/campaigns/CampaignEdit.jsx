@@ -16,6 +16,20 @@ const CampaignEdit = ({
 	setCurrentCamp,
 	setAsyncList,
 }) => {
+	// Render form
+	const [currentSale, setCurrentSale] = useState({})
+
+	const fetchCurrentSale = async (id) => {
+		const { success, data, error } = await clientFetch(
+			adminCampaignApi.saleApi.get(id)
+		)
+		success ? setCurrentSale(data) : alert(error)
+	}
+
+	useEffect(() => {
+		currentCamp?.id && fetchCurrentSale(currentCamp.id)
+	}, [currentCamp])
+
 	// promotionType là falsy => Choose a camp
 	const campTypeKey = currentCamp?.promotionType
 
@@ -62,20 +76,6 @@ const CampaignEdit = ({
 		alert("Loại chiến dịch không được hỗ trợ.")
 		return null
 	}
-
-	// Render form
-	const [currentSale, setCurrentSale] = useState({})
-
-	const fetchCurrentSale = async (id) => {
-		const { success, data, error } = await clientFetch(
-			adminCampaignApi.saleApi.get(id)
-		)
-		success ? setCurrentSale(data) : alert(error)
-	}
-
-	useEffect(() => {
-		currentCamp?.id && fetchCurrentSale(currentCamp.id)
-	}, [currentCamp])
 
 	return (
 		<SaleForm
