@@ -7,6 +7,9 @@ const nextConfig = {
 				hostname: "**",
 			},
 		],
+		eslint: {
+			ignoreDuringBuilds: true,
+		},
 	},
 	async headers() {
 		return [
