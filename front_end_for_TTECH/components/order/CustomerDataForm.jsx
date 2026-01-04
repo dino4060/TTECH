@@ -12,6 +12,7 @@ import CircleLoader from "../uncategory/CircleLoader"
 import AddressDataForm, {
 	FormFieldList,
 } from "./AddressDataForm"
+import { getEnv } from "@/lib/utils/env"
 
 const CustomerDataForm = ({
 	cart,
@@ -198,7 +199,7 @@ const CustomerDataForm = ({
 			const momoRes = await momoApiRt.createPayUrl({
 				amount: newOrder.total * 1000,
 				orderId: newOrder.id,
-				returnUrl: "http://localhost:3000/checkout/success",
+				returnUrl: "http://localhost:3000/checkout/success", // getEnv.SUCCESS_CHECKOUT_URL,
 			})
 
 			if (momoRes.resultCode !== 0) {
