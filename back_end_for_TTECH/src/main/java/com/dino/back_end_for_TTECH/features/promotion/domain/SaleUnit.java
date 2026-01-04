@@ -1,16 +1,28 @@
 package com.dino.back_end_for_TTECH.features.promotion.domain;
 
-import com.dino.back_end_for_TTECH.features.product.domain.Product;
-import com.dino.back_end_for_TTECH.shared.api.model.CurrentUser;
-import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import org.springframework.lang.Nullable;
+
+import com.dino.back_end_for_TTECH.features.product.domain.Product;
+import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "sale_units")
@@ -24,48 +36,29 @@ import org.springframework.lang.Nullable;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SaleUnit extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sale_lines_seq")
-    @SequenceGenerator(name = "sale_lines_seq", allocationSize = 1)
-    @Column(name = "unit_id")
-    Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sale_lines_seq")
+  @SequenceGenerator(name = "sale_lines_seq", allocationSize = 1)
+  @Column(name = "unit_id")
+  Long id;
 
-    boolean isOn;
+  boolean isOn;
 
-    int dealPrice;
+  int dealPrice;
 
-    int dealPercent;
+  int dealPercent;
 
-    int totalLimit;
+  int totalLimit;
 
-    int usedCount = 0;
+  int usedCount = 0;
 
-    String levelType;
+  String levelType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sale_id", updatable = false, nullable = false)
-    Sale sale;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "sale_id", updatable = false, nullable = false)
+  Sale sale;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", updatable = false, nullable = false)
-    Product product;
-
-    // INSTANCE METHODS //
-
-    private boolean isWithinTotalLimit() {
-        if (this.totalLimit == -1 || this.usedCount == -1)
-            return true;
-
-        return this.usedCount < this.totalLimit;
-    }
-
-    public boolean canApply(@Nullable CurrentUser currentUser) {
-        if (!this.isWithinTotalLimit())
-            return false;
-
-        if (currentUser != null)
-            return false;
-
-        return this.sale.isActive();
-    }
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id", updatable = false, nullable = false)
+  Product product;
 }

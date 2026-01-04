@@ -1,10 +1,10 @@
 package com.dino.back_end_for_TTECH.features.promotion.domain.repository;
 
-import com.dino.back_end_for_TTECH.features.promotion.domain.Voucher;
+import com.dino.back_end_for_TTECH.features.promotion.domain.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VoucherRepository extends JpaRepository<Voucher, Long> {
+public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
 }

@@ -31,7 +31,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VoucherUnit extends BaseEntity {
+public class CouponUnit extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "voucher_lines_seq")
@@ -41,7 +41,7 @@ public class VoucherUnit extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "voucher_id", nullable = false)
-    Voucher voucher;
+    Coupon voucher;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)

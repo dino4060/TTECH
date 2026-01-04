@@ -6,7 +6,7 @@ import com.dino.back_end_for_TTECH.features.product.domain.model.ProductSpecific
 import com.dino.back_end_for_TTECH.features.product.domain.model.ProductVariation;
 import com.dino.back_end_for_TTECH.features.product.domain.model.Status;
 import com.dino.back_end_for_TTECH.features.promotion.domain.SaleUnit;
-import com.dino.back_end_for_TTECH.features.promotion.domain.VoucherUnit;
+import com.dino.back_end_for_TTECH.features.promotion.domain.CouponUnit;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseEntity;
 import com.dino.back_end_for_TTECH.shared.domain.model.BaseStatus;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -89,5 +89,5 @@ public class Product extends BaseEntity implements BaseStatus<Status> {
     List<SaleUnit> saleUnits;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<VoucherUnit> voucherUnits;
+    List<CouponUnit> voucherUnits;
 }

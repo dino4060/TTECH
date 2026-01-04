@@ -49,19 +49,4 @@ public class Campaign extends BaseEntity implements BaseStatus<Status> {
     LocalDateTime endTime;
 
     String status;
-
-    private boolean isPeriodActive() {
-        // Instant.isXXX use () => !isXXX use []
-//        Instant now = Instant.now();
-//        return !now.isBefore(this.startTime) && !now.isAfter(this.endTime);
-        return true;
-    }
-
-    private boolean isStatusActive() {
-        return this.status.equals(Status.ONGOING.toString());
-    }
-
-    public boolean isActive() {
-        return this.isPeriodActive() && this.isStatusActive();
-    }
 }
