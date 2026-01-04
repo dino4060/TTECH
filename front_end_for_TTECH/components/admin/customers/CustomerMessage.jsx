@@ -68,9 +68,10 @@ const CustomerMessage = () => {
 		// })
 		// setNewMessage("")
 	}
-	useEffect(() => {
-		// handleRoom()
-	}, [messagesRef])
+
+	// useEffect(() => {
+	// 	handleRoom()
+	// }, [messagesRef])
 
 	return (
 		<div className='container mx-auto mt-10 bg-white'>

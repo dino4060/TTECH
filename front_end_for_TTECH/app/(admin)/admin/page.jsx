@@ -13,7 +13,7 @@ const Page = () => {
 	const { user } = UserAuth()
 
 	useEffect(() => {
-		if (!user.roles || !user.roles.includes("ADMIN")) {
+		if (user.roles && !user.roles.includes("ADMIN")) {
 			return router.push("/")
 		}
 	}, [user])
