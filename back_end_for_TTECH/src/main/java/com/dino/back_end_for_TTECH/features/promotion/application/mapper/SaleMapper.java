@@ -12,10 +12,10 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface SaleMapper extends PageMapper {
 
-    Sale toModel(SaleBody body);
+  Sale toModel(SaleBody body);
 
-    @Mapping(target = "units", ignore = true)
-    void toModel(SaleBody body, @MappingTarget Sale sale);
+  @Mapping(target = "units", ignore = true)
+  void toModel(SaleBody body, @MappingTarget Sale sale);
 
-    SaleData toData(Sale model);
+  SaleData toData(Sale model);
 }

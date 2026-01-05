@@ -13,14 +13,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-/**
- * Represents a allDiscount that:
- * - Be part of a allDiscount program,
- * - Can be applied to a product or spu.
- * <p>
- * Note for properties:
- * - totalLimit, buyerLimit == NULL is unlimited.
- */
 @Entity
 @Table(name = "voucher_units")
 @DynamicInsert
@@ -33,17 +25,17 @@ import org.hibernate.annotations.SQLRestriction;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CouponUnit extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "voucher_lines_seq")
-    @SequenceGenerator(name = "voucher_lines_seq", allocationSize = 1)
-    @Column(name = "unit_id")
-    Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "voucher_lines_seq")
+  @SequenceGenerator(name = "voucher_lines_seq", allocationSize = 1)
+  @Column(name = "unit_id")
+  Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "voucher_id", nullable = false)
-    Coupon voucher;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "voucher_id", nullable = false)
+  Coupon coupon;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    Product product;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id", nullable = false)
+  Product product;
 }

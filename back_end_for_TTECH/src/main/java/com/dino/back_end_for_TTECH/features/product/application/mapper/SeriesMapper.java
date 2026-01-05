@@ -10,9 +10,9 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface SeriesMapper {
 
-    SeriesData toSeriesData(Series model);
+  SeriesData toSeriesData(Series model);
 
-    Series toSeries(SeriesBody body);
+  Series toSeries(SeriesBody body);
 
-    void toSeries(SeriesBody body, @MappingTarget Series model);
+  void toSeries(SeriesBody body, @MappingTarget Series model);
 }

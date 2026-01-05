@@ -28,20 +28,20 @@ public class AdminCouponController {
 
   CouponService couponService;
 
+  @PostMapping
+  public ResponseEntity<?> create(
+      @Valid @RequestBody CouponBody body) {
+
+    var result = this.couponService.create(body);
+    return ResponseEntity.ok(result);
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<?> get(
       @PathVariable long id) {
 
     var data = this.couponService.get(id);
     return ResponseEntity.ok(data);
-  }
-
-  @PostMapping
-  public ResponseEntity<?> add(
-      @Valid @RequestBody CouponBody body) {
-
-    this.couponService.add(body);
-    return ResponseEntity.ok(Map.of());
   }
 
   @PutMapping("/{id}")

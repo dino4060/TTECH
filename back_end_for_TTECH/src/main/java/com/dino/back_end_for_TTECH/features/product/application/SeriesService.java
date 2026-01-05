@@ -25,69 +25,69 @@ import java.util.List;
 @Slf4j
 public class SeriesService {
 
-    private final SeriesRepository seriesRepo;
-    private final SeriesMapper seriesMapper;
-    private final CategoryService categoryService;
+  private final SeriesRepository seriesRepo;
+  private final SeriesMapper seriesMapper;
+  private final CategoryService categoryService;
 
-    public Series get(Long id) {
-        return seriesRepo
-                .findById(id)
-                .orElseThrow(() -> new NotFoundE("Không tìm thấy series"));
-    }
+  public Series get(Long id) {
+    return seriesRepo
+        .findById(id)
+        .orElseThrow(() -> new NotFoundE("Không tìm thấy series"));
+  }
 
-    @SuppressWarnings("unused")
-    private void validate(Series supplier) {
-        List<Series> list = this.seriesRepo.findByName(supplier.getName());
+  @SuppressWarnings("unused")
+  private void validate(Series supplier) {
+    List<Series> list = this.seriesRepo.findByName(supplier.getName());
 
-        boolean isNonDupName = AppCheck.isEmpty(list) ||
-                AppCheck.isEqual(list.getFirst().getId(), supplier.getId());
+    boolean isNonDupName = AppCheck.isEmpty(list) ||
+        AppCheck.isEqual(list.getFirst().getId(), supplier.getId());
 
-        if (!isNonDupName)
-            throw new DuplicationE("Tên series bị trùng lập");
-    }
+    if (!isNonDupName)
+      throw new DuplicationE("Tên series bị trùng lập");
+  }
 
-    @Cacheable(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
-    public List<SeriesData> list() {
-        var suppliers = this.seriesRepo
-                .findAll();
+  @Cacheable(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
+  public List<SeriesData> list() {
+    var suppliers = this.seriesRepo
+        .findAll();
 
-        return suppliers.stream()
-                .map(s -> seriesMapper.toSeriesData(s))
-                .sorted(Comparator.comparing(s -> s.name())).toList();
-    }
+    return suppliers.stream()
+        .map(s -> seriesMapper.toSeriesData(s))
+        .sorted(Comparator.comparing(s -> s.name())).toList();
+  }
 
-    public List<SeriesData> list(SeriesQuery query) {
-        var seriesList = query.getCategory() == null
-                ? this.seriesRepo.findAll()
-                : this.seriesRepo.findByCategoryId(query.getCategory());
+  public List<SeriesData> list(SeriesQuery query) {
+    var seriesList = query.getCategory() == null
+        ? this.seriesRepo.findAll()
+        : this.seriesRepo.findByCategoryId(query.getCategory());
 
-        return seriesList.stream()
-                .map(s -> seriesMapper.toSeriesData(s))
-                .sorted(Comparator.comparing(s -> s.name())).toList();
-    }
+    return seriesList.stream()
+        .map(s -> seriesMapper.toSeriesData(s))
+        .sorted(Comparator.comparing(s -> s.name())).toList();
+  }
 
-    @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
-    public SeriesData add(SeriesBody body) {
-        Series one = seriesMapper.toSeries(body);
-        // this.validate(one);
-        Series newOne = seriesRepo.save(one);
-        return seriesMapper.toSeriesData(newOne);
-    }
+  @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
+  public SeriesData add(SeriesBody body) {
+    Series one = seriesMapper.toSeries(body);
+    // this.validate(one);
+    Series newOne = seriesRepo.save(one);
+    return seriesMapper.toSeriesData(newOne);
+  }
 
-    @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
-    public SeriesData edit(long id, SeriesBody body) {
-        Series one = get(id);
-        one.setName(body.name());
-        one.setPosition(body.position());
-        one.setCategory(this.categoryService.get(body.category().id()));
-        // this.validate(one);
-        Series newOne = seriesRepo.save(one);
-        return seriesMapper.toSeriesData(newOne);
-    }
+  @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
+  public SeriesData edit(long id, SeriesBody body) {
+    Series one = get(id);
+    one.setName(body.name());
+    one.setPosition(body.position());
+    one.setCategory(this.categoryService.get(body.category().getId()));
+    // this.validate(one);
+    Series newOne = seriesRepo.save(one);
+    return seriesMapper.toSeriesData(newOne);
+  }
 
-    @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
-    public void remove(long id) {
-        Series one = get(id);
-        seriesRepo.deleteById(one.getId());
-    }
+  @CacheEvict(value = CacheValue.SUPPLIERS, key = CacheKey.LIST)
+  public void remove(long id) {
+    Series one = get(id);
+    seriesRepo.deleteById(one.getId());
+  }
 }

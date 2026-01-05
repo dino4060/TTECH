@@ -12,13 +12,15 @@ import java.time.LocalDateTime;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CampaignBody {
-    String promotionType;
+  Long id;
 
-    String name;
+  String promotionType;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    LocalDateTime startTime;
+  String name;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    LocalDateTime endTime;
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+  LocalDateTime startTime;
+
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+  LocalDateTime endTime;
 }

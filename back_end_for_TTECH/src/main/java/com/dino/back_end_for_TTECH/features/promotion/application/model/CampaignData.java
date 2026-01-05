@@ -11,6 +11,5 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CampaignData extends CampaignBody {
-    Long id;
-    String status;
+  String status;
 }

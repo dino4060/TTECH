@@ -11,5 +11,21 @@ import java.util.List;
 @Data
 public class CouponData extends CampaignData {
 
-  List<SaleUnitData> units;
+  Integer discountAmount;
+
+  Integer discountPercent;
+
+  Integer minSpend;
+
+  Integer maxDiscount;
+
+  Integer expiryClaimDays;
+
+  Integer totalLimit;
+
+  Integer limitPerClient;
+
+  Boolean isAllProducts;
+
+  List<CouponUnitData> units;
 }

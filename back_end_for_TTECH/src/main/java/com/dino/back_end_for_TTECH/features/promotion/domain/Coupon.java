@@ -1,6 +1,7 @@
 package com.dino.back_end_for_TTECH.features.promotion.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,10 +62,10 @@ public class Coupon extends Campaign {
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
-  private Map<Long, Integer> countPerClient;
+  Map<Long, Integer> countPerClient = new HashMap<>();
 
   Boolean isAllProducts;
 
-  @OneToMany(mappedBy = "voucher", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "coupon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   List<CouponUnit> units = new ArrayList<>();
 }
