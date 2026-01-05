@@ -9,7 +9,9 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PROTECTED)
 public class CampaignData extends CampaignBody {
+  Long id;
+
   String status;
 }

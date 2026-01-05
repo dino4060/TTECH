@@ -32,62 +32,66 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product extends BaseEntity implements BaseStatus<Status> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_seq")
-    @SequenceGenerator(name = "products_seq", sequenceName = "products_seq", allocationSize = 1)
-    @Column(name = "product_id")
-    Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_seq")
+  @SequenceGenerator(name = "products_seq", sequenceName = "products_seq", allocationSize = 1)
+  @Column(name = "product_id")
+  Long id;
 
-    @Column(nullable = false)
-    String name;
+  @Column(nullable = false)
+  String name;
 
-    @Column(nullable = false)
-    String thumb;
+  @Column(nullable = false)
+  String thumb;
 
-    String version;
+  String version;
 
-    String color;
+  String color;
 
-    String status;
+  String status;
 
-    int guaranteeMonths;
+  int guaranteeMonths;
 
-    List<String> photos;
+  List<String> photos;
 
-    @Column(columnDefinition = "text")
-    String description;
+  @Column(columnDefinition = "text")
+  String description;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    List<ProductSpecification> specifications;
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  List<ProductSpecification> specifications;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    List<ProductVariation> variations;
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  List<ProductVariation> variations;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    Category category;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id")
+  Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "series_id")
-    Series series;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "series_id")
+  Series series;
 
-    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    Price price;
+  @OneToOne(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  Price price;
 
-    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    Stock stock;
+  @OneToOne(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  Stock stock;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<CartLine> cartLines;
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  List<CartLine> cartLines;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<OrderLine> orderLines;
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  List<OrderLine> orderLines;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<SaleUnit> saleUnits;
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  List<SaleUnit> saleUnits;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<CouponUnit> voucherUnits;
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  List<CouponUnit> voucherUnits;
+
+  public Product(Long id) {
+    this.id = id;
+  }
 }

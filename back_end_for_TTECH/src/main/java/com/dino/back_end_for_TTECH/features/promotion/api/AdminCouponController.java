@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dino.back_end_for_TTECH.features.promotion.application.CouponService;
 import com.dino.back_end_for_TTECH.features.promotion.application.model.CouponBody;
+import com.dino.back_end_for_TTECH.shared.application.exception.BadRequestE;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -36,20 +37,23 @@ public class AdminCouponController {
     return ResponseEntity.ok(result);
   }
 
+  @PutMapping("/{id}")
+  public ResponseEntity<?> update(
+      @Valid @RequestBody CouponBody body) {
+
+    if (body.getId() == null) {
+      throw new BadRequestE("CouponBody.id is required");
+    }
+    var result = this.couponService.update(body);
+    return ResponseEntity.ok(result);
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<?> get(
       @PathVariable long id) {
 
     var data = this.couponService.get(id);
     return ResponseEntity.ok(data);
-  }
-
-  @PutMapping("/{id}")
-  public ResponseEntity<?> edit(
-      @PathVariable long id,
-      @Valid @RequestBody CouponBody body) {
-    this.couponService.edit(body);
-    return ResponseEntity.ok(Map.of());
   }
 
   @DeleteMapping("/{id}")

@@ -3,14 +3,13 @@ package com.dino.back_end_for_TTECH.features.promotion.application.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class CouponBody extends CampaignBody {
-
-  Long id;
 
   Integer discountAmount;
 
@@ -28,5 +27,6 @@ public class CouponBody extends CampaignBody {
 
   Boolean isAllProducts;
 
+  @Valid
   List<CouponUnitBody> units = new ArrayList<>();
 }

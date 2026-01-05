@@ -68,4 +68,8 @@ public class Coupon extends Campaign {
 
   @OneToMany(mappedBy = "coupon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   List<CouponUnit> units = new ArrayList<>();
+
+  public Coupon(Long id) {
+    this.id = id;
+  }
 }

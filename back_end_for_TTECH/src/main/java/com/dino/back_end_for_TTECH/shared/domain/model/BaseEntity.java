@@ -1,14 +1,19 @@
 package com.dino.back_end_for_TTECH.shared.domain.model;
 
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import java.time.Instant;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @MappedSuperclass
 @Getter
@@ -18,20 +23,20 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseEntity {
 
-    @CreationTimestamp
-    Instant createdAt;
+  @CreationTimestamp
+  Instant createdAt;
 
-    @UpdateTimestamp
-    Instant updatedAt;
+  @UpdateTimestamp
+  Instant updatedAt;
 
-    Boolean isDeleted;
+  Boolean isDeleted;
 
-    @PrePersist
-    public void beforeCreate() {
-        this.isDeleted = Boolean.FALSE;
-    }
+  @PrePersist
+  public void beforeCreate() {
+    this.isDeleted = Boolean.FALSE;
+  }
 
-    @PreUpdate
-    public void beforeUpdate() {
-    }
+  @PreUpdate
+  public void beforeUpdate() {
+  }
 }
