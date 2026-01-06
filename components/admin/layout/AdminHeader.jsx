@@ -78,6 +78,10 @@ export const AdminRouteList = [
 		id: "marketing",
 		component: CampaignManagement,
 	},
+	// {
+	// 	id: "promotion",
+	// 	component: CampaignManagement,
+	// },
 	{
 		id: "series",
 		component: SeriesManagement,

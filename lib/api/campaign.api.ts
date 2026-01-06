@@ -35,4 +35,28 @@ export const adminCampaignApi = {
 			method: HttpMethod.DELETE,
 		}),
 	},
+
+	couponApi: {
+		get: (id: number): TApi<{}[]> => ({
+			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/coupons/${id}`,
+			method: HttpMethod.GET,
+		}),
+
+		deactivated: (id: number): TApi<{}[]> => ({
+			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/coupons/${id}`,
+			method: HttpMethod.DELETE,
+		}),
+
+		update: (body = {}): TApi<{}[]> => ({
+			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/coupons`,
+			method: HttpMethod.PUT,
+			body,
+		}),
+
+		create: (body = {}): TApi<{}[]> => ({
+			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/coupons`,
+			method: HttpMethod.POST,
+			body,
+		}),
+	},
 }

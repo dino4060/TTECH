@@ -14,7 +14,7 @@ import {
 	ZapIcon,
 } from "lucide-react"
 import SaleForm from "./SaleForm"
-import VoucherForm from "./VoucherForm"
+import CouponForm from "./CouponForm"
 
 const CampaignAdd = ({
 	currentCamp,
@@ -152,6 +152,99 @@ export const CampTypeUn = {
 			/>
 		),
 	},
+	PUBLIC_VOUCHER: {
+		key: "PUBLIC_VOUCHER",
+		name: "Coupon đơn hàng",
+		icon: TicketIcon,
+		renderForm: (
+			CampType,
+			action,
+			onReturn,
+			currentCamp,
+			setCurrentCamp,
+			setAsyncList
+		) => (
+			// 	<CouponForm
+			<CouponForm
+				CampType={CampType}
+				action={action}
+				onReturn={onReturn}
+				currentCamp={currentCamp}
+				setCurrentCamp={setCurrentCamp}
+				setAsyncList={setAsyncList}
+			/>
+		),
+	},
+	CODE_VOUCHER: {
+		key: "CODE_VOUCHER",
+		name: "Coupon mã dành riêng",
+		icon: TagIcon,
+		renderForm: (
+			CampType,
+			action,
+			onReturn,
+			currentCamp,
+			setCurrentCamp,
+			setAsyncList
+		) => (
+			<CouponForm
+				CampType={CampType}
+				action={action}
+				onReturn={onReturn}
+				currentCamp={currentCamp}
+				setCurrentCamp={setCurrentCamp}
+				setAsyncList={setAsyncList}
+			/>
+		),
+	},
+	REVIEW_VOUCHER: {
+		key: "REVIEW_VOUCHER",
+		name: "Coupon đánh giá",
+		icon: PencilLineIcon,
+		renderForm: (CampType, action, onReturn) => (
+			<CouponForm
+				CampType={CampType}
+				action={action}
+				onReturn={onReturn}
+			/>
+		),
+	},
+	NEW_CUSTOMER_VOUCHER: {
+		key: "NEW_CUSTOMER_VOUCHER",
+		name: "Coupon khách mới",
+		icon: UserRoundPlusIcon,
+		renderForm: (CampType, action, onReturn) => (
+			<CouponForm
+				CampType={CampType}
+				action={action}
+				onReturn={onReturn}
+			/>
+		),
+	},
+	LOYAL_CUSTOMER_VOUCHER: {
+		key: "LOYAL_CUSTOMER_VOUCHER",
+		name: "Coupon khách quen",
+		icon: UserRoundCheckIcon,
+		renderForm: (CampType, action, onReturn) => (
+			<CouponForm
+				CampType={CampType}
+				action={action}
+				onReturn={onReturn}
+			/>
+		),
+	},
+	MESSAGE_VOUCHER: {
+		key: "MESSAGE_VOUCHER",
+		name: "Coupon tin nhắn",
+		icon: MessagesSquareIcon,
+		renderForm: (CampType, action, onReturn) => (
+			<CouponForm
+				CampType={CampType}
+				action={action}
+				onReturn={onReturn}
+			/>
+		),
+	},
 }
 
 const CampTypeGroups = [
@@ -163,87 +256,21 @@ const CampTypeGroups = [
 		CampTypes: [
 			CampTypeUn.DAILY_SALE,
 			CampTypeUn.FLASH_SALE,
-			// CampTypeUn.NEW_ARRIVAL_SALE,
+			CampTypeUn.NEW_ARRIVAL_SALE,
 		],
 	},
 	{
 		key: "VOUCHER",
-		name: "Voucher",
+		name: "Coupon",
 		note:
-			"Trao tặng voucher thúc đẩy khách hàng chi tiêu nhiều hơn",
+			"Trao tặng Coupon thúc đẩy khách hàng chi tiêu nhiều hơn",
 		CampTypes: [
-			{
-				key: "PUBLIC_VOUCHER",
-				name: "Voucher đơn hàng",
-				icon: TicketIcon,
-				renderForm: (CampType, action, onReturn) => (
-					<VoucherForm
-						CampType={CampType}
-						action={action}
-						onReturn={onReturn}
-					/>
-				),
-			},
-			{
-				key: "CODE_VOUCHER",
-				name: "Voucher mã dành riêng",
-				icon: TagIcon,
-				renderForm: (CampType, action, onReturn) => (
-					<VoucherForm
-						CampType={CampType}
-						action={action}
-						onReturn={onReturn}
-					/>
-				),
-			},
-			{
-				key: "REVIEW_VOUCHER",
-				name: "Voucher đánh giá",
-				icon: PencilLineIcon,
-				renderForm: (CampType, action, onReturn) => (
-					<VoucherForm
-						CampType={CampType}
-						action={action}
-						onReturn={onReturn}
-					/>
-				),
-			},
-			{
-				key: "NEW_CUSTOMER_VOUCHER",
-				name: "Voucher khách mới",
-				icon: UserRoundPlusIcon,
-				renderForm: (CampType, action, onReturn) => (
-					<VoucherForm
-						CampType={CampType}
-						action={action}
-						onReturn={onReturn}
-					/>
-				),
-			},
-			{
-				key: "LOYAL_CUSTOMER_VOUCHER",
-				name: "Voucher khách quen",
-				icon: UserRoundCheckIcon,
-				renderForm: (CampType, action, onReturn) => (
-					<VoucherForm
-						CampType={CampType}
-						action={action}
-						onReturn={onReturn}
-					/>
-				),
-			},
-			{
-				key: "MESSAGE_VOUCHER",
-				name: "Voucher tin nhắn",
-				icon: MessagesSquareIcon,
-				renderForm: (CampType, action, onReturn) => (
-					<VoucherForm
-						CampType={CampType}
-						action={action}
-						onReturn={onReturn}
-					/>
-				),
-			},
+			CampTypeUn.PUBLIC_VOUCHER,
+			CampTypeUn.CODE_VOUCHER,
+			CampTypeUn.REVIEW_VOUCHER,
+			CampTypeUn.NEW_ARRIVAL_SALE,
+			CampTypeUn.LOYAL_CUSTOMER_VOUCHER,
+			CampTypeUn.MESSAGE_VOUCHER,
 		],
 	},
 ]

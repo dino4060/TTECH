@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-BootstrapApplication<back_end_for_TTECH>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.dino.back_end_for_TTECH.BootstrapApplication",
+      "projectName": "back_end_for_TTECH",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

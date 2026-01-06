@@ -199,7 +199,7 @@ const CustomerDataForm = ({
 			const momoRes = await momoApiRt.createPayUrl({
 				amount: newOrder.total * 1000,
 				orderId: newOrder.id,
-				returnUrl: "http://localhost:3000/checkout/success", // getEnv.SUCCESS_CHECKOUT_URL,
+				returnUrl: getEnv.SUCCESS_CHECKOUT_URL, // "http://localhost:3000/checkout/success",
 			})
 
 			if (momoRes.resultCode !== 0) {
