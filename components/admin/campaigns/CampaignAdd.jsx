@@ -14,7 +14,7 @@ import {
 	ZapIcon,
 } from "lucide-react"
 import SaleForm from "./SaleForm"
-import CouponForm from "./CouponForm"
+import CouponForm from "./Coupon/CouponForm"
 
 const CampaignAdd = ({
 	currentCamp,

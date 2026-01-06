@@ -9,8 +9,27 @@ import {
 import { AnimatePresence, motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 import { IoChevronBackOutline } from "react-icons/io5"
-import { ActionKeyUn as ActionUn } from "./CampaignAction"
-import SaleUnitList from "./SaleUnit/SaleUnitList"
+import { ActionKeyUn as ActionUn } from "../CampaignAction"
+import CouponConfigForm from "./CouponConfigForm"
+
+const DEFAULT_COUPON_DATA = (promotionType) => ({
+	promotionType,
+	id: "",
+	name: "",
+	startTime: "",
+	endTime: "",
+})
+
+const DEFAULT_COUPON_CONFIG = {
+	isFixed: true,
+	discountValue: 50,
+	minSpend: 1,
+	totalLimit: 2,
+	limitPerCustomer: 3,
+	validityDays: 4,
+	isApplyAll: true,
+	units: [],
+}
 
 const CouponSaleForm = ({
 	CampType: CouponType,
@@ -20,28 +39,23 @@ const CouponSaleForm = ({
 	setCurrentCamp,
 	setAsyncList,
 }) => {
-	const [couponData, setCouponData] = useState({})
-	const [couponUnits, setCouponUnits] = useState([])
-	const [isAsyncUnits, setAsyncUnits] = useState(false)
+	const [couponData, setCouponData] = useState(
+		DEFAULT_COUPON_DATA(CouponType.key)
+	)
+	const [couponConfig, setCouponConfig] = useState(
+		DEFAULT_COUPON_CONFIG
+	)
 	const [feedback, setFeedback] = useState({})
 	const [notification, setNotification] = useState("")
-	const cleanCouponData = {
-		promotionType: CouponType.key,
-		id: "",
-		name: "",
-		startTime: "",
-		endTime: "",
-		units: [],
-	}
 
 	// Turn add mode => Clean sale data
 	useEffect(() => {
 		if (action === ActionUn.ADD || !currentCamp?.id) {
-			setCouponData(cleanCouponData)
-			setCouponUnits([])
+			setCouponData(DEFAULT_COUPON_DATA(CouponType.key))
+			setCouponConfig(DEFAULT_COUPON_CONFIG)
 		} else {
 			setCouponData(currentCamp)
-			setCouponUnits(currentCamp.units)
+			setCouponConfig(currentCamp)
 		}
 		setFeedback({})
 	}, [currentCamp])
@@ -73,7 +87,7 @@ const CouponSaleForm = ({
 				  }
 
 		// Validate form
-		const body = { ...couponData, units: couponUnits }
+		const body = { ...couponData, ...couponConfig }
 		const isValid = checkSubmitForm(
 			CampForm,
 			body,
@@ -101,9 +115,8 @@ const CouponSaleForm = ({
 		const { success, error } = await clientFetch(api(body))
 		if (success) {
 			setNotification(notification)
-			setCouponData(cleanCouponData)
-			setCouponUnits([])
-			setAsyncUnits((prev) => ![prev])
+			setCouponData(DEFAULT_COUPON_DATA(CouponType.key))
+			setCouponConfig(DEFAULT_COUPON_CONFIG)
 			setAsyncList((prev) => !prev)
 		} else {
 			alert(error)
@@ -162,12 +175,10 @@ const CouponSaleForm = ({
 					</div>
 				))}
 
-				{/* <SaleUnitList
-					action={action}
-					saleUnits={couponUnits}
-					setSaleUnits={setCouponUnits}
-					isAsyncUnits={isAsyncUnits}
-				/> */}
+				<CouponConfigForm
+					couponConfig={couponConfig}
+					setCouponConfig={setCouponConfig}
+				/>
 
 				<button
 					className='bg-blue-500 w-full p-4 mt-4 text-2xl font-semibold text-white rounded-2xl'
