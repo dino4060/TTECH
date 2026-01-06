@@ -13,7 +13,7 @@ import {
 	UserRoundPlusIcon,
 	ZapIcon,
 } from "lucide-react"
-import SaleForm from "./SaleForm"
+import SaleForm from "./SaleUnit/SaleForm"
 import CouponForm from "./Coupon/CouponForm"
 
 const CampaignAdd = ({

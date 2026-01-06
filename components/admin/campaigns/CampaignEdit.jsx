@@ -5,7 +5,7 @@ import {
 } from "react-icons/io5"
 import { ActionKeyUn as ActionUn } from "./CampaignAction"
 import { CampTypeUn } from "./CampaignAdd"
-import SaleForm from "./SaleForm"
+import SaleForm from "./SaleUnit/SaleForm"
 import { adminCampaignApi } from "@/lib/api/campaign.api"
 import { useEffect, useState } from "react"
 import { clientFetch } from "@/lib/http/fetch.client"

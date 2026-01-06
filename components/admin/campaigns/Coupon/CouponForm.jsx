@@ -11,6 +11,7 @@ import { Fragment, useEffect, useState } from "react"
 import { IoChevronBackOutline } from "react-icons/io5"
 import { ActionKeyUn as ActionUn } from "../CampaignAction"
 import CouponConfigForm from "./CouponConfigForm"
+import CouponUnitList from "./CouponUnitList"
 
 const DEFAULT_COUPON_DATA = (promotionType) => ({
 	promotionType,
@@ -27,6 +28,10 @@ const DEFAULT_COUPON_CONFIG = {
 	totalLimit: 2,
 	limitPerCustomer: 3,
 	validityDays: 4,
+	units: [],
+}
+
+const DEFAULT_PRODUCTS_CONFIG = {
 	isApplyAll: true,
 	units: [],
 }
@@ -45,17 +50,23 @@ const CouponSaleForm = ({
 	const [couponConfig, setCouponConfig] = useState(
 		DEFAULT_COUPON_CONFIG
 	)
+	const [productsConfig, setProductsConfig] = useState(
+		DEFAULT_PRODUCTS_CONFIG
+	)
 	const [feedback, setFeedback] = useState({})
 	const [notification, setNotification] = useState("")
+	const [isSubmitted, setSubmitted] = useState(false)
 
 	// Turn add mode => Clean sale data
 	useEffect(() => {
 		if (action === ActionUn.ADD || !currentCamp?.id) {
 			setCouponData(DEFAULT_COUPON_DATA(CouponType.key))
 			setCouponConfig(DEFAULT_COUPON_CONFIG)
+			setProductsConfig(DEFAULT_PRODUCTS_CONFIG)
 		} else {
 			setCouponData(currentCamp)
 			setCouponConfig(currentCamp)
+			setProductsConfig(currentCamp)
 		}
 		setFeedback({})
 	}, [currentCamp])
@@ -87,7 +98,11 @@ const CouponSaleForm = ({
 				  }
 
 		// Validate form
-		const body = { ...couponData, ...couponConfig }
+		const body = {
+			...couponData,
+			...couponConfig,
+			...productsConfig,
+		}
 		const isValid = checkSubmitForm(
 			CampForm,
 			body,
@@ -117,7 +132,9 @@ const CouponSaleForm = ({
 			setNotification(notification)
 			setCouponData(DEFAULT_COUPON_DATA(CouponType.key))
 			setCouponConfig(DEFAULT_COUPON_CONFIG)
+			setProductsConfig(DEFAULT_PRODUCTS_CONFIG)
 			setAsyncList((prev) => !prev)
+			setSubmitted((prev) => !prev)
 		} else {
 			alert(error)
 		}
@@ -175,10 +192,18 @@ const CouponSaleForm = ({
 					</div>
 				))}
 
-				<CouponConfigForm
-					couponConfig={couponConfig}
-					setCouponConfig={setCouponConfig}
-				/>
+				<div className='flex flex-col gap-6 mt-6'>
+					<CouponConfigForm
+						couponConfig={couponConfig}
+						setCouponConfig={setCouponConfig}
+					/>
+
+					<CouponUnitList
+						productsConfig={productsConfig}
+						setProductsConfig={setProductsConfig}
+						isSubmitted={isSubmitted}
+					/>
+				</div>
 
 				<button
 					className='bg-blue-500 w-full p-4 mt-4 text-2xl font-semibold text-white rounded-2xl'
