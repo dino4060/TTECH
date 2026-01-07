@@ -1,33 +1,49 @@
 "use client"
+import { motion } from "framer-motion"
 import { Fragment, useState } from "react"
 import { ActionKeyUn } from "./CampaignAction"
-import { motion } from "framer-motion"
-import {
-	CirclePercentIcon,
-	MessagesSquareIcon,
-	PackagePlusIcon,
-	PencilLineIcon,
-	TagIcon,
-	TicketIcon,
-	UserRoundCheckIcon,
-	UserRoundPlusIcon,
-	ZapIcon,
-} from "lucide-react"
-import SaleForm from "./SaleUnit/SaleForm"
-import CouponForm from "./Coupon/CouponForm"
+import { CampTypeUn } from "./CampaignUtils"
+
+const CampTypeGroups = [
+	{
+		key: "SALE",
+		name: "Giảm giá",
+		note:
+			"Ưu đãi giảm giá sản phẩm giúp tăng sức cạnh tranh với đối thủ",
+		CampTypes: [
+			CampTypeUn.DAILY_SALE,
+			CampTypeUn.FLASH_SALE,
+			CampTypeUn.NEW_ARRIVAL_SALE,
+		],
+	},
+	{
+		key: "VOUCHER",
+		name: "Coupon",
+		note:
+			"Trao tặng Coupon thúc đẩy khách hàng chi tiêu nhiều hơn",
+		CampTypes: [
+			CampTypeUn.PUBLIC_VOUCHER,
+			CampTypeUn.CODE_VOUCHER,
+			CampTypeUn.REVIEW_VOUCHER,
+			CampTypeUn.NEW_ARRIVAL_SALE,
+			CampTypeUn.LOYAL_CUSTOMER_VOUCHER,
+			CampTypeUn.MESSAGE_VOUCHER,
+		],
+	},
+]
 
 const CampaignAdd = ({
 	currentCamp,
 	setCurrentCamp,
 	setAsyncList,
 }) => {
-	const [CampType, setCampType] = useState(null)
-	const onNextStep = (type) => setCampType(type)
-	const onReturn = () => setCampType(null)
+	const [CampaignType, setCampaignType] = useState(null)
+	const onNextStep = (type) => setCampaignType(type)
+	const onReturn = () => setCampaignType(null)
 
 	return (
 		<Fragment>
-			{!CampType ? (
+			{!CampaignType ? (
 				/* Step 1: Choose a Campaign Type */
 				<motion.div
 					initial={{ opacity: 0, y: -20 }}
@@ -70,8 +86,8 @@ const CampaignAdd = ({
 				</motion.div>
 			) : (
 				/* Step 2: Render a Campaign Form */
-				CampType.renderForm(
-					CampType,
+				CampaignType.renderForm(
+					CampaignType,
 					ActionKeyUn.ADD,
 					onReturn,
 					currentCamp,
@@ -84,193 +100,3 @@ const CampaignAdd = ({
 }
 
 export default CampaignAdd
-
-export const CampTypeUn = {
-	DAILY_SALE: {
-		key: "DAILY_SALE",
-		name: "Giảm giá hằng ngày",
-		icon: CirclePercentIcon,
-		renderForm: (
-			CampType,
-			action,
-			onReturn,
-			currentCamp,
-			setCurrentCamp,
-			setAsyncList
-		) => (
-			<SaleForm
-				CampType={CampType}
-				action={action}
-				onReturn={onReturn}
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
-				setAsyncList={setAsyncList}
-			/>
-		),
-	},
-	FLASH_SALE: {
-		key: "FLASH_SALE",
-		name: "Flash Sale",
-		icon: ZapIcon,
-		renderForm: (
-			CampType,
-			action,
-			onReturn,
-			currentCamp,
-			setCurrentCamp,
-			setAsyncList
-		) => (
-			<SaleForm
-				CampType={CampType}
-				action={action}
-				onReturn={onReturn}
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
-				setAsyncList={setAsyncList}
-			/>
-		),
-	},
-	NEW_ARRIVAL_SALE: {
-		key: "NEW_ARRIVAL_SALE",
-		name: "Giảm giá hàng mới về",
-		icon: PackagePlusIcon,
-		renderForm: (
-			CampType,
-			action,
-			onReturn,
-			currentCamp,
-			setCurrentCamp,
-			setAsyncList
-		) => (
-			<SaleForm
-				CampType={CampType}
-				action={action}
-				onReturn={onReturn}
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
-				setAsyncList={setAsyncList}
-			/>
-		),
-	},
-	PUBLIC_VOUCHER: {
-		key: "PUBLIC_VOUCHER",
-		name: "Coupon đơn hàng",
-		icon: TicketIcon,
-		renderForm: (
-			CampType,
-			action,
-			onReturn,
-			currentCamp,
-			setCurrentCamp,
-			setAsyncList
-		) => (
-			// 	<CouponForm
-			<CouponForm
-				CampType={CampType}
-				action={action}
-				onReturn={onReturn}
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
-				setAsyncList={setAsyncList}
-			/>
-		),
-	},
-	CODE_VOUCHER: {
-		key: "CODE_VOUCHER",
-		name: "Coupon mã dành riêng",
-		icon: TagIcon,
-		renderForm: (
-			CampType,
-			action,
-			onReturn,
-			currentCamp,
-			setCurrentCamp,
-			setAsyncList
-		) => (
-			<CouponForm
-				CampType={CampType}
-				action={action}
-				onReturn={onReturn}
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
-				setAsyncList={setAsyncList}
-			/>
-		),
-	},
-	REVIEW_VOUCHER: {
-		key: "REVIEW_VOUCHER",
-		name: "Coupon đánh giá",
-		icon: PencilLineIcon,
-		renderForm: (CampType, action, onReturn) => (
-			<CouponForm
-				CampType={CampType}
-				action={action}
-				onReturn={onReturn}
-			/>
-		),
-	},
-	NEW_CUSTOMER_VOUCHER: {
-		key: "NEW_CUSTOMER_VOUCHER",
-		name: "Coupon khách mới",
-		icon: UserRoundPlusIcon,
-		renderForm: (CampType, action, onReturn) => (
-			<CouponForm
-				CampType={CampType}
-				action={action}
-				onReturn={onReturn}
-			/>
-		),
-	},
-	LOYAL_CUSTOMER_VOUCHER: {
-		key: "LOYAL_CUSTOMER_VOUCHER",
-		name: "Coupon khách quen",
-		icon: UserRoundCheckIcon,
-		renderForm: (CampType, action, onReturn) => (
-			<CouponForm
-				CampType={CampType}
-				action={action}
-				onReturn={onReturn}
-			/>
-		),
-	},
-	MESSAGE_VOUCHER: {
-		key: "MESSAGE_VOUCHER",
-		name: "Coupon tin nhắn",
-		icon: MessagesSquareIcon,
-		renderForm: (CampType, action, onReturn) => (
-			<CouponForm
-				CampType={CampType}
-				action={action}
-				onReturn={onReturn}
-			/>
-		),
-	},
-}
-
-const CampTypeGroups = [
-	{
-		key: "SALE",
-		name: "Giảm giá",
-		note:
-			"Ưu đãi giảm giá sản phẩm giúp tăng sức cạnh tranh với đối thủ",
-		CampTypes: [
-			CampTypeUn.DAILY_SALE,
-			CampTypeUn.FLASH_SALE,
-			CampTypeUn.NEW_ARRIVAL_SALE,
-		],
-	},
-	{
-		key: "VOUCHER",
-		name: "Coupon",
-		note:
-			"Trao tặng Coupon thúc đẩy khách hàng chi tiêu nhiều hơn",
-		CampTypes: [
-			CampTypeUn.PUBLIC_VOUCHER,
-			CampTypeUn.CODE_VOUCHER,
-			CampTypeUn.REVIEW_VOUCHER,
-			CampTypeUn.NEW_ARRIVAL_SALE,
-			CampTypeUn.LOYAL_CUSTOMER_VOUCHER,
-			CampTypeUn.MESSAGE_VOUCHER,
-		],
-	},
-]

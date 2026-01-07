@@ -5,6 +5,50 @@ import CampaignAdd from "./CampaignAdd"
 import CampaignEdit from "./CampaignEdit"
 import CampaignRemove from "./CampaignRemove"
 
+export const ActionKeyUn = {
+	ADD: "ADD",
+	EDIT: "EDIT",
+	REMOVE: "REMOVE",
+	ANALYZE: "ANALYZE",
+}
+
+const Actions = [
+	{
+		key: ActionKeyUn.ANALYZE,
+		name: "phân tích",
+		render: () => <div>Phân tích</div>,
+	},
+	{
+		key: ActionKeyUn.ADD,
+		name: "thêm mới",
+		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+			<CampaignAdd
+				currentCamp={currentCamp}
+				setCurrentCamp={setCurrentCamp}
+				setAsyncList={setAsyncList}
+			/>
+		),
+	},
+	{
+		key: ActionKeyUn.EDIT,
+		name: "chỉnh sửa",
+		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+			<CampaignEdit
+				currentCamp={currentCamp}
+				setCurrentCamp={setCurrentCamp}
+				setAsyncList={setAsyncList}
+			/>
+		),
+	},
+	{
+		key: ActionKeyUn.REMOVE,
+		name: "xóa",
+		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+			<CampaignRemove setAsyncList={setAsyncList} />
+		),
+	},
+]
+
 const CampaignAction = ({
 	currentCamp,
 	setCurrentCamp,
@@ -51,47 +95,3 @@ const CampaignAction = ({
 }
 
 export default CampaignAction
-
-export const ActionKeyUn = {
-	ADD: "ADD",
-	EDIT: "EDIT",
-	REMOVE: "REMOVE",
-	ANALYZE: "ANALYZE",
-}
-
-const Actions = [
-	{
-		key: ActionKeyUn.ANALYZE,
-		name: "phân tích",
-		render: () => <div>Phân tích</div>,
-	},
-	{
-		key: ActionKeyUn.ADD,
-		name: "thêm mới",
-		render: (currentCamp, setCurrentCamp, setAsyncList) => (
-			<CampaignAdd
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
-				setAsyncList={setAsyncList}
-			/>
-		),
-	},
-	{
-		key: ActionKeyUn.EDIT,
-		name: "chỉnh sửa",
-		render: (currentCamp, setCurrentCamp, setAsyncList) => (
-			<CampaignEdit
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
-				setAsyncList={setAsyncList}
-			/>
-		),
-	},
-	{
-		key: ActionKeyUn.REMOVE,
-		name: "xóa",
-		render: (currentCamp, setCurrentCamp, setAsyncList) => (
-			<CampaignRemove setAsyncList={setAsyncList} />
-		),
-	},
-]
