@@ -4,7 +4,7 @@ import { Fragment, useEffect, useState } from "react"
 import ProductOptions from "../ProductOptions"
 import LimitCell from "./LimitCell"
 import PriceCell from "./PriceCell"
-import { ActionKeyUn } from "../CampaignAction"
+import { ActionKeyMap } from "../CampaignUtils"
 
 const SaleUnitList = ({
 	action,
@@ -79,7 +79,7 @@ const SaleUnitList = ({
 						: "Chưa có sản phẩm áp dụng"}
 				</h3>
 
-				{action === ActionKeyUn.ADD && (
+				{action === ActionKeyMap.ADD && (
 					<div className='flex gap-2'>
 						<button
 							className='self-center px-5 py-2 text-white text-2xl bg-blue-500 rounded-full'

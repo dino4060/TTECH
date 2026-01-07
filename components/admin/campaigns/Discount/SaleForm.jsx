@@ -9,8 +9,8 @@ import {
 import { AnimatePresence, motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 import { IoChevronBackOutline } from "react-icons/io5"
-import { ActionKeyUn as ActionUn } from "../CampaignAction"
 import SaleUnitList from "./SaleUnitList"
+import { ActionKeyMap } from "../CampaignUtils"
 
 const SaleForm = ({
 	CampType: SaleType,
@@ -36,7 +36,7 @@ const SaleForm = ({
 
 	// Turn add mode => Clean sale data
 	useEffect(() => {
-		if (action === ActionUn.ADD || !currentCamp?.id) {
+		if (action === ActionKeyMap.ADD || !currentCamp?.id) {
 			setSaleData(cleanSaleData)
 			setSaleUnits([])
 		} else {
@@ -54,7 +54,7 @@ const SaleForm = ({
 	const onSubmitSale = async () => {
 		// Prepare data for ADD or EDIT
 		const { id, isCheckID, api, notification } =
-			action === ActionUn.ADD
+			action === ActionKeyMap.ADD
 				? {
 						id: 0,
 						isCheckID: false,
@@ -125,7 +125,7 @@ const SaleForm = ({
 						{SaleType.name}
 					</h3>
 
-					{action === ActionUn.ADD && (
+					{action === ActionKeyMap.ADD && (
 						<IoChevronBackOutline
 							size={25}
 							onClick={() => onReturn()}
@@ -175,7 +175,7 @@ const SaleForm = ({
 					className='bg-blue-500 w-full p-4 mt-4 text-2xl font-semibold text-white rounded-2xl'
 					onClick={() => onSubmitSale()}
 				>
-					{action === ActionUn.ADD
+					{action === ActionKeyMap.ADD
 						? "HOÀN TẤT THÊM"
 						: "HOÀN TẤT SỬA"}
 				</button>

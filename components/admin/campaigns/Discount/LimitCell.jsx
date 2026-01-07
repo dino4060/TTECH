@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ActionKeyUn } from "../CampaignAction"
+import { ActionKeyMap } from "../CampaignUtils"
 
 const LimitCell = ({
 	saleUnit,
@@ -59,7 +59,7 @@ const LimitCell = ({
 							onChange={onChangeLimit}
 							onWheel={onPreventScroll}
 							className='w-[100px] text-right outline-none border border-black/50 rounded-lg pr-[5px]'
-							disabled={action === ActionKeyUn.EDIT}
+							disabled={action === ActionKeyMap.EDIT}
 						/>
 					</div>
 				</div>

@@ -5,7 +5,7 @@ import {
 } from "@/lib/utils/number"
 import { convertTokVND } from "@/lib/utils/number2"
 import { useEffect, useState } from "react"
-import { ActionKeyUn } from "../CampaignAction"
+import { ActionKeyMap } from "../CampaignUtils"
 
 const PriceCell = ({
 	saleUnit,
@@ -126,7 +126,7 @@ const PriceCell = ({
 							onChange={onChangeDealPrice}
 							onWheel={onPreventScroll}
 							className='w-[100px] text-right outline-none border border-black/50 rounded-lg pr-[18px]'
-							disabled={action === ActionKeyUn.EDIT}
+							disabled={action === ActionKeyMap.EDIT}
 						/>
 						<span className='absolute right-2 top-1/2 transform -translate-y-1/2'>
 							k
@@ -143,7 +143,7 @@ const PriceCell = ({
 							onChange={onChangeDiscountPercent}
 							onWheel={onPreventScroll}
 							className='w-[100px] text-right outline-none border border-black/50 rounded-lg pr-[18px]'
-							disabled={action === ActionKeyUn.EDIT}
+							disabled={action === ActionKeyMap.EDIT}
 						/>
 						<span className='absolute right-2 top-1/2 transform -translate-y-1/2'>
 							%

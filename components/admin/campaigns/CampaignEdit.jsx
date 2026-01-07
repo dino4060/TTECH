@@ -6,10 +6,10 @@ import {
 	IoAlertCircleOutline,
 	IoInformation,
 } from "react-icons/io5"
-import { ActionKeyUn as ActionKeyMap } from "./CampaignAction"
 import {
+	ActionKeyMap,
 	CampaignApiMap,
-	CampTypeUn as CampaignTypeMap,
+	CampaignTypeMap,
 } from "./CampaignUtils"
 
 const CampaignEdit = ({

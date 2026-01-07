@@ -10,10 +10,17 @@ import {
 	ZapIcon,
 } from "lucide-react"
 import CouponForm from "./Coupon/CouponForm"
-import SaleForm from "./SaleUnit/SaleForm"
+import SaleForm from "./Discount/SaleForm"
 import { adminCampaignApi } from "@/lib/api/campaign.api"
 
-export const CampTypeUn = {
+export const ActionKeyMap = {
+	ADD: "ADD",
+	EDIT: "EDIT",
+	REMOVE: "REMOVE",
+	ANALYZE: "ANALYZE",
+}
+
+export const CampaignTypeMap = {
 	DAILY_SALE: {
 		key: "DAILY_SALE",
 		name: "Giảm giá hằng ngày",
@@ -105,7 +112,7 @@ export const CampTypeUn = {
 	},
 	CODE_VOUCHER: {
 		key: "CODE_VOUCHER",
-		name: "Coupon mã dành riêng",
+		name: "Mã Coupon dành riêng",
 		icon: TagIcon,
 		renderForm: (
 			CampType,
@@ -174,8 +181,6 @@ export const CampTypeUn = {
 		),
 	},
 }
-
-export const CampaignTypeMap = CampTypeUn
 
 export const CampaignApiMap = {
 	[CampaignTypeMap.DAILY_SALE.key]: adminCampaignApi.saleApi,

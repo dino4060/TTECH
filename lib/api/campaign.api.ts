@@ -22,21 +22,16 @@ export const adminCampaignApi = {
 			method: HttpMethod.GET,
 		}),
 
-		create: (body = {}): TApi<{}[]> => ({
-			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales`,
-			method: HttpMethod.POST,
-			body,
-		}),
-
 		update: (id: number, body = {}): TApi<{}[]> => ({
 			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales/${id}`,
 			method: HttpMethod.PUT,
 			body,
 		}),
 
-		delete: (id: number): TApi<{}[]> => ({
-			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales/${id}`,
-			method: HttpMethod.DELETE,
+		create: (body = {}): TApi<{}[]> => ({
+			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales`,
+			method: HttpMethod.POST,
+			body,
 		}),
 	},
 
@@ -44,11 +39,6 @@ export const adminCampaignApi = {
 		get: (id: number): TApi<{}[]> => ({
 			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/coupons/${id}`,
 			method: HttpMethod.GET,
-		}),
-
-		delete: (id: number): TApi<{}[]> => ({
-			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/coupons/${id}`,
-			method: HttpMethod.DELETE,
 		}),
 
 		update: (body = {}): TApi<{}[]> => ({

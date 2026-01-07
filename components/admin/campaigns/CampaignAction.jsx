@@ -4,64 +4,21 @@ import { Fragment, useEffect, useState } from "react"
 import CampaignAdd from "./CampaignAdd"
 import CampaignEdit from "./CampaignEdit"
 import CampaignRemove from "./CampaignRemove"
-
-export const ActionKeyUn = {
-	ADD: "ADD",
-	EDIT: "EDIT",
-	REMOVE: "REMOVE",
-	ANALYZE: "ANALYZE",
-}
-
-const Actions = [
-	{
-		key: ActionKeyUn.ANALYZE,
-		name: "phân tích",
-		render: () => <div>Phân tích</div>,
-	},
-	{
-		key: ActionKeyUn.ADD,
-		name: "thêm mới",
-		render: (currentCamp, setCurrentCamp, setAsyncList) => (
-			<CampaignAdd
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
-				setAsyncList={setAsyncList}
-			/>
-		),
-	},
-	{
-		key: ActionKeyUn.EDIT,
-		name: "chỉnh sửa",
-		render: (currentCamp, setCurrentCamp, setAsyncList) => (
-			<CampaignEdit
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
-				setAsyncList={setAsyncList}
-			/>
-		),
-	},
-	{
-		key: ActionKeyUn.REMOVE,
-		name: "xóa",
-		render: (currentCamp, setCurrentCamp, setAsyncList) => (
-			<CampaignRemove setAsyncList={setAsyncList} />
-		),
-	},
-]
+import { ActionKeyMap } from "./CampaignUtils"
 
 const CampaignAction = ({
 	currentCamp,
 	setCurrentCamp,
 	setAsyncList,
 }) => {
-	const [action, setAction] = useState(ActionKeyUn.ADD)
+	const [action, setAction] = useState(ActionKeyMap.ADD)
 
 	useEffect(() => {
-		currentCamp?.id && setAction(ActionKeyUn.EDIT)
+		currentCamp?.id && setAction(ActionKeyMap.EDIT)
 	}, [currentCamp])
 
 	useEffect(() => {
-		action !== ActionKeyUn.EDIT && setCurrentCamp({})
+		action !== ActionKeyMap.EDIT && setCurrentCamp({})
 	}, [action])
 
 	return (
@@ -95,3 +52,40 @@ const CampaignAction = ({
 }
 
 export default CampaignAction
+
+const Actions = [
+	{
+		key: ActionKeyMap.ANALYZE,
+		name: "phân tích",
+		render: () => <div>Phân tích</div>,
+	},
+	{
+		key: ActionKeyMap.ADD,
+		name: "thêm mới",
+		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+			<CampaignAdd
+				currentCamp={currentCamp}
+				setCurrentCamp={setCurrentCamp}
+				setAsyncList={setAsyncList}
+			/>
+		),
+	},
+	{
+		key: ActionKeyMap.EDIT,
+		name: "chỉnh sửa",
+		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+			<CampaignEdit
+				currentCamp={currentCamp}
+				setCurrentCamp={setCurrentCamp}
+				setAsyncList={setAsyncList}
+			/>
+		),
+	},
+	{
+		key: ActionKeyMap.REMOVE,
+		name: "xóa",
+		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+			<CampaignRemove setAsyncList={setAsyncList} />
+		),
+	},
+]

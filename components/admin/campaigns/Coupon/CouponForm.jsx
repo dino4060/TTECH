@@ -9,9 +9,9 @@ import {
 import { AnimatePresence, motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 import { IoChevronBackOutline } from "react-icons/io5"
-import { ActionKeyUn as ActionUn } from "../CampaignAction"
 import CouponConfigForm from "./CouponConfigForm"
 import CouponUnitList from "./CouponUnitList"
+import { ActionKeyMap } from "../CampaignUtils"
 
 const DEFAULT_COUPON_DATA = (promotionType) => ({
 	promotionType,
@@ -60,7 +60,7 @@ const CouponSaleForm = ({
 
 	// Turn add mode => Clean sale data
 	useEffect(() => {
-		if (action === ActionUn.ADD || !currentCamp?.id) {
+		if (action === ActionKeyMap.ADD || !currentCamp?.id) {
 			setCouponData(DEFAULT_COUPON_DATA(CouponType.key))
 			setCouponConfig(DEFAULT_COUPON_CONFIG)
 			setProductsConfig(DEFAULT_PRODUCTS_CONFIG)
@@ -80,7 +80,7 @@ const CouponSaleForm = ({
 	const onSubmitCoupon = async () => {
 		// Prepare data for ADD or EDIT
 		const { isCheckID, api, notification } =
-			action === ActionUn.ADD
+			action === ActionKeyMap.ADD
 				? {
 						isCheckID: false,
 						api: (body) => {
@@ -152,7 +152,7 @@ const CouponSaleForm = ({
 						{CouponType.name}
 					</h3>
 
-					{action === ActionUn.ADD && (
+					{action === ActionKeyMap.ADD && (
 						<IoChevronBackOutline
 							size={25}
 							onClick={() => onReturn()}
@@ -211,7 +211,7 @@ const CouponSaleForm = ({
 					className='bg-blue-500 w-full p-4 mt-4 text-2xl font-semibold text-white rounded-2xl'
 					onClick={() => onSubmitCoupon()}
 				>
-					{action === ActionUn.ADD
+					{action === ActionKeyMap.ADD
 						? "HOÀN TẤT THÊM"
 						: "HOÀN TẤT SỬA"}
 				</button>
