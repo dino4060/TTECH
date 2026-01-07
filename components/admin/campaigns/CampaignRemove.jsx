@@ -6,28 +6,21 @@ import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 
 const CampaignRemove = ({ setAsyncList }) => {
-	const [campId, setCampId] = useState(null)
-	const { id, onCopyId } = useIdContext()
+	const { id } = useIdContext()
+	const [campaignId, setCampaignId] = useState("")
 
 	useEffect(() => {
-		setCampId(id)
+		setCampaignId(id)
 	}, [id])
 
-	useEffect(() => {
-		onCopyId("")
-	}, [])
+	const handleCampaignRemove = async (id) => {
+		if (id === "") return
 
-	const onRemoveCamp = async (campId) => {
-		if (campId === "") return
-		const { success, error } = await clientFetch(
-			adminCampaignApi.saleApi.remove(campId)
-		)
-		if (success) {
-			setCampId("")
-			setAsyncList((prev) => !prev)
-		} else {
-			alert(error)
-		}
+		const res = await clientFetch(adminCampaignApi.delete(id))
+		if (res.success === false) alert(res.error)
+
+		setCampaignId("")
+		setAsyncList((prev) => !prev)
 	}
 
 	return (
@@ -44,14 +37,14 @@ const CampaignRemove = ({ setAsyncList }) => {
 				exit='init'
 				animate='animate'
 				placeholder='Nhập vào id để xóa'
-				value={campId}
-				onChange={(e) => setCampId(e.target.value)}
+				value={campaignId}
+				onChange={(e) => setCampaignId(e.target.value)}
 			/>
 
 			<button
 				className='py-3 px-5 text-[1.4rem] font-[400] leading-6 text-red-500
           border border-red-500 rounded-xl'
-				onClick={() => onRemoveCamp(campId)}
+				onClick={() => handleCampaignRemove(campaignId)}
 			>
 				Xác nhận xóa
 			</button>

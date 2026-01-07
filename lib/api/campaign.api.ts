@@ -11,6 +11,10 @@ export const adminCampaignApi = {
 		method: HttpMethod.GET,
 		query,
 	}),
+	delete: (id: number): TApi<{}[]> => ({
+		route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/${id}`,
+		method: HttpMethod.DELETE,
+	}),
 
 	saleApi: {
 		get: (id: number): TApi<{}[]> => ({
@@ -30,7 +34,7 @@ export const adminCampaignApi = {
 			body,
 		}),
 
-		remove: (id: number): TApi<{}[]> => ({
+		delete: (id: number): TApi<{}[]> => ({
 			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales/${id}`,
 			method: HttpMethod.DELETE,
 		}),
@@ -42,7 +46,7 @@ export const adminCampaignApi = {
 			method: HttpMethod.GET,
 		}),
 
-		deactivated: (id: number): TApi<{}[]> => ({
+		delete: (id: number): TApi<{}[]> => ({
 			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/coupons/${id}`,
 			method: HttpMethod.DELETE,
 		}),

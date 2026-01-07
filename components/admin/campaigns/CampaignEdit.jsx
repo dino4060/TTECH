@@ -7,17 +7,10 @@ import {
 	IoInformation,
 } from "react-icons/io5"
 import { ActionKeyUn as ActionKeyMap } from "./CampaignAction"
-import { CampTypeUn as CampaignTypeMap } from "./CampaignUtils"
-import SaleForm from "./SaleUnit/SaleForm"
-import { Fascinate } from "next/font/google"
-
-const ApiGetCampaignMap = {
-	[CampaignTypeMap.DAILY_SALE.key]:
-		adminCampaignApi.saleApi.get,
-
-	[CampaignTypeMap.PUBLIC_VOUCHER.key]:
-		adminCampaignApi.couponApi.get,
-}
+import {
+	CampaignApiMap,
+	CampTypeUn as CampaignTypeMap,
+} from "./CampaignUtils"
 
 const CampaignEdit = ({
 	currentCamp: currentCampaign,
@@ -34,18 +27,23 @@ const CampaignEdit = ({
 		if (!campaignId || !campaignTypeKey) return
 
 		const CampaignType = CampaignTypeMap[campaignTypeKey]
-		if (!CampaignType) return
+		if (!CampaignType) {
+			alert(`CampaignType ${CampaignType} is out of scope`)
+			return
+		}
 
-		setCampaignType(CampaignType)
-
-		const ApiGetCampaign = ApiGetCampaignMap[CampaignType.key]
-		if (!ApiGetCampaign) return
+		const CampaignApi = CampaignApiMap[CampaignType.key]
+		if (!CampaignApi) {
+			alert(`CampaignType ${CampaignApi} is out of scope`)
+			return
+		}
 
 		const fetchFullCampaign = async (id) => {
-			const res = await clientFetch(ApiGetCampaign(id))
+			const res = await clientFetch(CampaignApi.get(id))
 			if (res.success === false) alert(res.error)
 
 			setFullCampaign(res.data)
+			setCampaignType(CampaignType)
 			setShow(true)
 		}
 

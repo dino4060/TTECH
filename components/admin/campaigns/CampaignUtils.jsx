@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 import CouponForm from "./Coupon/CouponForm"
 import SaleForm from "./SaleUnit/SaleForm"
+import { adminCampaignApi } from "@/lib/api/campaign.api"
 
 export const CampTypeUn = {
 	DAILY_SALE: {
@@ -172,4 +173,13 @@ export const CampTypeUn = {
 			/>
 		),
 	},
+}
+
+export const CampaignTypeMap = CampTypeUn
+
+export const CampaignApiMap = {
+	[CampaignTypeMap.DAILY_SALE.key]: adminCampaignApi.saleApi,
+
+	[CampaignTypeMap.PUBLIC_VOUCHER.key]:
+		adminCampaignApi.couponApi,
 }
