@@ -53,11 +53,11 @@ const SaleForm = ({
 
 	const onSubmitSale = async () => {
 		// Prepare data for ADD or EDIT
-		const { id, idModelName, api, notification } =
+		const { id, isCheckID, api, notification } =
 			action === ActionUn.ADD
 				? {
 						id: 0,
-						idModelName: "",
+						isCheckID: false,
 						api: (id, body) => {
 							return adminCampaignApi.saleApi.create(body)
 						},
@@ -65,7 +65,7 @@ const SaleForm = ({
 				  }
 				: {
 						id: saleData.id,
-						idModelName: "Chiến dịch khuyến mãi",
+						isCheckID: true,
 						api: (id, body) => {
 							return adminCampaignApi.saleApi.update(id, body)
 						},
@@ -78,7 +78,7 @@ const SaleForm = ({
 			CampForm,
 			body,
 			feedback,
-			idModelName
+			isCheckID
 		)
 		if (!isValid) {
 			setFeedback({ ...feedback })

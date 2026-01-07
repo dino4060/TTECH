@@ -34,7 +34,7 @@ const CouponUnitList = ({
 		setAppliedProductIds(
 			(prev) =>
 				new Set([
-					...Array.from(newProducts).map((p) => p.id), // ? use map directly
+					...Array.from(newProducts).map((p) => p.id),
 					...prev,
 				])
 		)

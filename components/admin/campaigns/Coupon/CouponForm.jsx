@@ -23,11 +23,12 @@ const DEFAULT_COUPON_DATA = (promotionType) => ({
 
 const DEFAULT_COUPON_CONFIG = {
 	isFixed: true,
-	discountValue: 50,
-	minSpend: 1,
-	totalLimit: 2,
-	limitPerCustomer: 3,
-	validityDays: 4,
+	discountValue: 1,
+	minSpend: undefined,
+	minDiscount: undefined,
+	totalLimit: undefined,
+	limitPerCustomer: undefined,
+	validityDays: undefined,
 	units: [],
 }
 
@@ -78,19 +79,17 @@ const CouponSaleForm = ({
 
 	const onSubmitCoupon = async () => {
 		// Prepare data for ADD or EDIT
-		const { id, idModelName, api, notification } =
+		const { isCheckID, api, notification } =
 			action === ActionUn.ADD
 				? {
-						id: 0,
-						idModelName: "",
+						isCheckID: false,
 						api: (body) => {
 							return adminCampaignApi.couponApi.create(body)
 						},
 						notification: "Tạo mới coupon thành công",
 				  }
 				: {
-						id: couponData.id,
-						idModelName: "Chiến dịch khuyến mãi",
+						isCheckID: true,
 						api: (body) => {
 							return adminCampaignApi.couponApi.update(body)
 						},
@@ -107,7 +106,7 @@ const CouponSaleForm = ({
 			CampForm,
 			body,
 			feedback,
-			idModelName
+			isCheckID
 		)
 		if (!isValid) {
 			setFeedback({ ...feedback })
@@ -177,6 +176,9 @@ const CouponSaleForm = ({
 								FF.disabled && "text-black/50"
 							}`}
 							type={FF.type}
+							{...(FF.type === "datetime-local"
+								? { step: "3600" }
+								: {})}
 							disabled={FF.disabled}
 							placeholder={FF.name}
 							value={couponData[FF.key]}

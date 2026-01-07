@@ -35,6 +35,15 @@ const CouponConfigForm = ({
 		}))
 	}
 
+	const handleMaxDiscountChange = (value) => {
+		const numValue = parseInt(value) || ""
+		if (numValue < 0) return
+		setCouponConfig((prev) => ({
+			...prev,
+			maxDiscount: numValue || "",
+		}))
+	}
+
 	const handleTotalUsageChange = (value) => {
 		const numValue = parseInt(value) || ""
 		if (numValue < 0) return
@@ -154,6 +163,36 @@ const CouponConfigForm = ({
 						placeholder='Nhập một số dương'
 						value={couponConfig.minSpend || ""}
 						onChange={(e) => handleMinSpendChange(e.target.value)}
+					/>
+				</div>
+			</div>
+
+			{/* Trần ưu dãi giảm gía */}
+			<div className='mb-4'>
+				<div className='flex justify-between items-center'>
+					<h2 className='text-[1.4rem] mb-2'>
+						Mức giảm giá tối đa
+					</h2>
+
+					<div className='text-[1.4rem] font-medium text-blue-500'>
+						{couponConfig.maxDiscount
+							? `Giảm giá tối đa ${convertTo000D(
+									couponConfig.maxDiscount
+							  )}`
+							: "Không giới hạn"}
+					</div>
+				</div>
+
+				<div className='flex gap-3 items-center'>
+					<input
+						className='w-full outline-none p-4 text-2xl font-medium border border-black/50 rounded-2xl'
+						type='number'
+						min='0'
+						placeholder='Nhập một số dương'
+						value={couponConfig.minSpend || ""}
+						onChange={(e) =>
+							handleMaxDiscountChange(e.target.value)
+						}
 					/>
 				</div>
 			</div>

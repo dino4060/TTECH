@@ -22,10 +22,10 @@ export const checkSubmitForm = (
 	Form: FormField[],
 	body: Record<string, any>,
 	feedback: Record<string, string>,
-	idModelName?: string
+	isCheckID?: boolean
 ) => {
-	if (idModelName && !body["id"]) {
-		feedback["id"] = `Vui lòng chọn ${idModelName}`
+	if (isCheckID && !body["id"]) {
+		feedback["id"] = `Vui lòng nhập ID`
 		return false
 	}
 
