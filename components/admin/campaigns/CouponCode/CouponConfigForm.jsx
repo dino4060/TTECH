@@ -3,6 +3,7 @@ import {
 	convertPercent,
 	convertTo000D,
 } from "@/lib/utils/number2"
+import { generateRandomCode } from "@/lib/utils/text"
 import { Fragment } from "react"
 import { IoChevronDown } from "react-icons/io5"
 
@@ -10,6 +11,25 @@ const CouponConfigForm = ({
 	couponConfig,
 	setCouponConfig,
 }) => {
+	const handleCouponCodeChange = (value) => {
+		const cleaned = value
+			.toUpperCase()
+			.replace(/[^A-Z0-9]/g, "")
+			.slice(0, 20)
+		setCouponConfig((prev) => ({
+			...prev,
+			couponCode: cleaned || undefined,
+		}))
+	}
+
+	const handleGenerateCode = () => {
+		const newCode = generateRandomCode(8)
+		setCouponConfig((prev) => ({
+			...prev,
+			couponCode: newCode,
+		}))
+	}
+
 	const handleDiscountTypeChange = (value) => {
 		setCouponConfig((prev) => ({
 			...prev,
@@ -63,20 +83,56 @@ const CouponConfigForm = ({
 		}))
 	}
 
-	const handleValidityDaysChange = (value) => {
-		const numValue = parseInt(value) || ""
-		if (numValue < 0) return
-		setCouponConfig((prev) => ({
-			...prev,
-			validityDays: numValue || "",
-		}))
-	}
-
 	return (
 		<div>
 			<h3 className='text-[2.2rem] font-semibold mb-4'>
 				Cấu hình Coupon
 			</h3>
+
+			{/* Input coupon code */}
+			<div className='mb-4'>
+				<div className='flex justify-between items-center'>
+					<h2 className='text-[1.4rem] flex gap-1 mb-2'>
+						Mã coupon
+						<span className='text-red-500'>*</span>
+					</h2>
+
+					<div className='text-[1.4rem] font-medium text-blue-500'>
+						{couponConfig.couponCode
+							? `Mã coupon là ${couponConfig.couponCode}`
+							: "Mã coupon sẽ được tạo tự động"}
+					</div>
+				</div>
+
+				<div className='flex gap-3 items-center'>
+					<input
+						className='flex-1 outline-none p-4 text-2xl font-medium border border-black/50 rounded-2xl'
+						type='text'
+						minLength='2'
+						maxLength='20'
+						placeholder='Nhập mã coupon từ 2 đến 20 ký tự chữ và số'
+						value={couponConfig.couponCode || ""}
+						onChange={(e) =>
+							handleCouponCodeChange(e.target.value)
+						}
+					/>
+
+					<button
+						type='button'
+						className='px-6 py-4 text-xl font-semibold bg-gray-300 text-black/80 rounded-xl hover:bg-gray-400 transition-colors whitespace-nowrap'
+						onClick={handleGenerateCode}
+					>
+						Tạo mã tự động
+					</button>
+				</div>
+
+				{couponConfig.couponCode &&
+					couponConfig.couponCode.length < 2 && (
+						<p className='text-red-500 text-[1.2rem] mt-1'>
+							Mã coupon phải có ít nhất 2 ký tự
+						</p>
+					)}
+			</div>
 
 			{/* Input group giảm giá */}
 			<div className='mb-4'>
@@ -230,58 +286,32 @@ const CouponConfigForm = ({
 
 			{/* Số lượng áp dụng / khách hàng */}
 			<div className='mb-4'>
-				<div className='flex justify-between items-center'>
-					<h2 className='text-[1.4rem] mb-2'>
+				<div className='flex justify-between items-center mb-2'>
+					<h2 className='text-[1.4rem]'>
 						Số lượng áp dụng coupon / khách hàng
 					</h2>
 
 					<div className='text-[1.4rem] font-medium text-blue-500'>
-						{couponConfig.limitPerCustomer
-							? `Tặng ${couponConfig.limitPerCustomer} lượt / khách hàng`
+						{couponConfig.limitPerCustomer === 1
+							? "Tặng 1 lượt / khách hàng"
 							: "Không giới hạn"}
 					</div>
 				</div>
 
-				<div className='flex gap-3 items-center'>
+				<label className='flex gap-3 items-center cursor-pointer w-fit'>
 					<input
-						className='w-full outline-none p-4 text-2xl font-medium border border-black/50 rounded-2xl'
-						type='number'
-						min='0'
-						placeholder='Nhập một số dương'
-						value={couponConfig.limitPerCustomer || ""}
-						onChange={(e) =>
-							handleUsagePerCustomerChange(e.target.value)
-						}
+						className='w-8 h-8 accent-blue-500 cursor-pointer border-black/50 rounded-lg'
+						type='checkbox'
+						checked={couponConfig.limitPerCustomer === 1}
+						onChange={(e) => {
+							const value = e.target.checked ? 1 : undefined
+							handleUsagePerCustomerChange(value)
+						}}
 					/>
-				</div>
-			</div>
-
-			{/* Số ngày hiệu lực nhận coupon */}
-			<div className='mb-4'>
-				<div className='flex justify-between items-center'>
-					<h2 className='text-[1.4rem] mb-2'>
-						Số ngày hiệu lực sau khi nhận coupon
-					</h2>
-
-					<div className='text-[1.4rem] font-medium text-blue-500'>
-						{couponConfig.validityDays
-							? `Hiệu lực trong ${couponConfig.validityDays} ngày`
-							: "Không giới hạn"}
-					</div>
-				</div>
-
-				<div className='flex gap-3 items-center'>
-					<input
-						className='w-full outline-none p-4 text-2xl font-medium border border-black/50 rounded-2xl'
-						type='number'
-						min='0'
-						placeholder='Nhập một số dương'
-						value={couponConfig.validityDays || ""}
-						onChange={(e) =>
-							handleValidityDaysChange(e.target.value)
-						}
-					/>
-				</div>
+					<span className='p-4 text-2xl font-medium select-none'>
+						Giới hạn mỗi khách hàng chỉ dùng 1 lần
+					</span>
+				</label>
 			</div>
 		</div>
 	)

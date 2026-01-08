@@ -34,7 +34,7 @@ const CampaignEdit = ({
 
 		const CampaignApi = CampaignApiMap[CampaignType.key]
 		if (!CampaignApi) {
-			alert(`CampaignType ${CampaignApi} is out of scope`)
+			alert(`CampaignApi ${CampaignApi} is out of scope`)
 			return
 		}
 

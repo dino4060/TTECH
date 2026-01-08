@@ -12,6 +12,7 @@ import {
 import CouponForm from "./Coupon/CouponForm"
 import SaleForm from "./Discount/SaleForm"
 import { adminCampaignApi } from "@/lib/api/campaign.api"
+import CouponCodeForm from "./CouponCode/CouponCodeForm"
 
 export const ActionKeyMap = {
 	ADD: "ADD",
@@ -99,7 +100,6 @@ export const CampaignTypeMap = {
 			setCurrentCamp,
 			setAsyncList
 		) => (
-			// 	<CouponForm
 			<CouponForm
 				CampType={CampType}
 				action={action}
@@ -122,7 +122,7 @@ export const CampaignTypeMap = {
 			setCurrentCamp,
 			setAsyncList
 		) => (
-			<CouponForm
+			<CouponCodeForm
 				CampType={CampType}
 				action={action}
 				onReturn={onReturn}
@@ -187,4 +187,41 @@ export const CampaignApiMap = {
 
 	[CampaignTypeMap.PUBLIC_VOUCHER.key]:
 		adminCampaignApi.couponApi,
+
+	[CampaignTypeMap.CODE_VOUCHER.key]:
+		adminCampaignApi.couponApi,
+}
+
+export const pickCoupon = (data) => {
+	const { promotionType, id, name, startTime, endTime } =
+		data
+	return { promotionType, id, name, startTime, endTime }
+}
+
+export const pickCouponConfig = (data) => {
+	const {
+		couponCode,
+		isFixed,
+		discountValue,
+		minSpend,
+		minDiscount,
+		totalLimit,
+		limitPerCustomer,
+		validityDays,
+	} = data
+	return {
+		couponCode,
+		isFixed,
+		discountValue,
+		minSpend,
+		minDiscount,
+		totalLimit,
+		limitPerCustomer,
+		validityDays,
+	}
+}
+
+export const pickProductConfig = (data) => {
+	const { isApplyAll, units } = data
+	return { isApplyAll, units }
 }

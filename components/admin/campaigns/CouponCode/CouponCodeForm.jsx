@@ -18,7 +18,7 @@ import {
 	pickProductConfig,
 } from "../CampaignUtils"
 
-const DEFAULT_COUPON_DATA = (promotionType) => ({
+const DEFAULT_COUPON_CODE_DATA = (promotionType) => ({
 	promotionType,
 	id: "",
 	name: "",
@@ -27,6 +27,7 @@ const DEFAULT_COUPON_DATA = (promotionType) => ({
 })
 
 const DEFAULT_COUPON_CONFIG = {
+	couponCode: undefined,
 	isFixed: true,
 	discountValue: 1,
 	minSpend: undefined,
@@ -34,7 +35,6 @@ const DEFAULT_COUPON_CONFIG = {
 	totalLimit: undefined,
 	limitPerCustomer: undefined,
 	validityDays: undefined,
-	units: [],
 }
 
 const DEFAULT_PRODUCTS_CONFIG = {
@@ -42,7 +42,7 @@ const DEFAULT_PRODUCTS_CONFIG = {
 	units: [],
 }
 
-const CouponForm = ({
+const CouponCodeForm = ({
 	CampType: CouponType,
 	action,
 	onReturn,
@@ -51,7 +51,7 @@ const CouponForm = ({
 	setAsyncList,
 }) => {
 	const [couponData, setCouponData] = useState(
-		DEFAULT_COUPON_DATA(CouponType.key)
+		DEFAULT_COUPON_CODE_DATA(CouponType.key)
 	)
 	const [couponConfig, setCouponConfig] = useState(
 		DEFAULT_COUPON_CONFIG
@@ -66,7 +66,7 @@ const CouponForm = ({
 	// Turn add mode => Clean sale data
 	useEffect(() => {
 		if (action === ActionKeyMap.ADD || !currentCamp?.id) {
-			setCouponData(DEFAULT_COUPON_DATA(CouponType.key))
+			setCouponData(DEFAULT_COUPON_CODE_DATA(CouponType.key))
 			setCouponConfig(DEFAULT_COUPON_CONFIG)
 			setProductsConfig(DEFAULT_PRODUCTS_CONFIG)
 		} else {
@@ -107,6 +107,7 @@ const CouponForm = ({
 			...couponConfig,
 			...productsConfig,
 		}
+
 		const isValid = checkSubmitForm(
 			CampaignForm,
 			body,
@@ -134,7 +135,7 @@ const CouponForm = ({
 		const { success, error } = await clientFetch(api(body))
 		if (success) {
 			setNotification(notification)
-			setCouponData(DEFAULT_COUPON_DATA(CouponType.key))
+			setCouponData(DEFAULT_COUPON_CODE_DATA(CouponType.key))
 			setCouponConfig(DEFAULT_COUPON_CONFIG)
 			setProductsConfig(DEFAULT_PRODUCTS_CONFIG)
 			setAsyncList((prev) => !prev)
@@ -237,7 +238,7 @@ const CouponForm = ({
 	)
 }
 
-export default CouponForm
+export default CouponCodeForm
 
 const CampaignForm = [
 	{
