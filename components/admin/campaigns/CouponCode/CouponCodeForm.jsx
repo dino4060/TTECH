@@ -13,34 +13,13 @@ import CouponConfigForm from "./CouponConfigForm"
 import CouponUnitList from "./CouponUnitList"
 import {
 	ActionKeyMap,
-	pickCoupon,
+	DEFAULT_CAMPAIGN,
+	pickCampaign,
+	DEFAULT_COUPON_CONFIG,
 	pickCouponConfig,
-	pickProductConfig,
+	DEFAULT_COUPON_PRODUCTS,
+	pickCouponProducts,
 } from "../CampaignUtils"
-
-const DEFAULT_COUPON_CODE_DATA = (promotionType) => ({
-	promotionType,
-	id: "",
-	name: "",
-	startTime: "",
-	endTime: "",
-})
-
-const DEFAULT_COUPON_CONFIG = {
-	couponCode: undefined,
-	isFixed: true,
-	discountValue: 1,
-	minSpend: undefined,
-	minDiscount: undefined,
-	totalLimit: undefined,
-	limitPerCustomer: undefined,
-	validityDays: undefined,
-}
-
-const DEFAULT_PRODUCTS_CONFIG = {
-	isApplyAll: true,
-	units: [],
-}
 
 const CouponCodeForm = ({
 	CampType: CouponType,
@@ -51,13 +30,13 @@ const CouponCodeForm = ({
 	setAsyncList,
 }) => {
 	const [couponData, setCouponData] = useState(
-		DEFAULT_COUPON_CODE_DATA(CouponType.key)
+		DEFAULT_CAMPAIGN(CouponType.key)
 	)
 	const [couponConfig, setCouponConfig] = useState(
 		DEFAULT_COUPON_CONFIG
 	)
 	const [productsConfig, setProductsConfig] = useState(
-		DEFAULT_PRODUCTS_CONFIG
+		DEFAULT_COUPON_PRODUCTS
 	)
 	const [feedback, setFeedback] = useState({})
 	const [notification, setNotification] = useState("")
@@ -66,13 +45,13 @@ const CouponCodeForm = ({
 	// Turn add mode => Clean sale data
 	useEffect(() => {
 		if (action === ActionKeyMap.ADD || !currentCamp?.id) {
-			setCouponData(DEFAULT_COUPON_CODE_DATA(CouponType.key))
+			setCouponData(DEFAULT_CAMPAIGN(CouponType.key))
 			setCouponConfig(DEFAULT_COUPON_CONFIG)
-			setProductsConfig(DEFAULT_PRODUCTS_CONFIG)
+			setProductsConfig(DEFAULT_COUPON_PRODUCTS)
 		} else {
-			setCouponData(pickCoupon(currentCamp))
+			setCouponData(pickCampaign(currentCamp))
 			setCouponConfig(pickCouponConfig(currentCamp))
-			setProductsConfig(pickProductConfig(currentCamp))
+			setProductsConfig(pickCouponProducts(currentCamp))
 		}
 		setFeedback({})
 	}, [currentCamp])
@@ -106,6 +85,7 @@ const CouponCodeForm = ({
 			...couponData,
 			...couponConfig,
 			...productsConfig,
+			discountValue: couponConfig.discountValue || 1,
 		}
 
 		const isValid = checkSubmitForm(
@@ -135,9 +115,9 @@ const CouponCodeForm = ({
 		const { success, error } = await clientFetch(api(body))
 		if (success) {
 			setNotification(notification)
-			setCouponData(DEFAULT_COUPON_CODE_DATA(CouponType.key))
+			setCouponData(DEFAULT_CAMPAIGN(CouponType.key))
 			setCouponConfig(DEFAULT_COUPON_CONFIG)
-			setProductsConfig(DEFAULT_PRODUCTS_CONFIG)
+			setProductsConfig(DEFAULT_COUPON_PRODUCTS)
 			setAsyncList((prev) => !prev)
 			setSubmitted((prev) => !prev)
 		} else {
@@ -162,6 +142,7 @@ const CouponCodeForm = ({
 						<IoChevronBackOutline
 							size={25}
 							onClick={() => onReturn()}
+							className='hover:text-blue-500'
 						/>
 					)}
 				</div>

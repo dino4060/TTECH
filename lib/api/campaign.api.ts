@@ -16,7 +16,7 @@ export const adminCampaignApi = {
 		method: HttpMethod.DELETE,
 	}),
 
-	saleApi: {
+	discountApi: {
 		get: (id: number): TApi<{}[]> => ({
 			route: `${RESOURCES.CAMPAIGNS.PRIVATE_ADMIN}/sales/${id}`,
 			method: HttpMethod.GET,

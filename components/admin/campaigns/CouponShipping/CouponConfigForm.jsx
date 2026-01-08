@@ -1,23 +1,11 @@
 "use client"
-import {
-	convertPercent,
-	convertTo000D,
-} from "@/lib/utils/number2"
+import { convertTo000D } from "@/lib/utils/number2"
 import { Fragment } from "react"
-import { IoChevronDown } from "react-icons/io5"
 
 const CouponConfigForm = ({
 	couponConfig,
 	setCouponConfig,
 }) => {
-	const handleDiscountTypeChange = (value) => {
-		setCouponConfig((prev) => ({
-			...prev,
-			isFixed: value,
-			// maxDiscount: undefined,
-		}))
-	}
-
 	const handleDiscountValueChange = (value) => {
 		const numValue = parseInt(value) || ""
 		if (numValue === 0 || numValue < 0) return
@@ -33,15 +21,6 @@ const CouponConfigForm = ({
 		setCouponConfig((prev) => ({
 			...prev,
 			minSpend: numValue || "",
-		}))
-	}
-
-	const handleMaxDiscountChange = (value) => {
-		const numValue = parseInt(value) || ""
-		if (numValue < 0) return
-		setCouponConfig((prev) => ({
-			...prev,
-			maxDiscount: numValue || "",
 		}))
 	}
 
@@ -82,21 +61,20 @@ const CouponConfigForm = ({
 			<div className='mb-4'>
 				<div className='flex justify-between items-center'>
 					<h2 className='text-[1.4rem] flex gap-1 mb-2'>
-						Giảm giá cho đơn hàng
+						Giảm phí vận chuyển
 						<span className='text-red-500'>*</span>
 					</h2>
 
 					<div className='text-[1.4rem] font-medium text-blue-500'>
 						{couponConfig.discountValue ? (
 							<Fragment>
-								Giảm{" "}
-								{couponConfig.isFixed
-									? convertTo000D(couponConfig.discountValue)
-									: convertPercent(couponConfig.discountValue)}{" "}
-								cho đơn hàng
+								Giảm {convertTo000D(couponConfig.discountValue)} cho
+								phí vận chuyển
 							</Fragment>
 						) : (
-							`Giảm ${convertTo000D(1)} cho đơn hàng`
+							<Fragment>
+								Giảm {convertTo000D(1)} cho phí vận chuyển
+							</Fragment>
 						)}
 					</div>
 				</div>
@@ -106,28 +84,22 @@ const CouponConfigForm = ({
 						<select
 							className='w-full appearance-none outline-none p-4 pr-12 text-2xl font-medium border border-black/50 rounded-2xl'
 							value={couponConfig.isFixed ? "VND" : "PERCENT"}
-							onChange={(e) => {
-								const isFixed =
-									e.target.value === "VND" ? true : false
-								handleDiscountTypeChange(isFixed)
-							}}
+							disabled={true}
 						>
 							<option value='VND'>Giảm theo số tiền</option>
 							<option value='PERCENT'>Giảm theo phần trăm</option>
 						</select>
 
-						<div className='absolute inset-y-0 right-4 flex items-center pointer-events-none'>
+						{/* <div className='absolute inset-y-0 right-4 flex items-center pointer-events-none'>
 							<IoChevronDown size={18} className='text-black/60' />
-						</div>
+						</div> */}
 					</div>
 
 					<input
 						className='flex-[7] outline-none p-4 text-2xl font-medium border border-black/50 rounded-2xl'
 						type='number'
 						min='1'
-						placeholder={
-							couponConfig.isFixed ? "Số tiền" : "Phần trăm"
-						}
+						placeholder='Nhập một số dương'
 						value={couponConfig.discountValue || ""}
 						onChange={(e) =>
 							handleDiscountValueChange(e.target.value)
@@ -135,38 +107,6 @@ const CouponConfigForm = ({
 					/>
 				</div>
 			</div>
-
-			{/* Trần ưu dãi giảm gía */}
-			{couponConfig.isFixed === false && (
-				<div className='mb-4'>
-					<div className='flex justify-between items-center'>
-						<h2 className='text-[1.4rem] mb-2'>
-							Mức giảm giá tối đa
-						</h2>
-
-						<div className='text-[1.4rem] font-medium text-blue-500'>
-							{couponConfig.maxDiscount
-								? `Giảm giá tối đa ${convertTo000D(
-										couponConfig.maxDiscount
-								  )}`
-								: "Không giới hạn"}
-						</div>
-					</div>
-
-					<div className='flex gap-3 items-center'>
-						<input
-							className='w-full outline-none p-4 text-2xl font-medium border border-black/50 rounded-2xl'
-							type='number'
-							min='0'
-							placeholder='Nhập một số dương'
-							value={couponConfig.maxDiscount || ""}
-							onChange={(e) =>
-								handleMaxDiscountChange(e.target.value)
-							}
-						/>
-					</div>
-				</div>
-			)}
 
 			{/* Điều kiện đơn hàng tối thiểu */}
 			<div className='mb-4'>

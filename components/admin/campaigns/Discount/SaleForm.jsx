@@ -59,7 +59,7 @@ const SaleForm = ({
 						id: 0,
 						isCheckID: false,
 						api: (id, body) => {
-							return adminCampaignApi.saleApi.create(body)
+							return adminCampaignApi.discountApi.create(body)
 						},
 						notification: "Tạo dữ liệu thành công",
 				  }
@@ -67,7 +67,7 @@ const SaleForm = ({
 						id: saleData.id,
 						isCheckID: true,
 						api: (id, body) => {
-							return adminCampaignApi.saleApi.update(id, body)
+							return adminCampaignApi.discountApi.update(id, body)
 						},
 						notification: "Cập nhật dữ liệu thành công",
 				  }
@@ -129,6 +129,7 @@ const SaleForm = ({
 						<IoChevronBackOutline
 							size={25}
 							onClick={() => onReturn()}
+							className='hover:text-blue-500'
 						/>
 					)}
 				</div>

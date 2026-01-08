@@ -43,7 +43,7 @@ const CouponConfigForm = ({
 		if (numValue === 0 || numValue < 0) return
 		setCouponConfig((prev) => ({
 			...prev,
-			discountValue: numValue || 1,
+			discountValue: numValue || undefined,
 		}))
 	}
 
@@ -184,11 +184,7 @@ const CouponConfigForm = ({
 						placeholder={
 							couponConfig.isFixed ? "Số tiền" : "Phần trăm"
 						}
-						value={
-							couponConfig.discountValue === 1
-								? ""
-								: couponConfig.discountValue
-						}
+						value={couponConfig.discountValue || ""}
 						onChange={(e) =>
 							handleDiscountValueChange(e.target.value)
 						}

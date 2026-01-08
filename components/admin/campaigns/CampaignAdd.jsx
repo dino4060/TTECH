@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import { Fragment, useState } from "react"
 import {
 	ActionKeyMap,
+	CampaignGroupList,
 	CampaignTypeMap,
 } from "./CampaignUtils"
 
@@ -33,34 +34,6 @@ const CampaignAdd = ({
 }
 
 export default CampaignAdd
-
-const CampaignGroupList = [
-	{
-		key: "SALE",
-		name: "Giảm giá",
-		note:
-			"Giảm giá sản phẩm giúp tăng sức cạnh tranh với đối thủ",
-		CampTypes: [
-			CampaignTypeMap.DAILY_SALE,
-			CampaignTypeMap.FLASH_SALE,
-			CampaignTypeMap.NEW_ARRIVAL_SALE,
-		],
-	},
-	{
-		key: "VOUCHER",
-		name: "Coupon",
-		note:
-			"Trao tặng Coupon thúc đẩy khách hàng chi tiêu nhiều hơn",
-		CampTypes: [
-			CampaignTypeMap.PUBLIC_VOUCHER,
-			CampaignTypeMap.CODE_VOUCHER,
-			// CampaignTypeMap.REVIEW_VOUCHER,
-			// CampaignTypeMap.NEW_CUSTOMER_VOUCHER,
-			// CampaignTypeMap.LOYAL_CUSTOMER_VOUCHER,
-			// CampaignTypeMap.MESSAGE_VOUCHER,
-		],
-	},
-]
 
 const NoCampaignAdd = ({ setCampaignType }) => {
 	return (
