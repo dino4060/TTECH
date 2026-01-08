@@ -5,6 +5,7 @@ import {
 	PencilLineIcon,
 	TagIcon,
 	TicketIcon,
+	TruckElectricIcon,
 	UserRoundCheckIcon,
 	UserRoundPlusIcon,
 	ZapIcon,
@@ -136,7 +137,7 @@ export const CampaignTypeMap = {
 	SHIPPING_COUPON: {
 		key: "SHIPPING_COUPON",
 		name: "Coupon vận chuyển",
-		icon: TagIcon,
+		icon: TruckElectricIcon,
 		renderForm: (
 			CampType,
 			action,

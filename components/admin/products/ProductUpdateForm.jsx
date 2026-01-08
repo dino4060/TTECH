@@ -2,12 +2,14 @@
 import Notification from "@/components/uncategory/Notification"
 import { adminProductApi } from "@/lib/api/product.api"
 import { clientFetch } from "@/lib/http/fetch.client"
-import { da } from "@faker-js/faker"
-import { AnimatePresence, motion } from "framer-motion"
+import { motion } from "framer-motion"
 import { CldUploadWidget } from "next-cloudinary"
 import { useEffect, useState } from "react"
-import { IoCopyOutline } from "react-icons/io5"
-import { IoCloseCircle } from "react-icons/io5"
+import {
+	IoCloseCircle,
+	IoCopyOutline,
+} from "react-icons/io5"
+import SpecificationsForm from "./SpecificationsForm"
 
 const ProductManagementForm = ({
 	currentProductChoose,
@@ -36,6 +38,10 @@ const ProductManagementForm = ({
 		available: currentProductChoose?.stock?.available,
 		restock: currentProductChoose?.stock?.restock,
 	})
+
+	const [specifications, setSpecifications] = useState(
+		currentProductChoose?.specifications || []
+	)
 
 	const [error, setError] = useState({})
 	const [imageListDisplay, setImageListDisplay] = useState(
@@ -77,6 +83,10 @@ const ProductManagementForm = ({
 			available: currentProductChoose?.stock?.available,
 			restock: currentProductChoose?.stock?.restock,
 		})
+
+		setSpecifications(
+			currentProductChoose?.specifications || []
+		)
 	}, [currentProductChoose])
 
 	const onChangeData = (e) => {
@@ -182,6 +192,7 @@ const ProductManagementForm = ({
 				// available: Number.parseInt(stockData.available),
 				restock: Number.parseInt(stockData.restock),
 			},
+			specifications: specifications,
 		}
 
 		const { success, error: failure } = await clientFetch(
@@ -338,6 +349,7 @@ const ProductManagementForm = ({
 						id='description'
 						value={data.description ?? ""}
 						onChange={onChangeData}
+						rows={5}
 						className='outline-none border-b font-semibold border-black/20 w-full'
 					/>
 				</div>
@@ -431,10 +443,16 @@ const ProductManagementForm = ({
 					))}
 				</div>
 
+				<SpecificationsForm
+					specifications={specifications}
+					setSpecifications={setSpecifications}
+					action={"UPDATE"}
+				/>
+
 				<button
 					onClick={handleSubmit}
 					disabled={!nonError(error)}
-					className={`text-white text-[1.4rem] font-semibold py-2 rounded-lg
+					className={`text-white text-[1.4rem] font-semibold py-2 rounded-lg mt-8
             ${
 													!nonError(error)
 														? "bg-gray-400 cursor-not-allowed"

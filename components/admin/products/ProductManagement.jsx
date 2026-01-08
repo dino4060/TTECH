@@ -6,7 +6,7 @@ import { adminSeriesApi } from "@/lib/api/series.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { useEffect, useState } from "react"
 import ProductAction from "./ProductAction"
-import ProductManagementForm from "./ProductManagementForm"
+import ProductManagementForm from "./ProductUpdateForm"
 import ProductRenderList from "./ProductRenderList"
 
 const ProductManagement = () => {

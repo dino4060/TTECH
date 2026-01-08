@@ -5,7 +5,7 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { CiSearch } from "react-icons/ci"
-import AddProduct from "./AddProduct"
+import ProductAddForm from "./ProductAddForm"
 
 const ProductAction = ({
 	filter,
@@ -51,7 +51,7 @@ const ProductAction = ({
 					}}
 				/>
 			)}
-			<AddProduct
+			<ProductAddForm
 				show={showAdd}
 				category={category}
 				series={series}

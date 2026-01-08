@@ -8,8 +8,9 @@ import { IoCloseCircle } from "react-icons/io5"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { adminProductApi } from "@/lib/api/product.api"
 import Notification from "@/components/uncategory/Notification"
+import SpecificationsForm from "./SpecificationsForm"
 
-const AddProduct = ({
+const ProductAddForm = ({
 	show,
 	series,
 	category,
@@ -29,6 +30,7 @@ const AddProduct = ({
 		retailPrice: "",
 		restock: "",
 	})
+	const [specifications, setSpecifications] = useState([])
 
 	const [notifications, setNotifications] = useState(false)
 	const [notes, setNotes] = useState("")
@@ -98,6 +100,8 @@ const AddProduct = ({
 			price: {
 				retailPrice: Number.parseInt(data.retailPrice),
 			},
+
+			specifications,
 		}
 
 		const { success, error: failure } = await clientFetch(
@@ -124,6 +128,7 @@ const AddProduct = ({
 			restock: "",
 			retailPrice: "",
 		})
+		setSpecifications([])
 
 		setImageListDisplay([])
 
@@ -363,6 +368,12 @@ const AddProduct = ({
 									</select>
 								</motion.div>
 
+								<SpecificationsForm
+									specifications={specifications}
+									setSpecifications={setSpecifications}
+									action={"ADD"}
+								/>
+
 								<button
 									onClick={addNewProduct}
 									className='bg-blue-600/80 w-1/4 mt-10 text-white font-bold text-3xl rounded-3xl py-3'
@@ -378,4 +389,4 @@ const AddProduct = ({
 	)
 }
 
-export default AddProduct
+export default ProductAddForm
