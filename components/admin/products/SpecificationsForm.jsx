@@ -1,4 +1,5 @@
 "use client"
+import { useEffect, useState } from "react"
 import {
 	IoAddCircleOutline,
 	IoRemoveCircleOutline,
@@ -9,15 +10,20 @@ const SpecificationsForm = ({
 	setSpecifications,
 	action,
 }) => {
-	// Nhóm các specifications theo group name để hiển thị
-	const groups = specifications.reduce((acc, spec) => {
-		const groupName = spec.group || "Chưa phân nhóm"
-		if (!acc[groupName]) acc[groupName] = []
-		acc[groupName].push(spec)
-		return acc
-	}, {})
+	const [groups, setGroups] = useState({})
+	const [groupNames, setGroupNames] = useState([])
 
-	const groupNames = Object.keys(groups)
+	useEffect(() => {
+		const groups = specifications.reduce((acc, spec) => {
+			const groupName = spec.group || "Chưa phân nhóm"
+			if (!acc[groupName]) acc[groupName] = []
+			acc[groupName].push(spec)
+			return acc
+		}, {})
+
+		setGroups(groups)
+		setGroupNames(Object.keys(groups))
+	}, [specifications])
 
 	// Thêm một hàng mới vào một group
 	const addRow = (groupName) => {

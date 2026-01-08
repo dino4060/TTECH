@@ -18,6 +18,7 @@ import {
 	CiMedal,
 } from "react-icons/ci"
 import { motion } from "framer-motion"
+import SpecificationsTable from "@/components/product/SpecificationsTable"
 
 export default function Page({ params }) {
 	const productId = params.id
@@ -237,6 +238,10 @@ export default function Page({ params }) {
 					</div>
 				</div>
 
+				<SpecificationsTable
+					specifications={product.specifications}
+				/>
+
 				<div className='flex items-center gap-2 text-[1.5rem]'>
 					<CiChat1 size={20} />
 					Chat ngay với hệ thống, hoặc liên hệ hotline 09009090
@@ -284,4 +289,5 @@ const DefaultProduct = {
 		views: 0,
 		carts: 0,
 	},
+	specifications: [],
 }
