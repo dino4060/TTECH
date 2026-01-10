@@ -3,18 +3,63 @@ import { addressApi } from "@/lib/api/address.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { findGhnAddress } from "@/lib/utils/shipping/address"
 import { roundTo1K } from "@/lib/utils/number2"
+import { couponApi } from "@/lib/api/coupon.api"
 
-export const calcDiscount = (totalPrice, dealPercent) => {
-	return Math.ceil(totalPrice * (dealPercent / 100))
+export const applyCouponCode = async ({
+	couponCode,
+	totalPrice,
+	cart,
+	onSuccess,
+	onError,
+}) => {
+	if (!couponCode || couponCode.trim() === "") {
+		onError("Vui lòng nhập mã coupon")
+		return
+	}
+
+	if (!cart?.lines || cart.lines.length === 0) {
+		onError("Giỏ hàng trống, không thể áp dụng coupon")
+		return
+	}
+
+	if (!totalPrice) {
+		onError("Chi tiêu bằng 0, không thể áp dụng coupon")
+		return
+	}
+
+	// Get product IDs
+	const productIDs = cart.lines.map(
+		(line) => line.product.id
+	)
+
+	// Call API
+	const { success, data, error } = await clientFetch(
+		couponApi.preview({
+			couponCode: couponCode.trim().toUpperCase(),
+			spendAmount: totalPrice,
+			productIDs,
+		})
+	)
+
+	if (success === false) {
+		onError(error || "Lỗi khi kiểm tra mã coupon")
+		return
+	}
+
+	if (!data.isApplied) {
+		onError(data.message || "Không đủ điều kiện áp dụng")
+		return
+	}
+
+	onSuccess(data)
 }
 
 export const calcPayment = (
 	totalPrice,
-	dealPercent,
+	discountAmount,
 	shippingFee
 ) => {
-	const totalDeal = calcDiscount(totalPrice, dealPercent)
-	return Math.ceil(totalPrice + shippingFee - totalDeal)
+	return Math.ceil(totalPrice + shippingFee - discountAmount)
 }
 
 export const formatDateTimeRange = (

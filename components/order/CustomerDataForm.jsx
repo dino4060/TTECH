@@ -25,6 +25,7 @@ const CustomerDataForm = ({
 	totalDiscount,
 	totalPayment,
 	shippingFee,
+	appliedCouponCode,
 }) => {
 	const router = useRouter()
 	const { user } = UserAuth()
@@ -135,6 +136,7 @@ const CustomerDataForm = ({
 
 			paymentType: data.paymentType,
 			note: data.note,
+			couponCode: appliedCouponCode,
 
 			toUserName: customerAddr.userName,
 			toPhone: customerAddr.phone,

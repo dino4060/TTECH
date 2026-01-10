@@ -145,7 +145,11 @@ const CouponConfigForm = ({
 
 					<div className='text-[1.4rem] font-medium text-blue-500'>
 						{couponConfig.totalLimit
-							? `Tặng ${couponConfig.totalLimit} lượt sử dụng`
+							? `Tặng ${couponConfig.totalLimit} lượt. Đã dùng ${
+									couponConfig.usedCount
+							  } lượt. Có sẳn ${
+									couponConfig.totalLimit - couponConfig.usedCount
+							  } lượt`
 							: "Không giới hạn"}
 					</div>
 				</div>

@@ -2,10 +2,12 @@
 import {
 	convertTo000D,
 	convertTokVND,
+	convertToK,
 } from "@/lib/utils/number2"
 import { useEffect, useState } from "react"
 import CustomerDataForm from "./CustomerDataForm"
 import {
+	applyCouponCode,
 	calcDiscount,
 	calcPayment,
 	fetchCalcGhnShippingFee,
@@ -14,22 +16,30 @@ import {
 	formatDateTimeRange,
 } from "./order.service"
 
+const DEFAULT_COUPON = {
+	isApplied: false,
+	promotionType: undefined,
+	id: undefined,
+	couponCode: undefined,
+	discountAmount: undefined,
+	message: undefined,
+}
+
 const OrderBill = ({ cart, setCart }) => {
 	const [totalPrice, setTotalPrice] = useState(0)
-	const [discount, setDiscount] = useState(
-		null
-		//   {
-		// 	discountId: 123,
-		// 	discountCode: "TTECH10P",
-		// 	discountAmount: 10,
-		// 	discountDateFrom: "",
-		// 	discountDateTo: "",
-		// }
-	)
+	const [discountAmount, setDiscountAmount] = useState(0)
 	const [shippingFee, setShippingFee] = useState(0)
 	const [deliveryTime, setDeliveryTime] = useState(null)
 	const [warehouseAddr, setWarehouseAddr] = useState(null)
 	const [customerAddr, setCustomerAddr] = useState(null)
+
+	// Coupon states
+	const [couponCode, setCouponCode] = useState("")
+	const [couponError, setCouponError] = useState("")
+	const [appliedCouponCode, setAppliedCouponCode] =
+		useState(DEFAULT_COUPON)
+	const [isApplyingCoupon, setIsApplyingCoupon] =
+		useState(false)
 
 	// init => get the warehouse address
 	useEffect(() => {
@@ -75,19 +85,35 @@ const OrderBill = ({ cart, setCart }) => {
 		setTotalPrice(total)
 	}, [cart])
 
-	// const getCurrentDiscount = async () => {
-	// 	const date = new Date().toISOString().split("T")[0]
+	const handleApplyCoupon = async () => {
+		setIsApplyingCoupon(true)
+		setCouponError("")
 
-	// 	const response = await handleDiscount.getCurrentDiscount(
-	// 		date
-	// 	)
+		await applyCouponCode({
+			couponCode,
+			totalPrice,
+			cart,
+			onSuccess: (data) => {
+				setDiscountAmount((prev) => prev + data.discountAmount)
+				setAppliedCouponCode(data)
+				setCouponError("")
+			},
+			onError: (error) => {
+				setAppliedCouponCode(DEFAULT_COUPON)
+				setCouponError(error)
+			},
+		})
 
-	// 	if (response.discountId) setDiscount(response)
-	// }
+		setIsApplyingCoupon(false)
+	}
 
-	// useEffect(() => {
-	// 	getCurrentDiscount()
-	// }, [])
+	const handleRemoveCoupon = () => {
+		setDiscountAmount(
+			(prev) => prev - appliedCouponCode.discountAmount
+		)
+		setAppliedCouponCode(DEFAULT_COUPON)
+		setCouponCode("")
+	}
 
 	return (
 		<div className='flex flex-col items-center p-8 shrink-0  bg-white min-w-[300px] max-w-[500px] '>
@@ -128,14 +154,60 @@ const OrderBill = ({ cart, setCart }) => {
 				</tbody>
 			</table>
 
-			{discount && (
+			{/* Coupon Input Section */}
+			<div className='w-full mt-6'>
+				<div className='flex gap-2'>
+					<input
+						type='text'
+						placeholder='Nhập mã coupon để nhận ưu dãi'
+						value={couponCode}
+						onChange={(e) =>
+							setCouponCode(e.target.value.toUpperCase())
+						}
+						className='flex-1 outline-none border-2 border-black/20 rounded-xl p-3 text-[1.4rem]'
+						disabled={
+							isApplyingCoupon || appliedCouponCode.isApplied
+						}
+					/>
+					<button
+						onClick={
+							appliedCouponCode.isApplied
+								? handleRemoveCoupon
+								: handleApplyCoupon
+						}
+						disabled={isApplyingCoupon || !couponCode.trim()}
+						className={`px-6 py-3 text-xl font-semibold rounded-xl transition-colors ${
+							isApplyingCoupon || !couponCode.trim()
+								? "bg-gray-300 text-gray-300 cursor-not-allowed"
+								: "bg-gray-300 text-gray-500"
+						}`}
+					>
+						{isApplyingCoupon
+							? "Chờ tí nhóa <3"
+							: appliedCouponCode.isApplied
+							? "Hủy áp dụng"
+							: "Áp dụng"}
+					</button>
+				</div>
+
+				{couponError && (
+					<p className='text-red-500 text-lg mt-2'>
+						{couponError}
+					</p>
+				)}
+			</div>
+
+			{appliedCouponCode.isApplied && (
 				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-blue-400 p-2 rounded-xl'>
-					Quý khách được áp dụng mã:{" "}
+					Đã áp dụng mã coupon{" "}
 					<span className='font-bold'>
-						{discount.discountCode}
+						{appliedCouponCode.couponCode}
 					</span>{" "}
-					giảm <span>{discount.discountAmount}%</span> cho đơn
-					hàng
+					giảm{" "}
+					<span>
+						{convertToK(appliedCouponCode.discountAmount)}
+					</span>{" "}
+					cho đơn hàng
 				</div>
 			)}
 
@@ -157,16 +229,11 @@ const OrderBill = ({ cart, setCart }) => {
 				<div className='text-right'>
 					{convertTo000D(totalPrice)}
 				</div>
-				{discount && (
+				{discountAmount !== 0 && (
 					<>
 						<div className=''>Giảm:</div>
 						<div className='text-red-500 text-right'>
-							{convertTo000D(
-								calcDiscount(
-									totalPrice,
-									discount ? discount.discountAmount : 0
-								)
-							)}
+							{convertTo000D(discountAmount)}
 						</div>
 					</>
 				)}
@@ -181,11 +248,7 @@ const OrderBill = ({ cart, setCart }) => {
 				<div>{"="}</div>
 				<div className='text-right'>
 					{convertTo000D(
-						calcPayment(
-							totalPrice,
-							discount ? discount.discountAmount : 0,
-							shippingFee
-						)
+						calcPayment(totalPrice, discountAmount, shippingFee)
 					)}
 				</div>
 			</div>
@@ -200,16 +263,14 @@ const OrderBill = ({ cart, setCart }) => {
 				warehouseAddr={warehouseAddr}
 				setWarehouseAddr={setWarehouseAddr}
 				totalPrice={totalPrice}
-				totalDiscount={calcDiscount(
-					totalPrice,
-					discount ? discount.discountAmount : 0
-				)}
+				totalDiscount={discountAmount}
 				totalPayment={calcPayment(
 					totalPrice,
-					discount ? discount.discountAmount : 0,
+					discountAmount,
 					shippingFee
 				)}
 				shippingFee={shippingFee}
+				appliedCouponCode={appliedCouponCode}
 			/>
 		</div>
 	)

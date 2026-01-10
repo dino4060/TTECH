@@ -270,6 +270,7 @@ export const DEFAULT_COUPON_CONFIG = {
 	minSpend: undefined,
 	maxDiscount: undefined,
 	totalLimit: undefined,
+	usedCount: undefined,
 	limitPerCustomer: undefined,
 	validityDays: undefined,
 }
@@ -282,16 +283,18 @@ export const pickCouponConfig = (data) => {
 		minSpend,
 		maxDiscount,
 		totalLimit,
+		usedCount,
 		limitPerCustomer,
 		validityDays,
 	} = data
 	return {
 		couponCode,
 		isFixed,
-		discountValue: discountValue,
+		discountValue,
 		minSpend,
 		maxDiscount,
 		totalLimit,
+		usedCount,
 		limitPerCustomer,
 		validityDays,
 	}
