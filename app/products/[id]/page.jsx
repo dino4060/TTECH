@@ -19,10 +19,11 @@ import {
 } from "react-icons/ci"
 import { motion } from "framer-motion"
 import SpecificationsTable from "@/components/product/SpecificationsTable"
+import ProductCouponList from "@/components/product/ProductCouponList"
 
 export default function Page({ params }) {
 	const productId = params.id
-	const [product, setProduct] = useState(DefaultProduct)
+	const [product, setProduct] = useState(DEFAULT_PRODUCT)
 	const [photoList, setPhotoList] = useState([])
 	const [zoomPhotoIndex, setZoomPhotoIndex] = useState(null)
 	const [loading, setLoading] = useState(true)
@@ -238,6 +239,16 @@ export default function Page({ params }) {
 					</div>
 				</div>
 
+				{/* 
+        New component here
+        It itself call api list 
+        Render 2 coupon group by column flex: 
+        - order coupon (red-pink is same tiktok order coupon)
+        - shipping coupon (blue-green is same tiktok shipping coupon)
+        Handle claim empty body / logic */}
+
+				<ProductCouponList productId={productId} />
+
 				<SpecificationsTable
 					specifications={product.specifications}
 				/>
@@ -264,7 +275,7 @@ export default function Page({ params }) {
 	)
 }
 
-const DefaultProduct = {
+const DEFAULT_PRODUCT = {
 	id: 0,
 	name: "Loading...",
 	thumb: "Loading...",
