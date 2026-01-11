@@ -21,7 +21,7 @@ const DEFAILT_COUPON_RESULT = {
 	promotionType: undefined,
 	id: undefined,
 	couponCode: undefined,
-	discountAmount: undefined,
+	discountAmount: 0,
 	message: undefined,
 }
 
@@ -34,13 +34,13 @@ const OrderBill = ({ cart, setCart }) => {
 	const [customerAddr, setCustomerAddr] = useState(null)
 
 	// Coupon code states
-	const [couponCode, setCouponCode] = useState("")
-	const [couponError, setCouponError] = useState("")
 	const [appliedCouponCode, setAppliedCouponCode] = useState(
 		DEFAILT_COUPON_RESULT
 	)
 	const [isApplyingCoupon, setIsApplyingCoupon] =
 		useState(false)
+	const [couponCode, setCouponCode] = useState("")
+	const [couponError, setCouponError] = useState("")
 
 	// Claimed coupon states
 	const [bestOrderCoupon, setBestOrderCoupon] = useState(
@@ -56,6 +56,12 @@ const OrderBill = ({ cart, setCart }) => {
 
 	// have address pair => calc shipping fee
 	useEffect(() => {
+		if (totalPrice >= 50000) {
+			setDeliveryTime(0)
+			setShippingFee(0)
+			return
+		}
+
 		const isValid =
 			warehouseAddr &&
 			customerAddr &&
@@ -76,7 +82,7 @@ const OrderBill = ({ cart, setCart }) => {
 				setShippingFee
 			)
 		}
-	}, [warehouseAddr, customerAddr, cart])
+	}, [warehouseAddr, customerAddr, totalPrice])
 
 	// get cart => fill order line items
 	useEffect(() => {
@@ -115,13 +121,17 @@ const OrderBill = ({ cart, setCart }) => {
 			})
 		}
 		getBestCoupons()
+
+		if (couponCode) {
+			handleApplyCoupon()
+		}
 	}, [totalPrice])
 
 	// Sync total discount amount from all applied sources
 	useEffect(() => {
 		let totalDiscount = 0
-		// if (appliedCouponCode.isApplied)
-		// 	totalDiscount += appliedCouponCode.discountAmount
+		if (appliedCouponCode.isApplied)
+			totalDiscount += appliedCouponCode.discountAmount
 		if (bestOrderCoupon.isApplied)
 			totalDiscount += bestOrderCoupon.discountAmount
 		if (bestShippingCoupon.isApplied)
@@ -129,7 +139,7 @@ const OrderBill = ({ cart, setCart }) => {
 
 		setDiscountAmount(totalDiscount)
 	}, [
-		// appliedCouponCode,
+		appliedCouponCode,
 		bestOrderCoupon,
 		bestShippingCoupon,
 	])
@@ -143,11 +153,14 @@ const OrderBill = ({ cart, setCart }) => {
 			totalPrice,
 			cart,
 			onSuccess: (data) => {
-				setDiscountAmount((prev) => prev + data.discountAmount)
+				// setDiscountAmount((prev) => prev + data.discountAmount)
 				setAppliedCouponCode(data)
 				setCouponError("")
 			},
 			onError: (error) => {
+				setDiscountAmount(
+					(prev) => prev - appliedCouponCode.discountAmount || 0
+				)
 				setAppliedCouponCode(DEFAILT_COUPON_RESULT)
 				setCouponError(error)
 			},
@@ -280,7 +293,7 @@ const OrderBill = ({ cart, setCart }) => {
 				</div>
 			)}
 
-			{deliveryTime && (
+			{deliveryTime !== 0 && (
 				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-green-400 p-2 rounded-xl'>
 					Dự kiến giao hàng vào ngày:{" "}
 					<span className='font-bold'>
@@ -298,7 +311,7 @@ const OrderBill = ({ cart, setCart }) => {
 				<div className='text-right'>
 					{convertTo000D(totalPrice)}
 				</div>
-				{discountAmount !== 0 && (
+				{shippingFee !== 0 && (
 					<>
 						<div className=''>Phí:</div>
 						<div className='text-right'>
@@ -306,7 +319,7 @@ const OrderBill = ({ cart, setCart }) => {
 						</div>
 					</>
 				)}
-				{shippingFee !== 0 && (
+				{discountAmount !== 0 && (
 					<>
 						<div className=''>Giảm:</div>
 						<div className='text-red-500 text-right'>
