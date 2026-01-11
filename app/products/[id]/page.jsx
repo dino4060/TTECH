@@ -1,4 +1,6 @@
 "use client"
+import ProductCoupon from "@/components/product/ProductCoupon"
+import SpecificationsTable from "@/components/product/SpecificationsTable"
 import CircleLoader from "@/components/uncategory/CircleLoader"
 import Notification from "@/components/uncategory/Notification"
 import { UserAuth } from "@/context/AuthContext"
@@ -9,7 +11,7 @@ import {
 	convertPercent,
 	convertTo000D,
 } from "@/lib/utils/number2"
-import { AnimatePresence } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { Fragment, useEffect, useState } from "react"
 import {
@@ -17,9 +19,6 @@ import {
 	CiChat1,
 	CiMedal,
 } from "react-icons/ci"
-import { motion } from "framer-motion"
-import SpecificationsTable from "@/components/product/SpecificationsTable"
-import ProductCouponList from "@/components/product/ProductCouponList"
 
 export default function Page({ params }) {
 	const productId = params.id
@@ -247,7 +246,7 @@ export default function Page({ params }) {
         - shipping coupon (blue-green is same tiktok shipping coupon)
         Handle claim empty body / logic */}
 
-				<ProductCouponList productId={productId} />
+				<ProductCoupon productId={productId} />
 
 				<SpecificationsTable
 					specifications={product.specifications}
