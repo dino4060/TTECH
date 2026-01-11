@@ -57,7 +57,7 @@ const OrderBill = ({ cart, setCart }) => {
 	// have address pair => calc shipping fee
 	useEffect(() => {
 		if (totalPrice >= 50000) {
-			setDeliveryTime(0)
+			setDeliveryTime(null)
 			setShippingFee(0)
 			return
 		}
@@ -293,7 +293,7 @@ const OrderBill = ({ cart, setCart }) => {
 				</div>
 			)}
 
-			{deliveryTime !== 0 && (
+			{deliveryTime && (
 				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-green-400 p-2 rounded-xl'>
 					Dự kiến giao hàng vào ngày:{" "}
 					<span className='font-bold'>
