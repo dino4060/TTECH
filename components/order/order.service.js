@@ -5,6 +5,22 @@ import { findGhnAddress } from "@/lib/utils/shipping/address"
 import { roundTo1K } from "@/lib/utils/number2"
 import { couponApi } from "@/lib/api/coupon.api"
 
+export const fetchPreviewClaims = async ({
+	body,
+	onSuccess,
+}) => {
+	const res = await clientFetch(
+		couponApi.previewClaims(body)
+	)
+
+	if (!res.success) {
+		alert(`Coupon api error: ${res.error}`)
+		return
+	}
+
+	onSuccess(res.data)
+}
+
 export const applyCouponCode = async ({
 	couponCode,
 	totalPrice,

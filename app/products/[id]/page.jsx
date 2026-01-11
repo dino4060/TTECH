@@ -238,14 +238,6 @@ export default function Page({ params }) {
 					</div>
 				</div>
 
-				{/* 
-        New component here
-        It itself call api list 
-        Render 2 coupon group by column flex: 
-        - order coupon (red-pink is same tiktok order coupon)
-        - shipping coupon (blue-green is same tiktok shipping coupon)
-        Handle claim empty body / logic */}
-
 				<ProductCoupon productId={productId} />
 
 				<SpecificationsTable

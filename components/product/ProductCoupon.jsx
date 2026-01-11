@@ -71,8 +71,9 @@ const ProductCoupon = ({ productId }) => {
 											key={c.id}
 											coupon={c}
 											primaryColor='bg-gradient-to-r from-pink-500 to-red-500'
-											revertColor='bg-gradient-to-r to-pink-500 from-red-500'
-											itemColor='red-500'
+											claimColor='bg-gradient-to-r to-pink-500 from-red-500'
+											claimedColor='border-red-500 text-red-500'
+											nameColor='text-red-500'
 											name={"Mua hàng"}
 											icon={TbTicket}
 										/>
@@ -101,8 +102,9 @@ const ProductCoupon = ({ productId }) => {
 											key={c.id}
 											coupon={c}
 											primaryColor='bg-gradient-to-r from-green-500 to-teal-500'
-											revertColor='bg-gradient-to-r to-green-500 from-teal-500'
-											itemColor='teal-500'
+											claimColor='bg-gradient-to-r to-green-500 from-teal-500'
+											claimedColor='border-teal-500 text-teal-500'
+											nameColor='text-teal-500'
 											name={"Vận chuyển"}
 											icon={TbTruckDelivery}
 										/>
@@ -125,8 +127,9 @@ export default ProductCoupon
 const CouponItem = ({
 	coupon,
 	primaryColor,
-	revertColor,
-	itemColor,
+	claimColor,
+	claimedColor,
+	nameColor,
 	name,
 	icon: Icon,
 }) => {
@@ -180,7 +183,7 @@ const CouponItem = ({
 			<div className='flex-1 p-3 flex justify-between items-center gap-4'>
 				<div>
 					<div
-						className={`text-[1.4rem] font-bold text-${itemColor}`}
+						className={`text-[1.4rem] font-bold ${nameColor}`}
 					>
 						{coupon.isFixed
 							? `Giảm ${convertToK(coupon.discountValue)}`
@@ -200,10 +203,10 @@ const CouponItem = ({
 									? () => handleUnclaim(coupon.id)
 									: () => handleClaim(coupon.id)
 							}
-							className={`px-5 py-1 rounded-lg text-[1.3rem] font-medium transition-all ${
+							className={`px-5 rounded-lg text-[1.3rem] font-medium transition-all ${
 								claimed
-									? `border-2 border-${itemColor} text-${itemColor}`
-									: `${revertColor} text-white`
+									? `py-1 border-2 ${claimedColor}`
+									: `py-2 ${claimColor} text-white`
 							}`}
 						>
 							{claimed ? "Đã nhận" : "Nhận ngay"}
