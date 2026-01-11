@@ -71,7 +71,8 @@ const ProductCoupon = ({ productId }) => {
 											key={c.id}
 											coupon={c}
 											primaryColor='bg-gradient-to-r from-pink-500 to-red-500'
-											textColor='text-red-500'
+											revertColor='bg-gradient-to-r to-pink-500 from-red-500'
+											itemColor='red-500'
 											name={"Mua hàng"}
 											icon={TbTicket}
 										/>
@@ -100,7 +101,8 @@ const ProductCoupon = ({ productId }) => {
 											key={c.id}
 											coupon={c}
 											primaryColor='bg-gradient-to-r from-green-500 to-teal-500'
-											textColor='text-teal-500'
+											revertColor='bg-gradient-to-r to-green-500 from-teal-500'
+											itemColor='teal-500'
 											name={"Vận chuyển"}
 											icon={TbTruckDelivery}
 										/>
@@ -123,64 +125,105 @@ export default ProductCoupon
 const CouponItem = ({
 	coupon,
 	primaryColor,
-	textColor,
+	revertColor,
+	itemColor,
 	name,
 	icon: Icon,
-}) => (
-	<div
-		className={`flex items-center border rounded-xl overflow-hidden mb-3 bg-white`}
-	>
+}) => {
+	const [claimed, setClaimed] = useState(false)
+
+	useEffect(() => {
+		if (!coupon) return
+		setClaimed(coupon.isClaimed)
+	}, [coupon])
+
+	const handleClaim = async (couponId) => {
+		if (!couponId) {
+			alert("Error: coupon id is empty")
+			return
+		}
+		setClaimed(true)
+		const res = await clientFetch(couponApi.claim(couponId))
+		if (!res.success) {
+			setClaimed(false)
+			alert("Coupon Error: " + res.error)
+			return
+		}
+	}
+
+	const handleUnclaim = async (couponId) => {
+		if (!couponId) {
+			alert("Error: coupon id is empty")
+			return
+		}
+		setClaimed(false)
+		const res = await clientFetch(couponApi.unclaim(couponId))
+		if (!res.success) {
+			setClaimed(true)
+			alert("Coupon Error: " + res.error)
+			return
+		}
+	}
+
+	return (
 		<div
-			className={`p-4 ${primaryColor} text-white flex flex-col items-center justify-center w-[100px]`}
+			className={`flex items-center border rounded-xl overflow-hidden mb-3 bg-white`}
 		>
-			<Icon size={24} />
-			<span className='text-[1.4rem] font-semibold mt-1'>
-				{name}
-			</span>
-		</div>
-		<div className='flex-1 p-3 flex justify-between items-center gap-4'>
-			<div>
-				<div
-					className={`text-[1.4rem] font-semibold ${textColor}`}
-				>
-					{coupon.isFixed
-						? `Giảm ${convertToK(coupon.discountValue)}`
-						: `Nhận ưu đãi ${convertPercent(
-								coupon.discountValue
-						  )}`}
-				</div>
-				<div className='text-[1.2rem] text-black/50 line-clamp-1'>
-					{!coupon.minSpend
-						? "Dành cho mọi đơn hàng"
-						: `Dành cho đơn hàng trên ${convertTo000D(
-								coupon.minSpend
-						  )}`}
-				</div>
+			<div
+				className={`p-4 ${primaryColor} text-white flex flex-col items-center justify-center w-[100px]`}
+			>
+				<Icon size={24} />
+				<span className='text-[1.4rem] font-semibold mt-1'>
+					{name}
+				</span>
 			</div>
-			<div>
-				<div className='flex flex-col items-end min-w-[100px]'>
-					<div className='text-[1.15rem] text-black/50 mb-1'>
-						Đã dùng hết{" "}
-						{calcPercentOfPart(
-							coupon.usedCount,
-							coupon.totalLimit || ((coupon.usedCount + 1) * 4) / 3
+			<div className='flex-1 p-3 flex justify-between items-center gap-4'>
+				<div>
+					<div
+						className={`text-[1.4rem] font-bold text-${itemColor}`}
+					>
+						{coupon.isFixed
+							? `Giảm ${convertToK(coupon.discountValue)}`
+							: `Giảm ${convertPercent(coupon.discountValue)}`}
+					</div>
+					<div className='text-[1.2rem] text-black/50 line-clamp-1'>
+						{!coupon.minSpend
+							? "Dành cho mọi đơn hàng"
+							: `Mua hàng trên ${convertTo000D(coupon.minSpend)}`}
+					</div>
+				</div>
+				<div>
+					<div className='flex flex-col items-end min-w-[100px]'>
+						<button
+							onClick={
+								claimed
+									? () => handleUnclaim(coupon.id)
+									: () => handleClaim(coupon.id)
+							}
+							className={`px-5 py-1 rounded-lg text-[1.3rem] font-medium transition-all ${
+								claimed
+									? `border-2 border-${itemColor} text-${itemColor}`
+									: `${revertColor} text-white`
+							}`}
+						>
+							{claimed ? "Đã nhận" : "Nhận ngay"}
+						</button>
+						{coupon.totalLimit && (
+							<div className='mt-3 w-full h-[6px] bg-gray-100 rounded-full overflow-hidden border border-black/[0.03]'>
+								<div
+									className={`h-full ${primaryColor} transition-all duration-500`}
+									style={{
+										width: `${calcPercentOfPart(
+											coupon.usedCount,
+											coupon.totalLimit
+										)}%`,
+									}}
+								/>
+							</div>
 						)}
-						%
-					</div>
-					<div className='w-full h-[6px] bg-gray-100 rounded-full overflow-hidden border border-black/[0.03]'>
-						<div
-							className={`h-full ${primaryColor} transition-all duration-500`}
-							style={{
-								width: `${calcPercentOfPart(
-									coupon.usedCount,
-									coupon.totalLimit ||
-										((coupon.usedCount + 1) * 4) / 3
-								)}%`,
-							}}
-						/>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-)
+	)
+}

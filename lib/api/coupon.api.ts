@@ -3,6 +3,14 @@ import { HttpMethod } from "@/types/base.types"
 import { RESOURCES } from "../constants/resources"
 
 export const couponApi = {
+	claim: (couponId: number): TApi<{}> => ({
+		route: `${RESOURCES.CAMPAIGNS.PRIVATE}/coupons/coupon-claims/${couponId}`,
+		method: HttpMethod.POST,
+	}),
+	unclaim: (couponId: number): TApi<{}> => ({
+		route: `${RESOURCES.CAMPAIGNS.PRIVATE}/coupons/coupon-claims/${couponId}`,
+		method: HttpMethod.DELETE,
+	}),
 	preview: (body: {
 		id?: number
 		couponCode?: string
@@ -16,7 +24,7 @@ export const couponApi = {
 		discountAmount: number
 		message: string
 	}> => ({
-		route: `${RESOURCES.CAMPAIGNS.PRIVATE}/coupons`,
+		route: `${RESOURCES.CAMPAIGNS.PRIVATE}/coupons/coupon-previews`,
 		method: HttpMethod.POST,
 		body,
 	}),
@@ -47,10 +55,5 @@ export const couponApi = {
 	> => ({
 		route: `${RESOURCES.CAMPAIGNS.PRIVATE}/coupons?product-id=${productId}`,
 		method: HttpMethod.GET,
-	}),
-	claim: (body: { couponId: number }): TApi<{}> => ({
-		route: `${RESOURCES.CAMPAIGNS.PRIVATE}/coupons/claim`,
-		method: HttpMethod.POST,
-		body,
 	}),
 }
