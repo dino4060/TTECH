@@ -12,6 +12,7 @@ import {
 	fetchCalcGhnShippingFee,
 	fetchEstimateGhnLeadtime,
 	fetchGetWarehouseAddress,
+	fetchPreviewBenefits,
 	fetchPreviewClaims,
 	formatDateTimeRange,
 } from "./order.service"
@@ -22,6 +23,16 @@ const DEFAILT_COUPON_RESULT = {
 	id: undefined,
 	couponCode: undefined,
 	discountAmount: 0,
+	message: undefined,
+}
+
+const DEFAULT_BENEFIT_RESULT = {
+	isApplied: false,
+	membershipCode: undefined,
+	id: undefined,
+	benefitType: undefined,
+	benefitName: undefined,
+	benefitValue: 0,
 	message: undefined,
 }
 
@@ -48,6 +59,20 @@ const OrderBill = ({ cart, setCart }) => {
 	)
 	const [bestShippingCoupon, setBestShippingCoupon] =
 		useState(DEFAILT_COUPON_RESULT)
+
+	// Benefit states
+	const [bestUpgrade, setBestUpgrade] = useState(
+		DEFAULT_BENEFIT_RESULT
+	)
+	const [bestRenew, setBestRenew] = useState(
+		DEFAULT_BENEFIT_RESULT
+	)
+	const [bestCouponBenefit, setBestCouponBenefit] = useState(
+		DEFAULT_BENEFIT_RESULT
+	)
+	const [bestGuarantee, setBestGuarantee] = useState(
+		DEFAULT_BENEFIT_RESULT
+	)
 
 	// init => get the warehouse address
 	useEffect(() => {
@@ -99,7 +124,7 @@ const OrderBill = ({ cart, setCart }) => {
 		setTotalPrice(total)
 	}, [cart])
 
-	// totalPrice changes => fetch best coupons
+	// totalPrice changes => fetch best coupons & benefits
 	useEffect(() => {
 		const getBestCoupons = async () => {
 			if (totalPrice === 0) return
@@ -112,11 +137,20 @@ const OrderBill = ({ cart, setCart }) => {
 			await fetchPreviewClaims({
 				body,
 				onSuccess: (data) => {
-					console.log(data)
-
 					const [order, shipping] = data
 					order.isApplied && setBestOrderCoupon(order)
 					shipping.isApplied && setBestShippingCoupon(shipping)
+				},
+			})
+
+			await fetchPreviewBenefits({
+				body,
+				onSuccess: (data) => {
+					const [upgrade, renew, coupon, guarantee] = data
+					upgrade.isApplied && setBestUpgrade(upgrade)
+					renew.isApplied && setBestRenew(renew)
+					coupon.isApplied && setBestCouponBenefit(coupon)
+					guarantee.isApplied && setBestGuarantee(guarantee)
 				},
 			})
 		}
@@ -130,18 +164,38 @@ const OrderBill = ({ cart, setCart }) => {
 	// Sync total discount amount from all applied sources
 	useEffect(() => {
 		let totalDiscount = 0
+		// From Coupons
 		if (appliedCouponCode.isApplied)
 			totalDiscount += appliedCouponCode.discountAmount
 		if (bestOrderCoupon.isApplied)
 			totalDiscount += bestOrderCoupon.discountAmount
-		if (bestShippingCoupon.isApplied)
-			totalDiscount += bestShippingCoupon.discountAmount
+		if (bestShippingCoupon.isApplied && shippingFee)
+			totalDiscount += Math.min(
+				bestShippingCoupon.discountAmount,
+				shippingFee
+			)
+		// From Benefits
+		if (bestUpgrade.isApplied)
+			totalDiscount += bestUpgrade.benefitValue
+		if (bestRenew.isApplied)
+			totalDiscount += bestRenew.benefitValue
+		if (bestCouponBenefit.isApplied)
+			totalDiscount += bestCouponBenefit.benefitValue
+		if (bestGuarantee.isApplied)
+			totalDiscount += bestGuarantee.benefitValue
 
 		setDiscountAmount(totalDiscount)
 	}, [
+		// Coupons
 		appliedCouponCode,
 		bestOrderCoupon,
 		bestShippingCoupon,
+		shippingFee,
+		// Benefits
+		bestUpgrade,
+		bestRenew,
+		bestCouponBenefit,
+		bestGuarantee,
 	])
 
 	const handleApplyCoupon = async () => {
@@ -260,6 +314,39 @@ const OrderBill = ({ cart, setCart }) => {
 			</div>
 
 			{/* Discount Notification Lines */}
+			{[bestUpgrade, bestRenew, bestCouponBenefit].map(
+				(benefit, idx) =>
+					benefit.isApplied && (
+						<div
+							key={benefit.id || idx}
+							className='text-white mt-4 text-2xl w-3/4 text-center bg-purple-500 p-2 rounded-xl'
+						>
+							Đặc quyền{" "}
+							<span className=''>
+								{`${bestUpgrade.membershipCode} ${bestUpgrade.benefitName}`}
+							</span>
+							.{" "}
+							<span className='font-bold'>
+								Giảm {convertToK(benefit.benefitValue)}
+							</span>{" "}
+							tổng tiền hàng
+						</div>
+					)
+			)}
+
+			{bestGuarantee.isApplied && (
+				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-purple-500 p-2 rounded-xl'>
+					Đặc quyền{" "}
+					<span className=''>
+						{`${bestUpgrade.membershipCode} ${bestUpgrade.benefitName}`}
+					</span>
+					.
+					<span className='font-bold'>
+						Tặng thêm {benefit.benefitValue} tháng
+					</span>
+				</div>
+			)}
+
 			{appliedCouponCode.isApplied && (
 				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-blue-400 p-2 rounded-xl'>
 					Đã áp dụng Coupon{" "}
@@ -275,7 +362,7 @@ const OrderBill = ({ cart, setCart }) => {
 
 			{bestOrderCoupon.isApplied && (
 				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-blue-400 p-2 rounded-xl'>
-					Đã áp dụng Coupon Mua hàng đã nhận.{" "}
+					Đã áp dụng Coupon Mua hàng tốt nhất.{" "}
 					<span className='font-bold'>
 						Giảm {convertToK(bestOrderCoupon.discountAmount)}
 					</span>{" "}
@@ -283,11 +370,17 @@ const OrderBill = ({ cart, setCart }) => {
 				</div>
 			)}
 
-			{bestShippingCoupon.isApplied && (
+			{bestShippingCoupon.isApplied && shippingFee && (
 				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-blue-400 p-2 rounded-xl'>
-					Đã áp dụng Coupon Vận chuyển đã nhận.{" "}
+					Đã áp dụng Coupon Vận chuyển tốt nhất.{" "}
 					<span className='font-bold'>
-						Giảm {convertToK(bestShippingCoupon.discountAmount)}
+						Giảm{" "}
+						{convertToK(
+							Math.min(
+								bestShippingCoupon.discountAmount,
+								shippingFee
+							)
+						)}
 					</span>{" "}
 					phí vận chuyển
 				</div>

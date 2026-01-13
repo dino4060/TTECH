@@ -8,7 +8,8 @@ const RESOURCE_NAMES = [
 	"orders",
 	"campaigns",
 	"addresses",
-  "dashboard"
+	"dashboard",
+	"benefits",
 ] as const
 
 type TResourceUnion = (typeof RESOURCE_NAMES)[number]

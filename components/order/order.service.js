@@ -4,6 +4,21 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import { findGhnAddress } from "@/lib/utils/shipping/address"
 import { roundTo1K } from "@/lib/utils/number2"
 import { couponApi } from "@/lib/api/coupon.api"
+import { benefitApi } from "@/lib/api/benefit.api"
+
+export const fetchPreviewBenefits = async ({
+	body,
+	onSuccess,
+}) => {
+	const res = await clientFetch(benefitApi.preview(body))
+
+	if (!res.success) {
+		alert(`Benefit API error: ${res.error}`)
+		return
+	}
+
+	onSuccess(res.data)
+}
 
 export const fetchPreviewClaims = async ({
 	body,
@@ -14,7 +29,7 @@ export const fetchPreviewClaims = async ({
 	)
 
 	if (!res.success) {
-		alert(`Coupon api error: ${res.error}`)
+		alert(`Coupon API error: ${res.error}`)
 		return
 	}
 
