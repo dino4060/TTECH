@@ -4,6 +4,7 @@ import { clientFetch } from "@/lib/http/fetch.client"
 import { convertTo000D } from "@/lib/utils/number2"
 import { useEffect, useState } from "react"
 import { CiMinimize1 } from "react-icons/ci"
+import { TbGiftCard } from "react-icons/tb"
 
 const DetailOrder = ({
 	currentOrderClick,
@@ -67,10 +68,14 @@ const DetailOrder = ({
 				</div>
 			</div>
 			<div className='flex mt-5 h-[500px]'>
-				{/* <form
+				<form
 					onSubmit={(e) => e.preventDefault()}
 					className='grow-[2] shrink-0 text-2xl'
 				>
+					<h3 className='text-[1.6rem] font-bold flex items-center gap-2 uppercase mb-4'>
+						Quản lý trạng thái
+					</h3>
+
 					<select
 						id='state'
 						onChange={handleValueChange}
@@ -92,7 +97,34 @@ const DetailOrder = ({
 					>
 						Xác nhận
 					</button>
-				</form> */}
+
+					{/* order.giftTexts != null , khác rỗng => 
+          render Mục ưu đãi tặng kèm
+          order.giftTexts là string array, render list or table  */}
+					{/* Mục ưu đãi tặng kèm */}
+					{currentOrderClick.giftTexts &&
+						currentOrderClick.giftTexts.length > 0 && (
+							<div className='mt-12 pt-6'>
+								<h3 className='text-[1.6rem] font-bold flex items-center gap-2 uppercase mb-4'>
+									Quyền lợi bổ sung
+								</h3>
+								<div className='bg-pink-50 p-4 border border-pink-100'>
+									<ul className='list-disc ml-6 space-y-2'>
+										{currentOrderClick.giftTexts.map(
+											(gift, index) => (
+												<li
+													key={index}
+													className='text-gray-700 font-medium'
+												>
+													{gift}
+												</li>
+											)
+										)}
+									</ul>
+								</div>
+							</div>
+						)}
+				</form>
 				<div className='grow-[5] text-2xl shrink-0 flex flex-wrap'>
 					{orderDetailList?.map((x) => (
 						<div
@@ -125,8 +157,9 @@ const DetailOrder = ({
 export default DetailOrder
 
 const state = [
+	"UNPAID",
 	"PENDING",
-	"completed",
-	"cancelled",
-	"banked",
+	"SHIPPING",
+	"COMPLETED",
+	"CANCELED",
 ]

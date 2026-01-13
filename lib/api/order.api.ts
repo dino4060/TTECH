@@ -32,4 +32,10 @@ export const adminOrderApi = {
 		method: HttpMethod.GET,
 		query,
 	}),
+
+	update: (body: any): TApi<{}[]> => ({
+		route: `${RESOURCES.ORDERS.PRIVATE}`,
+		method: HttpMethod.PATCH,
+		body,
+	}),
 }

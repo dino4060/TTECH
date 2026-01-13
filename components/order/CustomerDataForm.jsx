@@ -61,7 +61,7 @@ const CustomerDataForm = ({
 		if (!bestGuarantee.isApplied) return
 		const { membershipCode, benefitName, benefitValue } =
 			bestGuarantee
-		const giftText = `Đặc quyền ${membershipCode} - Loại ${benefitName} - Tặng thêm ${benefitValue} tháng`
+		const giftText = `Đặc quyền ${membershipCode} - ${benefitName} - Tặng thêm ${benefitValue} tháng`
 		setGiftTexts((prev) => [...prev, giftText])
 	}, [bestGuarantee])
 

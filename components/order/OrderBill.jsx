@@ -326,7 +326,7 @@ const OrderBill = ({ cart, setCart }) => {
 						>
 							Đặc quyền{" "}
 							<span className=''>
-								{`${bestUpgrade.membershipCode} ${bestUpgrade.benefitName}`}
+								{`${benefit.membershipCode} ${benefit.benefitName}`}
 							</span>
 							.{" "}
 							<span className='font-bold'>
@@ -341,11 +341,11 @@ const OrderBill = ({ cart, setCart }) => {
 				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-purple-500 p-2 rounded-xl'>
 					Đặc quyền{" "}
 					<span className=''>
-						{`${bestUpgrade.membershipCode} ${bestUpgrade.benefitName}`}
+						{`${bestGuarantee.membershipCode} ${bestGuarantee.benefitName}`}
 					</span>
 					.
 					<span className='font-bold'>
-						Tặng thêm {benefit.benefitValue} tháng
+						Tặng thêm {bestGuarantee.benefitValue} tháng
 					</span>
 				</div>
 			)}
