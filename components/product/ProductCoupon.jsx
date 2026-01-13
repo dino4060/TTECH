@@ -203,10 +203,10 @@ const CouponItem = ({
 									? () => handleUnclaim(coupon.id)
 									: () => handleClaim(coupon.id)
 							}
-							className={`px-5 rounded-lg text-[1.3rem] font-medium transition-all ${
+							className={`w-[80px] h-[30px] box-border text-center rounded-lg text-[1.3rem] font-medium transition-all ${
 								claimed
-									? `py-1 border-2 ${claimedColor}`
-									: `py-2 ${claimColor} text-white`
+									? `border-2 ${claimedColor}`
+									: `${claimColor} text-white`
 							}`}
 						>
 							{claimed ? "Đã nhận" : "Nhận ngay"}

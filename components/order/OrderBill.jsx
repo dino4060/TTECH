@@ -295,7 +295,7 @@ const OrderBill = ({ cart, setCart }) => {
 
 			{deliveryTime && (
 				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-green-400 p-2 rounded-xl'>
-					Dự kiến giao hàng vào ngày:{" "}
+					Dự kiến giao bưu kiện vào ngày{" "}
 					<span className='font-bold'>
 						{formatDateTimeRange(
 							deliveryTime.from,
