@@ -25,7 +25,7 @@ import {
 	translateTrackingAddr,
 } from "./order.service"
 
-const UserOrder = () => {
+const UserOrder = ({ setAsyncPoints }) => {
 	const [showDetail, setShowDetail] = useState({})
 	const [showTracking, setShowTracking] = useState({})
 	const [loadTracking, setLoadTracking] = useState({})
@@ -88,6 +88,8 @@ const UserOrder = () => {
 		const endLoad = { ...loadCanceling }
 		endLoad[orderId] = false
 		setLoadCanceling(endLoad)
+
+		setAsyncPoints((prev) => !prev)
 	}
 
 	const onToggleDetail = (orderId) => {

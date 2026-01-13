@@ -26,6 +26,12 @@ const CustomerDataForm = ({
 	totalPayment,
 	shippingFee,
 	appliedCouponCode,
+	bestOrderCoupon,
+	bestShippingCoupon,
+	bestUpgrade,
+	bestRenew,
+	bestCouponBenefit,
+	bestGuarantee,
 }) => {
 	const router = useRouter()
 	const { user } = UserAuth()
@@ -48,6 +54,16 @@ const CustomerDataForm = ({
 		street: "",
 	})
 	const [sharedFeedback, setSharedFeedback] = useState("")
+	const [giftTexts, setGiftTexts] = useState([])
+
+	// build giftTexts
+	useEffect(() => {
+		if (!bestGuarantee.isApplied) return
+		const { membershipCode, benefitName, benefitValue } =
+			bestGuarantee
+		const giftText = `Đặc quyền ${membershipCode} - Loại ${benefitName} - Tặng thêm ${benefitValue} tháng`
+		setGiftTexts((prev) => [...prev, giftText])
+	}, [bestGuarantee])
 
 	// change totalPayment => logic allowCOD
 	useEffect(() => {
@@ -136,7 +152,7 @@ const CustomerDataForm = ({
 
 			paymentType: data.paymentType,
 			note: data.note,
-			couponCode: appliedCouponCode,
+			giftTexts,
 
 			toUserName: customerAddr.userName,
 			toPhone: customerAddr.phone,
@@ -149,6 +165,18 @@ const CustomerDataForm = ({
 			fromProvinceId: warehouseAddr.provinceId,
 			fromWardId: warehouseAddr.wardId,
 			fromStreet: warehouseAddr.street,
+
+			couponResults: [
+				appliedCouponCode,
+				bestOrderCoupon,
+				bestShippingCoupon,
+			],
+			benefitResults: [
+				bestUpgrade,
+				bestRenew,
+				bestCouponBenefit,
+				bestGuarantee,
+			],
 		}
 		const orderRes = await clientFetch(
 			orderApi.checkout(body)

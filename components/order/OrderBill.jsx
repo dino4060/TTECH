@@ -113,6 +113,7 @@ const OrderBill = ({ cart, setCart }) => {
 	useEffect(() => {
 		if (!cart?.lines || cart.lines.length === 0) {
 			setTotalPrice(0)
+			setDiscountAmount(0)
 			setShippingFee(0)
 			return
 		}
@@ -127,7 +128,9 @@ const OrderBill = ({ cart, setCart }) => {
 	// totalPrice changes => fetch best coupons & benefits
 	useEffect(() => {
 		const getBestCoupons = async () => {
-			if (totalPrice === 0) return
+			if (totalPrice === 0) {
+				return
+			}
 
 			const body = {
 				spendAmount: totalPrice,
@@ -370,7 +373,7 @@ const OrderBill = ({ cart, setCart }) => {
 				</div>
 			)}
 
-			{bestShippingCoupon.isApplied && shippingFee && (
+			{bestShippingCoupon.isApplied && shippingFee !== 0 && (
 				<div className='text-white mt-4 text-2xl w-3/4 text-center bg-blue-400 p-2 rounded-xl'>
 					Đã áp dụng Coupon Vận chuyển tốt nhất.{" "}
 					<span className='font-bold'>
@@ -446,6 +449,12 @@ const OrderBill = ({ cart, setCart }) => {
 				)}
 				shippingFee={shippingFee}
 				appliedCouponCode={appliedCouponCode}
+				bestOrderCoupon={bestOrderCoupon}
+				bestShippingCoupon={bestShippingCoupon}
+				bestUpgrade={bestUpgrade}
+				bestRenew={bestRenew}
+				bestCouponBenefit={bestCouponBenefit}
+				bestGuarantee={bestGuarantee}
 			/>
 		</div>
 	)
