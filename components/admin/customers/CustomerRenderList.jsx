@@ -1,6 +1,12 @@
 import { convertDate } from "@/lib/utils/number"
 import { motion } from "framer-motion"
 
+const ColorMap = {
+	UPGRADE: "#06b6d4",
+	RENEW: "#16a34a",
+	DOWNGRADE: "#f97316",
+}
+
 const CustomerRenderList = ({ customerList }) => {
 	return (
 		<table className='w-full border-spacing-1 border-separate mt-10 table-auto text-xl bg-white relative'>
@@ -16,13 +22,22 @@ const CustomerRenderList = ({ customerList }) => {
 						Email
 					</th>
 					<th className='px-4 py-2 border border-b-4 rounded-md bg-white border-blue-500 flex-1 shrink-0 text-center'>
-						Số điện thoại
+						Phone
 					</th>
 					<th className='px-4 py-2 border border-b-4 rounded-md bg-white border-blue-500 flex-1 shrink-0 text-center'>
-						Tạo lúc
+						Đăng ký lúc
 					</th>
 					<th className='px-4 py-2 border border-b-4 rounded-md bg-white border-blue-500 flex-1 shrink-0 text-center'>
-						Sửa lúc
+						Membership
+					</th>
+					<th className='px-4 py-2 border border-b-4 rounded-md bg-white border-blue-500 flex-1 shrink-0 text-center'>
+						Điểm thành viên
+					</th>
+					<th className='px-4 py-2 border border-b-4 rounded-md bg-white border-blue-500 flex-1 shrink-0 text-center'>
+						Lịch sử
+					</th>
+					<th className='px-4 py-2 border border-b-4 rounded-md bg-white border-blue-500 flex-1 shrink-0 text-center'>
+						Đánh giá lúc
 					</th>
 				</tr>
 			</thead>
@@ -57,7 +72,25 @@ const CustomerRenderList = ({ customerList }) => {
 							{convertDate(c.createdAt)}
 						</th>
 						<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
-							{convertDate(c.updatedAt)}
+							{c.member?.membership?.membershipCode || ""}
+						</th>
+						<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
+							{c.member?.points ?? ""}
+						</th>
+						<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
+							<span
+								style={{
+									backgroundColor: ColorMap[c.member?.status || ""],
+								}}
+								className='p-2 rounded-xl text-white'
+							>
+								{c.member?.status || ""}
+							</span>
+						</th>
+						<th className='px-4 py-2 flex-1 font-[400] shrink-0 text-center'>
+							{c.member?.rankedAt
+								? convertDate(c.member.rankedAt)
+								: ""}
 						</th>
 					</motion.tr>
 				))}

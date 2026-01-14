@@ -67,28 +67,28 @@ export const AdminRouteList = [
 		component: OrderManagement,
 	},
 	{
+		id: "campagins",
+		component: CampaignManagement,
+	},
+	{
 		id: "customer",
 		component: CustomerManagement,
+	},
+	{
+		id: "membership",
+		component: CustomerMessage,
 	},
 	{
 		id: "message",
 		component: CustomerMessage,
 	},
 	{
-		id: "marketing",
-		component: CampaignManagement,
+		id: "category",
+		component: CategoryManagement,
 	},
-	// {
-	// 	id: "promotion",
-	// 	component: CampaignManagement,
-	// },
 	{
 		id: "series",
 		component: SeriesManagement,
-	},
-	{
-		id: "category",
-		component: CategoryManagement,
 	},
 	{
 		id: "profile",

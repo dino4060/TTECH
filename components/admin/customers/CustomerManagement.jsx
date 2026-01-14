@@ -14,6 +14,7 @@ const CustomerManagement = () => {
 			role: ["CUSTOMER"],
 			createdAt: "0001-01-01T00:00:00",
 			updatedAt: "0001-01-01T00:00:00",
+			member: {},
 		},
 	])
 
