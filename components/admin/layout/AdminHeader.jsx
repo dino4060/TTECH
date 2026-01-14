@@ -7,6 +7,7 @@ import CustomerMessage from "@/components/admin/customers/CustomerMessage"
 import AdminDashboard from "@/components/admin/dashboard/AdminDashboard"
 import OrderManagement from "@/components/admin/orders/OrderManagement"
 import ProductManagement from "@/components/admin/products/ProductManagement"
+import MembershipManagement from "@/components/admin/memberships/MembershipManagement"
 import SeriesManagement from "@/components/admin/series/SeriesManagement"
 import Image from "next/image"
 import AdminNotification from "./AdminNotification"
@@ -76,7 +77,7 @@ export const AdminRouteList = [
 	},
 	{
 		id: "membership",
-		component: CustomerMessage,
+		component: MembershipManagement,
 	},
 	{
 		id: "message",
