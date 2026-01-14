@@ -53,9 +53,9 @@ const Page = () => {
 							<div
 								onMouseEnter={() => setHover(true)}
 								onMouseLeave={() => setHover(false)}
-								className='bg-blue-400 rounded-full p-2 flex items-center gap-4 cursor-pointer shadow-md transition-transform active:scale-95'
+								className='bg-blue-500 rounded-full p-2 flex items-center gap-4 cursor-pointer shadow-md transition-transform active:scale-95'
 							>
-								<div className='bg-white px-6 py-1 rounded-full text-blue-400 font-bold text-[1.4rem]'>
+								<div className='bg-white px-6 py-1 rounded-full text-blue-500 font-bold text-[1.4rem]'>
 									{membership.membershipCode}
 								</div>
 
@@ -98,7 +98,7 @@ const Page = () => {
 																</span>
 															)}
 														</div>
-														<span className='text-blue-500 font-bold'>
+														<span className='text-pink-500 font-bold'>
 															{b.benefitValue}
 															{b.benefitUnit === "PERCENT"
 																? "%"
