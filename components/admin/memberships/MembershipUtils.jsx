@@ -29,13 +29,6 @@ export const ModeEnum = {
 	CONFIG: "CONFIG",
 }
 
-export const BenefitType = {
-	UPGRADE: "UPGRADE",
-	RENEW: "RENEW",
-	COUPON: "COUPON",
-	GUARANTEE: "GUARANTEE",
-}
-
 export const BenefitUnit = {
 	FIXED: "FIXED",
 	PERCENT: "PERCENT",
@@ -58,6 +51,13 @@ export const BenefitUnitRenderEnum = {
 		show: "Tháng",
 		symbol: " tháng",
 	},
+}
+
+export const BenefitType = {
+	UPGRADE: "UPGRADE",
+	RENEW: "RENEW",
+	COUPON: "COUPON",
+	GUARANTEE: "GUARANTEE",
 }
 
 export const BenefitTypeRenderEnum = {

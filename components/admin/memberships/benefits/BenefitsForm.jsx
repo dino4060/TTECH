@@ -7,8 +7,9 @@ import {
 	BenefitUnit,
 	ModeEnum,
 } from "../MembershipUtils"
-import DealFormCell from "./DealFormCell"
-import LimitCellForm from "./LimitCellForm"
+import ValueForm from "./ValueFormCell"
+import LimitForm from "./LimitForm"
+import IDNameForm from "./IDNameForm"
 
 const DEFAULT_BENEFIT = (BenefitTypeRender) => ({
 	tempId: Date.now(),
@@ -180,32 +181,11 @@ const BenefitsForm = ({
 										}}
 										transition={{ type: "spring" }}
 									>
-										<td className='px-4 py-2 font-normal shrink-0 text-center'>
-											<div className='flex gap-2 items-center'>
-												<div
-													className={`p-3 m-1 rounded-xl shrink-0 bg-blue-50`}
-												>
-													{(() => {
-														const IconComponent =
-															BenefitTypeRenderEnum[b.benefitType]?.icon ||
-															BenefitTypeRenderEnum.COUPON.icon
-														return (
-															<IconComponent className='w-8 h-8 text-blue-500' />
-														)
-													})()}
-												</div>
-												<div className='flex-1 min-w-0 text-left'>
-													<div className='text-[1.4rem] whitespace-nowrap overflow-hidden text-ellipsis'>
-														{b.benefitName}
-													</div>
-													<div>{b.id && `ID: ${b.id}`}</div>
-												</div>
-											</div>
-										</td>
+										<IDNameForm benefit={b} />
 
-										<DealFormCell benefit={b} />
+										<ValueForm benefit={b} />
 
-										<LimitCellForm benefit={b} />
+										<LimitForm benefit={b} />
 
 										{!manage ? (
 											<td className='px-4 py-2 font-normal shrink-0 text-center'>

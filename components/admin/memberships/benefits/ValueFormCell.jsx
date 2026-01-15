@@ -6,7 +6,7 @@ import {
 	BenefitUnitRenderEnum,
 } from "../MembershipUtils"
 
-const DealFormCell = ({ benefit }) => {
+const ValueForm = ({ benefit }) => {
 	const [value, setValue] = useState(0)
 	const [unit, setUnit] = useState(BenefitUnit.FIXED)
 
@@ -82,4 +82,4 @@ const DealFormCell = ({ benefit }) => {
 	)
 }
 
-export default DealFormCell
+export default ValueForm
