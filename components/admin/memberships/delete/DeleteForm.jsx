@@ -1,5 +1,6 @@
 "use client"
 import { adminCampaignApi as adminDataApi } from "@/lib/api/campaign.api"
+import { adminMembershipApi } from "@/lib/api/membership.api"
 import { clientFetch } from "@/lib/http/fetch.client"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
@@ -22,7 +23,9 @@ const DeleteForm = ({
 
 	const handleDelete = async (id) => {
 		if (id === "") return
-		const res = await clientFetch(adminDataApi.delete(id))
+		const res = await clientFetch(
+			adminMembershipApi.delete(id)
+		)
 		if (res.success === false) {
 			alert(res.error)
 			return
@@ -34,17 +37,17 @@ const DeleteForm = ({
 
 	const handleToggleStatus = async () => {
 		if (!dataID) return
+		const body = {
+			id: Number(dataID),
+			isAlive: !isAlive,
+		}
 		const res = await clientFetch(
-			adminDataApi.update({
-				id: dataID,
-				isAlive: !isAlive,
-			})
+			adminMembershipApi.patch(body)
 		)
-		if (res.success === false) {
+		if (!res.success) {
 			alert(res.error)
 			return
 		}
-
 		setIsAlive(!isAlive)
 		setAsyncList((prev) => !prev)
 	}
@@ -57,8 +60,8 @@ const DeleteForm = ({
 					<motion.input
 						className={`border rounded-2xl outline-none w-[200px] h-[30px] px-4 text-[1.4rem] ${
 							isAlive
-								? "border-red-500 text-red-500"
-								: "border-blue-500 text-blue-500"
+								? "border-red-500 text-red-500 placeholder-red-500"
+								: "border-blue-500 text-blue-500 placeholder-blue-500"
 						}`}
 						required
 						variants={{
@@ -68,14 +71,14 @@ const DeleteForm = ({
 						initial='init'
 						exit='init'
 						animate='animate'
-						placeholder='Nhập vào id để xóa'
+						placeholder='Nhập vào id'
 						value={dataID}
 						onChange={(e) => setDataID(e.target.value)}
 					/>
 
 					<motion.button
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
+						whileHover={{ scale: 1.1 }}
+						whileTap={{ scale: 0.9 }}
 						className={`py-3 w-[100px] text-[1.4rem] font-[400] leading-6 rounded-xl border transition-colors ${
 							isAlive
 								? "border-red-500 text-red-500"
@@ -101,18 +104,20 @@ const DeleteForm = ({
 					initial='init'
 					exit='init'
 					animate='animate'
-					placeholder='Nhập vào id để xóa'
+					placeholder='Nhập vào id'
 					value={dataID}
 					onChange={(e) => setDataID(e.target.value)}
 				/>
 
-				<button
+				<motion.button
+					whileHover={{ scale: 1.1 }}
+					whileTap={{ scale: 0.9 }}
 					className='py-3 w-[100px] text-[1.4rem] font-[400] leading-6 border
           text-red-500 border-red-500 rounded-xl'
 					onClick={() => handleDelete(dataID)}
 				>
 					Xác nhận xóa
-				</button>
+				</motion.button>
 			</div>
 		</div>
 	)

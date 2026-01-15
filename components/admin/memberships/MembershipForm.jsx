@@ -12,9 +12,11 @@ import { Fragment, useEffect, useState } from "react"
 import {
 	DEFAULT_MEMBERSHIP,
 	ModeEnum,
+	pickBenefits,
 	pickMembership,
 } from "./MembershipUtils"
 import BenefitsForm from "./benefits/BenefitsForm"
+import { adminMembershipApi } from "@/lib/api/membership.api"
 
 const MembershipForm = ({
 	mode,
@@ -25,22 +27,26 @@ const MembershipForm = ({
 	const [benefitsData, setBenefitsData] = useState([])
 	const [feedback, setFeedback] = useState({})
 	const [notification, setNotification] = useState("")
-	const [isSubmitted, setSubmitted] = useState(false)
 
 	// Fill form data
 	useEffect(() => {
+		console.log(mode)
+		console.log(currentMBS)
+
 		if (mode === ModeEnum.ADD) {
 			setMBSData(DEFAULT_MEMBERSHIP)
+			setBenefitsData([])
 			setFeedback({})
 			return
 		}
 
 		if (mode === ModeEnum.EDIT) {
 			setMBSData(pickMembership(currentMBS))
+			setBenefitsData(pickBenefits(currentMBS))
 			setFeedback({})
 			return
 		}
-	}, [currentMBS])
+	}, [currentMBS, mode])
 
 	const handleChange = (key, value) => {
 		setMBSData((prev) => ({ ...prev, [key]: value }))
@@ -48,61 +54,46 @@ const MembershipForm = ({
 	}
 
 	const handleSubmit = async () => {
-		// Prepare data for ADD or EDIT
-		const { isCheckID, api, notification } =
-			mode === ModeEnum.ADD
-				? {
-						isCheckID: false,
-						api: (body) => {
-							return adminCampaignApi.couponApi.create(body)
-						},
-						notification: "Tạo mới coupon thành công",
-				  }
-				: {
-						isCheckID: true,
-						api: (body) => {
-							return adminCampaignApi.couponApi.update(body)
-						},
-						notification: "Cập nhật coupon thành công",
-				  }
-
-		// Validate form
+		// Prepare
+		const isAdd = mode === ModeEnum.ADD
+		const config = isAdd
+			? {
+					api: adminMembershipApi.create,
+					msg: "Tạo mới membership thành công",
+					isCheckID: false,
+			  }
+			: {
+					api: adminMembershipApi.update,
+					msg: "Cập nhật membership thành công",
+					isCheckID: true,
+			  }
 		const body = {
 			...mbsData,
+			benefits: benefitsData,
 		}
+
+		// Validate form
 		const isValid = checkSubmitForm(
 			MembershipFormList,
 			body,
 			feedback,
-			isCheckID
+			config.isCheckID
 		)
 		if (!isValid) {
 			setFeedback({ ...feedback })
 			return
 		}
-		const isValidDateTime = checkDateTimePair(
-			body,
-			"startTime",
-			"endTime"
-		)
-		if (!isValidDateTime) {
-			setFeedback({
-				...feedback,
-				endTime: "Thời gian kết thúc phải sau bắt đầu",
-			})
-			return
-		}
 
 		// Call API
-		const { success, error } = await clientFetch(api(body))
-		if (success) {
-			setNotification(notification)
-			setMBSData(DEFAULT_MEMBERSHIP)
-			setAsyncList((prev) => !prev)
-			setSubmitted((prev) => !prev)
-		} else {
-			alert(error)
+		const res = await clientFetch(config.api(body))
+		if (!res.success) {
+			alert(res.error)
+			return
 		}
+		setMBSData(DEFAULT_MEMBERSHIP)
+		setBenefitsData([])
+		setAsyncList((prev) => !prev)
+		setNotification(config.msg)
 	}
 
 	return (

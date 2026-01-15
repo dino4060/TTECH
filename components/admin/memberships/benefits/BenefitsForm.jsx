@@ -28,6 +28,7 @@ const DEFAULT_BENEFIT = (BenefitTypeRender) => ({
 		BenefitTypeRender.key === BenefitType.RENEW
 			? 1
 			: undefined,
+	isAlive: true,
 })
 
 const BenefitsForm = ({
@@ -44,7 +45,7 @@ const BenefitsForm = ({
 			return
 		}
 		if (mode === ModeEnum.EDIT) {
-			setBenefitsData(mbsData.benefits)
+			setBenefitsData(benefitsData)
 			return
 		}
 	}, [mode])

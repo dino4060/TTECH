@@ -13,10 +13,6 @@ const MembershipPanel = ({
 	setAsyncList,
 	setMode,
 }) => {
-	// useEffect(() => {
-	// 	currentMBS.id && setMode(ModeEnum.EDIT)
-	// }, [currentMBS])
-
 	const hanlePanelChange = (mode) => {
 		if (mode === ModeEnum.EDIT) return
 		if (mode === ModeEnum.DELETE) return
@@ -72,7 +68,7 @@ const PanelRenderList = [
 		name: "chỉnh sửa",
 		render: (currentMBS, setAsyncList) => (
 			<MembershipForm
-				mode={ModeEnum.ADD}
+				mode={ModeEnum.EDIT}
 				currentMBS={currentMBS}
 				setAsyncList={setAsyncList}
 			/>

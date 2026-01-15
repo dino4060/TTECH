@@ -67,11 +67,10 @@ export const BenefitTypeRenderEnum = {
 }
 
 export const DEFAULT_MEMBERSHIP = {
-	id: undefined,
-	membershipCode: undefined,
-	minPoint: undefined,
-	isAlive: undefined,
-	benefits: [],
+	id: "",
+	membershipCode: "",
+	minPoint: "",
+	isAlive: true,
 }
 
 export const pickMembership = (data) => {
@@ -79,7 +78,10 @@ export const pickMembership = (data) => {
 		id: data.id,
 		membershipCode: data.membershipCode,
 		minPoint: data.minPoint,
-		benefits: data.benefits,
 		isAlive: data.isAlive,
 	}
+}
+
+export const pickBenefits = (data) => {
+	return data.benefits
 }

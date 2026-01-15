@@ -157,7 +157,7 @@ export default ConfigForm
 const ConfigFormList = [
 	{
 		key: "validityMonths",
-		name: "Hiệu lực Membership",
+		name: "Hiệu lực membership",
 		type: "number",
 		unit: "tháng",
 		disabled: false,

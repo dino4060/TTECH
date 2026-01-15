@@ -52,7 +52,7 @@ const MembershipTable = ({
 					{mbsList?.map((mbs) => (
 						<motion.tr
 							key={mbs.id}
-							className='cursor-pointer'
+							className='cursor-pointer'  
 							variants={RowVariantEnum}
 							initial='init'
 							whileHover='hover'
