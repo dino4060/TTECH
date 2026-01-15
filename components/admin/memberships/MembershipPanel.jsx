@@ -1,11 +1,9 @@
 "use client"
 import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
-import CampaignAdd from "./FormAdd"
-import CampaignEdit from "./FormEdit"
 import CampaignRemove from "./FormDelete"
-import { ModeEnum } from "./MembershipUtils"
 import MembershipForm from "./MembershipForm"
+import { ModeEnum } from "./MembershipUtils"
 
 const MembershipPanel = ({
 	currentMBS,
@@ -44,7 +42,6 @@ const MembershipPanel = ({
 			<div className='p-10 pt-8'>
 				{PanelRenderList.find((a) => a.key === mode).render(
 					currentMBS,
-					setCurrentMBS,
 					setAsyncList
 				)}
 			</div>
@@ -58,7 +55,7 @@ const PanelRenderList = [
 	{
 		key: ModeEnum.ADD,
 		name: "thêm mới",
-		render: (currentMBS, setCurrentCamp, setAsyncList) => (
+		render: (currentMBS, setAsyncList) => (
 			<MembershipForm
 				mode={ModeEnum.ADD}
 				currentMBS={currentMBS}
@@ -69,25 +66,25 @@ const PanelRenderList = [
 	{
 		key: ModeEnum.EDIT,
 		name: "chỉnh sửa",
-		render: (currentCamp, setCurrentCamp, setAsyncList) => (
-			<CampaignEdit
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
+		render: (currentMBS, setAsyncList) => (
+			<MembershipForm
+				mode={ModeEnum.ADD}
+				currentMBS={currentMBS}
 				setAsyncList={setAsyncList}
 			/>
 		),
 	},
 	{
 		key: ModeEnum.DELETE,
-		name: "loại bỏ",
-		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+		name: "quản lý",
+		render: (currentMBS, setAsyncList) => (
 			<CampaignRemove setAsyncList={setAsyncList} />
 		),
 	},
 	{
 		key: ModeEnum.CONFIG,
 		name: "cấu hình",
-		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+		render: (currentCamp, setAsyncList) => (
 			<div>Cấu hình tham số hiệu lực Membership 6 tháng</div>
 		),
 	},

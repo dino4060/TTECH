@@ -1,5 +1,8 @@
 "use client"
-import { convertTo000D } from "@/lib/utils/number2"
+import {
+	convertPositiveNumOr,
+	convertTo000D,
+} from "@/lib/utils/number2"
 import { useEffect, useState } from "react"
 
 const LimitForm = ({ benefit }) => {
@@ -12,13 +15,13 @@ const LimitForm = ({ benefit }) => {
 	}, [benefit])
 
 	const onMinSpendChange = (e) => {
-		const v = Number(e.target.value)
+		const v = convertPositiveNumOr(e.target.value, "")
 		setMinSpend(v || "")
 		benefit.minSpend = v || 0
 	}
 
 	const onLimitChange = (e) => {
-		const v = Number(e.target.value)
+		const v = convertPositiveNumOr(e.target.value, "")
 		setLimitPerCTM(v || "")
 		benefit.limitPerCustomer = v || 0
 	}

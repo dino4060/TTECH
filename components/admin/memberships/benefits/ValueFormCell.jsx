@@ -5,6 +5,7 @@ import {
 	BenefitUnit,
 	BenefitUnitRenderEnum,
 } from "../MembershipUtils"
+import { convertPositiveNumOr } from "@/lib/utils/number2"
 
 const ValueForm = ({ benefit }) => {
 	const [value, setValue] = useState(0)
@@ -16,7 +17,7 @@ const ValueForm = ({ benefit }) => {
 	}, [benefit])
 
 	const onValueChange = (e) => {
-		const v = Number(e.target.value)
+		const v = convertPositiveNumOr(e.target.value, "")
 		setValue(v)
 		benefit.benefitValue = v || 1
 	}
