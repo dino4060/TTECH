@@ -15,12 +15,72 @@ import SaleForm from "./Discount/SaleForm"
 import { adminCampaignApi } from "@/lib/api/campaign.api"
 import CouponCodeForm from "./CouponCode/CouponCodeForm"
 import ShippingCouponForm from "./CouponShipping/ShippingCouponForm"
+import {
+	ArrowBigUpDash,
+	RefreshCcw,
+	TicketPercent,
+	ShieldCheck,
+} from "lucide-react"
 
 export const ModeEnum = {
 	ADD: "ADD",
 	EDIT: "EDIT",
 	DELETE: "DELETE",
-	ANALYZE: "ANALYZE",
+	CONFIG: "CONFIG",
+}
+
+export const BenefitType = {
+	UPGRADE: "UPGRADE",
+	RENEW: "RENEW",
+	COUPON: "COUPON",
+	GUARANTEE: "GUARANTEE",
+}
+
+export const BenefitUnit = {
+	FIXED: "FIXED",
+	PERCENT: "PERCENT",
+	MONTHS: "MONTHS",
+}
+
+export const BenefitUnitRenderEnum = {
+	FIXED: {
+		key: BenefitUnit.FIXED,
+		show: "Giá tiền",
+		symbol: ".000đ",
+	},
+	PERCENT: {
+		key: BenefitUnit.PERCENT,
+		show: "Phần trăm",
+		symbol: "%",
+	},
+	MONTHS: {
+		key: BenefitUnit.MONTHS,
+		show: "Tháng",
+		symbol: " tháng",
+	},
+}
+
+export const BenefitTypeRenderEnum = {
+	UPGRADE: {
+		key: BenefitType.UPGRADE,
+		show: "Thăng hạng",
+		icon: ArrowBigUpDash,
+	},
+	RENEW: {
+		key: BenefitType.RENEW,
+		show: "Duy trì",
+		icon: RefreshCcw,
+	},
+	COUPON: {
+		key: BenefitType.COUPON,
+		show: "Mua hàng",
+		icon: TicketPercent,
+	},
+	GUARANTEE: {
+		key: BenefitType.GUARANTEE,
+		show: "Bảo hành",
+		icon: ShieldCheck,
+	},
 }
 
 export const CampaignTypeMap = {
@@ -255,6 +315,16 @@ export const DEFAULT_MEMBERSHIP = {
 	minPoint: undefined,
 	isAlive: undefined,
 	benefits: [],
+}
+
+export const pickMembership = (data) => {
+	return {
+		id: data.id,
+		membershipCode: data.membershipCode,
+		minPoint: data.minPoint,
+		benefits: data.benefits,
+		isAlive: data.isAlive,
+	}
 }
 
 export const DEFAULT_CAMPAIGN = (promotionType) => ({

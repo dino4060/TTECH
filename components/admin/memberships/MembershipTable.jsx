@@ -1,12 +1,8 @@
 "use client"
 import { useIdContext } from "@/context/IdContext"
-import { adminCampaignApi } from "@/lib/api/campaign.api"
 import { adminMembershipApi } from "@/lib/api/membership.api"
 import { clientFetch } from "@/lib/http/fetch.client"
-import {
-	convertToVND,
-	formatNumberVN,
-} from "@/lib/utils/number2"
+import { formatNumberVN } from "@/lib/utils/number2"
 import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 import { IoCopyOutline } from "react-icons/io5"

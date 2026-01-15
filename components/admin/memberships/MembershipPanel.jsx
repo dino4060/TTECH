@@ -5,6 +5,7 @@ import CampaignAdd from "./FormAdd"
 import CampaignEdit from "./FormEdit"
 import CampaignRemove from "./FormDelete"
 import { ModeEnum } from "./MembershipUtils"
+import MembershipForm from "./MembershipForm"
 
 const MembershipPanel = ({
 	currentMBS,
@@ -57,10 +58,10 @@ const PanelRenderList = [
 	{
 		key: ModeEnum.ADD,
 		name: "thêm mới",
-		render: (currentCamp, setCurrentCamp, setAsyncList) => (
-			<CampaignAdd
-				currentCamp={currentCamp}
-				setCurrentCamp={setCurrentCamp}
+		render: (currentMBS, setCurrentCamp, setAsyncList) => (
+			<MembershipForm
+				mode={ModeEnum.ADD}
+				currentMBS={currentMBS}
 				setAsyncList={setAsyncList}
 			/>
 		),
@@ -83,5 +84,11 @@ const PanelRenderList = [
 			<CampaignRemove setAsyncList={setAsyncList} />
 		),
 	},
+	{
+		key: ModeEnum.CONFIG,
+		name: "cấu hình",
+		render: (currentCamp, setCurrentCamp, setAsyncList) => (
+			<div>Cấu hình tham số hiệu lực Membership 6 tháng</div>
+		),
+	},
 ]
- 
