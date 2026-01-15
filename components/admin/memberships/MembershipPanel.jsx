@@ -4,6 +4,7 @@ import { Fragment, useEffect, useState } from "react"
 import DeleteForm from "./delete/DeleteForm"
 import MembershipForm from "./MembershipForm"
 import { ModeEnum } from "./MembershipUtils"
+import ConfigForm from "./config/ConfigForm"
 
 const MembershipPanel = ({
 	currentMBS,
@@ -90,8 +91,6 @@ const PanelRenderList = [
 	{
 		key: ModeEnum.CONFIG,
 		name: "cấu hình",
-		render: (currentCamp, setAsyncList) => (
-			<div>Cấu hình tham số hiệu lực Membership 6 tháng</div>
-		),
+		render: () => <ConfigForm />,
 	},
 ]

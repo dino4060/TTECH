@@ -34,16 +34,16 @@ const DeleteForm = ({
 
 	const handleToggleStatus = async () => {
 		if (!dataID) return
-		// const res = await clientFetch(
-		// 	adminDataApi.update({
-		// 		id: dataID,
-		// 		isAlive: !isAlive,
-		// 	})
-		// )
-		// if (res.success === false) {
-		// 	alert(res.error)
-		// 	return
-		// }
+		const res = await clientFetch(
+			adminDataApi.update({
+				id: dataID,
+				isAlive: !isAlive,
+			})
+		)
+		if (res.success === false) {
+			alert(res.error)
+			return
+		}
 
 		setIsAlive(!isAlive)
 		setAsyncList((prev) => !prev)

@@ -79,10 +79,10 @@ export const AdminRouteList = [
 		id: "membership",
 		component: MembershipManagement,
 	},
-	{
-		id: "message",
-		component: CustomerMessage,
-	},
+	// {
+	// 	id: "message",
+	// 	component: CustomerMessage,
+	// },
 	{
 		id: "category",
 		component: CategoryManagement,
