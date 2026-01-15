@@ -355,7 +355,7 @@ const ProductSort = {
 
 		{
 			id: "discount",
-			name: "Giá rẻ nhất",
+			name: "Giảm sâu nhất",
 		},
 		{
 			id: "favorite",

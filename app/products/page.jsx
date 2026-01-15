@@ -79,6 +79,7 @@ export default function Page() {
 							thumb={p?.thumb || ""}
 							highlight={p?.description || ""}
 							price={p?.price || null}
+              discountCampaign={p?.discountCampaign || null}
 						/>
 					))}
 				</div>

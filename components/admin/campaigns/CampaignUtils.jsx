@@ -239,6 +239,12 @@ export const CampaignApiMap = {
 	[CampaignTypeMap.DAILY_SALE.key]:
 		adminCampaignApi.discountApi,
 
+	[CampaignTypeMap.FLASH_SALE.key]:
+		adminCampaignApi.discountApi,
+
+	[CampaignTypeMap.NEW_ARRIVAL_DISCOUNT.key]:
+		adminCampaignApi.discountApi,
+
 	[CampaignTypeMap.ORDER_COUPON.key]:
 		adminCampaignApi.couponApi,
 
