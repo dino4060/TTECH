@@ -29,8 +29,12 @@ const CampaignAction = ({
 						key={Action.key}
 						className={`
 							px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold
-							border-pink-500 border-b-pink-500 flex-1 shrink-0 text-center uppercase
-							${Action.key === action ? "bg-pink-100" : "bg-white"}
+							border-blue-500 border-b-blue-500 flex-1 shrink-0 text-center uppercase
+							${
+								Action.key === action
+									? "bg-blue-500 text-white"
+									: "bg-white"
+							}
 						`}
 						whileHover={{ scale: 1.1 }}
 						onClick={() => setAction(Action.key)}
@@ -54,11 +58,11 @@ const CampaignAction = ({
 export default CampaignAction
 
 const Actions = [
-	{
-		key: ActionKeyMap.ANALYZE,
-		name: "phân tích",
-		render: () => <div>Phân tích</div>,
-	},
+	// {
+	// 	key: ActionKeyMap.ANALYZE,
+	// 	name: "phân tích",
+	// 	render: () => <div>Phân tích</div>,
+	// },
 	{
 		key: ActionKeyMap.ADD,
 		name: "thêm mới",

@@ -10,6 +10,7 @@ import {
 import ValueForm from "./ValueFormCell"
 import LimitForm from "./LimitForm"
 import IDNameForm from "./IDNameForm"
+import StatusForm from "./StatusForm"
 
 const DEFAULT_BENEFIT = (BenefitTypeRender) => ({
 	tempId: Date.now(),
@@ -54,17 +55,6 @@ const BenefitsForm = ({
 			DEFAULT_BENEFIT(BenefitTypeRender),
 		])
 		setAdd(false)
-	}
-
-	const handleDelete = (id, tempId) => {
-		if (!id && !tempId) return
-
-		setBenefitsData((prev) =>
-			prev.filter((b) => {
-				if (!id) return b.tempId !== tempId
-				return b.id !== id
-			})
-		)
 	}
 
 	return (
@@ -121,7 +111,7 @@ const BenefitsForm = ({
 									onClick={() => handleAddBenefitType(BTR)}
 								>
 									<div className='flex items-center gap-4'>
-										<div className='p-3 bg-blue-50 rounded-xl'>
+										<div className='p-3 bg-pink-100 rounded-xl'>
 											<BTR.icon className='w-8 h-8 text-blue-500' />
 										</div>
 										<div className='flex-1 min-w-0'>
@@ -187,7 +177,13 @@ const BenefitsForm = ({
 
 										<LimitForm benefit={b} />
 
-										{!manage ? (
+										<StatusForm
+											benefit={b}
+											manage={manage}
+											setBenefitsData={setBenefitsData}
+										/>
+
+										{/* {!manage ? (
 											<td className='px-4 py-2 font-normal shrink-0 text-center'>
 												<span
 													className='p-2 rounded-xl text-white'
@@ -209,7 +205,7 @@ const BenefitsForm = ({
 													Xóa
 												</span>
 											</td>
-										)}
+										)} */}
 									</motion.tr>
 								))
 							)}

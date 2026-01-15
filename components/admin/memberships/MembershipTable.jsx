@@ -6,11 +6,13 @@ import { formatNumberVN } from "@/lib/utils/number2"
 import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
 import { IoCopyOutline } from "react-icons/io5"
+import { ModeEnum } from "./MembershipUtils"
 
 const MembershipTable = ({
 	currentMBS,
 	setCurrentMBS,
 	asyncList,
+	setMode,
 }) => {
 	const [mbsList, setMBSList] = useState([])
 	const { onCopyId } = useIdContext()
@@ -58,18 +60,23 @@ const MembershipTable = ({
 								mbs.id === currentMBS.id ? "clicked" : "init"
 							}
 							transition={{ type: "spring" }}
-							onClick={() => setCurrentMBS(mbs)}
+							onClick={() => {
+								setCurrentMBS(mbs)
+								setMode(ModeEnum.EDIT)
+							}}
 						>
 							{MembershipColumnList.map((col) => {
 								return col.key === "id" ? (
 									<motion.td
 										key={col.key}
 										className='px-2 py-2 flex-1 text-center font-[400] shrink-0'
-										whileHover={{ color: "rgb(59 130 246)" }}
+										whileHover={{ color: "rgb(239 68 68)" }}
 										whileTap={{ scale: 1.5 }}
 										onClick={(event) => {
 											event.stopPropagation()
 											onCopyId(mbs.id)
+											setCurrentMBS(mbs)
+											setMode(ModeEnum.DELETE)
 										}}
 									>
 										{col.renderData(mbs)}

@@ -55,14 +55,14 @@ const NoCampaignAdd = ({ setCampaignType }) => {
 						{group.CampTypes.map((type) => (
 							<motion.div
 								key={type.key}
-								className='p-6 border border-gray-300 rounded-lg bg-white hover:border-pink-500
+								className='p-6 border border-gray-300 rounded-lg bg-white hover:border-blue-500
                     hover:shadow-md transition-all cursor-pointer'
 								whileHover={{ scale: 1.02 }}
 								onClick={() => setCampaignType(type)}
 							>
 								<div className='flex items-center gap-4'>
 									<div className='p-3 bg-pink-100 rounded-lg'>
-										<type.icon className='w-8 h-8 text-pink-500' />
+										<type.icon className='w-8 h-8 text-blue-500' />
 									</div>
 									<div className='flex-1 min-w-0'>
 										<h3 className='text-2xl font-semibold flex items-center gap-2'>

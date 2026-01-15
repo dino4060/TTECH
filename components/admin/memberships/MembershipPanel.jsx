@@ -1,40 +1,43 @@
 "use client"
 import { motion } from "framer-motion"
 import { Fragment, useEffect, useState } from "react"
-import CampaignRemove from "./FormDelete"
+import DeleteForm from "./delete/DeleteForm"
 import MembershipForm from "./MembershipForm"
 import { ModeEnum } from "./MembershipUtils"
 
 const MembershipPanel = ({
 	currentMBS,
+	mode,
 	setCurrentMBS,
 	setAsyncList,
+	setMode,
 }) => {
-	const [mode, setMode] = useState(ModeEnum.ADD)
+	// useEffect(() => {
+	// 	currentMBS.id && setMode(ModeEnum.EDIT)
+	// }, [currentMBS])
 
-	useEffect(() => {
-		currentMBS?.id && setMode(ModeEnum.EDIT)
-	}, [currentMBS])
-
-	useEffect(() => {
-		mode !== ModeEnum.EDIT && setCurrentMBS({})
-	}, [mode])
+	const hanlePanelChange = (mode) => {
+		if (mode === ModeEnum.EDIT) return
+		if (mode === ModeEnum.DELETE) return
+		setMode(mode)
+		setCurrentMBS({})
+	}
 
 	return (
 		<Fragment>
 			<div className='flex gap-2 justify-end p-1 bg-white'>
-				{PanelRenderList.map((Action) => (
+				{PanelRenderList.map((PR) => (
 					<motion.div
-						key={Action.key}
+						key={PR.key}
 						className={`
 							px-4 cursor-pointer py-2 border border-b-4 rounded-md text-xl font-bold
-							border-pink-500 border-b-pink-500 flex-1 shrink-0 text-center uppercase
-							${Action.key === mode ? "bg-pink-100" : "bg-white"}
+							border-blue-500 border-b-blue-500 flex-1 shrink-0 text-center uppercase
+							${PR.key === mode ? "bg-blue-500 text-white" : "bg-white"}
 						`}
 						whileHover={{ scale: 1.1 }}
-						onClick={() => setMode(Action.key)}
+						onClick={() => hanlePanelChange(PR.key)}
 					>
-						{Action.name}
+						{PR.name}
 					</motion.div>
 				))}
 			</div>
@@ -78,7 +81,10 @@ const PanelRenderList = [
 		key: ModeEnum.DELETE,
 		name: "quản lý",
 		render: (currentMBS, setAsyncList) => (
-			<CampaignRemove setAsyncList={setAsyncList} />
+			<DeleteForm
+				currentMBS={currentMBS}
+				setAsyncList={setAsyncList}
+			/>
 		),
 	},
 	{
