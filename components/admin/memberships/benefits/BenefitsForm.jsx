@@ -8,19 +8,7 @@ import {
 	ModeEnum,
 } from "../MembershipUtils"
 import DealFormCell from "./DealFormCell"
-
-const DEFAULT_LEGACY = [
-	{
-		id: 1,
-		benefitType: BenefitType.GUARANTEE,
-		benefitName: "Bảo hành mẫu",
-		benefitValue: 6,
-		benefitUnit: "MONTHS",
-		minSpend: 160,
-		validityMonths: 6,
-		limitPerCustomer: undefined,
-	},
-]
+import LimitCellForm from "./LimitCellForm"
 
 const DEFAULT_BENEFIT = (BenefitTypeRender) => ({
 	tempId: Date.now(),
@@ -33,7 +21,11 @@ const DEFAULT_BENEFIT = (BenefitTypeRender) => ({
 			? BenefitUnit.MONTHS
 			: BenefitUnit.FIXED,
 	minSpend: undefined,
-	limitPerCustomer: undefined,
+	limitPerCustomer:
+		BenefitTypeRender.key === BenefitType.UPGRADE ||
+		BenefitTypeRender.key === BenefitType.RENEW
+			? 1
+			: undefined,
 })
 
 const BenefitsForm = ({
@@ -213,7 +205,7 @@ const BenefitsForm = ({
 
 										<DealFormCell benefit={b} />
 
-										<td>Develop (LimitCellForm)</td>
+										<LimitCellForm benefit={b} />
 
 										{!manage ? (
 											<td className='px-4 py-2 font-normal shrink-0 text-center'>
