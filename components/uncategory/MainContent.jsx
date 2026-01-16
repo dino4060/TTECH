@@ -47,7 +47,7 @@ const MainContent = () => {
 							</div>
 
 							<div
-								onClick={() => openURL("upcomming")}
+								// onClick={() => openURL("upcomming")}
 								className='bg-gray-500/10 rounded-3xl p-6 mt-10'
 							>
 								<Image
@@ -59,7 +59,7 @@ const MainContent = () => {
 									className='w-[100%] h-auto p-[10px]'
 								/>
 								<h1 className='text-3xl text-center font-[600] p-4 leading-[18px]'>
-									Tìm cửa hàng ở gần bạn
+									Coupon
 								</h1>
 							</div>
 						</div>
